@@ -34,7 +34,7 @@ def load_course(conn, data):
     ))
     course_db_id = cur.fetchone()[0]
 
-    # ── секции ────────────────────────────────────────────────
+    # секции
     # В JSON курса приходит список id секций (int), без названий.
     # Названия секций лежат в /api/sections, но в вашем дампе их нет.
     # Поэтому используем "Модуль N" как заголовок.
@@ -48,7 +48,7 @@ def load_course(conn, data):
         """, (course_db_id, pos, f"Модуль {pos}"))
         section_ext_to_db[sec_ext] = cur.fetchone()[0]
 
-    # ── уроки ─────────────────────────────────────────────────
+    # уроки
     # units[] даёт связку section ↔ lesson; по ней и определим section_id.
     lesson_ext_to_db = {}
     for u in data.get("units", []):
@@ -73,7 +73,7 @@ def load_course(conn, data):
         ))
         lesson_ext_to_db[lesson_ext] = cur.fetchone()[0]
 
-    # ── шаги + step_contents ──────────────────────────────────
+    # шаги + step_contents
     steps_count = 0
     for ext_step_id_str, s in data["steps"].items():
         lesson_db = lesson_ext_to_db.get(s["lesson"])

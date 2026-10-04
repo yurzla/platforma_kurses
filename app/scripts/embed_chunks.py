@@ -7,10 +7,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# ─────────────────────────────────────────────
 # Настройки
-# ─────────────────────────────────────────────
-
 DSN = os.environ.get("DSN")
 
 if not DSN:
@@ -23,11 +20,7 @@ CHUNK_SIZE = 500
 CHUNK_OVERLAP = 50
 EMBEDDING_DIM = 768
 
-
-# ─────────────────────────────────────────────
 # Подготовка текста
-# ─────────────────────────────────────────────
-
 def clean_text(text):
     if not text:
         return ""
@@ -39,10 +32,7 @@ def clean_text(text):
 
 
 def split_into_chunks(text):
-    """
-    Разбивает текст примерно по CHUNK_SIZE слов
-    с перекрытием CHUNK_OVERLAP.
-    """
+    # Разбивает текст примерно по CHUNK_SIZE слов с перекрытием CHUNK_OVERLAP.
 
     words = text.split()
 
@@ -66,26 +56,16 @@ def split_into_chunks(text):
     return chunks
 
 
-# ─────────────────────────────────────────────
 # Определение типа контента
-# ─────────────────────────────────────────────
-
 def get_source_type(step_type):
-    """
-    Преобразует тип шага Stepik в тип,
-    который используем для RAG.
-    """
+    # Преобразует тип шага Stepik в тип, который используем для RAG.
 
     if step_type in ("text", "video"):
         return "theory"
 
     return "task"
 
-
-# ─────────────────────────────────────────────
 # Ollama
-# ─────────────────────────────────────────────
-
 def get_embedding(text):
     response = requests.post(
         OLLAMA_URL,
@@ -102,10 +82,7 @@ def get_embedding(text):
     embedding = data["embeddings"][0]
 
     if len(embedding) != EMBEDDING_DIM:
-        raise ValueError(
-            f"Ожидалась размерность {EMBEDDING_DIM}, "
-            f"получено {len(embedding)}"
-        )
+        raise ValueError(f"Ожидалась размерность {EMBEDDING_DIM}, получено {len(embedding)}")
 
     return embedding
 
@@ -114,18 +91,10 @@ def vector_to_pg(vector):
     return "[" + ",".join(map(str, vector)) + "]"
 
 
-# ─────────────────────────────────────────────
 # Проверка / создание embedding
-# ─────────────────────────────────────────────
-
 def ensure_embedding(conn, chunk_id, chunk_text):
-    """
-    Если embedding для chunk уже существует —
-    ничего не делаем.
-
-    Если нет — получаем его через Ollama
-    и записываем в БД.
-    """
+    #Если embedding для chunk уже существует - ничего не делаем.
+    # Если нет - получаем его через Ollama и записываем в БД.
 
     with conn.cursor() as cur:
         cur.execute("""
@@ -161,11 +130,7 @@ def ensure_embedding(conn, chunk_id, chunk_text):
 
     return True
 
-
-# ─────────────────────────────────────────────
 # Шаги курса
-# ─────────────────────────────────────────────
-
 def process_steps(conn):
     print()
     print("=== Материалы и задания курсов ===")
@@ -179,14 +144,10 @@ def process_steps(conn):
                 sec.course_id,
                 s.step_type
             FROM step_contents sc
-            JOIN steps s
-                ON s.id = sc.step_id
-            JOIN lessons l
-                ON l.id = s.lesson_id
-            JOIN sections sec
-                ON sec.id = l.section_id
-            WHERE sc.body IS NOT NULL
-              AND TRIM(sc.body) <> ''
+            JOIN steps s ON s.id = sc.step_id
+            JOIN lessons l ON l.id = s.lesson_id
+            JOIN sections sec ON sec.id = l.section_id
+            WHERE sc.body IS NOT NULL AND TRIM(sc.body) <> ''
             ORDER BY sc.step_id
         """)
 
@@ -201,7 +162,6 @@ def process_steps(conn):
     for number, row in enumerate(rows, start=1):
 
         step_id, body, lesson_id, course_id, step_type = row
-
         text = clean_text(body)
 
         if not text:
@@ -219,17 +179,12 @@ def process_steps(conn):
         )
 
         for chunk_index, chunk_text in enumerate(chunks):
-
-            # ─────────────────────────────────────
             # Ищем существующий chunk
-            # ─────────────────────────────────────
-
             with conn.cursor() as cur:
                 cur.execute("""
                     SELECT id, source_type
                     FROM content_chunks
-                    WHERE step_id = %s
-                      AND chunk_index = %s
+                    WHERE step_id = %s AND chunk_index = %s
                 """, (
                     step_id,
                     chunk_index
@@ -253,10 +208,7 @@ def process_steps(conn):
                         ))
 
             else:
-                # ─────────────────────────────────
                 # Chunk ещё не существует
-                # ─────────────────────────────────
-
                 with conn.cursor() as cur:
                     cur.execute("""
                         INSERT INTO content_chunks (
@@ -281,40 +233,21 @@ def process_steps(conn):
                     chunk_id = cur.fetchone()[0]
 
                 new_chunks += 1
-
-            # ─────────────────────────────────────
-            # ВАЖНО:
             # embedding создаём только если его нет
-            # ─────────────────────────────────────
-
-            created = ensure_embedding(
-                conn,
-                chunk_id,
-                chunk_text
-            )
+            created = ensure_embedding(conn, chunk_id, chunk_text)
 
             if created:
                 new_embeddings += 1
-                print(
-                    f"    chunk {chunk_index}: "
-                    f"embedding создан ({EMBEDDING_DIM} dim)"
-                )
+                print(f"    chunk {chunk_index}: embedding создан ({EMBEDDING_DIM} dim)")
             else:
                 existing_embeddings += 1
-                print(
-                    f"    chunk {chunk_index}: "
-                    f"embedding уже есть"
-                )
+                print(f"    chunk {chunk_index}: embedding уже есть")
 
             conn.commit()
 
     return new_chunks, new_embeddings, existing_embeddings
 
-
-# ─────────────────────────────────────────────
 # Описания курсов
-# ─────────────────────────────────────────────
-
 def process_course_descriptions(conn):
     print()
     print("=== Описания курсов ===")
@@ -326,8 +259,7 @@ def process_course_descriptions(conn):
                 title,
                 description
             FROM courses
-            WHERE description IS NOT NULL
-              AND TRIM(description) <> ''
+            WHERE description IS NOT NULL AND TRIM(description) <> ''
             ORDER BY id
         """)
 
@@ -339,24 +271,13 @@ def process_course_descriptions(conn):
     new_embeddings = 0
     existing_embeddings = 0
 
-    for number, (course_id, title, description) in enumerate(
-        courses,
-        start=1
-    ):
+    for number, (course_id, title, description) in enumerate(courses, start=1):
 
         # Добавляем название курса к описанию.
-        # Для смыслового поиска это полезно.
-        text = clean_text(
-            f"{title}. {description}"
-        )
-
+        text = clean_text(f"{title}. {description}")
         chunks = split_into_chunks(text)
 
-        print(
-            f"[{number}/{len(courses)}] "
-            f"course_id={course_id}, "
-            f"chunks={len(chunks)}"
-        )
+        print(f"[{number}/{len(courses)}] course_id={course_id}, chunks={len(chunks)}")
 
         for chunk_index, chunk_text in enumerate(chunks):
 
@@ -416,36 +337,21 @@ def process_course_descriptions(conn):
                 new_chunks += 1
 
             # Снова: embedding только если его нет.
-            created = ensure_embedding(
-                conn,
-                chunk_id,
-                chunk_text
-            )
+            created = ensure_embedding(conn, chunk_id, chunk_text)
 
             if created:
                 new_embeddings += 1
 
-                print(
-                    f"    chunk {chunk_index}: "
-                    f"embedding создан ({EMBEDDING_DIM} dim)"
-                )
+                print(f"    chunk {chunk_index}: embedding создан ({EMBEDDING_DIM} dim)")
             else:
                 existing_embeddings += 1
-
-                print(
-                    f"    chunk {chunk_index}: "
-                    f"embedding уже есть"
-                )
+                print(f"    chunk {chunk_index}: embedding уже есть")
 
             conn.commit()
 
     return new_chunks, new_embeddings, existing_embeddings
 
-
-# ─────────────────────────────────────────────
 # Итоговая проверка
-# ─────────────────────────────────────────────
-
 def print_statistics(conn):
     print()
     print("=== Итоговая статистика ===")
@@ -495,11 +401,6 @@ def print_statistics(conn):
 
     for source_type, count in source_stats:
         print(f"  {source_type}: {count}")
-
-
-# ─────────────────────────────────────────────
-# Запуск
-# ─────────────────────────────────────────────
 
 def main():
 
