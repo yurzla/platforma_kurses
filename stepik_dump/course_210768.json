@@ -1,0 +1,3029 @@
+{
+  "course": {
+    "id": 210768,
+    "summary": "Цель обучения — создать проект с нуля, изучив и применив технологии и архитектуру, которые обеспечивают качество и масштабируемость вашего кода, скорость разработки, а также удовольствие и радость от процесса.",
+    "workload": "8",
+    "cover": "https://cdn.stepik.net/media/cache/images/courses/210768/cover_PRfvYm7/e2961884f85bbccfe6de8ccb6647e281.png",
+    "intro": "",
+    "course_format": "",
+    "target_audience": "Для тех, кто может отличить null от объекта:\nЯ буду обучать вас огромному количеству технологий и тому, как связать их между собой. Но вам нужно уже хоть что-то знать о программировании и вёрстке, потому что я не буду разжёвывать базовые понятия, а буду обучать продвинутым.\n\nДля тех, кто хочет кайфовать от процесса разработки:\nПредлагаемые мной стек технологий и архитектура очень приятны для самого разработчика. Ваш код будет понятным, лаконичным, легко поддерживаемым. Вы будете получать удовольствия в процессе создания своего продукта.\n\nДля тех, кто хочет создавать продукты целиком и полностью:\nСудьба многих разработчиков сводится к тому, что они приходят на уже давно кем-то как попало начатые продукты, и вынуждены подстраиваться под существующие неудобные архитектуру и стек. Вы же стремитесь самостоятельно создавать продукты целиком, от и до.",
+    "certificate_footer": null,
+    "certificate_cover_org": null,
+    "is_certificate_issued": false,
+    "is_certificate_auto_issued": false,
+    "certificate_regular_threshold": null,
+    "certificate_distinction_threshold": null,
+    "instructors": [
+      356005971
+    ],
+    "certificate": "",
+    "requirements": "<p>Вообще мы пишем прямо с чистого листа. Но хорошо бы, чтобы вы уже имели какие-то навыки в вёрстке. Всё остальное я объясню в этом учебнике и дам ссылки на сторонние источники, где можно глубже изучить каждую отдельную тему.</p>",
+    "description": "<p>Я с детства мечтал, что когда вырасту, смогу сам сделать крутой многопользовательский сервис как вконтакте (это было лет 16 назад). И вот я 16 лет корпел, корпел, и научился. Сервисы, которые я раньше программировал больше года в команде из 3 человек, я теперь могу запрограммировать за пару, тройку месяцев в одиночку. Решающую роль сыграли выбранные технологии (перебрал многие) и способ их совмещения — архитектура.</p>\n\n<p>И вот я создал курс, где показываю как в итоге оказывается с моей точки зрения надо создавать веб-сервисы с нуля, чтобы обеспечить качество и масштабируемость кода, скорость разработки, а также удовольствие и радость от процесса.</p>\n\n<p>Курс вообще без воды, чисто практический. 28 часов видео и 143 урока, все бесплатные.</p>\n\n<h3>Актуальность</h3>\n\n<p>Курс делался в течение 2023–2024 года. Версии использованных библиотек устарели. Сами подходы не потеряют актуальности ещё многие годы. Курс по-прежнему является отличным гайдом для понимания принципов фулстек разработки.</p>\n\n<p>В то же время я сейчас работаю над созданием нового курса по фулстек разработке, который по сути начинается от той точки, на которой заканчивается этот курс. У нас будет на уроках бойлерплейт со всеми настройками проекта и задача создать свой собственный SaaS-продукт: Антикурс по созданию SaaS на TypeScript, React, Bun, Point0 <a href=\"https://stepik.org/course/296168\" rel=\"noopener noreferrer nofollow\">https://stepik.org/course/296168</a></p>",
+    "sections": [
+      436477,
+      440980,
+      440981,
+      440982,
+      440983,
+      440984,
+      440985,
+      440986,
+      440987,
+      440988,
+      440989,
+      440990,
+      440991,
+      440992,
+      440993,
+      440994,
+      440995,
+      440996,
+      440997,
+      440998,
+      440999,
+      441000,
+      441001,
+      441002,
+      441003,
+      441004,
+      441005
+    ],
+    "total_units": 154,
+    "enrollment": 210768,
+    "is_favorite": false,
+    "actions": {
+      "view_reports": {
+        "enabled": false,
+        "needs_permission": "teach"
+      },
+      "edit_reports": {
+        "enabled": false,
+        "needs_permission": "teach"
+      },
+      "view_grade_book_page": {
+        "enabled": false,
+        "needs_permission": "assist"
+      },
+      "view_grade_book": {
+        "enabled": false,
+        "needs_permission": "assist"
+      },
+      "edit_lti": {
+        "enabled": false,
+        "needs_permission": "admin"
+      },
+      "edit_advanced_settings": {
+        "enabled": false,
+        "needs_permission": "teach"
+      },
+      "manage_permissions": {
+        "enabled": false,
+        "needs_permission": "admin"
+      },
+      "view_revenue": {
+        "enabled": false
+      },
+      "can_be_enrolled": {
+        "enabled": true
+      },
+      "can_be_bought": {
+        "enabled": true
+      },
+      "can_be_price_changed": {
+        "enabled": true
+      },
+      "can_be_deleted": {
+        "enabled": false
+      },
+      "edit_tags": {
+        "enabled": false
+      }
+    },
+    "progress": "78-210768",
+    "first_lesson": 1405175,
+    "first_unit": 1422600,
+    "certificate_link": null,
+    "certificate_regular_link": null,
+    "certificate_distinction_link": null,
+    "user_certificate": null,
+    "referral_link": null,
+    "schedule_link": "/course/210768/schedule/55d1e905004129b31ad434b322aa93c03ce4ef97/",
+    "schedule_long_link": "/course/210768/schedule/long/55d1e905004129b31ad434b322aa93c03ce4ef97/",
+    "first_deadline": null,
+    "last_deadline": null,
+    "subscriptions": [
+      "31-78-210768",
+      "30-78-210768"
+    ],
+    "announcements": [],
+    "is_contest": false,
+    "is_self_paced": true,
+    "is_adaptive": false,
+    "is_idea_compatible": false,
+    "is_in_wishlist": false,
+    "last_step": "78-210768",
+    "intro_video": {
+      "id": 426048,
+      "thumbnail": "https://cdn.stepik.net/video/426048/thumbnail/166df648fb9d5387822195eb14af9a3f.jpg",
+      "urls": [
+        {
+          "quality": "1080",
+          "url": "https://cdn.stepik.net/video/426048/1080/515d80f387f1b524315c7b7d93ee7a98.mp4"
+        },
+        {
+          "quality": "720",
+          "url": "https://cdn.stepik.net/video/426048/720/0cfa428e8d9930f54ebd841584f88c95.mp4"
+        },
+        {
+          "quality": "540",
+          "url": "https://cdn.stepik.net/video/426048/540/e6719f74a1ae8569353d21f80919ef3f.mp4"
+        },
+        {
+          "quality": "360",
+          "url": "https://cdn.stepik.net/video/426048/360/c3e87cbbd18dba419ca015d90519f0f6.mp4"
+        },
+        {
+          "quality": "240",
+          "url": "https://cdn.stepik.net/video/426048/240/f68123923def1cec907da3885720b82f.mp4"
+        }
+      ],
+      "duration": 595,
+      "status": "ready",
+      "upload_date": "2024-08-16T22:20:38Z",
+      "filename": "https://drive.google.com/file/d/1iQzVaw4C0US1wME2afsLnIKkUTHsNvQO/view?usp=sharing"
+    },
+    "social_providers": [],
+    "authors": [
+      356005971
+    ],
+    "tags": [
+      1,
+      2,
+      26,
+      30,
+      33,
+      35,
+      55,
+      61,
+      62,
+      63
+    ],
+    "is_enabled": true,
+    "is_proctored": false,
+    "proctor_url": null,
+    "review_summary": 210134,
+    "schedule_type": "self_paced",
+    "product_kind": "plain",
+    "variant_title": "",
+    "variant_description": "",
+    "certificates_count": 0,
+    "learners_count": 10373,
+    "lessons_count": 154,
+    "quizzes_count": 0,
+    "challenges_count": 0,
+    "peer_reviews_count": 0,
+    "instructor_reviews_count": 0,
+    "videos_duration": 0,
+    "time_to_complete": 2630,
+    "is_popular": true,
+    "is_processed_with_paddle": false,
+    "is_unsuitable": false,
+    "is_paid": false,
+    "price": "0.00",
+    "currency_code": "RUB",
+    "display_price": "-",
+    "default_promo_code_name": null,
+    "default_promo_code_price": null,
+    "default_promo_code_discount": null,
+    "default_promo_code_is_percent_discount": null,
+    "default_promo_code_expire_date": null,
+    "continue_url": "/course/210768/continue",
+    "readiness": 0.8181818181818182,
+    "is_archived": false,
+    "options": {},
+    "price_tier": null,
+    "position": 1,
+    "is_censored": false,
+    "difficulty": "normal",
+    "acquired_skills": [
+      "Создавать многопользовательские веб-сервисы с нуля",
+      "React",
+      "TypeScript",
+      "Vite",
+      "Node.js",
+      "pnpm",
+      "Express",
+      "trpc",
+      "PostgreSQL",
+      "Prisma",
+      "Formik",
+      "Zod",
+      "Jest",
+      "Prettier",
+      "ESLint",
+      "Stylelint",
+      "SCSS",
+      "Husky",
+      "React Router",
+      "Cloudinary",
+      "AWS S3",
+      "MJML",
+      "CRON",
+      "Winston",
+      "Balsamiq",
+      "Sentry",
+      "Mixpanel",
+      "Cloudflare",
+      "Docker",
+      "DataDog",
+      "Heroku"
+    ],
+    "acquired_assets": [
+      "Вы поймёте как создать по сути любой многопользовательский веб-сервис с нуля. Не какой-то там Hello World или To-Do, а настоящий, со всеми базовыми фичами. Мало кто так умеет, даже многие мидлы-фулстеки не смогут нормально с нуля сервис поднять, а вы сможете."
+    ],
+    "learning_format": "<p>В основе обучения лежит учебник из 143 уроков. В учебнике освещается процесс создания веб-сервиса, который содержит в себе практически всё, что встречается в каждом IT-продукте: авторизация, формы, роутер, логирование, тесты, деплой, и т.д. Всё это сопровождается исходным кодом и видео-инструкциями. Изучите, скопируйте, адаптируйте под свой или заказной проект.<br>\n<br>\nУчебник освещает аспекты встречающиеся в практически 100% IT-продуктов. Однако некоторая часть кода индивидуальна в каждом отдельном продукте, и её вы должны написать самостоятельно. Постарайтесь написать её самостоятельно. Будет нужна поддержка, совет, код-ревью, обращайтесь за индивидуальной консультацией.<br>\n<br>\nПосмотрите все видео уроки учебника, в рамках которого будет создан типовой многопользовательский веб-сервис. Ознакомьтесь с кодом представленным в каждом уроке. Скачайте полный исходных код образовательного проекта (бесплатно) и используйте его в качестве основы для своего проекта. Если будете застревать в ходе создания собственного проекта, обращайтесь за индивидуальной консультацией, или вступайте в образовательную группу. Ниже перечислены все уроки учебника.</p>",
+    "content_details": [],
+    "issue": null,
+    "course_type": "basic",
+    "possible_type": null,
+    "is_certificate_with_score": false,
+    "preview_lesson": 1405175,
+    "preview_unit": 1422600,
+    "possible_currencies": [],
+    "commission_basic": null,
+    "commission_promo": null,
+    "with_certificate": false,
+    "child_courses": [],
+    "child_courses_count": 0,
+    "parent_courses": [],
+    "variants": [],
+    "became_published_at": "2024-08-16T22:28:51Z",
+    "became_paid_at": "2024-08-16T22:28:51Z",
+    "title_en": "Fullstack-development of a web service in TypeScript, Reach, No…",
+    "last_update_price_date": "2024-11-02T17:30:32.681Z",
+    "learners_limit": null,
+    "enrollment_begin_date": null,
+    "enrollment_end_date": null,
+    "owner": 356005971,
+    "language": "ru",
+    "is_featured": true,
+    "is_public": true,
+    "canonical_url": "https://stepik.org/course/210768/",
+    "title": "Фулстек-разработка веб-сервиса на TypeScript, Reaсt, Node.js",
+    "slug": "Фулстек-разработка-веб-сервиса-на-TypeScript-Reaсt-Nodejs-210768",
+    "begin_date": null,
+    "end_date": null,
+    "soft_deadline": null,
+    "hard_deadline": null,
+    "grading_policy": "no_deadlines",
+    "begin_date_source": null,
+    "end_date_source": null,
+    "soft_deadline_source": null,
+    "hard_deadline_source": null,
+    "grading_policy_source": "no_deadlines",
+    "is_active": true,
+    "create_date": "2024-07-29T10:36:02Z",
+    "update_date": "2026-08-07T17:09:14Z",
+    "learners_group": null,
+    "testers_group": null,
+    "moderators_group": null,
+    "assistants_group": null,
+    "teachers_group": null,
+    "admins_group": null,
+    "discussions_count": 352,
+    "discussion_proxy": "78-210768-1",
+    "discussion_threads": [
+      "78-210768-1"
+    ],
+    "lti_consumer_key": "",
+    "lti_secret_key": "",
+    "lti_private_profile": false
+  },
+  "sections": [],
+  "units": [
+    {
+      "id": 1422600,
+      "section": 436477,
+      "lesson": 1405175,
+      "assignments": [
+        5886949
+      ],
+      "position": 1,
+      "actions": {
+        "learn_unit": "#"
+      },
+      "progress": "80-1422600",
+      "begin_date": null,
+      "end_date": null,
+      "soft_deadline": null,
+      "hard_deadline": null,
+      "grading_policy": "no_deadlines",
+      "begin_date_source": null,
+      "end_date_source": null,
+      "soft_deadline_source": null,
+      "hard_deadline_source": null,
+      "grading_policy_source": null,
+      "is_active": true,
+      "create_date": "2024-08-16T17:15:56Z",
+      "update_date": "2024-12-20T13:33:36Z"
+    },
+    {
+      "id": 1422605,
+      "section": 436477,
+      "lesson": 1405180,
+      "assignments": [
+        5887025
+      ],
+      "position": 2,
+      "actions": {
+        "learn_unit": "#"
+      },
+      "progress": "80-1422605",
+      "begin_date": null,
+      "end_date": null,
+      "soft_deadline": null,
+      "hard_deadline": null,
+      "grading_policy": "no_deadlines",
+      "begin_date_source": null,
+      "end_date_source": null,
+      "soft_deadline_source": null,
+      "hard_deadline_source": null,
+      "grading_policy_source": null,
+      "is_active": true,
+      "create_date": "2024-08-16T17:58:04Z",
+      "update_date": "2026-08-07T17:09:14Z"
+    },
+    {
+      "id": 1433614,
+      "section": 436477,
+      "lesson": 1415758,
+      "assignments": [
+        5944660
+      ],
+      "position": 3,
+      "actions": {
+        "learn_unit": "#"
+      },
+      "progress": "80-1433614",
+      "begin_date": null,
+      "end_date": null,
+      "soft_deadline": null,
+      "hard_deadline": null,
+      "grading_policy": "no_deadlines",
+      "begin_date_source": null,
+      "end_date_source": null,
+      "soft_deadline_source": null,
+      "hard_deadline_source": null,
+      "grading_policy_source": null,
+      "is_active": true,
+      "create_date": "2024-08-28T11:16:59Z",
+      "update_date": "2026-06-06T20:34:59Z"
+    },
+    {
+      "id": 1422606,
+      "section": 436477,
+      "lesson": 1405181,
+      "assignments": [
+        5887035
+      ],
+      "position": 4,
+      "actions": {
+        "learn_unit": "#"
+      },
+      "progress": "80-1422606",
+      "begin_date": null,
+      "end_date": null,
+      "soft_deadline": null,
+      "hard_deadline": null,
+      "grading_policy": "no_deadlines",
+      "begin_date_source": null,
+      "end_date_source": null,
+      "soft_deadline_source": null,
+      "hard_deadline_source": null,
+      "grading_policy_source": null,
+      "is_active": true,
+      "create_date": "2024-08-16T18:03:12Z",
+      "update_date": "2026-07-21T18:02:56Z"
+    },
+    {
+      "id": 1422637,
+      "section": 436477,
+      "lesson": 1405212,
+      "assignments": [
+        5887095
+      ],
+      "position": 5,
+      "actions": {
+        "learn_unit": "#"
+      },
+      "progress": "80-1422637",
+      "begin_date": null,
+      "end_date": null,
+      "soft_deadline": null,
+      "hard_deadline": null,
+      "grading_policy": "no_deadlines",
+      "begin_date_source": null,
+      "end_date_source": null,
+      "soft_deadline_source": null,
+      "hard_deadline_source": null,
+      "grading_policy_source": null,
+      "is_active": true,
+      "create_date": "2024-08-16T18:12:26Z",
+      "update_date": "2026-07-21T18:02:57Z"
+    },
+    {
+      "id": 1422653,
+      "section": 436477,
+      "lesson": 1405228,
+      "assignments": [
+        5887120
+      ],
+      "position": 6,
+      "actions": {
+        "learn_unit": "#"
+      },
+      "progress": "80-1422653",
+      "begin_date": null,
+      "end_date": null,
+      "soft_deadline": null,
+      "hard_deadline": null,
+      "grading_policy": "no_deadlines",
+      "begin_date_source": null,
+      "end_date_source": null,
+      "soft_deadline_source": null,
+      "hard_deadline_source": null,
+      "grading_policy_source": null,
+      "is_active": true,
+      "create_date": "2024-08-16T18:19:31Z",
+      "update_date": "2026-07-21T18:02:57Z"
+    },
+    {
+      "id": 1422654,
+      "section": 440980,
+      "lesson": 1405229,
+      "assignments": [
+        5887121
+      ],
+      "position": 1,
+      "actions": {
+        "learn_unit": "#"
+      },
+      "progress": "80-1422654",
+      "begin_date": null,
+      "end_date": null,
+      "soft_deadline": null,
+      "hard_deadline": null,
+      "grading_policy": "no_deadlines",
+      "begin_date_source": null,
+      "end_date_source": null,
+      "soft_deadline_source": null,
+      "hard_deadline_source": null,
+      "grading_policy_source": null,
+      "is_active": true,
+      "create_date": "2024-08-16T18:21:10Z",
+      "update_date": "2026-07-21T18:02:58Z"
+    },
+    {
+      "id": 1422687,
+      "section": 440980,
+      "lesson": 1405262,
+      "assignments": [
+        5887201
+      ],
+      "position": 2,
+      "actions": {
+        "learn_unit": "#"
+      },
+      "progress": "80-1422687",
+      "begin_date": null,
+      "end_date": null,
+      "soft_deadline": null,
+      "hard_deadline": null,
+      "grading_policy": "no_deadlines",
+      "begin_date_source": null,
+      "end_date_source": null,
+      "soft_deadline_source": null,
+      "hard_deadline_source": null,
+      "grading_policy_source": null,
+      "is_active": true,
+      "create_date": "2024-08-16T18:24:54Z",
+      "update_date": "2026-07-21T18:02:59Z"
+    },
+    {
+      "id": 1422688,
+      "section": 440980,
+      "lesson": 1405263,
+      "assignments": [
+        5887210
+      ],
+      "position": 3,
+      "actions": {
+        "learn_unit": "#"
+      },
+      "progress": "80-1422688",
+      "begin_date": null,
+      "end_date": null,
+      "soft_deadline": null,
+      "hard_deadline": null,
+      "grading_policy": "no_deadlines",
+      "begin_date_source": null,
+      "end_date_source": null,
+      "soft_deadline_source": null,
+      "hard_deadline_source": null,
+      "grading_policy_source": null,
+      "is_active": true,
+      "create_date": "2024-08-16T18:29:21Z",
+      "update_date": "2026-07-21T18:02:59Z"
+    },
+    {
+      "id": 1422747,
+      "section": 440980,
+      "lesson": 1405322,
+      "assignments": [
+        6251688
+      ],
+      "position": 4,
+      "actions": {
+        "learn_unit": "#"
+      },
+      "progress": "80-1422747",
+      "begin_date": null,
+      "end_date": null,
+      "soft_deadline": null,
+      "hard_deadline": null,
+      "grading_policy": "no_deadlines",
+      "begin_date_source": null,
+      "end_date_source": null,
+      "soft_deadline_source": null,
+      "hard_deadline_source": null,
+      "grading_policy_source": null,
+      "is_active": true,
+      "create_date": "2024-08-16T18:54:39Z",
+      "update_date": "2026-07-21T18:03:24Z"
+    },
+    {
+      "id": 1422689,
+      "section": 440980,
+      "lesson": 1405264,
+      "assignments": [
+        5887211
+      ],
+      "position": 5,
+      "actions": {
+        "learn_unit": "#"
+      },
+      "progress": "80-1422689",
+      "begin_date": null,
+      "end_date": null,
+      "soft_deadline": null,
+      "hard_deadline": null,
+      "grading_policy": "no_deadlines",
+      "begin_date_source": null,
+      "end_date_source": null,
+      "soft_deadline_source": null,
+      "hard_deadline_source": null,
+      "grading_policy_source": null,
+      "is_active": true,
+      "create_date": "2024-08-16T18:29:25Z",
+      "update_date": "2026-07-21T18:03:00Z"
+    },
+    {
+      "id": 1422690,
+      "section": 440980,
+      "lesson": 1405265,
+      "assignments": [
+        5887212
+      ],
+      "position": 6,
+      "actions": {
+        "learn_unit": "#"
+      },
+      "progress": "80-1422690",
+      "begin_date": null,
+      "end_date": null,
+      "soft_deadline": null,
+      "hard_deadline": null,
+      "grading_policy": "no_deadlines",
+      "begin_date_source": null,
+      "end_date_source": null,
+      "soft_deadline_source": null,
+      "hard_deadline_source": null,
+      "grading_policy_source": null,
+      "is_active": true,
+      "create_date": "2024-08-16T18:29:29Z",
+      "update_date": "2026-07-21T17:56:28Z"
+    },
+    {
+      "id": 1917427,
+      "section": 440980,
+      "lesson": 1891742,
+      "assignments": [
+        7957837
+      ],
+      "position": 7,
+      "actions": {
+        "learn_unit": "#"
+      },
+      "progress": "80-1917427",
+      "begin_date": null,
+      "end_date": null,
+      "soft_deadline": null,
+      "hard_deadline": null,
+      "grading_policy": "no_deadlines",
+      "begin_date_source": null,
+      "end_date_source": null,
+      "soft_deadline_source": null,
+      "hard_deadline_source": null,
+      "grading_policy_source": null,
+      "is_active": true,
+      "create_date": "2025-08-04T07:44:24Z",
+      "update_date": "2025-08-04T07:48:47Z"
+    },
+    {
+      "id": 1422691,
+      "section": 440980,
+      "lesson": 1405266,
+      "assignments": [
+        5887216
+      ],
+      "position": 8,
+      "actions": {
+        "learn_unit": "#"
+      },
+      "progress": "80-1422691",
+      "begin_date": null,
+      "end_date": null,
+      "soft_deadline": null,
+      "hard_deadline": null,
+      "grading_policy": "no_deadlines",
+      "begin_date_source": null,
+      "end_date_source": null,
+      "soft_deadline_source": null,
+      "hard_deadline_source": null,
+      "grading_policy_source": null,
+      "is_active": true,
+      "create_date": "2024-08-16T18:29:33Z",
+      "update_date": "2026-07-21T18:03:01Z"
+    },
+    {
+      "id": 1422692,
+      "section": 440980,
+      "lesson": 1405267,
+      "assignments": [
+        5887217
+      ],
+      "position": 9,
+      "actions": {
+        "learn_unit": "#"
+      },
+      "progress": "80-1422692",
+      "begin_date": null,
+      "end_date": null,
+      "soft_deadline": null,
+      "hard_deadline": null,
+      "grading_policy": "no_deadlines",
+      "begin_date_source": null,
+      "end_date_source": null,
+      "soft_deadline_source": null,
+      "hard_deadline_source": null,
+      "grading_policy_source": null,
+      "is_active": true,
+      "create_date": "2024-08-16T18:29:38Z",
+      "update_date": "2026-07-21T18:03:02Z"
+    },
+    {
+      "id": 1591382,
+      "section": 440980,
+      "lesson": 1570210,
+      "assignments": [
+        6558796
+      ],
+      "position": 10,
+      "actions": {
+        "learn_unit": "#"
+      },
+      "progress": "80-1591382",
+      "begin_date": null,
+      "end_date": null,
+      "soft_deadline": null,
+      "hard_deadline": null,
+      "grading_policy": "no_deadlines",
+      "begin_date_source": null,
+      "end_date_source": null,
+      "soft_deadline_source": null,
+      "hard_deadline_source": null,
+      "grading_policy_source": null,
+      "is_active": true,
+      "create_date": "2024-12-22T10:24:09Z",
+      "update_date": "2026-06-22T19:46:55Z"
+    },
+    {
+      "id": 1422693,
+      "section": 440981,
+      "lesson": 1405268,
+      "assignments": [
+        5887213
+      ],
+      "position": 1,
+      "actions": {
+        "learn_unit": "#"
+      },
+      "progress": "80-1422693",
+      "begin_date": null,
+      "end_date": null,
+      "soft_deadline": null,
+      "hard_deadline": null,
+      "grading_policy": "no_deadlines",
+      "begin_date_source": null,
+      "end_date_source": null,
+      "soft_deadline_source": null,
+      "hard_deadline_source": null,
+      "grading_policy_source": null,
+      "is_active": true,
+      "create_date": "2024-08-16T18:29:43Z",
+      "update_date": "2026-07-21T18:03:03Z"
+    },
+    {
+      "id": 1422694,
+      "section": 440981,
+      "lesson": 1405269,
+      "assignments": [
+        5887214
+      ],
+      "position": 2,
+      "actions": {
+        "learn_unit": "#"
+      },
+      "progress": "80-1422694",
+      "begin_date": null,
+      "end_date": null,
+      "soft_deadline": null,
+      "hard_deadline": null,
+      "grading_policy": "no_deadlines",
+      "begin_date_source": null,
+      "end_date_source": null,
+      "soft_deadline_source": null,
+      "hard_deadline_source": null,
+      "grading_policy_source": null,
+      "is_active": true,
+      "create_date": "2024-08-16T18:29:49Z",
+      "update_date": "2026-07-21T18:03:03Z"
+    },
+    {
+      "id": 1422695,
+      "section": 440981,
+      "lesson": 1405270,
+      "assignments": [
+        5887215
+      ],
+      "position": 3,
+      "actions": {
+        "learn_unit": "#"
+      },
+      "progress": "80-1422695",
+      "begin_date": null,
+      "end_date": null,
+      "soft_deadline": null,
+      "hard_deadline": null,
+      "grading_policy": "no_deadlines",
+      "begin_date_source": null,
+      "end_date_source": null,
+      "soft_deadline_source": null,
+      "hard_deadline_source": null,
+      "grading_policy_source": null,
+      "is_active": true,
+      "create_date": "2024-08-16T18:29:53Z",
+      "update_date": "2026-07-21T18:03:04Z"
+    },
+    {
+      "id": 1422696,
+      "section": 440981,
+      "lesson": 1405271,
+      "assignments": [
+        5887218
+      ],
+      "position": 4,
+      "actions": {
+        "learn_unit": "#"
+      },
+      "progress": "80-1422696",
+      "begin_date": null,
+      "end_date": null,
+      "soft_deadline": null,
+      "hard_deadline": null,
+      "grading_policy": "no_deadlines",
+      "begin_date_source": null,
+      "end_date_source": null,
+      "soft_deadline_source": null,
+      "hard_deadline_source": null,
+      "grading_policy_source": null,
+      "is_active": true,
+      "create_date": "2024-08-16T18:29:58Z",
+      "update_date": "2026-07-21T18:03:05Z"
+    }
+  ],
+  "lessons": {
+    "1405175": {
+      "id": 1405175,
+      "steps": [
+        5832290
+      ],
+      "actions": {
+        "learn_lesson": "#"
+      },
+      "progress": "76-1405175",
+      "subscriptions": [
+        "31-76-1405175",
+        "30-76-1405175"
+      ],
+      "viewed_by": 11192,
+      "passed_by": 11192,
+      "time_to_complete": 28,
+      "cover_url": null,
+      "is_comments_enabled": true,
+      "is_exam_without_progress": false,
+      "is_blank": false,
+      "is_draft": false,
+      "is_orphaned": false,
+      "courses": [
+        210768
+      ],
+      "units": [
+        1422600
+      ],
+      "owner": 356005971,
+      "language": "ru",
+      "is_featured": false,
+      "is_public": true,
+      "canonical_url": "https://stepik.org/lesson/1405175/",
+      "title": "Обзор архитектуры и фичей учебного проекта",
+      "slug": "Обзор-архитектуры-и-фичей-учебного-проекта-1405175",
+      "create_date": "2024-08-16T17:15:56Z",
+      "update_date": "2024-12-20T13:33:36Z",
+      "learners_group": null,
+      "testers_group": null,
+      "moderators_group": null,
+      "assistants_group": null,
+      "teachers_group": null,
+      "admins_group": null,
+      "discussions_count": 27,
+      "discussion_proxy": "76-1405175-1",
+      "discussion_threads": [
+        "76-1405175-1"
+      ],
+      "epic_count": 206,
+      "abuse_count": 0,
+      "vote_delta": 206,
+      "vote": null,
+      "lti_consumer_key": "",
+      "lti_secret_key": "",
+      "lti_private_profile": false
+    },
+    "1405180": {
+      "id": 1405180,
+      "steps": [
+        5832369
+      ],
+      "actions": {
+        "learn_lesson": "#"
+      },
+      "progress": "76-1405180",
+      "subscriptions": [
+        "31-76-1405180",
+        "30-76-1405180"
+      ],
+      "viewed_by": 5397,
+      "passed_by": 5397,
+      "time_to_complete": 63,
+      "cover_url": null,
+      "is_comments_enabled": true,
+      "is_exam_without_progress": false,
+      "is_blank": false,
+      "is_draft": false,
+      "is_orphaned": false,
+      "courses": [
+        210768
+      ],
+      "units": [
+        1422605
+      ],
+      "owner": 356005971,
+      "language": "ru",
+      "is_featured": false,
+      "is_public": true,
+      "canonical_url": "https://stepik.org/lesson/1405180/",
+      "title": "Как проходит обучение",
+      "slug": "Как-проходит-обучение-1405180",
+      "create_date": "2024-08-16T17:58:04Z",
+      "update_date": "2026-08-07T17:09:14Z",
+      "learners_group": null,
+      "testers_group": null,
+      "moderators_group": null,
+      "assistants_group": null,
+      "teachers_group": null,
+      "admins_group": null,
+      "discussions_count": 8,
+      "discussion_proxy": "76-1405180-1",
+      "discussion_threads": [
+        "76-1405180-1"
+      ],
+      "epic_count": 102,
+      "abuse_count": 0,
+      "vote_delta": 102,
+      "vote": null,
+      "lti_consumer_key": "",
+      "lti_secret_key": "",
+      "lti_private_profile": false
+    },
+    "1415758": {
+      "id": 1415758,
+      "steps": [
+        5887979
+      ],
+      "actions": {
+        "learn_lesson": "#"
+      },
+      "progress": "76-1415758",
+      "subscriptions": [
+        "31-76-1415758",
+        "30-76-1415758"
+      ],
+      "viewed_by": 4250,
+      "passed_by": 4250,
+      "time_to_complete": 15,
+      "cover_url": null,
+      "is_comments_enabled": true,
+      "is_exam_without_progress": false,
+      "is_blank": false,
+      "is_draft": false,
+      "is_orphaned": false,
+      "courses": [
+        210768
+      ],
+      "units": [
+        1433614
+      ],
+      "owner": 356005971,
+      "language": "ru",
+      "is_featured": false,
+      "is_public": true,
+      "canonical_url": "https://stepik.org/lesson/1415758/",
+      "title": "Связь с Автором",
+      "slug": "Связь-с-Автором-1415758",
+      "create_date": "2024-08-28T11:16:59Z",
+      "update_date": "2026-06-06T20:34:59Z",
+      "learners_group": null,
+      "testers_group": null,
+      "moderators_group": null,
+      "assistants_group": null,
+      "teachers_group": null,
+      "admins_group": null,
+      "discussions_count": 1,
+      "discussion_proxy": "76-1415758-1",
+      "discussion_threads": [
+        "76-1415758-1"
+      ],
+      "epic_count": 56,
+      "abuse_count": 0,
+      "vote_delta": 56,
+      "vote": null,
+      "lti_consumer_key": "",
+      "lti_secret_key": "",
+      "lti_private_profile": false
+    },
+    "1405181": {
+      "id": 1405181,
+      "steps": [
+        5832379
+      ],
+      "actions": {
+        "learn_lesson": "#"
+      },
+      "progress": "76-1405181",
+      "subscriptions": [
+        "31-76-1405181",
+        "30-76-1405181"
+      ],
+      "viewed_by": 4399,
+      "passed_by": 4399,
+      "time_to_complete": 52,
+      "cover_url": null,
+      "is_comments_enabled": true,
+      "is_exam_without_progress": false,
+      "is_blank": false,
+      "is_draft": false,
+      "is_orphaned": false,
+      "courses": [
+        210768
+      ],
+      "units": [
+        1422606
+      ],
+      "owner": 356005971,
+      "language": "ru",
+      "is_featured": false,
+      "is_public": false,
+      "canonical_url": "https://stepik.org/lesson/1405181/",
+      "title": "Создание графического прототипа",
+      "slug": "Создание-графического-прототипа-1405181",
+      "create_date": "2024-08-16T18:03:11Z",
+      "update_date": "2026-07-21T18:02:56Z",
+      "learners_group": null,
+      "testers_group": null,
+      "moderators_group": null,
+      "assistants_group": null,
+      "teachers_group": null,
+      "admins_group": null,
+      "discussions_count": 6,
+      "discussion_proxy": "76-1405181-1",
+      "discussion_threads": [
+        "76-1405181-1"
+      ],
+      "epic_count": 76,
+      "abuse_count": 0,
+      "vote_delta": 76,
+      "vote": null,
+      "lti_consumer_key": "",
+      "lti_secret_key": "",
+      "lti_private_profile": false
+    },
+    "1405212": {
+      "id": 1405212,
+      "steps": [
+        5832440
+      ],
+      "actions": {
+        "learn_lesson": "#"
+      },
+      "progress": "76-1405212",
+      "subscriptions": [
+        "31-76-1405212",
+        "30-76-1405212"
+      ],
+      "viewed_by": 3391,
+      "passed_by": 3391,
+      "time_to_complete": 60,
+      "cover_url": null,
+      "is_comments_enabled": true,
+      "is_exam_without_progress": false,
+      "is_blank": false,
+      "is_draft": false,
+      "is_orphaned": false,
+      "courses": [
+        210768
+      ],
+      "units": [
+        1422637
+      ],
+      "owner": 356005971,
+      "language": "ru",
+      "is_featured": false,
+      "is_public": false,
+      "canonical_url": "https://stepik.org/lesson/1405212/",
+      "title": "Формирование и оценка бэклога проекта",
+      "slug": "Формирование-и-оценка-бэклога-проекта-1405212",
+      "create_date": "2024-08-16T18:12:26Z",
+      "update_date": "2026-07-21T18:02:57Z",
+      "learners_group": null,
+      "testers_group": null,
+      "moderators_group": null,
+      "assistants_group": null,
+      "teachers_group": null,
+      "admins_group": null,
+      "discussions_count": 11,
+      "discussion_proxy": "76-1405212-1",
+      "discussion_threads": [
+        "76-1405212-1"
+      ],
+      "epic_count": 76,
+      "abuse_count": 0,
+      "vote_delta": 76,
+      "vote": null,
+      "lti_consumer_key": "",
+      "lti_secret_key": "",
+      "lti_private_profile": false
+    },
+    "1405228": {
+      "id": 1405228,
+      "steps": [
+        5832465
+      ],
+      "actions": {
+        "learn_lesson": "#"
+      },
+      "progress": "76-1405228",
+      "subscriptions": [
+        "31-76-1405228",
+        "30-76-1405228"
+      ],
+      "viewed_by": 3234,
+      "passed_by": 3234,
+      "time_to_complete": 33,
+      "cover_url": null,
+      "is_comments_enabled": true,
+      "is_exam_without_progress": false,
+      "is_blank": false,
+      "is_draft": false,
+      "is_orphaned": false,
+      "courses": [
+        210768
+      ],
+      "units": [
+        1422653
+      ],
+      "owner": 356005971,
+      "language": "ru",
+      "is_featured": false,
+      "is_public": false,
+      "canonical_url": "https://stepik.org/lesson/1405228/",
+      "title": "Установка программ для разработки",
+      "slug": "Установка-программ-для-разработки-1405228",
+      "create_date": "2024-08-16T18:19:30Z",
+      "update_date": "2026-07-21T18:02:57Z",
+      "learners_group": null,
+      "testers_group": null,
+      "moderators_group": null,
+      "assistants_group": null,
+      "teachers_group": null,
+      "admins_group": null,
+      "discussions_count": 9,
+      "discussion_proxy": "76-1405228-1",
+      "discussion_threads": [
+        "76-1405228-1"
+      ],
+      "epic_count": 44,
+      "abuse_count": 1,
+      "vote_delta": 43,
+      "vote": null,
+      "lti_consumer_key": "",
+      "lti_secret_key": "",
+      "lti_private_profile": false
+    },
+    "1405229": {
+      "id": 1405229,
+      "steps": [
+        5832466
+      ],
+      "actions": {
+        "learn_lesson": "#"
+      },
+      "progress": "76-1405229",
+      "subscriptions": [
+        "31-76-1405229",
+        "30-76-1405229"
+      ],
+      "viewed_by": 3475,
+      "passed_by": 3475,
+      "time_to_complete": 128,
+      "cover_url": null,
+      "is_comments_enabled": true,
+      "is_exam_without_progress": false,
+      "is_blank": false,
+      "is_draft": false,
+      "is_orphaned": false,
+      "courses": [
+        210768
+      ],
+      "units": [
+        1422654
+      ],
+      "owner": 356005971,
+      "language": "ru",
+      "is_featured": false,
+      "is_public": false,
+      "canonical_url": "https://stepik.org/lesson/1405229/",
+      "title": "Мастеркласс по VSCode",
+      "slug": "Мастеркласс-по-VSCode-1405229",
+      "create_date": "2024-08-16T18:21:09Z",
+      "update_date": "2026-07-21T18:02:58Z",
+      "learners_group": null,
+      "testers_group": null,
+      "moderators_group": null,
+      "assistants_group": null,
+      "teachers_group": null,
+      "admins_group": null,
+      "discussions_count": 6,
+      "discussion_proxy": "76-1405229-1",
+      "discussion_threads": [
+        "76-1405229-1"
+      ],
+      "epic_count": 46,
+      "abuse_count": 0,
+      "vote_delta": 46,
+      "vote": null,
+      "lti_consumer_key": "",
+      "lti_secret_key": "",
+      "lti_private_profile": false
+    },
+    "1405262": {
+      "id": 1405262,
+      "steps": [
+        5832546
+      ],
+      "actions": {
+        "learn_lesson": "#"
+      },
+      "progress": "76-1405262",
+      "subscriptions": [
+        "31-76-1405262",
+        "30-76-1405262"
+      ],
+      "viewed_by": 3229,
+      "passed_by": 3229,
+      "time_to_complete": 37,
+      "cover_url": null,
+      "is_comments_enabled": true,
+      "is_exam_without_progress": false,
+      "is_blank": false,
+      "is_draft": false,
+      "is_orphaned": false,
+      "courses": [
+        210768
+      ],
+      "units": [
+        1422687
+      ],
+      "owner": 356005971,
+      "language": "ru",
+      "is_featured": false,
+      "is_public": false,
+      "canonical_url": "https://stepik.org/lesson/1405262/",
+      "title": "Создание React приложения с помощью Vite",
+      "slug": "Создание-React-приложения-с-помощью-Vite-1405262",
+      "create_date": "2024-08-16T18:24:54Z",
+      "update_date": "2026-07-21T18:02:59Z",
+      "learners_group": null,
+      "testers_group": null,
+      "moderators_group": null,
+      "assistants_group": null,
+      "teachers_group": null,
+      "admins_group": null,
+      "discussions_count": 5,
+      "discussion_proxy": "76-1405262-1",
+      "discussion_threads": [
+        "76-1405262-1"
+      ],
+      "epic_count": 59,
+      "abuse_count": 0,
+      "vote_delta": 59,
+      "vote": null,
+      "lti_consumer_key": "",
+      "lti_secret_key": "",
+      "lti_private_profile": false
+    },
+    "1405263": {
+      "id": 1405263,
+      "steps": [
+        5832555
+      ],
+      "actions": {
+        "learn_lesson": "#"
+      },
+      "progress": "76-1405263",
+      "subscriptions": [
+        "31-76-1405263",
+        "30-76-1405263"
+      ],
+      "viewed_by": 2419,
+      "passed_by": 2419,
+      "time_to_complete": 53,
+      "cover_url": null,
+      "is_comments_enabled": true,
+      "is_exam_without_progress": false,
+      "is_blank": false,
+      "is_draft": false,
+      "is_orphaned": false,
+      "courses": [
+        210768
+      ],
+      "units": [
+        1422688
+      ],
+      "owner": 356005971,
+      "language": "ru",
+      "is_featured": false,
+      "is_public": false,
+      "canonical_url": "https://stepik.org/lesson/1405263/",
+      "title": "Знакомство с Git и GitHub",
+      "slug": "Знакомство-с-Git-и-GitHub-1405263",
+      "create_date": "2024-08-16T18:29:21Z",
+      "update_date": "2026-07-21T18:02:59Z",
+      "learners_group": null,
+      "testers_group": null,
+      "moderators_group": null,
+      "assistants_group": null,
+      "teachers_group": null,
+      "admins_group": null,
+      "discussions_count": 5,
+      "discussion_proxy": "76-1405263-1",
+      "discussion_threads": [
+        "76-1405263-1"
+      ],
+      "epic_count": 57,
+      "abuse_count": 0,
+      "vote_delta": 57,
+      "vote": null,
+      "lti_consumer_key": "",
+      "lti_secret_key": "",
+      "lti_private_profile": false
+    },
+    "1405322": {
+      "id": 1405322,
+      "steps": [
+        6180079
+      ],
+      "actions": {
+        "learn_lesson": "#"
+      },
+      "progress": "76-1405322",
+      "subscriptions": [
+        "31-76-1405322",
+        "30-76-1405322"
+      ],
+      "viewed_by": 2128,
+      "passed_by": 2128,
+      "time_to_complete": 2,
+      "cover_url": null,
+      "is_comments_enabled": true,
+      "is_exam_without_progress": false,
+      "is_blank": false,
+      "is_draft": false,
+      "is_orphaned": false,
+      "courses": [
+        210768
+      ],
+      "units": [
+        1422747
+      ],
+      "owner": 356005971,
+      "language": "ru",
+      "is_featured": false,
+      "is_public": false,
+      "canonical_url": "https://stepik.org/lesson/1405322/",
+      "title": "Получите доступ к полному исходному коду проекта на гитхабе",
+      "slug": "Получите-доступ-к-полному-исходному-коду-проекта-на-гитхабе-1405322",
+      "create_date": "2024-08-16T18:54:38Z",
+      "update_date": "2026-07-21T18:03:24Z",
+      "learners_group": null,
+      "testers_group": null,
+      "moderators_group": null,
+      "assistants_group": null,
+      "teachers_group": null,
+      "admins_group": null,
+      "discussions_count": 1,
+      "discussion_proxy": "76-1405322-1",
+      "discussion_threads": [
+        "76-1405322-1"
+      ],
+      "epic_count": 25,
+      "abuse_count": 0,
+      "vote_delta": 25,
+      "vote": null,
+      "lti_consumer_key": "",
+      "lti_secret_key": "",
+      "lti_private_profile": false
+    },
+    "1405264": {
+      "id": 1405264,
+      "steps": [
+        5832556
+      ],
+      "actions": {
+        "learn_lesson": "#"
+      },
+      "progress": "76-1405264",
+      "subscriptions": [
+        "31-76-1405264",
+        "30-76-1405264"
+      ],
+      "viewed_by": 2387,
+      "passed_by": 2387,
+      "time_to_complete": 19,
+      "cover_url": null,
+      "is_comments_enabled": true,
+      "is_exam_without_progress": false,
+      "is_blank": false,
+      "is_draft": false,
+      "is_orphaned": false,
+      "courses": [
+        210768
+      ],
+      "units": [
+        1422689
+      ],
+      "owner": 356005971,
+      "language": "ru",
+      "is_featured": false,
+      "is_public": false,
+      "canonical_url": "https://stepik.org/lesson/1405264/",
+      "title": "HTML теги",
+      "slug": "HTML-теги-1405264",
+      "create_date": "2024-08-16T18:29:25Z",
+      "update_date": "2026-07-21T18:03:00Z",
+      "learners_group": null,
+      "testers_group": null,
+      "moderators_group": null,
+      "assistants_group": null,
+      "teachers_group": null,
+      "admins_group": null,
+      "discussions_count": 3,
+      "discussion_proxy": "76-1405264-1",
+      "discussion_threads": [
+        "76-1405264-1"
+      ],
+      "epic_count": 47,
+      "abuse_count": 0,
+      "vote_delta": 47,
+      "vote": null,
+      "lti_consumer_key": "",
+      "lti_secret_key": "",
+      "lti_private_profile": false
+    },
+    "1405265": {
+      "id": 1405265,
+      "steps": [
+        5832557
+      ],
+      "actions": {
+        "learn_lesson": "#"
+      },
+      "progress": "76-1405265",
+      "subscriptions": [
+        "31-76-1405265",
+        "30-76-1405265"
+      ],
+      "viewed_by": 2482,
+      "passed_by": 2482,
+      "time_to_complete": 16,
+      "cover_url": null,
+      "is_comments_enabled": true,
+      "is_exam_without_progress": false,
+      "is_blank": false,
+      "is_draft": false,
+      "is_orphaned": false,
+      "courses": [
+        210768
+      ],
+      "units": [
+        1422690
+      ],
+      "owner": 356005971,
+      "language": "ru",
+      "is_featured": false,
+      "is_public": false,
+      "canonical_url": "https://stepik.org/lesson/1405265/",
+      "title": "React и JavaScript",
+      "slug": "React-и-JavaScript-1405265",
+      "create_date": "2024-08-16T18:29:29Z",
+      "update_date": "2026-07-21T17:56:28Z",
+      "learners_group": null,
+      "testers_group": null,
+      "moderators_group": null,
+      "assistants_group": null,
+      "teachers_group": null,
+      "admins_group": null,
+      "discussions_count": 4,
+      "discussion_proxy": "76-1405265-1",
+      "discussion_threads": [
+        "76-1405265-1"
+      ],
+      "epic_count": 46,
+      "abuse_count": 0,
+      "vote_delta": 46,
+      "vote": null,
+      "lti_consumer_key": "",
+      "lti_secret_key": "",
+      "lti_private_profile": false
+    },
+    "1891742": {
+      "id": 1891742,
+      "steps": [
+        7838805
+      ],
+      "actions": {
+        "learn_lesson": "#"
+      },
+      "progress": "76-1891742",
+      "subscriptions": [
+        "31-76-1891742",
+        "30-76-1891742"
+      ],
+      "viewed_by": 989,
+      "passed_by": 989,
+      "time_to_complete": 33,
+      "cover_url": null,
+      "is_comments_enabled": true,
+      "is_exam_without_progress": false,
+      "is_blank": false,
+      "is_draft": false,
+      "is_orphaned": false,
+      "courses": [
+        210768
+      ],
+      "units": [
+        1917427
+      ],
+      "owner": 356005971,
+      "language": "ru",
+      "is_featured": false,
+      "is_public": false,
+      "canonical_url": "https://stepik.org/lesson/1891742/",
+      "title": "Устанавливайте версии пакетов 1 в 1 как в учебнике",
+      "slug": "Устанавливайте-версии-пакетов-1-в-1-как-в-учебнике-1891742",
+      "create_date": "2025-08-04T07:44:23Z",
+      "update_date": "2025-08-04T07:48:47Z",
+      "learners_group": null,
+      "testers_group": null,
+      "moderators_group": null,
+      "assistants_group": null,
+      "teachers_group": null,
+      "admins_group": null,
+      "discussions_count": 0,
+      "discussion_proxy": "76-1891742-1",
+      "discussion_threads": [
+        "76-1891742-1"
+      ],
+      "epic_count": 5,
+      "abuse_count": 0,
+      "vote_delta": 5,
+      "vote": null,
+      "lti_consumer_key": "",
+      "lti_secret_key": "",
+      "lti_private_profile": false
+    },
+    "1405266": {
+      "id": 1405266,
+      "steps": [
+        5832558
+      ],
+      "actions": {
+        "learn_lesson": "#"
+      },
+      "progress": "76-1405266",
+      "subscriptions": [
+        "31-76-1405266",
+        "30-76-1405266"
+      ],
+      "viewed_by": 1865,
+      "passed_by": 1865,
+      "time_to_complete": 21,
+      "cover_url": null,
+      "is_comments_enabled": true,
+      "is_exam_without_progress": false,
+      "is_blank": false,
+      "is_draft": false,
+      "is_orphaned": false,
+      "courses": [
+        210768
+      ],
+      "units": [
+        1422691
+      ],
+      "owner": 356005971,
+      "language": "ru",
+      "is_featured": false,
+      "is_public": false,
+      "canonical_url": "https://stepik.org/lesson/1405266/",
+      "title": "Автоматическое форматирование кода через Prettier",
+      "slug": "Автоматическое-форматирование-кода-через-Prettier-1405266",
+      "create_date": "2024-08-16T18:29:33Z",
+      "update_date": "2026-07-21T18:03:01Z",
+      "learners_group": null,
+      "testers_group": null,
+      "moderators_group": null,
+      "assistants_group": null,
+      "teachers_group": null,
+      "admins_group": null,
+      "discussions_count": 5,
+      "discussion_proxy": "76-1405266-1",
+      "discussion_threads": [
+        "76-1405266-1"
+      ],
+      "epic_count": 31,
+      "abuse_count": 0,
+      "vote_delta": 31,
+      "vote": null,
+      "lti_consumer_key": "",
+      "lti_secret_key": "",
+      "lti_private_profile": false
+    },
+    "1405267": {
+      "id": 1405267,
+      "steps": [
+        5832559
+      ],
+      "actions": {
+        "learn_lesson": "#"
+      },
+      "progress": "76-1405267",
+      "subscriptions": [
+        "31-76-1405267",
+        "30-76-1405267"
+      ],
+      "viewed_by": 1928,
+      "passed_by": 1928,
+      "time_to_complete": 38,
+      "cover_url": null,
+      "is_comments_enabled": true,
+      "is_exam_without_progress": false,
+      "is_blank": false,
+      "is_draft": false,
+      "is_orphaned": false,
+      "courses": [
+        210768
+      ],
+      "units": [
+        1422692
+      ],
+      "owner": 356005971,
+      "language": "ru",
+      "is_featured": false,
+      "is_public": false,
+      "canonical_url": "https://stepik.org/lesson/1405267/",
+      "title": "Создание Node.js приложения на TypeScript",
+      "slug": "Создание-Nodejs-приложения-на-TypeScript-1405267",
+      "create_date": "2024-08-16T18:29:37Z",
+      "update_date": "2026-07-21T18:03:02Z",
+      "learners_group": null,
+      "testers_group": null,
+      "moderators_group": null,
+      "assistants_group": null,
+      "teachers_group": null,
+      "admins_group": null,
+      "discussions_count": 16,
+      "discussion_proxy": "76-1405267-1",
+      "discussion_threads": [
+        "76-1405267-1"
+      ],
+      "epic_count": 35,
+      "abuse_count": 0,
+      "vote_delta": 35,
+      "vote": null,
+      "lti_consumer_key": "",
+      "lti_secret_key": "",
+      "lti_private_profile": false
+    },
+    "1570210": {
+      "id": 1570210,
+      "steps": [
+        6479852
+      ],
+      "actions": {
+        "learn_lesson": "#"
+      },
+      "progress": "76-1570210",
+      "subscriptions": [
+        "31-76-1570210",
+        "30-76-1570210"
+      ],
+      "viewed_by": 1368,
+      "passed_by": 1368,
+      "time_to_complete": 12,
+      "cover_url": null,
+      "is_comments_enabled": true,
+      "is_exam_without_progress": false,
+      "is_blank": false,
+      "is_draft": false,
+      "is_orphaned": false,
+      "courses": [
+        210768
+      ],
+      "units": [
+        1591382
+      ],
+      "owner": 356005971,
+      "language": "ru",
+      "is_featured": false,
+      "is_public": false,
+      "canonical_url": "https://stepik.org/lesson/1570210/",
+      "title": "Поддержите автора подпиской",
+      "slug": "Поддержите-автора-подпиской-1570210",
+      "create_date": "2024-12-22T10:24:07Z",
+      "update_date": "2026-06-22T19:46:55Z",
+      "learners_group": null,
+      "testers_group": null,
+      "moderators_group": null,
+      "assistants_group": null,
+      "teachers_group": null,
+      "admins_group": null,
+      "discussions_count": 1,
+      "discussion_proxy": "76-1570210-1",
+      "discussion_threads": [
+        "76-1570210-1"
+      ],
+      "epic_count": 31,
+      "abuse_count": 0,
+      "vote_delta": 31,
+      "vote": null,
+      "lti_consumer_key": "",
+      "lti_secret_key": "",
+      "lti_private_profile": false
+    },
+    "1405268": {
+      "id": 1405268,
+      "steps": [
+        5832560
+      ],
+      "actions": {
+        "learn_lesson": "#"
+      },
+      "progress": "76-1405268",
+      "subscriptions": [
+        "31-76-1405268",
+        "30-76-1405268"
+      ],
+      "viewed_by": 1838,
+      "passed_by": 1838,
+      "time_to_complete": 16,
+      "cover_url": null,
+      "is_comments_enabled": true,
+      "is_exam_without_progress": false,
+      "is_blank": false,
+      "is_draft": false,
+      "is_orphaned": false,
+      "courses": [
+        210768
+      ],
+      "units": [
+        1422693
+      ],
+      "owner": 356005971,
+      "language": "ru",
+      "is_featured": false,
+      "is_public": false,
+      "canonical_url": "https://stepik.org/lesson/1405268/",
+      "title": "Создание express приложения",
+      "slug": "Создание-express-приложения-1405268",
+      "create_date": "2024-08-16T18:29:42Z",
+      "update_date": "2026-07-21T18:03:03Z",
+      "learners_group": null,
+      "testers_group": null,
+      "moderators_group": null,
+      "assistants_group": null,
+      "teachers_group": null,
+      "admins_group": null,
+      "discussions_count": 4,
+      "discussion_proxy": "76-1405268-1",
+      "discussion_threads": [
+        "76-1405268-1"
+      ],
+      "epic_count": 45,
+      "abuse_count": 0,
+      "vote_delta": 45,
+      "vote": null,
+      "lti_consumer_key": "",
+      "lti_secret_key": "",
+      "lti_private_profile": false
+    },
+    "1405269": {
+      "id": 1405269,
+      "steps": [
+        5832561
+      ],
+      "actions": {
+        "learn_lesson": "#"
+      },
+      "progress": "76-1405269",
+      "subscriptions": [
+        "31-76-1405269",
+        "30-76-1405269"
+      ],
+      "viewed_by": 1491,
+      "passed_by": 1491,
+      "time_to_complete": 20,
+      "cover_url": null,
+      "is_comments_enabled": true,
+      "is_exam_without_progress": false,
+      "is_blank": false,
+      "is_draft": false,
+      "is_orphaned": false,
+      "courses": [
+        210768
+      ],
+      "units": [
+        1422694
+      ],
+      "owner": 356005971,
+      "language": "ru",
+      "is_featured": false,
+      "is_public": false,
+      "canonical_url": "https://stepik.org/lesson/1405269/",
+      "title": "Создание эндпоинта, возвращающего JSON",
+      "slug": "Создание-эндпоинта-возвращающего-JSON-1405269",
+      "create_date": "2024-08-16T18:29:48Z",
+      "update_date": "2026-07-21T18:03:03Z",
+      "learners_group": null,
+      "testers_group": null,
+      "moderators_group": null,
+      "assistants_group": null,
+      "teachers_group": null,
+      "admins_group": null,
+      "discussions_count": 2,
+      "discussion_proxy": "76-1405269-1",
+      "discussion_threads": [
+        "76-1405269-1"
+      ],
+      "epic_count": 39,
+      "abuse_count": 0,
+      "vote_delta": 39,
+      "vote": null,
+      "lti_consumer_key": "",
+      "lti_secret_key": "",
+      "lti_private_profile": false
+    },
+    "1405270": {
+      "id": 1405270,
+      "steps": [
+        5832562
+      ],
+      "actions": {
+        "learn_lesson": "#"
+      },
+      "progress": "76-1405270",
+      "subscriptions": [
+        "31-76-1405270",
+        "30-76-1405270"
+      ],
+      "viewed_by": 1436,
+      "passed_by": 1436,
+      "time_to_complete": 19,
+      "cover_url": null,
+      "is_comments_enabled": true,
+      "is_exam_without_progress": false,
+      "is_blank": false,
+      "is_draft": false,
+      "is_orphaned": false,
+      "courses": [
+        210768
+      ],
+      "units": [
+        1422695
+      ],
+      "owner": 356005971,
+      "language": "ru",
+      "is_featured": false,
+      "is_public": false,
+      "canonical_url": "https://stepik.org/lesson/1405270/",
+      "title": "Добавление tRPC в бэкенд",
+      "slug": "Добавление-tRPC-в-бэкенд-1405270",
+      "create_date": "2024-08-16T18:29:52Z",
+      "update_date": "2026-07-21T18:03:04Z",
+      "learners_group": null,
+      "testers_group": null,
+      "moderators_group": null,
+      "assistants_group": null,
+      "teachers_group": null,
+      "admins_group": null,
+      "discussions_count": 3,
+      "discussion_proxy": "76-1405270-1",
+      "discussion_threads": [
+        "76-1405270-1"
+      ],
+      "epic_count": 30,
+      "abuse_count": 0,
+      "vote_delta": 30,
+      "vote": null,
+      "lti_consumer_key": "",
+      "lti_secret_key": "",
+      "lti_private_profile": false
+    },
+    "1405271": {
+      "id": 1405271,
+      "steps": [
+        5832563
+      ],
+      "actions": {
+        "learn_lesson": "#"
+      },
+      "progress": "76-1405271",
+      "subscriptions": [
+        "31-76-1405271",
+        "30-76-1405271"
+      ],
+      "viewed_by": 1291,
+      "passed_by": 1291,
+      "time_to_complete": 37,
+      "cover_url": null,
+      "is_comments_enabled": true,
+      "is_exam_without_progress": false,
+      "is_blank": false,
+      "is_draft": false,
+      "is_orphaned": false,
+      "courses": [
+        210768
+      ],
+      "units": [
+        1422696
+      ],
+      "owner": 356005971,
+      "language": "ru",
+      "is_featured": false,
+      "is_public": false,
+      "canonical_url": "https://stepik.org/lesson/1405271/",
+      "title": "Добавление tRPC во фронтенд",
+      "slug": "Добавление-tRPC-во-фронтенд-1405271",
+      "create_date": "2024-08-16T18:29:58Z",
+      "update_date": "2026-07-21T18:03:05Z",
+      "learners_group": null,
+      "testers_group": null,
+      "moderators_group": null,
+      "assistants_group": null,
+      "teachers_group": null,
+      "admins_group": null,
+      "discussions_count": 24,
+      "discussion_proxy": "76-1405271-1",
+      "discussion_threads": [
+        "76-1405271-1"
+      ],
+      "epic_count": 35,
+      "abuse_count": 0,
+      "vote_delta": 35,
+      "vote": null,
+      "lti_consumer_key": "",
+      "lti_secret_key": "",
+      "lti_private_profile": false
+    }
+  },
+  "steps": {
+    "5832290": {
+      "id": 5832290,
+      "lesson": 1405175,
+      "position": 1,
+      "status": "ready",
+      "block": {
+        "name": "text",
+        "text": "<p><iframe allowfullscreen=\"\" height=\"500\" src=\"https://vkvideo.ru/video_ext.php?oid=-227165132&amp;id=456239023&amp;hd=2\" width=\"100%\"></iframe></p>\n\n<p>Залог технического успеха проекта в его архитектуре. Код проекта должен легко поддерживаться и масштабироваться. Архитектура проекта задаётся выбранными технологиями и определением их взаимодействия. Качественно заложенная на старте проекта архитектура определяет качество вашей жизни и кода на протежении всего времени работы над проектом.</p>\n\n<p>Я много раз писал крупные проекты с нуля и понял, как выстроить архитектуру лучшим образом для проектов с командой от 1 до 3 человек. В уроках учебника мы шаг за шагом выстраиваем эту архитектуру с применением перечисленных выше технологий.</p>\n\n<p>В этом видео я бегло пройдусь по всем элементам архитектуры.</p>",
+        "video": null,
+        "options": {},
+        "subtitle_files": [],
+        "is_deprecated": false
+      },
+      "actions": {
+        "comment": "#"
+      },
+      "progress": "77-5832290",
+      "subscriptions": [
+        "31-77-5832290",
+        "30-77-5832290"
+      ],
+      "instruction": null,
+      "session": null,
+      "instruction_type": null,
+      "viewed_by": 11192,
+      "passed_by": 11192,
+      "correct_ratio": null,
+      "worth": 0,
+      "is_solutions_unlocked": false,
+      "solutions_unlocked_attempts": 3,
+      "has_submissions_restrictions": false,
+      "max_submissions_count": 3,
+      "variation": 1,
+      "variations_count": 1,
+      "is_enabled": true,
+      "needs_plan": null,
+      "num_grades": [
+        1,
+        0,
+        0,
+        3,
+        61
+      ],
+      "user_step_grade": null,
+      "user_step_vote": null,
+      "step_issue": 5811384,
+      "create_date": "2024-08-16T17:15:57Z",
+      "update_date": "2024-12-20T13:33:36Z",
+      "discussions_count": 27,
+      "discussion_proxy": "77-5832290-1",
+      "discussion_threads": [
+        "77-5832290-1"
+      ]
+    },
+    "5832369": {
+      "id": 5832369,
+      "lesson": 1405180,
+      "position": 1,
+      "status": "ready",
+      "block": {
+        "name": "text",
+        "text": "<h3>Актуальность</h3>\n\n<p>Курс делался в течение 2023–2024 года. Версии использованных библиотек устарели. Сами подходы не потеряют актуальности ещё многие годы. Курс по-прежнему является отличным гайдом для понимания принципов фулстек разработки.</p>\n\n<p>В то же время я сейчас работаю над созданием нового курса по фулстек разработке, который по сути начинается от той точки, на которой заканчивается этот курс. У нас будет на уроках бойлерплейт со всеми настройками проекта и задача создать свой собственный SaaS-продукт: Антикурс по созданию SaaS на TypeScript, React, Bun, Point0: <a href=\"https://stepik.org/course/296168\" rel=\"noopener noreferrer nofollow\">https://stepik.org/course/296168</a></p>\n\n<h3>Примечание</h3>\n\n<p>Раньше этот курс также проводится на самописной платформе, в этом видео будет мелькать её интерфейс. Не обращайте внимание на её интерфейс. Сам курс и подход к его прохождению был полностью продублирован в степик.</p>\n\n<p><iframe allowfullscreen=\"\" height=\"500\" src=\"https://vkvideo.ru/video_ext.php?oid=-227165132&amp;id=456239021&amp;hd=2\" width=\"100%\"></iframe></p>\n\n<h3>Цель урока</h3>\n\n<p>Разобраться, как проходить обучение, чтобы получить максимальную пользу</p>\n\n<h3>План</h3>\n\n<ul>\n\t<li>Уроки учебника состоят из (1) видео-процесса написания кода с комментариями, (2) краткого текста (цель урока, выводы, полезные ссылки, основные терминальные команды), (3) кода написанного в рамках этого урока.</li>\n\t<li>Вы можете получить полный исходный код на гитхабе <a href=\"https://github.com/1gr14/fullstack2023\" rel=\"noopener noreferrer nofollow\">https://github.com/1gr14/fullstack2023</a> В то же время исходный код каждого отдельного урока доступен прямо в самом уроке.</li>\n\t<li>Вы можете по прохождении каждого урока просто повторять за мной, и писать точно такой же код. Однако, я не думаю, что это лучшая стратегия.</li>\n\t<li>Я рекомендую вам придумать свой продукт, который вы хотите создать, и писать код для него. Сами уроки, просто посмотрите. Потом скопируйте исходный код проекта и адаптируйте его под себя. Допишите недостающий функционал.</li>\n\t<li>Если вы задумаете не слишком сложный проект, окажется, что в этом учебнике уже написано около 90% кода вашего продукта. Вам останется только дописать оставшиеся 10%. Наверняка там будет что-то, о чём в учебнике не упоминается. Но вы разберётесь. А если не разберётесь, то обращайтесь за помощью в дискорд сообщество, заказывайте личную консультацию, или вступайте в образовательную группу.</li>\n</ul>",
+        "video": null,
+        "options": {},
+        "subtitle_files": [],
+        "is_deprecated": false
+      },
+      "actions": {
+        "comment": "#"
+      },
+      "progress": "77-5832369",
+      "subscriptions": [
+        "31-77-5832369",
+        "30-77-5832369"
+      ],
+      "instruction": null,
+      "session": null,
+      "instruction_type": null,
+      "viewed_by": 5397,
+      "passed_by": 5397,
+      "correct_ratio": null,
+      "worth": 0,
+      "is_solutions_unlocked": false,
+      "solutions_unlocked_attempts": 3,
+      "has_submissions_restrictions": false,
+      "max_submissions_count": 3,
+      "variation": 1,
+      "variations_count": 1,
+      "is_enabled": true,
+      "needs_plan": null,
+      "num_grades": [
+        1,
+        0,
+        0,
+        2,
+        28
+      ],
+      "user_step_grade": null,
+      "user_step_vote": null,
+      "step_issue": 5811463,
+      "create_date": "2024-08-16T17:58:05Z",
+      "update_date": "2026-08-07T17:09:14Z",
+      "discussions_count": 8,
+      "discussion_proxy": "77-5832369-1",
+      "discussion_threads": [
+        "77-5832369-1"
+      ]
+    },
+    "5887979": {
+      "id": 5887979,
+      "lesson": 1415758,
+      "position": 1,
+      "status": "ready",
+      "block": {
+        "name": "text",
+        "text": "<p>Если у вас появится какие либо вопросы по обучению, можете писать в чат 💬 <a href=\"https://t.me/s_1gr14_chat\" rel=\"noopener noreferrer nofollow\">https://t.me/s_1gr14_chat</a> моего телеграм канала ⭐️ <a href=\"https://t.me/s_1gr14\" rel=\"noopener noreferrer nofollow\">https://t.me/s_1gr14</a></p>\n\n<p>Буду также признателен подписке на мои видео-каналы, где я буду делиться и прочими авторскими полезностями для разработчиков:<br>\n📹 VKVideo канал 1gr14: <a href=\"https://vkvideo.ru/@s_1gr14\" rel=\"noopener noreferrer nofollow\">https://vkvideo.ru/@s_1gr14</a><br>\n📹 Youtube канал 1gr14: <a href=\"https://www.youtube.com/@s_1gr14\" rel=\"noopener noreferrer nofollow\">https://www.youtube.com/@s_1gr14</a></p>",
+        "video": null,
+        "options": {},
+        "subtitle_files": [],
+        "is_deprecated": false
+      },
+      "actions": {
+        "comment": "#"
+      },
+      "progress": "77-5887979",
+      "subscriptions": [
+        "31-77-5887979",
+        "30-77-5887979"
+      ],
+      "instruction": null,
+      "session": null,
+      "instruction_type": null,
+      "viewed_by": 4250,
+      "passed_by": 4250,
+      "correct_ratio": null,
+      "worth": 0,
+      "is_solutions_unlocked": false,
+      "solutions_unlocked_attempts": 3,
+      "has_submissions_restrictions": false,
+      "max_submissions_count": 3,
+      "variation": 1,
+      "variations_count": 1,
+      "is_enabled": true,
+      "needs_plan": null,
+      "num_grades": [
+        0,
+        0,
+        0,
+        0,
+        12
+      ],
+      "user_step_grade": null,
+      "user_step_vote": null,
+      "step_issue": 5867073,
+      "create_date": "2024-08-28T11:17:00Z",
+      "update_date": "2026-06-06T20:34:59Z",
+      "discussions_count": 1,
+      "discussion_proxy": "77-5887979-1",
+      "discussion_threads": [
+        "77-5887979-1"
+      ]
+    },
+    "5832379": {
+      "id": 5832379,
+      "lesson": 1405181,
+      "position": 1,
+      "status": "ready",
+      "block": {
+        "name": "text",
+        "text": "<p><iframe allowfullscreen=\"\" height=\"500\" src=\"https://vkvideo.ru/video_ext.php?oid=-227165132&amp;id=456239022&amp;hd=2\" width=\"100%\"></iframe></p>\n\n<h3>Цель урока</h3>\n\n<p>Создать графический прототип продукта, чтобы определить, что мы вообще делаем</p>\n\n<h3>Выводы</h3>\n\n<ul>\n\t<li>Чтобы самому понять, что вы хотите сделать, и договориться с другими участниками процесса, нужно как-то подвести видение всех участников под один знаменатель. Графический прототип — отличный инструмент для этого</li>\n\t<li>Графический прототип будет выступать для вас, как для разработчика, в качестве технического задания. Вы будете смотреть на него и понимать, что вам нужно сделать</li>\n\t<li>Графический прототип также будет выступать в качестве основания для дизайнера, который будет превращать его в полноценный прототип</li>\n\t<li>Пока дизайнер обрисовывет прототип, вы уже можете начинать разрабатывать. Когда будет готов полноценный дизайн, просто поправите вёрстку</li>\n\t<li>Особенно хорошо, когда прототип рисуете именно вы, как разработчик, потому что вы можете заранее продумать логику продукта таким образом, чтобы вам было удобно его разрабатывать</li>\n\t<li>При создании прототипа MVP (минимально жизнеспособного продукта), главное — задумать только то, что критически важно для этого продукта, и не задумывать ничего сверх этого. Первая версия, должна быть эссенцией пользы вашего продукта</li>\n</ul>\n\n<h3>Полезная ссылка</h3>\n\n<p><a href=\"https://balsamiq.com\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://balsamiq.com</a> — официальный сайт Balsamiq</p>\n\n<h3>Домашнее задание</h3>\n\n<p>Создайте графический прототип для своего собственного проекта</p>",
+        "video": null,
+        "options": {},
+        "subtitle_files": [],
+        "is_deprecated": false
+      },
+      "actions": {
+        "comment": "#"
+      },
+      "progress": "77-5832379",
+      "subscriptions": [
+        "31-77-5832379",
+        "30-77-5832379"
+      ],
+      "instruction": null,
+      "session": null,
+      "instruction_type": null,
+      "viewed_by": 4399,
+      "passed_by": 4399,
+      "correct_ratio": null,
+      "worth": 0,
+      "is_solutions_unlocked": false,
+      "solutions_unlocked_attempts": 3,
+      "has_submissions_restrictions": false,
+      "max_submissions_count": 3,
+      "variation": 1,
+      "variations_count": 1,
+      "is_enabled": true,
+      "needs_plan": null,
+      "num_grades": [
+        0,
+        0,
+        0,
+        2,
+        17
+      ],
+      "user_step_grade": null,
+      "user_step_vote": null,
+      "step_issue": 5811473,
+      "create_date": "2024-08-16T18:03:12Z",
+      "update_date": "2026-07-21T18:02:56Z",
+      "discussions_count": 6,
+      "discussion_proxy": "77-5832379-1",
+      "discussion_threads": [
+        "77-5832379-1"
+      ]
+    },
+    "5832440": {
+      "id": 5832440,
+      "lesson": 1405212,
+      "position": 1,
+      "status": "ready",
+      "block": {
+        "name": "text",
+        "text": "<p><iframe allowfullscreen=\"\" height=\"500\" src=\"https://vkvideo.ru/video_ext.php?oid=-227165132&amp;id=456239020&amp;hd=2\" width=\"100%\"></iframe></p>\n\n<h3>Цель урока</h3>\n\n<p>Сформировать бэклог проекта, чтобы разбить задачу на мелкие части, и смочь распланировать сроки реализации проекта</p>\n\n<h3>Выводы</h3>\n\n<ul>\n\t<li>Графический прототип вам пригодится только на этапе осознания первой версии продукта и согласовывания идеи продукта с другими участниками процесса. Затем надо разбить весь процесс создания продукта на мелкие задачи, и отсортировать их по приоритету — это и есть бэклог</li>\n\t<li>Каждая задача должна быть адекватно-маленькой. Одна задача должна делать за 1 час – несколько дней, но не дольше недели. Если задача большая, её надо разбить на мелкие</li>\n\t<li>По мере создания продукта, постоянно приходят идеи каких-то новых фичей. Просто дописывайте их в конец бэклога, но не бросайте начатое</li>\n\t<li>Наполнив бэклог, определите условную сложность задач. Пусть самая постая задача будет оценана в (1) балл. Все остальные задачи оцените относительно неё. Если задача сложнее или дольше по сроку выполнения, чам самая простая задача примерно в 3 раза, то оцените её в (3) балла, и так далее</li>\n\t<li>Прикиньте, сколько баллов сложности вы сможете выполнять в неделю. Это будет вашей скоростью. По ней вы сможете оценить, сколько времени займёт весь проект</li>\n\t<li>Со временем вы научитесь более точно оценивать сложность задач, а скорость, скоторой вы их выполняете, будет расти</li>\n</ul>\n\n<h3>Полезная ссылка</h3>\n\n<p><a href=\"https://trello.com/iserdmi/recommend\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://trello.com/iserdmi/recommend</a> — реферральная ссылка на Trello</p>",
+        "video": null,
+        "options": {},
+        "subtitle_files": [],
+        "is_deprecated": false
+      },
+      "actions": {
+        "comment": "#"
+      },
+      "progress": "77-5832440",
+      "subscriptions": [
+        "31-77-5832440",
+        "30-77-5832440"
+      ],
+      "instruction": null,
+      "session": null,
+      "instruction_type": null,
+      "viewed_by": 3391,
+      "passed_by": 3391,
+      "correct_ratio": null,
+      "worth": 0,
+      "is_solutions_unlocked": false,
+      "solutions_unlocked_attempts": 3,
+      "has_submissions_restrictions": false,
+      "max_submissions_count": 3,
+      "variation": 1,
+      "variations_count": 1,
+      "is_enabled": true,
+      "needs_plan": null,
+      "num_grades": [
+        0,
+        0,
+        0,
+        0,
+        19
+      ],
+      "user_step_grade": null,
+      "user_step_vote": null,
+      "step_issue": 5811534,
+      "create_date": "2024-08-16T18:12:27Z",
+      "update_date": "2026-07-21T18:02:57Z",
+      "discussions_count": 11,
+      "discussion_proxy": "77-5832440-1",
+      "discussion_threads": [
+        "77-5832440-1"
+      ]
+    },
+    "5832465": {
+      "id": 5832465,
+      "lesson": 1405228,
+      "position": 1,
+      "status": "ready",
+      "block": {
+        "name": "text",
+        "text": "<p><iframe allowfullscreen=\"\" height=\"500\" src=\"https://vkvideo.ru/video_ext.php?oid=-227165132&amp;id=456239019&amp;hd=2\" width=\"100%\"></iframe></p>\n\n<h3>Цель урока</h3>\n\n<p>Установить все программы, которые понадобятся нам во время разработки</p>\n\n<h3>Полезные ссылки</h3>\n\n<ul>\n\t<li>\n\t<p><a href=\"https://code.visualstudio.com\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://code.visualstudio.com</a> — официальный сайт VSCode</p>\n\t</li>\n\t<li>\n\t<p><a href=\"https://nodejs.org\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://nodejs.org</a> — официальный сайт Node.js</p>\n\t</li>\n\t<li>\n\t<p><a href=\"https://pnpm.io\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://pnpm.io</a> — официальный сайт pnpm</p>\n\t</li>\n\t<li>\n\t<p><a href=\"https://git-scm.com/downloads\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://git-scm.com/downloads</a> — официальный сайт Git</p>\n\t</li>\n\t<li>\n\t<p><a href=\"https://www.docker.com/products/docker-desktop\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://www.docker.com/products/docker-desktop</a> — официальный сайт Docker</p>\n\t</li>\n\t<li>\n\t<p><a href=\"https://www.postgresql.org/download\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://www.postgresql.org/download</a> — официальный сайт PostgreSQL</p>\n\t</li>\n\t<li>\n\t<p><a href=\"https://dbeaver.io/download\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://dbeaver.io/download</a> — официальный сайт DBeaver</p>\n\t</li>\n\t<li>\n\t<p><a href=\"https://ohmyz.sh\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://ohmyz.sh</a> — официальный сайт Oh My Zsh</p>\n\t</li>\n<li>\n<p><a href=\"https://learn.microsoft.com/en-us/windows/wsl/install\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">Официальная статья о том, как поставить WSL на windows</a> там потом и используйте Oh My Zsh, и вообще разрабатывайте в WSL</p>\n</li>\n<li>\n<p><a href=\"https://winitpro.ru/index.php/2020/07/13/zapusk-linux-v-windows-wsl-2\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">Статья о том, как поставить WSL на windows на русском</a></p>\n</li>\n<li>\n<p><a href=\"https://code.visualstudio.com/docs/remote/wsl\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">Статья о том, как разрабатывать в VSCode внутри WSL</a></p>\n</li>\n<li>\n<p><a href=\"https://smarative.com/blog/oh-my-zsh-windows\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">(плохая идея) Статья о том, как поставить Oh My Zsh на windows вместе с Cygwin</a></p>\n</li>\n</ul>",
+        "video": null,
+        "options": {},
+        "subtitle_files": [],
+        "is_deprecated": false
+      },
+      "actions": {
+        "comment": "#"
+      },
+      "progress": "77-5832465",
+      "subscriptions": [
+        "31-77-5832465",
+        "30-77-5832465"
+      ],
+      "instruction": null,
+      "session": null,
+      "instruction_type": null,
+      "viewed_by": 3234,
+      "passed_by": 3234,
+      "correct_ratio": null,
+      "worth": 0,
+      "is_solutions_unlocked": false,
+      "solutions_unlocked_attempts": 3,
+      "has_submissions_restrictions": false,
+      "max_submissions_count": 3,
+      "variation": 1,
+      "variations_count": 1,
+      "is_enabled": true,
+      "needs_plan": null,
+      "num_grades": [
+        0,
+        0,
+        0,
+        0,
+        8
+      ],
+      "user_step_grade": null,
+      "user_step_vote": null,
+      "step_issue": 5811559,
+      "create_date": "2024-08-16T18:19:31Z",
+      "update_date": "2026-07-21T18:02:57Z",
+      "discussions_count": 9,
+      "discussion_proxy": "77-5832465-1",
+      "discussion_threads": [
+        "77-5832465-1"
+      ]
+    },
+    "5832466": {
+      "id": 5832466,
+      "lesson": 1405229,
+      "position": 1,
+      "status": "ready",
+      "block": {
+        "name": "text",
+        "text": "<p><iframe allowfullscreen=\"\" height=\"500\" src=\"https://vkvideo.ru/video_ext.php?oid=-227165132&amp;id=456239018&amp;hd=2\" width=\"100%\"></iframe></p><div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-target\"></div>\n  <h3>Цель урока</h3>\n<p>Узнать самые полезные команды и расширения VSCode</p>\n</div>\n<div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-link\"></div>\n  <h3>Полезные ссылки</h3>\n<ul>\n<li>\n<p><a href=\"https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">VSCode Extension: GitLens — Git supercharged</a></p>\n</li>\n<li>\n<p><a href=\"https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">VSCode Extension: Prettier Formatter for Visual Studio Code</a></p>\n</li>\n<li>\n<p><a href=\"https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-typescript-next\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">VSCode Extension: JavaScript and TypeScript Nightly</a></p>\n</li>\n<li>\n<p><a href=\"https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">VSCode Extension: ESLint</a> — расширение для VSCode, которое позволяет использовать ESLint</p>\n</li>\n<li>\n<p><a href=\"https://marketplace.visualstudio.com/items?itemName=JayFong.generate-index\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">VSCode Extension: Generate Index</a></p>\n</li>\n<li>\n<p><a href=\"https://marketplace.visualstudio.com/items?itemName=Prisma.prisma\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">VSCode Extension: Prisma</a></p>\n</li>\n<li>\n<p><a href=\"https://marketplace.visualstudio.com/items?itemName=mjmlio.vscode-mjml\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">VSCode Extension: MJML</a></p>\n</li>\n<li>\n<p><a href=\"https://marketplace.visualstudio.com/items?itemName=firsttris.vscode-jest-runner\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">VSCode Extension: Jest Runner</a></p>\n</li>\n<li>\n<p><a href=\"https://marketplace.visualstudio.com/items?itemName=GitHub.copilot\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">VSCode Extension: GitHub Copilot</a></p>\n</li>\n<li>\n<p><a href=\"https://marketplace.visualstudio.com/items?itemName=MS-vsliveshare.vsliveshare\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">VSCode Extension: Live Share</a></p>\n</li>\n<li>\n<p><a href=\"https://marketplace.visualstudio.com/items?itemName=ryuta46.multi-command\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">VSCode Extension: multi-command</a></p>\n</li>\n<li>\n<p><a href=\"https://marketplace.visualstudio.com/items?itemName=mtxr.sqltools\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">VSCode Extension: SQLTools</a></p>\n</li>\n<li>\n<p><a href=\"https://marketplace.visualstudio.com/items?itemName=stylelint.vscode-stylelint\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">VSCode Extension: Stylelint</a></p>\n</li>\n<li>\n<p><a href=\"https://marketplace.visualstudio.com/items?itemName=vscode-icons-team.vscode-icons\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">VSCode Extension: vscode-icons</a></p>\n</li>\n<li>\n<p><a href=\"https://marketplace.visualstudio.com/items?itemName=rusnasonov.vscode-typograf\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">VSCode Extension: vscode-typograf</a></p>\n</li>\n<li>\n<p><a href=\"https://marketplace.visualstudio.com/items?itemName=k--kato.intellij-idea-keybindings\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">VSCode Extension: IntelliJ IDEA Keybindings</a> — только для тех, кто переезжает с IntelliJ IDEA на VSCode</p>\n</li>\n</ul>\n</div>\n<div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-terminal\"></div>\n  <h3>Команды</h3>\n<ul>\n<li>В VSCode в верхнем меню выберите View → Command Palette... (там рядом будет написана ваша горячая клавиша, запомните её и используйте). Перед вами откроется поисковая строка по всем командам доступным в VSCode и установленных экстеншенах. Вот перечень команд, которыми я сам постоянно пользуюсь. Вводите их в поиске, запоминайте горячие клавиши, также написанные рядом с ними и пользуйтесь.</li>\n<li>Format Document — форматирование всего файла. Я использую эту команду постоянно, чтобы не заморачиваться с форматированием кода вручную.</li>\n<li>Toggle Line Comment — комментирование/раскомментирование кода.</li>\n<li>Go to Definition — переход к определению. Иногда нужно перейти к определению переменной или функции. Для этого использую эту команду.</li>\n<li>Go to References — переход к ссылкам. Чтобы перейти к местам, где используется переменная или функция. Или можно просто с зажтой клавишей команд на маке кликнуть по переменной.</li>\n<li>Go to File — переход к файлу. Когда нужно перейти к определенному файлу по его названию.</li>\n<li>Search: Find in Files — поиск по файлам. Когда нужно найти определенный текст во всех файлах.</li>\n<li>Transform to (Uppercase, Lowercase, Snake case...) — преобразование текста. Когда нужно преобразовать текст в верхний регистр, нижний регистр, змеиный регистр и т.д. Удобно при массовом редактировании кода</li>\n<li>Зажмите клавишу опшинс на маке, или альт на виндовс (или ещё какую-то такую), и кликайте по разным местам файла, устанавливая множество крусоров для массового редактирования файла. Ещё можете зажать левую клавишу мыши и выделять множество срок, расставляя множество курсоров.</li>\n<li>File: Reveal Active File in Explorer View — показать текущий файл в файловом менеджере в влевой части экрана. Удобно, когда вы потерялись в файлах.</li>\n<li>Go Back — возврат к предыдущему месту. Когда вы перешли к определению переменной, а потом хотите вернуться к тому месту, где вы были.</li>\n<li>Go Forward — возврат к следующему месту. Когда вы вернулись к предыдущему месту, а потом хотите вернуться к тому месту, где вы были.</li>\n<li>Rename Symbol — переименование переменной/функции/... везде, где она используется</li>\n<li>Copy Line Down — дублирование строки (копирование + вставка), в которой установлен кусор</li>\n<li>Organize Imports — удалить неиспользуемые импорты из верхушки файла</li>\n</ul>\n</div>",
+        "video": null,
+        "options": {},
+        "subtitle_files": [],
+        "is_deprecated": false
+      },
+      "actions": {
+        "comment": "#"
+      },
+      "progress": "77-5832466",
+      "subscriptions": [
+        "31-77-5832466",
+        "30-77-5832466"
+      ],
+      "instruction": null,
+      "session": null,
+      "instruction_type": null,
+      "viewed_by": 3475,
+      "passed_by": 3475,
+      "correct_ratio": null,
+      "worth": 0,
+      "is_solutions_unlocked": false,
+      "solutions_unlocked_attempts": 3,
+      "has_submissions_restrictions": false,
+      "max_submissions_count": 3,
+      "variation": 1,
+      "variations_count": 1,
+      "is_enabled": true,
+      "needs_plan": null,
+      "num_grades": [
+        0,
+        0,
+        0,
+        0,
+        8
+      ],
+      "user_step_grade": null,
+      "user_step_vote": null,
+      "step_issue": 5811560,
+      "create_date": "2024-08-16T18:21:10Z",
+      "update_date": "2026-07-21T18:02:58Z",
+      "discussions_count": 6,
+      "discussion_proxy": "77-5832466-1",
+      "discussion_threads": [
+        "77-5832466-1"
+      ]
+    },
+    "5832546": {
+      "id": 5832546,
+      "lesson": 1405262,
+      "position": 1,
+      "status": "ready",
+      "block": {
+        "name": "text",
+        "text": "<p><iframe allowfullscreen=\"\" height=\"500\" src=\"https://vkvideo.ru/video_ext.php?oid=-227165132&amp;id=456239036&amp;hd=2\" width=\"100%\"></iframe></p><h3>Исходный код урока</h3><p><a href=\"https://1gr14.dev/ru/ed/fullstack2023/vite\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://1gr14.dev/ru/ed/fullstack2023/vite</a></p><div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-target\"></div>\n  <h3>Цели урока</h3>\n<ul>\n<li>Использовать Vite для создания React приложения</li>\n<li>Запустить приложение в режиме разработки</li>\n<li>Посмотреть на приложение в браузере</li>\n<li>Поменять что-то в коде и посмотреть на результат</li>\n<li>Бегло осмотреть структуру созданного приложения</li>\n</ul>\n</div>\n<div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-finger\"></div>\n  <h3>Выводы</h3>\n<ul>\n<li>\n<p>React — библиотека полезная для создания интерактивных пользовательских интерфейсов</p>\n</li>\n<li>\n<p>Альтернативы React: Vue, Angular, Svelte</p>\n</li>\n<li>\n<p>Vite нужен для того, чтобы удобно разрабатывать и собирать React приложения</p>\n</li>\n<li>\n<p>Альтернативы Vite: Create React App, Next.js, Webpack</p>\n</li>\n</ul>\n</div>\n<div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-link\"></div>\n  <h3>Полезные ссылки</h3>\n<ul>\n<li>\n<p><a href=\"https://vitejs.dev\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://vitejs.dev</a> — официальный сайт Vite</p>\n</li>\n<li>\n<p><a href=\"https://react.dev\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://react.dev</a> — официальный сайт React</p>\n</li>\n<li>\n<p><a href=\"https://www.youtube.com/watch?v=cuHDQhDhvPE\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">Видео: I built the same app 10 times. Which JS Framework is best?</a></p>\n</li>\n<li>\n<p><a href=\"https://www.youtube.com/results?search_query=react+vs+angulat+vs+vue\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">Другие видео на ютуб по сравнению фреймворков</a></p>\n</li>\n</ul>\n</div>\n<div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-terminal\"></div>\n  <h3> Терминальные команды</h3>\n<ul>\n<li>\n<p><code>pnpm create vite webapp --template react-ts</code> — создать Vite приложение с React</p>\n</li>\n<li>\n<p><code>cd webapp</code> — перейти в папку с созданным приложением</p>\n</li>\n</ul>\n</div>",
+        "video": null,
+        "options": {},
+        "subtitle_files": [],
+        "is_deprecated": false
+      },
+      "actions": {
+        "comment": "#"
+      },
+      "progress": "77-5832546",
+      "subscriptions": [
+        "31-77-5832546",
+        "30-77-5832546"
+      ],
+      "instruction": null,
+      "session": null,
+      "instruction_type": null,
+      "viewed_by": 3229,
+      "passed_by": 3229,
+      "correct_ratio": null,
+      "worth": 0,
+      "is_solutions_unlocked": false,
+      "solutions_unlocked_attempts": 3,
+      "has_submissions_restrictions": false,
+      "max_submissions_count": 3,
+      "variation": 1,
+      "variations_count": 1,
+      "is_enabled": true,
+      "needs_plan": null,
+      "num_grades": [
+        0,
+        0,
+        0,
+        0,
+        8
+      ],
+      "user_step_grade": null,
+      "user_step_vote": null,
+      "step_issue": 5811640,
+      "create_date": "2024-08-16T18:24:55Z",
+      "update_date": "2026-07-21T18:02:59Z",
+      "discussions_count": 5,
+      "discussion_proxy": "77-5832546-1",
+      "discussion_threads": [
+        "77-5832546-1"
+      ]
+    },
+    "5832555": {
+      "id": 5832555,
+      "lesson": 1405263,
+      "position": 1,
+      "status": "ready",
+      "block": {
+        "name": "text",
+        "text": "<p><iframe allowfullscreen=\"\" height=\"500\" src=\"https://vkvideo.ru/video_ext.php?oid=-227165132&amp;id=456239035&amp;hd=2\" width=\"100%\"></iframe></p><div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-target\"></div>\n  <h3>Цели урока</h3>\n<ul>\n<li>Понять зачем нужна система контроля версий</li>\n<li>Разобраться с базовыми командами Git</li>\n<li>Пушнуть код в свой репозиторий на GitHub</li>\n</ul>\n</div>\n<div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-finger\"></div>\n  <h3>Выводы</h3>\n<ul>\n<li>\n<p>Git — это система контроля версий</p>\n</li>\n<li>\n<p>GitHub — это хостинг для Git репозиториев</p>\n</li>\n<li>\n<p>Каждый логический завершённый кусок вашего кода должен быть закоммичен</p>\n</li>\n<li>\n<p>Коммиты должны быть маленькими и частыми</p>\n</li>\n<li>\n<p>Всё не нужное надо добавлять в .gitignore</p>\n</li>\n<li>\n<p>В VSCode есть встроенная поддержка Git. Не самотря на это, нужно уметь работать с Git из консоли и понимать, что происходит</p>\n</li>\n<li>\n<p>Альтернативы Git: Mercurial, SVN</p>\n</li>\n<li>\n<p>Альтернативы GitHub: GitLab, BitBucket</p>\n</li>\n</ul>\n</div>\n<div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-link\"></div>\n  <h3>Полезные ссылки</h3>\n<ul>\n<li>\n<p><a href=\"https://git-scm.com/downloads\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://git-scm.com/downloads</a> — официальный сайт Git</p>\n</li>\n<li>\n<p><a href=\"https://github.com\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://github.com</a> — официальный сайт GitHub</p>\n</li>\n<li>\n<p><a href=\"https://www.youtube.com/watch?v=SWYqp7iY_Tc\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">Видео: Git &amp; GitHub Crash Course For Beginners</a></p>\n</li>\n</ul>\n</div>\n<div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-terminal\"></div>\n  <h3> Терминальные команды</h3>\n<ul>\n<li>\n<p><code>git init</code> — инициализировать репозиторий</p>\n</li>\n<li>\n<p><code>git status</code> — посмотреть статус репозитория</p>\n</li>\n<li>\n<p><code>git add -A</code> — добавить изменения в индекс</p>\n</li>\n<li>\n<p><code>git commit -m \"...\"</code> — закоммитить изменения</p>\n</li>\n<li>\n<p><code>git remote add origin ...</code> — добавить удалённый репозиторий</p>\n</li>\n<li>\n<p><code>git push -u origin master</code> — запушить изменения в удалённый репозиторий в первый раз</p>\n</li>\n<li>\n<p><code>git pull</code> — забрать изменения из удалённого репозитория</p>\n</li>\n<li>\n<p><code>git push</code> — запушить изменения в удалённый репозиторий в последующие разы</p>\n</li>\n</ul>\n</div>",
+        "video": null,
+        "options": {},
+        "subtitle_files": [],
+        "is_deprecated": false
+      },
+      "actions": {
+        "comment": "#"
+      },
+      "progress": "77-5832555",
+      "subscriptions": [
+        "31-77-5832555",
+        "30-77-5832555"
+      ],
+      "instruction": null,
+      "session": null,
+      "instruction_type": null,
+      "viewed_by": 2419,
+      "passed_by": 2419,
+      "correct_ratio": null,
+      "worth": 0,
+      "is_solutions_unlocked": false,
+      "solutions_unlocked_attempts": 3,
+      "has_submissions_restrictions": false,
+      "max_submissions_count": 3,
+      "variation": 1,
+      "variations_count": 1,
+      "is_enabled": true,
+      "needs_plan": null,
+      "num_grades": [
+        0,
+        0,
+        0,
+        1,
+        13
+      ],
+      "user_step_grade": null,
+      "user_step_vote": null,
+      "step_issue": 5811649,
+      "create_date": "2024-08-16T18:29:22Z",
+      "update_date": "2026-07-21T18:02:59Z",
+      "discussions_count": 5,
+      "discussion_proxy": "77-5832555-1",
+      "discussion_threads": [
+        "77-5832555-1"
+      ]
+    },
+    "6180079": {
+      "id": 6180079,
+      "lesson": 1405322,
+      "position": 1,
+      "status": "ready",
+      "block": {
+        "name": "text",
+        "text": "<p>Весь исходный код здесь: <a href=\"https://github.com/goodpont/ideanick\" rel=\"noopener noreferrer nofollow\">https://github.com/goodpont/ideanick</a></p>",
+        "video": null,
+        "options": {},
+        "subtitle_files": [],
+        "is_deprecated": false
+      },
+      "actions": {
+        "comment": "#"
+      },
+      "progress": "77-6180079",
+      "subscriptions": [
+        "31-77-6180079",
+        "30-77-6180079"
+      ],
+      "instruction": null,
+      "session": null,
+      "instruction_type": null,
+      "viewed_by": 2128,
+      "passed_by": 2128,
+      "correct_ratio": null,
+      "worth": 0,
+      "is_solutions_unlocked": false,
+      "solutions_unlocked_attempts": 3,
+      "has_submissions_restrictions": false,
+      "max_submissions_count": 3,
+      "variation": 1,
+      "variations_count": 1,
+      "is_enabled": true,
+      "needs_plan": null,
+      "num_grades": [
+        0,
+        0,
+        0,
+        1,
+        6
+      ],
+      "user_step_grade": null,
+      "user_step_vote": null,
+      "step_issue": 6159170,
+      "create_date": "2024-11-02T17:05:25Z",
+      "update_date": "2026-07-21T18:03:24Z",
+      "discussions_count": 1,
+      "discussion_proxy": "77-6180079-1",
+      "discussion_threads": [
+        "77-6180079-1"
+      ]
+    },
+    "5832556": {
+      "id": 5832556,
+      "lesson": 1405264,
+      "position": 1,
+      "status": "ready",
+      "block": {
+        "name": "text",
+        "text": "<p><iframe allowfullscreen=\"\" height=\"500\" src=\"https://vkvideo.ru/video_ext.php?oid=-227165132&amp;id=456239063&amp;hd=2\" width=\"100%\"></iframe></p><h3>Исходный код урока</h3><p><a href=\"https://1gr14.dev/ru/ed/fullstack2023/html\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://1gr14.dev/ru/ed/fullstack2023/html</a></p><div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-target\"></div>\n  <h3>Цели урока</h3>\n<ul>\n<li>Познакомиться с основными HTML тегами</li>\n<li>Познакомиться с JSX</li>\n</ul>\n</div>\n<div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-finger\"></div>\n  <h3>Выводы</h3>\n<ul>\n<li>\n<p>HTML тег структурная единица веб-страницы</p>\n</li>\n<li>\n<p>HTML тег имеет название и может иметь атрибуты</p>\n</li>\n<li>\n<p>Самые популярные HTML теги: html, head, body, div, p, span, b, br, h1, h2, h3, h4, a, input, button</p>\n</li>\n<li>\n<p>JSX — это специальный JavaScript синтаксис для генерации HTML</p>\n</li>\n</ul>\n</div>\n<div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-link\"></div>\n  <h3>Полезная ссылка</h3>\n<p><a href=\"https://developer.mozilla.org/en-US/docs/Web/HTML/Element\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://developer.mozilla.org/en-US/docs/Web/HTML/Element</a> — список всех HTML тегов</p>\n</div>",
+        "video": null,
+        "options": {},
+        "subtitle_files": [],
+        "is_deprecated": false
+      },
+      "actions": {
+        "comment": "#"
+      },
+      "progress": "77-5832556",
+      "subscriptions": [
+        "31-77-5832556",
+        "30-77-5832556"
+      ],
+      "instruction": null,
+      "session": null,
+      "instruction_type": null,
+      "viewed_by": 2387,
+      "passed_by": 2387,
+      "correct_ratio": null,
+      "worth": 0,
+      "is_solutions_unlocked": false,
+      "solutions_unlocked_attempts": 3,
+      "has_submissions_restrictions": false,
+      "max_submissions_count": 3,
+      "variation": 1,
+      "variations_count": 1,
+      "is_enabled": true,
+      "needs_plan": null,
+      "num_grades": [
+        0,
+        0,
+        0,
+        1,
+        9
+      ],
+      "user_step_grade": null,
+      "user_step_vote": null,
+      "step_issue": 5811650,
+      "create_date": "2024-08-16T18:29:26Z",
+      "update_date": "2026-07-21T18:03:00Z",
+      "discussions_count": 3,
+      "discussion_proxy": "77-5832556-1",
+      "discussion_threads": [
+        "77-5832556-1"
+      ]
+    },
+    "5832557": {
+      "id": 5832557,
+      "lesson": 1405265,
+      "position": 1,
+      "status": "ready",
+      "block": {
+        "name": "text",
+        "text": "<p><iframe allowfullscreen=\"\" height=\"500\" src=\"https://vkvideo.ru/video_ext.php?oid=-227165132&amp;id=456239062&amp;hd=2\" width=\"100%\"></iframe></p>\n\n<h3>Исходный код урока</h3>\n\n<p><a href=\"https://1gr14.dev/ru/ed/fullstack2023/react-javascript\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://1gr14.dev/ru/ed/fullstack2023/react-javascript</a></p>\n\n<h3>Цели урока</h3>\n\n<ul>\n\t<li>Выучить JavaScript</li>\n\t<li>Подружиться с React</li>\n</ul>\n\n<h3>Вывод</h3>\n\n<p>Выполняйте реальные задачи, создавайте реальные проекты. В процессе вы поймёте теорию. Не делайте наоборот. Выученное и неприменённое знание забудется. Знание, полученное во время решения реальных задач, закрепляется надёжно</p>\n\n<h3>Полезные ссылки</h3>\n\n<ul>\n\t<li>\n\t<p><a href=\"https://learn.javascript.ru\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://learn.javascript.ru</a> — бесплатный учебник по JavaScript</p>\n\t</li>\n\t<li>\n\t<p><a href=\"https://reactjs.org/docs/getting-started.html\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://reactjs.org/docs/getting-started.html</a> — официальная документация React</p>\n\t</li>\n</ul>",
+        "video": null,
+        "options": {},
+        "subtitle_files": [],
+        "is_deprecated": false
+      },
+      "actions": {
+        "comment": "#"
+      },
+      "progress": "77-5832557",
+      "subscriptions": [
+        "31-77-5832557",
+        "30-77-5832557"
+      ],
+      "instruction": null,
+      "session": null,
+      "instruction_type": null,
+      "viewed_by": 2482,
+      "passed_by": 2482,
+      "correct_ratio": null,
+      "worth": 0,
+      "is_solutions_unlocked": false,
+      "solutions_unlocked_attempts": 3,
+      "has_submissions_restrictions": false,
+      "max_submissions_count": 3,
+      "variation": 1,
+      "variations_count": 1,
+      "is_enabled": true,
+      "needs_plan": null,
+      "num_grades": [
+        0,
+        0,
+        0,
+        0,
+        12
+      ],
+      "user_step_grade": null,
+      "user_step_vote": null,
+      "step_issue": 5811651,
+      "create_date": "2024-08-16T18:29:29Z",
+      "update_date": "2026-07-21T17:56:28Z",
+      "discussions_count": 4,
+      "discussion_proxy": "77-5832557-1",
+      "discussion_threads": [
+        "77-5832557-1"
+      ]
+    },
+    "7838805": {
+      "id": 7838805,
+      "lesson": 1891742,
+      "position": 1,
+      "status": "ready",
+      "block": {
+        "name": "text",
+        "text": "<p>С момента выхода этого курса у многих пакетов, которые мы устанавливаем в рамках этого учебника, вышли новые версии. Кардинально суть работы этих библиотек не поменялась. Но если вы будете устанавливать во время обучения последние версии, у вас появятся лишние проблемы на этапе обучения.</p>\n\n<p>По-этому прошу, по мере прохождения уроков, смотрите в исходный код приложенный к ученику. Находите там файл package.json и смотрите какие именно версии пакетов мы установили.</p>\n\n<p>Для того, чтобы установить такую же, нужно написать&nbsp;<code>pnpm i -D prettier@3.0.1</code>&nbsp; чтобы установить к примеру prettier версии 3.0.1</p>\n\n<p>По окончании учебника вы можете апнуть версии пакетов, и поразбираться с новыми версиями, но прямо сейчас это вам вероятно будет только мешать</p>",
+        "video": null,
+        "options": {},
+        "subtitle_files": [],
+        "is_deprecated": false
+      },
+      "actions": {
+        "comment": "#"
+      },
+      "progress": "77-7838805",
+      "subscriptions": [
+        "31-77-7838805",
+        "30-77-7838805"
+      ],
+      "instruction": null,
+      "session": null,
+      "instruction_type": null,
+      "viewed_by": 989,
+      "passed_by": 989,
+      "correct_ratio": null,
+      "worth": 0,
+      "is_solutions_unlocked": false,
+      "solutions_unlocked_attempts": 3,
+      "has_submissions_restrictions": false,
+      "max_submissions_count": 3,
+      "variation": 1,
+      "variations_count": 1,
+      "is_enabled": true,
+      "needs_plan": null,
+      "num_grades": [
+        1,
+        0,
+        0,
+        0,
+        10
+      ],
+      "user_step_grade": null,
+      "user_step_vote": null,
+      "step_issue": 7817896,
+      "create_date": "2025-08-04T07:44:24Z",
+      "update_date": "2025-08-04T07:48:47Z",
+      "discussions_count": 0,
+      "discussion_proxy": "77-7838805-1",
+      "discussion_threads": [
+        "77-7838805-1"
+      ]
+    },
+    "5832558": {
+      "id": 5832558,
+      "lesson": 1405266,
+      "position": 1,
+      "status": "ready",
+      "block": {
+        "name": "text",
+        "text": "<p><iframe allowfullscreen=\"\" height=\"500\" src=\"https://vkvideo.ru/video_ext.php?oid=-227165132&amp;id=456239061&amp;hd=2\" width=\"100%\"></iframe></p><h3>Исходный код урока</h3><p><a href=\"https://1gr14.dev/ru/ed/fullstack2023/prettier\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://1gr14.dev/ru/ed/fullstack2023/prettier</a></p><div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-target\"></div>\n  <h3>Цель урока</h3>\n<p>Не тратить время на форматирование кода руками</p>\n</div>\n<div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-finger\"></div>\n  <h3>Выводы</h3>\n<ul>\n<li>\n<p>Чтобы отформатировать код вызовете <code>VSCode: View → Command Palette...</code> и введите команду <code>Format Document</code></p>\n</li>\n<li>\n<p>Запоминайте и используйте горячие клавиши в VSCode</p>\n</li>\n</ul>\n</div>\n<div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-link\"></div>\n  <h3>Полезные ссылки</h3>\n<ul>\n<li>\n<p><a href=\"https://prettier.io\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://prettier.io</a> — официальный сайт Prettier</p>\n</li>\n<li>\n<p><a href=\"https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">VSCode Extension: Prettier Formatter for Visual Studio Code</a></p>\n</li>\n</ul>\n</div>\n<div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-terminal\"></div>\n  <h3> Терминальные команды</h3>\n<ul>\n<li>\n<p><code>pnpm i -D prettier</code> — установить Prettier в dev зависимости</p>\n</li>\n<li>\n<p><code>pnpm prettify</code> — отформатировать все файлы проекта</p>\n</li>\n</ul>\n</div>",
+        "video": null,
+        "options": {},
+        "subtitle_files": [],
+        "is_deprecated": false
+      },
+      "actions": {
+        "comment": "#"
+      },
+      "progress": "77-5832558",
+      "subscriptions": [
+        "31-77-5832558",
+        "30-77-5832558"
+      ],
+      "instruction": null,
+      "session": null,
+      "instruction_type": null,
+      "viewed_by": 1865,
+      "passed_by": 1865,
+      "correct_ratio": null,
+      "worth": 0,
+      "is_solutions_unlocked": false,
+      "solutions_unlocked_attempts": 3,
+      "has_submissions_restrictions": false,
+      "max_submissions_count": 3,
+      "variation": 1,
+      "variations_count": 1,
+      "is_enabled": true,
+      "needs_plan": null,
+      "num_grades": [
+        0,
+        0,
+        0,
+        0,
+        3
+      ],
+      "user_step_grade": null,
+      "user_step_vote": null,
+      "step_issue": 5811652,
+      "create_date": "2024-08-16T18:29:34Z",
+      "update_date": "2026-07-21T18:03:01Z",
+      "discussions_count": 5,
+      "discussion_proxy": "77-5832558-1",
+      "discussion_threads": [
+        "77-5832558-1"
+      ]
+    },
+    "5832559": {
+      "id": 5832559,
+      "lesson": 1405267,
+      "position": 1,
+      "status": "ready",
+      "block": {
+        "name": "text",
+        "text": "<p><iframe allowfullscreen=\"\" height=\"500\" src=\"https://vkvideo.ru/video_ext.php?oid=-227165132&amp;id=456239032&amp;hd=2\" width=\"100%\"></iframe></p><h3>Исходный код урока</h3><p><a href=\"https://1gr14.dev/ru/ed/fullstack2023/typescript-init\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://1gr14.dev/ru/ed/fullstack2023/typescript-init</a></p><div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-target\"></div>\n  <h3>Цели урока</h3>\n<ul>\n<li>Сформировать конфиг тайпскипта</li>\n<li>Создать минимальное приложение на Node.js</li>\n<li>Зафиксировать версию Node.js</li>\n<li>Перезапускать приложение автоматически при изменении кода</li>\n<li>Сбилдить приложение</li>\n<li>Запустить сбилженное приложение</li>\n</ul>\n</div>\n<div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-link\"></div>\n  <h3>Полезные ссылки</h3>\n<ul>\n<li>\n<p><a href=\"https://www.typescriptlang.org/tsconfig\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://www.typescriptlang.org/tsconfig</a> — официальная документация по конфигурации тайпскрипта</p>\n</li>\n<li>\n<p><a href=\"https://nodejs.org\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://nodejs.org</a> — официальный сайт Node.js</p>\n</li>\n<li>\n<p><a href=\"https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-typescript-next\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">VSCode Extension: JavaScript and TypeScript Nightly</a></p>\n</li>\n<li>\n<p><a href=\"https://www.knowledgehut.com/blog/web-development/commonjs-vs-es-modules#frequently-asked-questions\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">Статья про CommonJS и ES Modules</a></p>\n</li>\n</ul>\n</div>\n<div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-terminal\"></div>\n  <h3> Терминальные команды</h3>\n<ul>\n<li>\n<p><code>mkdir backend</code> — создать папку для бэкенда</p>\n</li>\n<li>\n<p><code>cd backend</code> — перейти в папку с бэкендом</p>\n</li>\n<li>\n<p><code>pnpm i -D prettier rimraf ts-node-dev typescript</code> — установить зависимости</p>\n</li>\n<li>\n<p><code>pnpm dev</code> — запустить приложение в режиме разработки</p>\n</li>\n<li>\n<p><code>pnpm build</code> — собрать приложение</p>\n</li>\n<li>\n<p><code>pnpm start</code> — запустить собранное приложение</p>\n</li>\n<li>\n<p><code>nvm version</code> — узнать текущую версию node</p>\n</li>\n<li>\n<p><code>nvm use 20.3.1</code> — переключиться на конкретную версию node</p>\n</li>\n<li>\n<p><code>nvm use</code> — переключиться на версию node указанную в .nvmrc</p>\n</li>\n</ul>\n</div>",
+        "video": null,
+        "options": {},
+        "subtitle_files": [],
+        "is_deprecated": false
+      },
+      "actions": {
+        "comment": "#"
+      },
+      "progress": "77-5832559",
+      "subscriptions": [
+        "31-77-5832559",
+        "30-77-5832559"
+      ],
+      "instruction": null,
+      "session": null,
+      "instruction_type": null,
+      "viewed_by": 1928,
+      "passed_by": 1928,
+      "correct_ratio": null,
+      "worth": 0,
+      "is_solutions_unlocked": false,
+      "solutions_unlocked_attempts": 3,
+      "has_submissions_restrictions": false,
+      "max_submissions_count": 3,
+      "variation": 1,
+      "variations_count": 1,
+      "is_enabled": true,
+      "needs_plan": null,
+      "num_grades": [
+        0,
+        0,
+        0,
+        1,
+        4
+      ],
+      "user_step_grade": null,
+      "user_step_vote": null,
+      "step_issue": 5811653,
+      "create_date": "2024-08-16T18:29:38Z",
+      "update_date": "2026-07-21T18:03:02Z",
+      "discussions_count": 16,
+      "discussion_proxy": "77-5832559-1",
+      "discussion_threads": [
+        "77-5832559-1"
+      ]
+    },
+    "6479852": {
+      "id": 6479852,
+      "lesson": 1570210,
+      "position": 1,
+      "status": "ready",
+      "block": {
+        "name": "text",
+        "text": "<p>Буду признателен подписке на мои каналы, где я буду делиться и прочими авторскими полезностями для разработчиков:<br>\n⭐️ Основной канал 1gr14 в Telegram: https://t.me/s_1gr14<br>\n💬 Основной чат 1gr14 в Telegram: https://t.me/s_1gr14_chat<br>\n📹 VKVideo канал 1gr14: https://vkvideo.ru/@s_1gr14<br>\n📹 Youtube канал 1gr14: https://www.youtube.com/@s_1gr14</p>",
+        "video": null,
+        "options": {},
+        "subtitle_files": [],
+        "is_deprecated": false
+      },
+      "actions": {
+        "comment": "#"
+      },
+      "progress": "77-6479852",
+      "subscriptions": [
+        "31-77-6479852",
+        "30-77-6479852"
+      ],
+      "instruction": null,
+      "session": null,
+      "instruction_type": null,
+      "viewed_by": 1368,
+      "passed_by": 1368,
+      "correct_ratio": null,
+      "worth": 0,
+      "is_solutions_unlocked": false,
+      "solutions_unlocked_attempts": 3,
+      "has_submissions_restrictions": false,
+      "max_submissions_count": 3,
+      "variation": 1,
+      "variations_count": 1,
+      "is_enabled": true,
+      "needs_plan": null,
+      "num_grades": [
+        0,
+        0,
+        0,
+        1,
+        4
+      ],
+      "user_step_grade": null,
+      "user_step_vote": null,
+      "step_issue": 6458943,
+      "create_date": "2024-12-22T10:24:09Z",
+      "update_date": "2026-06-22T19:45:56Z",
+      "discussions_count": 1,
+      "discussion_proxy": "77-6479852-1",
+      "discussion_threads": [
+        "77-6479852-1"
+      ]
+    },
+    "5832560": {
+      "id": 5832560,
+      "lesson": 1405268,
+      "position": 1,
+      "status": "ready",
+      "block": {
+        "name": "text",
+        "text": "<p><iframe allowfullscreen=\"\" height=\"500\" src=\"https://vkvideo.ru/video_ext.php?oid=-227165132&amp;id=456239031&amp;hd=2\" width=\"100%\"></iframe></p><h3>Исходный код урока</h3><p><a href=\"https://1gr14.dev/ru/ed/fullstack2023/express-init\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://1gr14.dev/ru/ed/fullstack2023/express-init</a></p><div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-target\"></div>\n  <h3>Цели урока</h3>\n<ul>\n<li>Первратить бэкенд в процесс, обрабатывающий входящие запросы</li>\n<li>Создать проверочный эндпоинт с помощью express</li>\n</ul>\n</div>\n<div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-link\"></div>\n  <h3>Полезные ссылки</h3>\n<ul>\n<li>\n<p><a href=\"https://expressjs.com\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://expressjs.com</a> — официальный сайт express</p>\n</li>\n<li>\n<p><a href=\"https://www.codecademy.com/article/what-is-rest\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">Статья о том, что такое REST: GET, POST, ...</a></p>\n</li>\n</ul>\n</div>\n<div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-terminal\"></div>\n  <h3> Терминальные команды</h3>\n<ul>\n<li>\n<p><code>pnpm i express</code> — установить express</p>\n</li>\n<li>\n<p><code>pnpm i -D @types/express</code> — установить типы для express</p>\n</li>\n</ul>\n</div>",
+        "video": null,
+        "options": {},
+        "subtitle_files": [],
+        "is_deprecated": false
+      },
+      "actions": {
+        "comment": "#"
+      },
+      "progress": "77-5832560",
+      "subscriptions": [
+        "31-77-5832560",
+        "30-77-5832560"
+      ],
+      "instruction": null,
+      "session": null,
+      "instruction_type": null,
+      "viewed_by": 1838,
+      "passed_by": 1838,
+      "correct_ratio": null,
+      "worth": 0,
+      "is_solutions_unlocked": false,
+      "solutions_unlocked_attempts": 3,
+      "has_submissions_restrictions": false,
+      "max_submissions_count": 3,
+      "variation": 1,
+      "variations_count": 1,
+      "is_enabled": true,
+      "needs_plan": null,
+      "num_grades": [
+        0,
+        0,
+        0,
+        1,
+        5
+      ],
+      "user_step_grade": null,
+      "user_step_vote": null,
+      "step_issue": 5811654,
+      "create_date": "2024-08-16T18:29:43Z",
+      "update_date": "2026-07-21T18:03:03Z",
+      "discussions_count": 4,
+      "discussion_proxy": "77-5832560-1",
+      "discussion_threads": [
+        "77-5832560-1"
+      ]
+    },
+    "5832561": {
+      "id": 5832561,
+      "lesson": 1405269,
+      "position": 1,
+      "status": "ready",
+      "block": {
+        "name": "text",
+        "text": "<p><iframe allowfullscreen=\"\" height=\"500\" src=\"https://vkvideo.ru/video_ext.php?oid=-227165132&amp;id=456239060&amp;hd=2\" width=\"100%\"></iframe></p><h3>Исходный код урока</h3><p><a href=\"https://1gr14.dev/ru/ed/fullstack2023/express-json\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://1gr14.dev/ru/ed/fullstack2023/express-json</a></p><div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-target\"></div>\n  <h3>Цель урока</h3>\n<p>Создать эндпоинт, который будет возвращать список идей в формате JSON</p>\n</div>\n<div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-finger\"></div>\n  <h3>Выводы</h3>\n<ul>\n<li>JSON — это формат данных, который используется для обмена данными между разными системами, очень похожий на обычный JavaScript объект</li>\n<li>Будучи TypeScript фулстек разработчиком удобнее всего использовать tRPC для общения между клиентом и сервером</li>\n<li>Используя tRPC вы будете быстрее разрабатывать, благодаря автодополнению кода и согласованности типов на фронте и бэке</li>\n</ul>\n</div>",
+        "video": null,
+        "options": {},
+        "subtitle_files": [],
+        "is_deprecated": false
+      },
+      "actions": {
+        "comment": "#"
+      },
+      "progress": "77-5832561",
+      "subscriptions": [
+        "31-77-5832561",
+        "30-77-5832561"
+      ],
+      "instruction": null,
+      "session": null,
+      "instruction_type": null,
+      "viewed_by": 1491,
+      "passed_by": 1491,
+      "correct_ratio": null,
+      "worth": 0,
+      "is_solutions_unlocked": false,
+      "solutions_unlocked_attempts": 3,
+      "has_submissions_restrictions": false,
+      "max_submissions_count": 3,
+      "variation": 1,
+      "variations_count": 1,
+      "is_enabled": true,
+      "needs_plan": null,
+      "num_grades": [
+        0,
+        0,
+        0,
+        0,
+        6
+      ],
+      "user_step_grade": null,
+      "user_step_vote": null,
+      "step_issue": 5811655,
+      "create_date": "2024-08-16T18:29:49Z",
+      "update_date": "2026-07-21T18:03:03Z",
+      "discussions_count": 2,
+      "discussion_proxy": "77-5832561-1",
+      "discussion_threads": [
+        "77-5832561-1"
+      ]
+    },
+    "5832562": {
+      "id": 5832562,
+      "lesson": 1405270,
+      "position": 1,
+      "status": "ready",
+      "block": {
+        "name": "text",
+        "text": "<p><iframe allowfullscreen=\"\" height=\"500\" src=\"https://vkvideo.ru/video_ext.php?oid=-227165132&amp;id=456239029&amp;hd=2\" width=\"100%\"></iframe></p><h3>Исходный код урока</h3><p><a href=\"https://1gr14.dev/ru/ed/fullstack2023/trpc-backend\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://1gr14.dev/ru/ed/fullstack2023/trpc-backend</a></p><div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-target\"></div>\n  <h3>Цель урока</h3>\n<p>Настроить серверную часть для работы с tRPC</p>\n</div>\n<div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-finger\"></div>\n  <h3>Выводы</h3>\n<ul>\n<li>tRPC эндпоинты будут доступны по адресам вроде <code>http://localhost:3000/trpc/getIdeas</code></li>\n<li>Однако, нам не надо думать об адресах эндпоинтов, мы должны относится к эндпоинтам, как к функциям, которые мы вызываем с фронтенда на бэкенде</li>\n</ul>\n</div>\n<div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-link\"></div>\n  <h3>Полезная ссылка</h3>\n<p><a href=\"https://trpc.io\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://trpc.io</a> — официальный сайт tRPC</p>\n</div>\n<div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-terminal\"></div>\n  <h3>Терминальная команда</h3>\n<p><code>pnpm i @trpc/server</code> — установить tRPC для сервера</p>\n</div>",
+        "video": null,
+        "options": {},
+        "subtitle_files": [],
+        "is_deprecated": false
+      },
+      "actions": {
+        "comment": "#"
+      },
+      "progress": "77-5832562",
+      "subscriptions": [
+        "31-77-5832562",
+        "30-77-5832562"
+      ],
+      "instruction": null,
+      "session": null,
+      "instruction_type": null,
+      "viewed_by": 1436,
+      "passed_by": 1436,
+      "correct_ratio": null,
+      "worth": 0,
+      "is_solutions_unlocked": false,
+      "solutions_unlocked_attempts": 3,
+      "has_submissions_restrictions": false,
+      "max_submissions_count": 3,
+      "variation": 1,
+      "variations_count": 1,
+      "is_enabled": true,
+      "needs_plan": null,
+      "num_grades": [
+        0,
+        0,
+        0,
+        0,
+        4
+      ],
+      "user_step_grade": null,
+      "user_step_vote": null,
+      "step_issue": 5811656,
+      "create_date": "2024-08-16T18:29:54Z",
+      "update_date": "2026-07-21T18:03:04Z",
+      "discussions_count": 3,
+      "discussion_proxy": "77-5832562-1",
+      "discussion_threads": [
+        "77-5832562-1"
+      ]
+    },
+    "5832563": {
+      "id": 5832563,
+      "lesson": 1405271,
+      "position": 1,
+      "status": "ready",
+      "block": {
+        "name": "text",
+        "text": "<p><iframe allowfullscreen=\"\" height=\"500\" src=\"https://vkvideo.ru/video_ext.php?oid=-227165132&amp;id=456239028&amp;hd=2\" width=\"100%\"></iframe></p><h3>Исходный код урока</h3><p><a href=\"https://1gr14.dev/ru/ed/fullstack2023/trpc-webapp\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://1gr14.dev/ru/ed/fullstack2023/trpc-webapp</a></p><div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-target\"></div>\n  <h3>Цели урока</h3>\n<ul>\n<li>Добавить tRPC в webapp</li>\n<li>Запросить тайп-сейф данные с бэкенда</li>\n<li>Настроить монорепу с помощью pnpm</li>\n</ul>\n</div>\n<div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-finger\"></div>\n  <h3>Выводы</h3>\n<ul>\n<li>tRPC прекрасный инструмент для TypeScript фулстек разработки</li>\n<li>Многие вещи делаются только в начале проекта, и потом вы к ним не притрагиваетесь. Когда вы начинаете новый проект, вы просто копируете все эти сложные штуки и старого. Даже если вам сейчас не совсем понятно, как они работают, вы естественным образом с ними разберётесь, когда будете их использовать.</li>\n</ul>\n</div>\n<div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-link\"></div>\n  <h3>Полезные ссылки</h3>\n<ul>\n<li>\n<p><a href=\"https://trpc.io\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://trpc.io</a> — официальный сайт tRPC</p>\n</li>\n<li>\n<p><a href=\"https://tanstack.com/query/latest\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://tanstack.com/query/latest</a> — официальный сайт react-query</p>\n</li>\n<li>\n<p><a href=\"https://pnpm.io\" rel=\"noopener noreferrer nofollow\" target=\"_blank\">https://pnpm.io</a> — официальный сайт pnpm</p>\n</li>\n</ul>\n</div>\n<div class=\"guide-lesson-panel\">\n  <div class=\"guide-lesson-panel-icon guide-lesson-panel-icon-terminal\"></div>\n  <h3> Терминальные команды</h3>\n<ul>\n<li>\n<p><code>cd backend &amp;&amp; pnpm i cors</code> — установить cors для бэкенда</p>\n</li>\n<li>\n<p><code>cd webapp &amp;&amp; pnpm i @trpc/client @trpc/react-query @tanstack/react-query</code> — установить tRPC и его зависимости для клиента</p>\n</li>\n</ul>\n</div>",
+        "video": null,
+        "options": {},
+        "subtitle_files": [],
+        "is_deprecated": false
+      },
+      "actions": {
+        "comment": "#"
+      },
+      "progress": "77-5832563",
+      "subscriptions": [
+        "31-77-5832563",
+        "30-77-5832563"
+      ],
+      "instruction": null,
+      "session": null,
+      "instruction_type": null,
+      "viewed_by": 1291,
+      "passed_by": 1291,
+      "correct_ratio": null,
+      "worth": 0,
+      "is_solutions_unlocked": false,
+      "solutions_unlocked_attempts": 3,
+      "has_submissions_restrictions": false,
+      "max_submissions_count": 3,
+      "variation": 1,
+      "variations_count": 1,
+      "is_enabled": true,
+      "needs_plan": null,
+      "num_grades": [
+        0,
+        0,
+        0,
+        1,
+        8
+      ],
+      "user_step_grade": null,
+      "user_step_vote": null,
+      "step_issue": 5811657,
+      "create_date": "2024-08-16T18:29:59Z",
+      "update_date": "2026-07-21T18:03:05Z",
+      "discussions_count": 24,
+      "discussion_proxy": "77-5832563-1",
+      "discussion_threads": [
+        "77-5832563-1"
+      ]
+    }
+  }
+}
