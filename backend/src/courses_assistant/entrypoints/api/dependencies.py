@@ -4,26 +4,42 @@ from __future__ import annotations
 
 from fastapi import Depends, HTTPException, Request
 
+from courses_assistant.config import Settings
 from courses_assistant.container import Container
+from courses_assistant.domain.errors import InvalidToken
 from courses_assistant.domain.models import User, is_admin
-
-USER_SESSION_KEY = "user"
 
 
 def get_container(request: Request) -> Container:
     return request.app.state.container
 
 
+def extract_access_token(request: Request, settings: Settings) -> str | None:
+    """Access-токен из httpOnly cookie или заголовка `Authorization: Bearer`."""
+    token = request.cookies.get(settings.access_cookie)
+    if token:
+        return token
+    header = request.headers.get("authorization", "")
+    scheme, _, value = header.partition(" ")
+    if scheme.lower() == "bearer" and value:
+        return value
+    return None
+
+
 async def get_current_user(
     request: Request,
     container: Container = Depends(get_container),
 ) -> User | None:
-    """Пользователь из сессии (или None). Роль берётся из БД на каждом запросе."""
-    user_id = request.session.get(USER_SESSION_KEY)
-    if user_id is None:
+    """Пользователь из access-токена. Роль берётся из БД на каждом запросе."""
+    token = extract_access_token(request, container.settings)
+    if token is None:
+        return None
+    try:
+        user_id = container.tokens.decode_access_token(token)
+    except InvalidToken:
         return None
     async with container.uow_factory() as uow:
-        return await uow.users.get(int(user_id))
+        return await uow.users.get(user_id)
 
 
 async def require_user(

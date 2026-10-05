@@ -196,8 +196,10 @@ make test-integration
 Сервисы: `API_PORT` (:5000), `WEB_PORT` (:8000), `API_BASE_URL` (URL API для web,
 в compose — `http://api:5000`).
 
-Сессия: `SESSION_SECRET` (ключ подписи cookie; пусто — эфемерный на процесс),
-`COOKIE_SECURE`, `SESSION_MAX_AGE`.
+JWT: `JWT_SECRET` (ключ подписи access-токена; пусто — эфемерный на процесс),
+`JWT_ALGORITHM`, `ACCESS_TOKEN_TTL`, `REFRESH_TOKEN_TTL`, `COOKIE_SECURE`.
+Access и refresh передаются в httpOnly cookie; refresh-токены хранятся в БД
+(таблица `refresh_tokens`) и ротируются на `/api/v1/auth/refresh`.
 
 Планировщик/ретенция: `STREAM_CRON`, `CRON_INTERVAL_SECONDS`, `JOB_RETENTION_DAYS`,
 `REDIS_STREAM_MAXLEN`, `REDIS_STREAM_EVENTS_MAXLEN`.

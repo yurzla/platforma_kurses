@@ -12,6 +12,7 @@ from courses_assistant.adapters.embeddings.ollama import OllamaEmbedder
 from courses_assistant.adapters.llm.gigachat import GigaChatLLM
 from courses_assistant.adapters.persistence.database import create_engine, create_session_factory
 from courses_assistant.adapters.persistence.unit_of_work import SqlAlchemyUnitOfWork
+from courses_assistant.adapters.tokens.jwt import JwtTokenService
 from courses_assistant.application.commands import (
     ChangeUserRole,
     CreateChatSession,
@@ -22,7 +23,13 @@ from courses_assistant.application.commands import (
 )
 from courses_assistant.application.handlers import Handlers
 from courses_assistant.application.message_bus import MessageBus
-from courses_assistant.application.ports import LLM, Embedder, MessageBroker, UnitOfWork
+from courses_assistant.application.ports import (
+    LLM,
+    Embedder,
+    MessageBroker,
+    TokenService,
+    UnitOfWork,
+)
 from courses_assistant.config import Settings
 
 
@@ -35,6 +42,7 @@ class Container:
     llm: LLM
     embedder: Embedder
     broker: MessageBroker
+    tokens: TokenService
     handlers: Handlers
     bus: MessageBus
 
@@ -66,6 +74,12 @@ def build_container(settings: Settings) -> Container:
     )
     broker = RedisStreamsBroker(settings.redis_url)
 
+    tokens = JwtTokenService(
+        secret=settings.resolved_jwt_secret(),
+        algorithm=settings.jwt_algorithm,
+        access_ttl=settings.access_token_ttl,
+    )
+
     handlers = Handlers(
         uow_factory=uow_factory,
         llm=llm,
@@ -92,6 +106,7 @@ def build_container(settings: Settings) -> Container:
         llm=llm,
         embedder=embedder,
         broker=broker,
+        tokens=tokens,
         handlers=handlers,
         bus=bus,
     )

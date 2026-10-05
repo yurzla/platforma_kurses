@@ -55,6 +55,16 @@ class User:
 
 
 @dataclass(slots=True)
+class RefreshToken:
+    id: int
+    user_id: int
+    token_hash: str
+    expires_at: datetime
+    revoked_at: datetime | None = None
+    created_at: datetime | None = None
+
+
+@dataclass(slots=True)
 class ChatSession:
     id: int
     user_id: int

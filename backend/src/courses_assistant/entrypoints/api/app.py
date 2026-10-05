@@ -7,7 +7,6 @@ from contextlib import asynccontextmanager
 import structlog
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
-from starlette.middleware.sessions import SessionMiddleware
 
 from courses_assistant.config import Settings, get_settings
 from courses_assistant.container import Container, build_container
@@ -56,13 +55,6 @@ def create_app(settings: Settings | None = None, container: Container | None = N
     app.state.owns_container = owns_container
 
     app.add_middleware(RequestContextMiddleware)
-    app.add_middleware(
-        SessionMiddleware,
-        secret_key=settings.resolved_session_secret(),
-        same_site="lax",
-        https_only=settings.cookie_secure,
-        max_age=settings.session_max_age,
-    )
     app.include_router(health.router)
     app.include_router(chat.router)
     app.include_router(jobs.router)

@@ -24,12 +24,12 @@ def test_defaults() -> None:
     assert settings.stream_requests == "rag.requests"
 
 
-def test_resolved_session_secret_uses_configured() -> None:
-    assert Settings(session_secret="key").resolved_session_secret() == "key"
+def test_resolved_jwt_secret_uses_configured() -> None:
+    assert Settings(jwt_secret="key").resolved_jwt_secret() == "key"
 
 
-def test_resolved_session_secret_ephemeral_when_missing() -> None:
-    settings = Settings(session_secret="")
-    secret = settings.resolved_session_secret()
+def test_resolved_jwt_secret_ephemeral_when_missing() -> None:
+    settings = Settings(jwt_secret="")
+    secret = settings.resolved_jwt_secret()
     assert secret
-    assert secret == settings.resolved_session_secret()
+    assert secret == settings.resolved_jwt_secret()

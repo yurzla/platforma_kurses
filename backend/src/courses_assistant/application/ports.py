@@ -18,6 +18,7 @@ from courses_assistant.domain.models import (
     JobStatus,
     LLMMessage,
     QuestionJob,
+    RefreshToken,
     RetrievedChunk,
     User,
 )
@@ -33,6 +34,16 @@ class Embedder(ABC):
     @abstractmethod
     async def embed(self, text: str) -> list[float]:
         """Возвращает вектор текста."""
+
+
+class TokenService(ABC):
+    @abstractmethod
+    def create_access_token(self, user_id: int) -> str:
+        """Создаёт подписанный access-токен для пользователя."""
+
+    @abstractmethod
+    def decode_access_token(self, token: str) -> int:
+        """Возвращает id пользователя из токена или бросает InvalidToken."""
 
 
 class ChatRepository(ABC):
@@ -81,6 +92,21 @@ class UserRepository(ABC):
 
     @abstractmethod
     async def set_role(self, user_id: int, role: str) -> User | None: ...
+
+
+class RefreshTokenRepository(ABC):
+    @abstractmethod
+    async def add(self, user_id: int, token_hash: str, expires_at: datetime) -> None: ...
+
+    @abstractmethod
+    async def get(self, token_hash: str) -> RefreshToken | None: ...
+
+    @abstractmethod
+    async def revoke(self, token_hash: str, revoked_at: datetime) -> bool:
+        """Отзывает токен; True, если он был активен."""
+
+    @abstractmethod
+    async def revoke_all_for_user(self, user_id: int, revoked_at: datetime) -> None: ...
 
 
 class CatalogRepository(ABC):
@@ -188,6 +214,7 @@ class UnitOfWork(ABC):
     jobs: JobRepository
     users: UserRepository
     catalog: CatalogRepository
+    refresh_tokens: RefreshTokenRepository
 
     @abstractmethod
     async def __aenter__(self) -> UnitOfWork: ...

@@ -19,6 +19,7 @@ from courses_assistant.adapters.persistence.orm import (
     EnrollmentORM,
     JobORM,
     LessonORM,
+    RefreshTokenORM,
     SectionORM,
     StepContentORM,
     StepORM,
@@ -31,6 +32,7 @@ from courses_assistant.application.ports import (
     ChatRepository,
     CourseChunkRepository,
     JobRepository,
+    RefreshTokenRepository,
     UserRepository,
 )
 from courses_assistant.domain.catalog import (
@@ -46,6 +48,7 @@ from courses_assistant.domain.models import (
     ChatSession,
     JobStatus,
     QuestionJob,
+    RefreshToken,
     RetrievedChunk,
     Role,
     User,
@@ -206,6 +209,59 @@ class SqlUserRepository(UserRepository):
         )
         orm = result.scalar_one_or_none()
         return _to_user(orm) if orm else None
+
+
+def _to_refresh_token(orm: RefreshTokenORM) -> RefreshToken:
+    return RefreshToken(
+        id=orm.id,
+        user_id=orm.user_id,
+        token_hash=orm.token_hash,
+        expires_at=orm.expires_at,
+        revoked_at=orm.revoked_at,
+        created_at=orm.created_at,
+    )
+
+
+class SqlRefreshTokenRepository(RefreshTokenRepository):
+    def __init__(self, session: AsyncSession) -> None:
+        self._session = session
+
+    async def add(self, user_id: int, token_hash: str, expires_at: datetime) -> None:
+        self._session.add(
+            RefreshTokenORM(user_id=user_id, token_hash=token_hash, expires_at=expires_at)
+        )
+        await self._session.flush()
+
+    async def get(self, token_hash: str) -> RefreshToken | None:
+        result = await self._session.execute(
+            select(RefreshTokenORM).where(RefreshTokenORM.token_hash == token_hash)
+        )
+        orm = result.scalar_one_or_none()
+        return _to_refresh_token(orm) if orm else None
+
+    async def revoke(self, token_hash: str, revoked_at: datetime) -> bool:
+        result = cast(
+            "CursorResult[Any]",
+            await self._session.execute(
+                update(RefreshTokenORM)
+                .where(
+                    RefreshTokenORM.token_hash == token_hash,
+                    RefreshTokenORM.revoked_at.is_(None),
+                )
+                .values(revoked_at=revoked_at)
+            ),
+        )
+        return (result.rowcount or 0) > 0
+
+    async def revoke_all_for_user(self, user_id: int, revoked_at: datetime) -> None:
+        await self._session.execute(
+            update(RefreshTokenORM)
+            .where(
+                RefreshTokenORM.user_id == user_id,
+                RefreshTokenORM.revoked_at.is_(None),
+            )
+            .values(revoked_at=revoked_at)
+        )
 
 
 class SqlCatalogRepository(CatalogRepository):

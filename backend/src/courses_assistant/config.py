@@ -11,18 +11,18 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 logger = logging.getLogger(__name__)
 
-_EPHEMERAL_SESSION_SECRET: str | None = None
+_EPHEMERAL_JWT_SECRET: str | None = None
 
 
-def _ephemeral_session_secret() -> str:
-    global _EPHEMERAL_SESSION_SECRET
-    if _EPHEMERAL_SESSION_SECRET is None:
-        _EPHEMERAL_SESSION_SECRET = secrets.token_urlsafe(32)
+def _ephemeral_jwt_secret() -> str:
+    global _EPHEMERAL_JWT_SECRET
+    if _EPHEMERAL_JWT_SECRET is None:
+        _EPHEMERAL_JWT_SECRET = secrets.token_urlsafe(32)
         logger.warning(
-            "SESSION_SECRET не задан: сгенерирован эфемерный секрет. "
-            "Сессии не переживут рестарт; задайте SESSION_SECRET в проде."
+            "JWT_SECRET не задан: сгенерирован эфемерный секрет. "
+            "Токены не переживут рестарт; задайте JWT_SECRET в проде."
         )
-    return _EPHEMERAL_SESSION_SECRET
+    return _EPHEMERAL_JWT_SECRET
 
 
 class Settings(BaseSettings):
@@ -68,10 +68,14 @@ class Settings(BaseSettings):
     redis_stream_maxlen: int = 10_000
     redis_stream_events_maxlen: int = 1_000
 
-    # Сессия (подписанная cookie)
-    session_secret: str = ""
+    # JWT-аутентификация (access + refresh в httpOnly cookie)
+    jwt_secret: str = ""
+    jwt_algorithm: str = "HS256"
+    access_token_ttl: int = 60 * 15
+    refresh_token_ttl: int = 60 * 60 * 24 * 14
     cookie_secure: bool = False
-    session_max_age: int = 60 * 60 * 12
+    access_cookie: str = "access_token"
+    refresh_cookie: str = "refresh_token"
 
     # Embeddings (Ollama)
     ollama_url: str = "http://localhost:11434/api/embed"
@@ -96,9 +100,9 @@ class Settings(BaseSettings):
             )
         return self.gigachat_credentials
 
-    def resolved_session_secret(self) -> str:
-        """Ключ подписи session-cookie; при отсутствии — эфемерный на процесс."""
-        return self.session_secret or _ephemeral_session_secret()
+    def resolved_jwt_secret(self) -> str:
+        """Ключ подписи JWT; при отсутствии — эфемерный на процесс."""
+        return self.jwt_secret or _ephemeral_jwt_secret()
 
 
 @lru_cache

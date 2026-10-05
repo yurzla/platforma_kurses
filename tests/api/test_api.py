@@ -5,6 +5,7 @@ from __future__ import annotations
 import httpx
 import pytest
 
+from courses_assistant.adapters.tokens.jwt import JwtTokenService
 from courses_assistant.application.commands import ProcessQuestion
 from courses_assistant.application.handlers import Handlers
 from courses_assistant.application.message_bus import MessageBus
@@ -39,6 +40,11 @@ def build_test_container(store: FakeStore) -> tuple[Container, FakeStore, FakeBr
         llm=llm,
         embedder=embedder,
         broker=broker,
+        tokens=JwtTokenService(
+            secret="test-secret-key-for-jwt-tests-1234567890",
+            algorithm="HS256",
+            access_ttl=900,
+        ),
         handlers=handlers,
         bus=bus,
     )
@@ -47,12 +53,24 @@ def build_test_container(store: FakeStore) -> tuple[Container, FakeStore, FakeBr
 
 @pytest.fixture
 def client(store: FakeStore):
-    store.users.add(1)
     store.courses.add(10)
     container, _, _ = build_test_container(store)
     app = create_app(settings=container.settings, container=container)
     transport = httpx.ASGITransport(app=app)
     return httpx.AsyncClient(transport=transport, base_url="http://test"), container, store
+
+
+async def _register(ac: httpx.AsyncClient) -> None:
+    response = await ac.post(
+        "/api/v1/auth/register",
+        json={
+            "email": "s@example.com",
+            "name": "Студент",
+            "password": "secret",
+            "role": "student",
+        },
+    )
+    assert response.status_code == 201
 
 
 async def test_health() -> None:
@@ -69,7 +87,9 @@ async def test_health() -> None:
 async def test_full_ask_flow(client) -> None:
     ac, container, store = client
     async with ac:
-        created = await ac.post("/api/v1/chat/sessions", json={"user_id": 1, "course_id": 10})
+        await _register(ac)
+
+        created = await ac.post("/api/v1/chat/sessions", json={"course_id": 10})
         assert created.status_code == 201
         session_id = created.json()["id"]
 
@@ -106,16 +126,25 @@ async def test_full_ask_flow(client) -> None:
         assert len(history.json()) == 2
 
 
-async def test_unknown_user_returns_404(client) -> None:
+async def test_chat_requires_auth(client) -> None:
     ac, _, _ = client
     async with ac:
-        response = await ac.post("/api/v1/chat/sessions", json={"user_id": 999, "course_id": 10})
+        response = await ac.post("/api/v1/chat/sessions", json={"course_id": 10})
+    assert response.status_code == 401
+
+
+async def test_unknown_course_returns_404(client) -> None:
+    ac, _, _ = client
+    async with ac:
+        await _register(ac)
+        response = await ac.post("/api/v1/chat/sessions", json={"course_id": 999})
     assert response.status_code == 404
 
 
 async def test_unknown_job_returns_404(client) -> None:
     ac, _, _ = client
     async with ac:
+        await _register(ac)
         response = await ac.get("/api/v1/jobs/nope")
     assert response.status_code == 404
 
@@ -123,5 +152,45 @@ async def test_unknown_job_returns_404(client) -> None:
 async def test_validation_error(client) -> None:
     ac, _, _ = client
     async with ac:
-        response = await ac.post("/api/v1/chat/sessions", json={"user_id": 0, "course_id": 10})
+        await _register(ac)
+        response = await ac.post("/api/v1/chat/sessions", json={"course_id": 0})
     assert response.status_code == 422
+
+
+async def test_foreign_session_forbidden() -> None:
+    store = FakeStore()
+    store.courses.add(10)
+    container, _, _ = build_test_container(store)
+    app = create_app(settings=container.settings, container=container)
+    transport = httpx.ASGITransport(app=app)
+    async with (
+        httpx.AsyncClient(transport=transport, base_url="http://test") as owner,
+        httpx.AsyncClient(transport=transport, base_url="http://test") as other,
+    ):
+        await owner.post(
+            "/api/v1/auth/register",
+            json={
+                "email": "owner@example.com",
+                "name": "Owner",
+                "password": "secret",
+                "role": "student",
+            },
+        )
+        created = await owner.post("/api/v1/chat/sessions", json={"course_id": 10})
+        session_id = created.json()["id"]
+
+        await other.post(
+            "/api/v1/auth/register",
+            json={
+                "email": "other@example.com",
+                "name": "Other",
+                "password": "secret",
+                "role": "student",
+            },
+        )
+        forbidden = await other.get(f"/api/v1/chat/sessions/{session_id}/messages")
+        assert forbidden.status_code == 403
+        forbidden_ask = await other.post(
+            f"/api/v1/chat/sessions/{session_id}/ask", json={"question": "привет"}
+        )
+        assert forbidden_ask.status_code == 403

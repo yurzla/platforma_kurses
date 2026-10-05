@@ -52,18 +52,18 @@ The system SHALL be startable with a single `docker compose up` command that run
 - **THEN** the web image contains only the web package and its runtime dependencies and does not include the database, queue, or LLM libraries
 
 ### Requirement: Runtime configuration from environment
-The system SHALL read runtime configuration from environment variables with documented defaults for non-secret values. The backend SHALL read database, Redis, GigaChat, Ollama, session, and API settings. The web service SHALL read only its own settings (API base URL, host, port, and log level) and SHALL NOT require database, Redis, or LLM configuration to start.
+The system SHALL read runtime configuration from environment variables with documented defaults for non-secret values. The backend SHALL read database, Redis, GigaChat, Ollama, JWT, and API settings. The web service SHALL read only its own settings (API base URL, host, port, and log level) and SHALL NOT require database, Redis, or LLM configuration to start.
 
 #### Scenario: Missing required secret
 - **WHEN** the backend starts without a required secret such as GigaChat credentials
 - **THEN** startup fails with a clear error naming the missing setting
 
 #### Scenario: Session settings configured
-- **WHEN** the backend starts with session settings `SESSION_SECRET`, `COOKIE_SECURE`, and `SESSION_MAX_AGE`
-- **THEN** the session cookie is signed with the configured secret and uses the configured security and lifetime settings
+- **WHEN** the backend starts with JWT settings `JWT_SECRET`, `JWT_ALGORITHM`, `ACCESS_TOKEN_TTL`, `REFRESH_TOKEN_TTL`, and `COOKIE_SECURE`
+- **THEN** access tokens are signed with the configured secret and algorithm, token lifetimes follow the configured TTLs, and cookies use the configured security setting
 
 #### Scenario: Session secret missing
-- **WHEN** no session secret is configured
+- **WHEN** no JWT secret is configured
 - **THEN** the backend generates an ephemeral secret for the process and logs a warning
 
 #### Scenario: Service endpoints configured

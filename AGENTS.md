@@ -58,14 +58,17 @@ uv run python -m courses_assistant.scripts.import_step_sources --token "$access_
   НЕ импортирует `courses_assistant`.
 - Web-тесты: `tests/web/test_web.py` (web-стек поверх API через `httpx.ASGITransport`).
 - Аутентификация (API): единый вход по `users` (`domain/security.py`, scrypt); права — по роли
-  (`student`/`teacher`/`admin`), `require_user`/`require_admin` в `api/dependencies.py`. Сессия —
-  `SessionMiddleware` (ключ `user`); регистрация (`/register`) даёт только `student`/`teacher`,
+  (`student`/`teacher`/`admin`), `require_user`/`require_admin` в `api/dependencies.py`. Токены —
+  JWT: access (`pyjwt`, HS256) + opaque refresh, оба в httpOnly cookie; refresh хранится в таблице
+  `refresh_tokens` и ротируется на `POST /api/v1/auth/refresh`; `get_current_user` принимает access
+  из cookie или `Authorization: Bearer`. Регистрация (`/register`) даёт только `student`/`teacher`,
   `admin` — скриптом `create_user --role admin`.
 
 ## БД и миграции
 
 - Alembic: `backend/alembic/versions/` (baseline 14 таблиц → HNSW → jobs → updated_at index →
-  step_sources). Baseline не пересоздавать (в `_LATER_TABLES` исключены `jobs`, `step_sources`).
+  step_sources → refresh_tokens). Baseline не пересоздавать (в `_LATER_TABLES` исключены `jobs`,
+  `step_sources`, `refresh_tokens`).
 - Идемпотентный bootstrap: `uv run python -m courses_assistant.scripts.db_bootstrap`
   (stamp baseline при наличии дампа + upgrade).
 - Демо-дамп опционален и gitignored: `tmp/edu_platform_kurses.sql`; compose `seed` использует
@@ -97,8 +100,11 @@ openspec archive <name> -y                                   # синкает д
   `https://giga.chat/v1` отдаёт HTML со статусом 200.
 - Роли ограничены constraint `users_role_check` (`student|teacher|admin`). Доступ в
   `/api/v1/admin/*` и `/dashboard` — по роли `admin` из БД (не по env). Админ не может менять
-  собственную роль; сессия подписывается `SESSION_SECRET` (пусто — эфемерный, только dev).
+  собственную роль; access-токен подписывается `JWT_SECRET` (пусто — эфемерный, только dev).
+  Refresh-cookie ставится с `Path=/`, иначе web-прокси не увидит её для авто-refresh.
 - Порты: API `5000`, web `8000` (`API_PORT`/`WEB_PORT`), web ходит в API по `API_BASE_URL`.
+- `chat`/`jobs` требуют входа и владения сессией: `POST /chat/sessions` не принимает `user_id`
+  (сессия привязывается к текущему пользователю), история/`ask`/job доступны владельцу или `admin`.
 - Ключи ответов тестов: в дампе Stepik `block.options` их нет — только `/api/step-sources`
   (нужен токен автора курса; иначе шаги `grading=manual`). Импорт — `import_step_sources`.
 - Реальные секреты в `.env.example` не коммитить (только плейсхолдеры); `.env` в `.gitignore`.

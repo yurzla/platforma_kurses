@@ -226,3 +226,19 @@ async def test_static_assets_served() -> None:
         assert (await web.get("/static/theme.js")).status_code == 200
         assert (await web.get("/static/dashboard.css")).status_code == 200
         assert (await web.get("/static/web.js")).status_code == 200
+
+
+async def test_proxy_auto_refreshes_expired_access_token() -> None:
+    store = FakeStore()
+    seed_student_and_course(store)
+    web, api = build_stack(store)
+    async with web, api:
+        await web.post("/login", data={"email": "s@example.com", "password": "pw"})
+        for cookie in web.cookies.jar:
+            if cookie.name == "access_token":
+                cookie.value = "broken-token"
+
+        response = await web.get("/api/v1/courses", headers={"Accept": "application/json"})
+        assert response.status_code == 200
+        assert response.json()
+        assert all(cookie.value != "broken-token" for cookie in web.cookies.jar)

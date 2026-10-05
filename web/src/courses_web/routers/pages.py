@@ -8,12 +8,23 @@ from urllib.parse import parse_qsl
 from fastapi import APIRouter, Request
 from starlette.responses import HTMLResponse, RedirectResponse, Response
 
-from courses_web.client import call_api, relay_cookies
+from courses_web.client import call_api, relay_cookies, relay_refreshed
 from courses_web.templating import templates
 
 router = APIRouter(tags=["pages"])
 
 _REGISTER_ROLES = ("student", "teacher")
+
+
+def _render(
+    request: Request,
+    name: str,
+    context: dict[str, Any],
+    status_code: int = 200,
+) -> Response:
+    response = templates.TemplateResponse(request, name, context, status_code=status_code)
+    relay_refreshed(response, request)
+    return response
 
 
 async def _form(request: Request) -> dict[str, str]:
@@ -144,7 +155,7 @@ async def dashboard(request: Request) -> Response:
     me = await _me(request)
     if me.get("role") != "admin":
         return RedirectResponse("/login?next=/dashboard", status_code=303)
-    return templates.TemplateResponse(request, "dashboard.html", {"me": me})
+    return _render(request, "dashboard.html", {"me": me})
 
 
 @router.get("/courses", response_class=HTMLResponse)
@@ -153,7 +164,7 @@ async def courses(request: Request) -> Response:
     if resp.status_code == 401:
         return RedirectResponse("/login?next=/courses", status_code=303)
     me = await _me(request)
-    return templates.TemplateResponse(
+    return _render(
         request,
         "courses.html",
         {"me": me, "courses": resp.json() if resp.status_code == 200 else []},
@@ -168,9 +179,7 @@ async def course(request: Request, course_id: int) -> Response:
     if resp.status_code != 200:
         return HTMLResponse("<h1>Курс не найден</h1>", status_code=404)
     me = await _me(request)
-    return templates.TemplateResponse(
-        request, "course.html", {"me": me, "course": resp.json()}
-    )
+    return _render(request, "course.html", {"me": me, "course": resp.json()})
 
 
 @router.get("/courses/{course_id}/steps/{step_id}", response_class=HTMLResponse)
@@ -183,7 +192,7 @@ async def step(request: Request, course_id: int, step_id: int) -> Response:
     if resp.status_code != 200:
         return HTMLResponse("<h1>Шаг не найден</h1>", status_code=404)
     me = await _me(request)
-    return templates.TemplateResponse(
+    return _render(
         request,
         "step.html",
         {"me": me, "course_id": course_id, "step": resp.json()},

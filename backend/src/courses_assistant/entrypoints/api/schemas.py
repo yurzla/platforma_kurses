@@ -9,7 +9,6 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class SessionCreate(BaseModel):
-    user_id: int | None = Field(default=None, gt=0)
     course_id: int = Field(gt=0)
 
 

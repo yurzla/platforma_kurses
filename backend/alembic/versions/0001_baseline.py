@@ -19,7 +19,7 @@ branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 
 
-_LATER_TABLES = {"jobs", "step_sources"}
+_LATER_TABLES = {"jobs", "step_sources", "refresh_tokens"}
 
 
 def _legacy_tables() -> list:

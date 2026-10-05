@@ -126,3 +126,73 @@ def test_password_hash_roundtrip() -> None:
     assert verify_password("secret", encoded) is True
     assert verify_password("other", encoded) is False
     assert verify_password("secret", "garbage") is False
+
+
+async def _refresh_with(ac: httpx.AsyncClient, token: str) -> httpx.Response:
+    return await ac.post(
+        "/api/v1/auth/refresh", headers={"cookie": f"refresh_token={token}"}
+    )
+
+
+async def test_refresh_rotates_and_old_token_rejected() -> None:
+    store = FakeStore()
+    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    ac = make_app(store)
+    async with ac:
+        login = await ac.post(
+            "/api/v1/auth/login", json={"email": "s@example.com", "password": "pw"}
+        )
+        assert login.status_code == 200
+        old_refresh = ac.cookies.get("refresh_token")
+        assert old_refresh
+
+        refreshed = await ac.post("/api/v1/auth/refresh")
+        assert refreshed.status_code == 200
+        new_refresh = ac.cookies.get("refresh_token")
+        assert new_refresh and new_refresh != old_refresh
+
+        reuse = await _refresh_with(ac, old_refresh)
+        assert reuse.status_code == 401
+        revoked = await _refresh_with(ac, new_refresh)
+        assert revoked.status_code == 401
+
+
+async def test_logout_revokes_refresh_token() -> None:
+    store = FakeStore()
+    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    ac = make_app(store)
+    async with ac:
+        await ac.post(
+            "/api/v1/auth/login", json={"email": "s@example.com", "password": "pw"}
+        )
+        refresh = ac.cookies.get("refresh_token")
+        logout = await ac.post("/api/v1/auth/logout")
+        assert logout.status_code == 200
+        me = await ac.get("/api/v1/auth/me")
+        assert me.json()["role"] is None
+        reuse = await _refresh_with(ac, refresh)
+        assert reuse.status_code == 401
+
+
+async def test_access_token_via_bearer() -> None:
+    store = FakeStore()
+    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    container, _, _ = build_test_container(store)
+    app = create_app(settings=container.settings, container=container)
+    transport = httpx.ASGITransport(app=app)
+    async with httpx.AsyncClient(transport=transport, base_url="http://test") as login_ac:
+        await login_ac.post(
+            "/api/v1/auth/login", json={"email": "s@example.com", "password": "pw"}
+        )
+        token = login_ac.cookies.get("access_token")
+        assert token
+    async with httpx.AsyncClient(transport=transport, base_url="http://test") as ac:
+        ok = await ac.get("/api/v1/auth/me", headers={"Authorization": f"Bearer {token}"})
+        assert ok.json()["role"] == "student"
+        bad_token = "invalid.token.value"
+        bad = await ac.get(
+            "/api/v1/auth/me", headers={"Authorization": f"Bearer {bad_token}"}
+        )
+        assert bad.status_code == 401
+        anon = await ac.get("/api/v1/auth/me")
+        assert anon.json()["role"] is None

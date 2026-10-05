@@ -31,6 +31,10 @@ class CannotChangeOwnRole(DomainError):
     """Пользователь не может менять собственную роль."""
 
 
+class InvalidToken(DomainError):
+    """Access-токен отсутствует, истёк или некорректен."""
+
+
 class CourseNotFound(DomainError):
     """Курс не найден."""
 

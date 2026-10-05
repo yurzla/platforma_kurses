@@ -20,6 +20,8 @@ class Settings(BaseSettings):
     web_host: str = "0.0.0.0"
     web_port: int = 8000
     api_base_url: str = "http://localhost:5000"
+    access_cookie: str = "access_token"
+    refresh_cookie: str = "refresh_token"
 
 
 @lru_cache

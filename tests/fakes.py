@@ -16,6 +16,7 @@ from courses_assistant.application.ports import (
     Embedder,
     JobRepository,
     MessageBroker,
+    RefreshTokenRepository,
     UnitOfWork,
     UserRepository,
 )
@@ -33,6 +34,7 @@ from courses_assistant.domain.models import (
     JobStatus,
     LLMMessage,
     QuestionJob,
+    RefreshToken,
     RetrievedChunk,
     User,
 )
@@ -53,9 +55,11 @@ class FakeStore:
     answer_keys: dict[int, dict] = field(default_factory=dict)
     step_bodies: dict[int, str] = field(default_factory=dict)
     progress: dict[tuple[int, int], str] = field(default_factory=dict)
+    refresh_tokens: dict[str, RefreshToken] = field(default_factory=dict)
     session_seq: int = 0
     message_seq: int = 0
     user_seq: int = 0
+    refresh_seq: int = 0
 
     def add_course(self, course: CourseDetail) -> None:
         self.courses_detail[course.id] = course
@@ -428,6 +432,37 @@ class InMemoryJobRepository(JobRepository):
         return len(to_delete)
 
 
+class InMemoryRefreshTokenRepository(RefreshTokenRepository):
+    def __init__(self, store: FakeStore) -> None:
+        self._store = store
+
+    async def add(self, user_id: int, token_hash: str, expires_at: datetime) -> None:
+        self._store.refresh_seq += 1
+        self._store.refresh_tokens[token_hash] = RefreshToken(
+            id=self._store.refresh_seq,
+            user_id=user_id,
+            token_hash=token_hash,
+            expires_at=expires_at,
+            revoked_at=None,
+            created_at=datetime.now(UTC),
+        )
+
+    async def get(self, token_hash: str) -> RefreshToken | None:
+        return self._store.refresh_tokens.get(token_hash)
+
+    async def revoke(self, token_hash: str, revoked_at: datetime) -> bool:
+        token = self._store.refresh_tokens.get(token_hash)
+        if token is None or token.revoked_at is not None:
+            return False
+        token.revoked_at = revoked_at
+        return True
+
+    async def revoke_all_for_user(self, user_id: int, revoked_at: datetime) -> None:
+        for token in self._store.refresh_tokens.values():
+            if token.user_id == user_id and token.revoked_at is None:
+                token.revoked_at = revoked_at
+
+
 class InMemoryUnitOfWork(UnitOfWork):
     def __init__(self, store: FakeStore) -> None:
         self._store = store
@@ -436,6 +471,7 @@ class InMemoryUnitOfWork(UnitOfWork):
         self.jobs = InMemoryJobRepository(store)
         self.users = InMemoryUserRepository(store)
         self.catalog = InMemoryCatalogRepository(store)
+        self.refresh_tokens = InMemoryRefreshTokenRepository(store)
 
     async def __aenter__(self) -> InMemoryUnitOfWork:
         return self

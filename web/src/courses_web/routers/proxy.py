@@ -2,11 +2,10 @@
 
 from __future__ import annotations
 
-import httpx
 from fastapi import APIRouter, Request
 from starlette.responses import Response
 
-from courses_web.client import forwarded_headers, relay_cookies, send_api
+from courses_web.client import call_api, relay_cookies, relay_refreshed
 
 router = APIRouter(tags=["proxy"])
 
@@ -24,15 +23,13 @@ _DROP_RESPONSE_HEADERS = {
 
 @router.api_route("/api/{path:path}", methods=_METHODS)
 async def proxy(path: str, request: Request) -> Response:
-    client: httpx.AsyncClient = request.app.state.client
     body = await request.body()
-    upstream = await send_api(
-        client,
+    upstream = await call_api(
+        request,
         request.method,
         request.url.path,
-        params=list(request.query_params.multi_items()),
-        headers=forwarded_headers(request, include_content_type=True),
         content=body,
+        params=list(request.query_params.multi_items()),
     )
     response = Response(content=upstream.content, status_code=upstream.status_code)
     for key, value in upstream.headers.items():
@@ -40,4 +37,5 @@ async def proxy(path: str, request: Request) -> Response:
             continue
         response.headers[key] = value
     relay_cookies(response, upstream)
+    relay_refreshed(response, request)
     return response
