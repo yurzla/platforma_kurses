@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class SessionCreate(BaseModel):
@@ -53,3 +53,46 @@ class JobRead(BaseModel):
 class HealthRead(BaseModel):
     status: str
     dependencies: dict[str, str] = Field(default_factory=dict)
+
+
+class JobListItem(BaseModel):
+    id: str
+    session_id: int
+    status: str
+    question: str
+    attempts: int
+    error: str | None = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+
+
+class JobListResponse(BaseModel):
+    items: list[JobListItem]
+    total: int
+    limit: int
+    offset: int
+
+
+class DlqEntry(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    message_id: str
+    task: str | None = None
+    job_id: str | None = None
+    session_id: int | None = None
+    error: str | None = None
+    source_stream: str | None = None
+
+
+class StreamStat(BaseModel):
+    stream: str
+    group: str
+    length: int
+    pending: int | None = None
+    lag: int | None = None
+    consumers: int | None = None
+
+
+class OverviewResponse(BaseModel):
+    status_counts: dict[str, int]
+    streams: list[StreamStat]

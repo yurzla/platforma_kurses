@@ -3,10 +3,14 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+from datetime import UTC, datetime, timedelta
+
+import structlog
 
 from courses_assistant.application.commands import (
     CreateChatSession,
     ProcessQuestion,
+    RunCronTask,
     SendQuestion,
 )
 from courses_assistant.application.ports import LLM, Embedder, MessageBroker, UnitOfWork
@@ -23,6 +27,8 @@ from courses_assistant.domain.models import Answer, ChatMessage, JobStatus, Retr
 
 NO_MATERIALS_ANSWER = "Не удалось найти подходящие материалы в текущем курсе."
 NO_COURSE_ANSWER = "Материалы курса не найдены."
+
+logger = structlog.get_logger(__name__)
 
 
 def _chunk_to_source(chunk: RetrievedChunk) -> dict:
@@ -71,7 +77,11 @@ class Handlers:
             "question": command.question,
         }
         try:
-            message_id = await self._broker.publish(self._settings.stream_requests, payload)
+            message_id = await self._broker.publish(
+                self._settings.stream_requests,
+                payload,
+                maxlen=self._settings.redis_stream_maxlen,
+            )
         except Exception as exc:
             async with self._uow_factory() as uow:
                 await uow.jobs.mark_failed(job.id, f"publish error: {exc}")
@@ -148,3 +158,17 @@ class Handlers:
             )
             await uow.jobs.mark_done(command.job_id, answer_text, sources, rewritten)
             return Answer(text=answer_text, sources=[], rewritten_question=rewritten)
+
+    async def run_cron_task(self, command: RunCronTask) -> None:
+        if command.name == "purge_terminal_jobs":
+            days = int(command.payload.get("older_than_days", self._settings.job_retention_days))
+            older_than = datetime.now(UTC) - timedelta(days=days)
+            async with self._uow_factory() as uow:
+                deleted = await uow.jobs.purge_terminal(older_than)
+            logger.info(
+                "cron_purge_terminal_jobs",
+                deleted=deleted,
+                older_than=older_than.isoformat(),
+            )
+            return
+        raise ValueError(f"Неизвестная cron-задача: {command.name}")

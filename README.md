@@ -8,8 +8,9 @@ worker-ы, HTTP API отдаёт `202` и job-id, клиент опрашива�
 
 ```
 entrypoints/api (FastAPI) ──┐
-                            ├── application (commands, handlers, ports, message bus)
-entrypoints/worker ─────────┘                 │
+entrypoints/worker ─────────┤
+entrypoints/cron ───────────┼── application (commands, handlers, queries, ports, message bus, consumer)
+entrypoints/scheduler ──────┘                 │
                                               ▼
                                       adapters (SQLAlchemy, GigaChat, Ollama, Redis Streams)
                                               │
@@ -24,6 +25,8 @@ worker → XREADGROUP → status=running → rewrite → embed → pgvector <=> 
        → в одной транзакции: сообщения + jobs(done) → XACK
        → ошибка: ретраи → rag.dead (DLQ)
 GET /jobs/{id} → queued | running | done | failed
+scheduler → XADD rag.cron (purge_terminal_jobs) → cron-worker:
+       удаляет старые done/failed job-ы → XACK (ошибка → rag.cron.dead)
 ```
 
 Технологии: FastAPI, SQLAlchemy 2.0 async + asyncpg, pgvector, Alembic, Redis Streams,
@@ -34,11 +37,11 @@ GigaChat (httpx, OAuth), Ollama `nomic-embed-text` (768), uv, Docker Compose, py
 ```
 src/courses_assistant/
   domain/         модели, ошибки, промпты, построение контекста
-  application/    ports, unit_of_work, message_bus, commands, queries, handlers, rag
+  application/    ports, unit_of_work, message_bus, commands, queries, handlers, rag, consumer
   adapters/       persistence (orm, repositories, uow), llm/gigachat, embeddings/ollama, broker/redis_streams
-  entrypoints/    api (FastAPI), worker
+  entrypoints/    api (FastAPI + dashboard на Jinja2), worker, cron, scheduler
   scripts/        db_bootstrap, stepik_dump, load_stepik, embed_chunks
-alembic/          baseline (14 таблиц) + HNSW + jobs
+alembic/          baseline (14 таблиц) + HNSW + jobs + updated_at index
 tests/            unit, integration, api, fakes
 ```
 
@@ -68,7 +71,26 @@ make down
 
 Compose поднимает `postgres` (pgvector), `redis`, `ollama` (+ pull модели), `seed`
 (загрузка дампа, если `tmp/edu_platform_kurses.sql` существует), `migrate`
-(Alembic: stamp baseline при наличии дампа + upgrade), `api` и `worker`.
+(Alembic: stamp baseline при наличии дампа + upgrade), `api`, `worker`, `scheduler`
+(периодически ставит cron-задачи) и `cron` (выполняет их).
+
+## Дашборд
+
+Веб-дашборд: `http://localhost:8000/dashboard` — вкладки Jobs / DLQ / Streams,
+фильтры по статусу/сессии/вопросу, авто-обновление. Данные отдаёт read-only API
+`/api/v1/admin/*`.
+
+Если задан `ADMIN_TOKEN`, доступ к дашборду и админ-API требует токен:
+`http://localhost:8000/dashboard?token=<ADMIN_TOKEN>` (токен сохраняется в cookie)
+либо заголовок `Authorization: Bearer <ADMIN_TOKEN>` для API.
+
+## Ретенция
+
+- **Redis-стримы** ограничены approximate-`MAXLEN` (`REDIS_STREAM_MAXLEN`,
+  `REDIS_STREAM_EVENTS_MAXLEN`) — рост стримов ограничен.
+- **Postgres `jobs`**: cron-задача `purge_terminal_jobs` раз в
+  `CRON_INTERVAL_SECONDS` удаляет завершённые (`done`/`failed`) job-ы старше
+  `JOB_RETENTION_DAYS`. История (`chat_messages`/`chat_sessions`) не удаляется.
 
 ## API
 
@@ -79,6 +101,12 @@ Compose поднимает `postgres` (pgvector), `redis`, `ollama` (+ pull мо
 | POST | `/api/v1/chat/sessions/{id}/ask` | задать вопрос → 202 `{job_id}` |
 | GET | `/api/v1/jobs/{job_id}` | статус job и ответ |
 | GET | `/health`, `/health/ready` | liveness / readiness |
+| GET | `/dashboard` | веб-дашборд (Jobs / DLQ / Streams) |
+| GET | `/api/v1/admin/overview` | счётчики job по статусам + метрики стримов |
+| GET | `/api/v1/admin/jobs` | список job-ов (`status`, `session_id`, `search`, `limit`, `offset`) |
+| GET | `/api/v1/admin/jobs/{id}` | детали job |
+| GET | `/api/v1/admin/dlq` | записи DLQ (`rag.dead`, `rag.cron.dead`) |
+| GET | `/api/v1/admin/streams` | метрики Redis Streams |
 
 Swagger: `http://localhost:8000/docs`.
 
@@ -120,3 +148,7 @@ make test-integration
 См. `.env.example`. Ключевые: `DATABASE_URL`, `REDIS_URL`, `OLLAMA_URL`,
 `EMBEDDING_MODEL`, `EMBEDDING_DIMENSION`, `GIGACHAT_CREDENTIALS`, `GIGACHAT_AUTH_URL`,
 `GIGACHAT_BASE_URL`, `GIGACHAT_MODEL`.
+
+Планировщик/ретенция/админка: `STREAM_CRON`, `CRON_INTERVAL_SECONDS`,
+`JOB_RETENTION_DAYS`, `REDIS_STREAM_MAXLEN`, `REDIS_STREAM_EVENTS_MAXLEN`,
+`ADMIN_TOKEN` (пусто — доступ к дашборду открыт).

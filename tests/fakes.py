@@ -150,6 +150,60 @@ class InMemoryJobRepository(JobRepository):
         job.error = error
         job.updated_at = datetime.now(UTC)
 
+    def _filtered(
+        self,
+        status: JobStatus | None,
+        session_id: int | None,
+        search: str | None,
+    ) -> list[QuestionJob]:
+        jobs = list(self._store.jobs.values())
+        if status is not None:
+            jobs = [job for job in jobs if job.status == status]
+        if session_id is not None:
+            jobs = [job for job in jobs if job.session_id == session_id]
+        if search:
+            jobs = [job for job in jobs if search.lower() in job.question.lower()]
+        return jobs
+
+    async def list(
+        self,
+        status: JobStatus | None = None,
+        session_id: int | None = None,
+        search: str | None = None,
+        limit: int = 50,
+        offset: int = 0,
+    ) -> list[QuestionJob]:
+        jobs = self._filtered(status, session_id, search)
+        jobs.sort(key=lambda job: job.created_at or datetime.now(UTC), reverse=True)
+        return jobs[offset : offset + limit]
+
+    async def count(
+        self,
+        status: JobStatus | None = None,
+        session_id: int | None = None,
+        search: str | None = None,
+    ) -> int:
+        return len(self._filtered(status, session_id, search))
+
+    async def status_counts(self) -> dict[str, int]:
+        counts: dict[str, int] = {}
+        for job in self._store.jobs.values():
+            key = str(job.status)
+            counts[key] = counts.get(key, 0) + 1
+        return counts
+
+    async def purge_terminal(self, older_than: datetime) -> int:
+        to_delete = [
+            job_id
+            for job_id, job in self._store.jobs.items()
+            if job.status in (JobStatus.DONE, JobStatus.FAILED)
+            and job.updated_at is not None
+            and job.updated_at < older_than
+        ]
+        for job_id in to_delete:
+            del self._store.jobs[job_id]
+        return len(to_delete)
+
 
 class InMemoryUnitOfWork(UnitOfWork):
     def __init__(self, store: FakeStore) -> None:
@@ -202,8 +256,9 @@ class FakeBroker(MessageBroker):
         self.published: list[tuple[str, dict]] = []
         self.acked: list[tuple[str, str, str]] = []
         self.dead: list[tuple[str, dict, str]] = []
+        self.dead_entries: dict[str, list[tuple[str, dict]]] = {}
 
-    async def publish(self, stream: str, payload: dict) -> str:
+    async def publish(self, stream: str, payload: dict, maxlen: int | None = None) -> str:
         self.published.append((stream, payload))
         return f"{stream}-{len(self.published)}"
 
@@ -220,9 +275,31 @@ class FakeBroker(MessageBroker):
         self.acked.append((stream, group, message_id))
 
     async def move_to_dead(
-        self, stream: str, dead_stream: str, payload: dict, reason: str
+        self,
+        stream: str,
+        dead_stream: str,
+        payload: dict,
+        reason: str,
+        maxlen: int | None = None,
     ) -> None:
         self.dead.append((dead_stream, payload, reason))
+        entry = {**payload, "error": reason, "source_stream": stream}
+        self.dead_entries.setdefault(dead_stream, []).insert(
+            0, (f"{dead_stream}-{len(self.dead)}", entry)
+        )
+
+    async def read_dead(self, stream: str, count: int = 50) -> list[tuple[str, dict]]:
+        return self.dead_entries.get(stream, [])[:count]
+
+    async def stream_stats(self, stream: str, group: str) -> dict:
+        return {
+            "stream": stream,
+            "group": group,
+            "length": len(self.dead_entries.get(stream, [])),
+            "pending": 0,
+            "lag": 0,
+            "consumers": 1,
+        }
 
     async def ping(self) -> bool:
         return True

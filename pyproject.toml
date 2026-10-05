@@ -7,6 +7,7 @@ requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.115",
     "uvicorn[standard]>=0.30",
+    "jinja2>=3.1",
     "sqlalchemy[asyncio]>=2.0.30",
     "asyncpg>=0.30",
     "alembic>=1.13",
@@ -40,6 +41,8 @@ packages = ["src/courses_assistant"]
 [project.scripts]
 courses-assistant-api = "courses_assistant.entrypoints.api.__main__:main"
 courses-assistant-worker = "courses_assistant.entrypoints.worker.__main__:main"
+courses-assistant-scheduler = "courses_assistant.entrypoints.scheduler.__main__:main"
+courses-assistant-cron = "courses_assistant.entrypoints.cron.__main__:main"
 courses-assistant-db = "courses_assistant.scripts.db_bootstrap:main"
 courses-assistant-dump = "courses_assistant.scripts.stepik_dump:app"
 courses-assistant-load = "courses_assistant.scripts.load_stepik:app"

@@ -22,3 +22,9 @@ class ProcessQuestion:
     job_id: str
     session_id: int
     question: str
+
+
+@dataclass(slots=True, frozen=True)
+class RunCronTask:
+    name: str
+    payload: dict

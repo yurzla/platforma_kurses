@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 import structlog
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 from courses_assistant.config import Settings, get_settings
 from courses_assistant.container import Container, build_container
@@ -18,9 +20,11 @@ from courses_assistant.domain.errors import (
     UserNotFound,
 )
 from courses_assistant.entrypoints.api.middleware import RequestContextMiddleware
-from courses_assistant.entrypoints.api.routers import chat, health, jobs
+from courses_assistant.entrypoints.api.routers import admin, chat, dashboard, health, jobs
 
 logger = structlog.get_logger(__name__)
+
+_STATIC_DIR = Path(__file__).resolve().parent / "static"
 
 _NOT_FOUND = (SessionNotFound, JobNotFound, UserNotFound, CourseNotFound)
 
@@ -58,6 +62,9 @@ def create_app(settings: Settings | None = None, container: Container | None = N
     app.include_router(health.router)
     app.include_router(chat.router)
     app.include_router(jobs.router)
+    app.include_router(admin.router)
+    app.include_router(dashboard.router)
+    app.mount("/static", StaticFiles(directory=str(_STATIC_DIR)), name="static")
 
     async def not_found_handler(request: Request, exc: Exception) -> JSONResponse:
         return JSONResponse(status_code=404, content={"detail": str(exc)})

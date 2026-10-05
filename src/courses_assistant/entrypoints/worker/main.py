@@ -9,6 +9,7 @@ import signal
 import structlog
 
 from courses_assistant.application.commands import ProcessQuestion
+from courses_assistant.application.consumer import consume_loop
 from courses_assistant.config import Settings, get_settings
 from courses_assistant.container import Container, build_container
 
@@ -26,37 +27,22 @@ class Worker:
 
     async def run(self) -> None:
         settings = self._settings
-        broker = self._container.broker
-        await broker.ensure_group(settings.stream_requests, settings.consumer_group)
         logger.info(
             "worker_started",
             stream=settings.stream_requests,
             group=settings.consumer_group,
         )
-
-        while not self._stop.is_set():
-            try:
-                messages = await broker.read_group(
-                    settings.stream_requests,
-                    settings.consumer_group,
-                    settings.consumer_name,
-                    count=1,
-                    block_ms=settings.stream_block_ms,
-                )
-                if not messages:
-                    messages = await broker.reclaim_pending(
-                        settings.stream_requests,
-                        settings.consumer_group,
-                        settings.consumer_name,
-                        min_idle_ms=settings.consumer_pending_idle_ms,
-                        count=10,
-                    )
-                for message_id, payload in messages:
-                    await self._handle(message_id, payload)
-            except Exception as exc:  # noqa: BLE001
-                logger.error("worker_loop_error", error=str(exc))
-                await asyncio.sleep(1)
-
+        await consume_loop(
+            broker=self._container.broker,
+            stream=settings.stream_requests,
+            group=settings.consumer_group,
+            consumer=settings.consumer_name,
+            stop=self._stop,
+            handler=self._handle,
+            block_ms=settings.stream_block_ms,
+            reclaim_min_idle_ms=settings.consumer_pending_idle_ms,
+            error_log_event="worker_loop_error",
+        )
         await self._container.close()
         logger.info("worker_stopped")
 
@@ -70,7 +56,11 @@ class Worker:
         if not job_id or session_id is None or question is None:
             logger.error("worker_bad_payload", payload=payload)
             await broker.move_to_dead(
-                settings.stream_requests, settings.stream_dead, payload, "bad payload"
+                settings.stream_requests,
+                settings.stream_dead,
+                payload,
+                "bad payload",
+                maxlen=settings.redis_stream_maxlen,
             )
             await broker.ack(settings.stream_requests, settings.consumer_group, message_id)
             return
@@ -80,7 +70,9 @@ class Worker:
                 ProcessQuestion(job_id=job_id, session_id=session_id, question=question)
             )
             await broker.publish(
-                settings.stream_events, {"event": "question.done", "job_id": job_id}
+                settings.stream_events,
+                {"event": "question.done", "job_id": job_id},
+                maxlen=settings.redis_stream_events_maxlen,
             )
             await broker.ack(settings.stream_requests, settings.consumer_group, message_id)
             logger.info("job_done", job_id=job_id)
@@ -98,13 +90,19 @@ class Worker:
             async with self._container.uow_factory() as uow:
                 await uow.jobs.mark_failed(job_id, f"{type(exc).__name__}: {exc}")
             await broker.move_to_dead(
-                settings.stream_requests, settings.stream_dead, payload, str(exc)
+                settings.stream_requests,
+                settings.stream_dead,
+                payload,
+                str(exc),
+                maxlen=settings.redis_stream_maxlen,
             )
             await broker.ack(settings.stream_requests, settings.consumer_group, message_id)
             logger.error("job_failed", job_id=job_id, attempts=attempts, error=str(exc))
         else:
             await broker.ack(settings.stream_requests, settings.consumer_group, message_id)
-            await broker.publish(settings.stream_requests, payload)
+            await broker.publish(
+                settings.stream_requests, payload, maxlen=settings.redis_stream_maxlen
+            )
             logger.warning("job_retry", job_id=job_id, attempts=attempts, error=str(exc))
 
     async def _increment_attempts(self, job_id: str) -> int:

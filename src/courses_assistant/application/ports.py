@@ -4,11 +4,13 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from collections.abc import Sequence
+from datetime import datetime
 from types import TracebackType
 
 from courses_assistant.domain.models import (
     ChatMessage,
     ChatSession,
+    JobStatus,
     LLMMessage,
     QuestionJob,
     RetrievedChunk,
@@ -88,6 +90,34 @@ class JobRepository(ABC):
     @abstractmethod
     async def mark_failed(self, job_id: str, error: str) -> None: ...
 
+    @abstractmethod
+    async def list(
+        self,
+        status: JobStatus | None = None,
+        session_id: int | None = None,
+        search: str | None = None,
+        limit: int = 50,
+        offset: int = 0,
+    ) -> list[QuestionJob]:
+        """Список job-ов с фильтрами (для админки), новые сверху."""
+
+    @abstractmethod
+    async def count(
+        self,
+        status: JobStatus | None = None,
+        session_id: int | None = None,
+        search: str | None = None,
+    ) -> int:
+        """Число job-ов под те же фильтры, что и list (без пагинации)."""
+
+    @abstractmethod
+    async def status_counts(self) -> dict[str, int]:
+        """Сколько job-ов в каждом статусе."""
+
+    @abstractmethod
+    async def purge_terminal(self, older_than: datetime) -> int:
+        """Удаляет завершённые (done/failed) job-ы старше указанного момента."""
+
 
 class UnitOfWork(ABC):
     chat: ChatRepository
@@ -114,8 +144,8 @@ class UnitOfWork(ABC):
 
 class MessageBroker(ABC):
     @abstractmethod
-    async def publish(self, stream: str, payload: dict) -> str:
-        """Публикует сообщение, возвращает id."""
+    async def publish(self, stream: str, payload: dict, maxlen: int | None = None) -> str:
+        """Публикует сообщение (опционально с approximate-trim по maxlen), возвращает id."""
 
     @abstractmethod
     async def ensure_group(self, stream: str, group: str) -> None: ...
@@ -146,8 +176,21 @@ class MessageBroker(ABC):
 
     @abstractmethod
     async def move_to_dead(
-        self, stream: str, dead_stream: str, payload: dict, reason: str
+        self,
+        stream: str,
+        dead_stream: str,
+        payload: dict,
+        reason: str,
+        maxlen: int | None = None,
     ) -> None: ...
+
+    @abstractmethod
+    async def read_dead(self, stream: str, count: int = 50) -> list[tuple[str, dict]]:
+        """Читает записи DLQ (новые сверху). Возвращает (message_id, payload)."""
+
+    @abstractmethod
+    async def stream_stats(self, stream: str, group: str) -> dict:
+        """Возвращает метрики стрима: length, pending, lag, consumers."""
 
     @abstractmethod
     async def ping(self) -> bool:

@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import uuid
 from collections.abc import Sequence
+from datetime import datetime
+from typing import Any, cast
 
-from sqlalchemy import select, update
+from sqlalchemy import CursorResult, delete, func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from courses_assistant.adapters.persistence.orm import (
@@ -232,3 +234,64 @@ class SqlJobRepository(JobRepository):
             .where(JobORM.id == job_id)
             .values(status=JobStatus.FAILED.value, error=error)
         )
+
+    @staticmethod
+    def _filters(
+        status: JobStatus | None,
+        session_id: int | None,
+        search: str | None,
+    ) -> list:
+        conditions: list = []
+        if status is not None:
+            conditions.append(JobORM.status == status.value)
+        if session_id is not None:
+            conditions.append(JobORM.session_id == session_id)
+        if search:
+            conditions.append(JobORM.question.ilike(f"%{search}%"))
+        return conditions
+
+    async def list(
+        self,
+        status: JobStatus | None = None,
+        session_id: int | None = None,
+        search: str | None = None,
+        limit: int = 50,
+        offset: int = 0,
+    ) -> list[QuestionJob]:
+        stmt = select(JobORM).order_by(JobORM.created_at.desc(), JobORM.id.desc())
+        conditions = self._filters(status, session_id, search)
+        if conditions:
+            stmt = stmt.where(*conditions)
+        stmt = stmt.limit(limit).offset(offset)
+        rows = (await self._session.execute(stmt)).scalars().all()
+        return [_to_job(row) for row in rows]
+
+    async def count(
+        self,
+        status: JobStatus | None = None,
+        session_id: int | None = None,
+        search: str | None = None,
+    ) -> int:
+        stmt = select(func.count()).select_from(JobORM)
+        conditions = self._filters(status, session_id, search)
+        if conditions:
+            stmt = stmt.where(*conditions)
+        return int((await self._session.execute(stmt)).scalar_one())
+
+    async def status_counts(self) -> dict[str, int]:
+        result = await self._session.execute(
+            select(JobORM.status, func.count()).group_by(JobORM.status)
+        )
+        return {str(status): int(count) for status, count in result.all()}
+
+    async def purge_terminal(self, older_than: datetime) -> int:
+        result = cast(
+            "CursorResult[Any]",
+            await self._session.execute(
+                delete(JobORM).where(
+                    JobORM.status.in_([JobStatus.DONE.value, JobStatus.FAILED.value]),
+                    JobORM.updated_at < older_than,
+                )
+            ),
+        )
+        return int(result.rowcount or 0)

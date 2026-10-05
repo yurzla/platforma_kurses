@@ -19,8 +19,10 @@ class RedisStreamsBroker(MessageBroker):
             socket_timeout=socket_timeout,
         )
 
-    async def publish(self, stream: str, payload: dict) -> str:
-        message_id = await self._client.xadd(stream, {"data": json.dumps(payload)})
+    async def publish(self, stream: str, payload: dict, maxlen: int | None = None) -> str:
+        message_id = await self._client.xadd(
+            stream, {"data": json.dumps(payload)}, maxlen=maxlen, approximate=True
+        )
         return str(message_id)
 
     async def ensure_group(self, stream: str, group: str) -> None:
@@ -61,10 +63,50 @@ class RedisStreamsBroker(MessageBroker):
         await self._client.xack(stream, group, message_id)
 
     async def move_to_dead(
-        self, stream: str, dead_stream: str, payload: dict, reason: str
+        self,
+        stream: str,
+        dead_stream: str,
+        payload: dict,
+        reason: str,
+        maxlen: int | None = None,
     ) -> None:
         dead_payload = {**payload, "error": reason, "source_stream": stream}
-        await self._client.xadd(dead_stream, {"data": json.dumps(dead_payload)})
+        await self._client.xadd(
+            dead_stream, {"data": json.dumps(dead_payload)}, maxlen=maxlen, approximate=True
+        )
+
+    async def read_dead(self, stream: str, count: int = 50) -> list[tuple[str, dict]]:
+        response = await self._client.xrevrange(stream, count=count)
+        result: list[tuple[str, dict]] = []
+        for message_id, fields in response or []:
+            if not fields:
+                continue
+            raw = fields.get("data")
+            if raw is None:
+                continue
+            result.append((str(message_id), json.loads(raw)))
+        return result
+
+    async def stream_stats(self, stream: str, group: str) -> dict:
+        stats: dict = {
+            "stream": stream,
+            "group": group,
+            "length": await self._client.xlen(stream),
+            "pending": None,
+            "lag": None,
+            "consumers": None,
+        }
+        try:
+            groups = await self._client.xinfo_groups(stream)
+        except redis.ResponseError:
+            return stats
+        for info in groups:
+            if info.get("name") == group:
+                stats["pending"] = info.get("pending")
+                stats["lag"] = info.get("lag")
+                stats["consumers"] = info.get("consumers")
+                break
+        return stats
 
     async def ping(self) -> bool:
         try:

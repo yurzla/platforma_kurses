@@ -54,3 +54,52 @@ async def test_read_group_blocks_longer_than_socket_timeout() -> None:
         assert messages == []
     finally:
         await broker.close()
+
+
+async def test_publish_with_maxlen_bounds_stream() -> None:
+    assert REDIS_URL is not None
+    broker = RedisStreamsBroker(REDIS_URL)
+    suffix = uuid.uuid4().hex
+    stream = f"test.maxlen.{suffix}"
+    try:
+        for i in range(250):
+            await broker.publish(stream, {"i": i}, maxlen=10)
+        length = await broker._client.xlen(stream)  # type: ignore[attr-defined]
+        assert length < 250
+    finally:
+        await broker.close()
+
+
+async def test_move_to_dead_and_read_dead() -> None:
+    assert REDIS_URL is not None
+    broker = RedisStreamsBroker(REDIS_URL)
+    suffix = uuid.uuid4().hex
+    stream = f"test.requests.{suffix}"
+    dead = f"test.dead.{suffix}"
+    try:
+        await broker.move_to_dead(stream, dead, {"job_id": "j1"}, "boom", maxlen=100)
+        entries = await broker.read_dead(dead, count=10)
+        assert len(entries) == 1
+        _message_id, payload = entries[0]
+        assert payload["job_id"] == "j1"
+        assert payload["error"] == "boom"
+        assert payload["source_stream"] == stream
+    finally:
+        await broker.close()
+
+
+async def test_stream_stats_reports_length() -> None:
+    assert REDIS_URL is not None
+    broker = RedisStreamsBroker(REDIS_URL)
+    suffix = uuid.uuid4().hex
+    stream = f"test.stats.{suffix}"
+    group = f"test-group-{suffix}"
+    try:
+        await broker.ensure_group(stream, group)
+        await broker.publish(stream, {"x": 1})
+        stats = await broker.stream_stats(stream, group)
+        assert stats["stream"] == stream
+        assert stats["group"] == group
+        assert stats["length"] == 1
+    finally:
+        await broker.close()

@@ -15,6 +15,7 @@ from courses_assistant.adapters.persistence.unit_of_work import SqlAlchemyUnitOf
 from courses_assistant.application.commands import (
     CreateChatSession,
     ProcessQuestion,
+    RunCronTask,
     SendQuestion,
 )
 from courses_assistant.application.handlers import Handlers
@@ -75,6 +76,7 @@ def build_container(settings: Settings) -> Container:
             CreateChatSession: handlers.create_session,
             SendQuestion: handlers.send_question,
             ProcessQuestion: handlers.process_question,
+            RunCronTask: handlers.run_cron_task,
         }
     )
 

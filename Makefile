@@ -38,7 +38,7 @@ down:
 	docker compose down
 
 logs:
-	docker compose logs -f api worker
+	docker compose logs -f api worker cron scheduler
 
 build:
 	docker build -t courses-assistant:local .

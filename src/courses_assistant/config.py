@@ -39,6 +39,21 @@ class Settings(BaseSettings):
     consumer_pending_idle_ms: int = 60_000
     stream_block_ms: int = 5000
 
+    # Cron (отдельная очередь периодических задач)
+    stream_cron: str = "rag.cron"
+    cron_dlq: str = "rag.cron.dead"
+    cron_group: str = "rag-cron"
+    cron_consumer_name: str = "cron-1"
+    cron_interval_seconds: int = 3600
+    job_retention_days: int = 7
+
+    # Ретенция Redis-стримов
+    redis_stream_maxlen: int = 10_000
+    redis_stream_events_maxlen: int = 1_000
+
+    # Админка/дашборд
+    admin_token: str = ""
+
     # Embeddings (Ollama)
     ollama_url: str = "http://localhost:11434/api/embed"
     embedding_model: str = "nomic-embed-text"

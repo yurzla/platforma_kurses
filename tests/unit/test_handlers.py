@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+from datetime import UTC, datetime, timedelta
+
 import pytest
 
 from courses_assistant.application.commands import (
     CreateChatSession,
     ProcessQuestion,
+    RunCronTask,
     SendQuestion,
 )
 from courses_assistant.application.handlers import NO_MATERIALS_ANSWER, Handlers
@@ -72,7 +75,7 @@ async def test_send_question_enqueues(handlers, store, broker) -> None:
 async def test_send_question_publish_failure_marks_failed(handlers, store, broker) -> None:
     session_id = await handlers.create_session(CreateChatSession(user_id=1, course_id=10))
 
-    async def boom(stream: str, payload: dict) -> str:
+    async def boom(stream: str, payload: dict, maxlen: int | None = None) -> str:
         raise RuntimeError("redis down")
 
     broker.publish = boom  # type: ignore[method-assign]
@@ -130,3 +133,26 @@ async def test_process_question_is_idempotent(handlers, store) -> None:
     )
 
     assert len(store.messages[session_id]) == 2
+
+
+async def test_run_cron_task_purges_old_terminal_jobs(handlers, store) -> None:
+    session_id = await handlers.create_session(CreateChatSession(user_id=1, course_id=10))
+    old_job_id = await handlers.send_question(SendQuestion(session_id=session_id, question="?"))
+    fresh_job_id = await handlers.send_question(SendQuestion(session_id=session_id, question="??"))
+
+    store.jobs[old_job_id].status = JobStatus.DONE
+    store.jobs[old_job_id].updated_at = datetime.now(UTC) - timedelta(days=30)
+    store.jobs[fresh_job_id].status = JobStatus.FAILED
+    store.jobs[fresh_job_id].updated_at = datetime.now(UTC)
+
+    await handlers.run_cron_task(
+        RunCronTask(name="purge_terminal_jobs", payload={"older_than_days": 7})
+    )
+
+    assert old_job_id not in store.jobs
+    assert fresh_job_id in store.jobs
+
+
+async def test_run_cron_task_unknown_name_raises(handlers) -> None:
+    with pytest.raises(ValueError):
+        await handlers.run_cron_task(RunCronTask(name="nope", payload={}))
