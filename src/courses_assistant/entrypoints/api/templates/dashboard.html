@@ -1,75 +1,101 @@
 {% extends "base.html" %}
 
-{% block content %}
-<section class="cards" id="status-cards">
-  <div class="card" data-status="queued"><span class="card-value" id="cnt-queued">0</span><span class="card-label">queued</span></div>
-  <div class="card" data-status="running"><span class="card-value" id="cnt-running">0</span><span class="card-label">running</span></div>
-  <div class="card" data-status="done"><span class="card-value" id="cnt-done">0</span><span class="card-label">done</span></div>
-  <div class="card" data-status="failed"><span class="card-value" id="cnt-failed">0</span><span class="card-label">failed</span></div>
-</section>
+{% block title %}Courses Assistant · Dashboard{% endblock %}
 
-<section class="panel" id="panel-jobs">
-  <form class="filters" id="jobs-filters" onsubmit="return false;">
-    <label>Статус
-      <select id="f-status">
-        <option value="">все</option>
-        <option value="queued">queued</option>
-        <option value="running">running</option>
-        <option value="done">done</option>
-        <option value="failed">failed</option>
-      </select>
-    </label>
-    <label>Session ID
-      <input id="f-session" type="number" min="1" placeholder="например 16">
-    </label>
-    <label>Поиск по вопросу
-      <input id="f-search" type="text" placeholder="текст...">
-    </label>
-    <button id="f-apply" class="btn">Применить</button>
-    <button id="f-reset" class="btn ghost">Сброс</button>
-  </form>
-
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Job ID</th><th>Session</th><th>Status</th><th>Attempts</th>
-          <th>Вопрос</th><th>Ошибка</th><th>Created</th><th>Updated</th>
-        </tr>
-      </thead>
-      <tbody id="jobs-body"><tr><td colspan="8" class="muted">загрузка…</td></tr></tbody>
-    </table>
+{% block body %}
+<header class="topbar">
+  <div class="brand">Courses&nbsp;Assistant <span>· dashboard</span></div>
+  <nav class="tabs">
+    <button class="tab active" data-tab="jobs">Jobs</button>
+    <button class="tab" data-tab="dlq">DLQ</button>
+    <button class="tab" data-tab="streams">Streams</button>
+  </nav>
+  <div class="meta">обновлено: <span id="updated">—</span></div>
+  <div class="actions">
+    <button type="button" class="btn ghost" data-theme-toggle aria-pressed="false">Тема</button>
+    {% if auth_enabled %}
+    <form method="post" action="/logout">
+      <button type="submit" class="btn ghost">Выйти</button>
+    </form>
+    {% endif %}
   </div>
-  <div class="pager">
-    <button id="jobs-prev" class="btn ghost">← Назад</button>
-    <span id="jobs-page" class="muted">—</span>
-    <button id="jobs-next" class="btn ghost">Вперёд →</button>
-  </div>
-</section>
+</header>
 
-<section class="panel hidden" id="panel-dlq">
-  <h2>Dead Letter Queue</h2>
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr><th>Message ID</th><th>Task</th><th>Job ID</th><th>Session</th><th>Error</th><th>Source</th></tr>
-      </thead>
-      <tbody id="dlq-body"><tr><td colspan="6" class="muted">загрузка…</td></tr></tbody>
-    </table>
-  </div>
-</section>
+<main>
+  <section class="cards" id="status-cards">
+    <div class="card" data-status="queued"><span class="card-value" id="cnt-queued">0</span><span class="card-label">queued</span></div>
+    <div class="card" data-status="running"><span class="card-value" id="cnt-running">0</span><span class="card-label">running</span></div>
+    <div class="card" data-status="done"><span class="card-value" id="cnt-done">0</span><span class="card-label">done</span></div>
+    <div class="card" data-status="failed"><span class="card-value" id="cnt-failed">0</span><span class="card-label">failed</span></div>
+  </section>
 
-<section class="panel hidden" id="panel-streams">
-  <h2>Redis Streams</h2>
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr><th>Stream</th><th>Группа</th><th>Length</th><th>Pending</th><th>Lag</th><th>Consumers</th></tr>
-      </thead>
-      <tbody id="streams-body"><tr><td colspan="6" class="muted">загрузка…</td></tr></tbody>
-    </table>
-  </div>
-</section>
+  <section class="panel" id="panel-jobs">
+    <form class="filters" id="jobs-filters" onsubmit="return false;">
+      <label>Статус
+        <select id="f-status">
+          <option value="">все</option>
+          <option value="queued">queued</option>
+          <option value="running">running</option>
+          <option value="done">done</option>
+          <option value="failed">failed</option>
+        </select>
+      </label>
+      <label>Session ID
+        <input id="f-session" type="number" min="1" placeholder="например 16">
+      </label>
+      <label>Поиск по вопросу
+        <input id="f-search" type="text" placeholder="текст...">
+      </label>
+      <button id="f-apply" class="btn">Применить</button>
+      <button id="f-reset" class="btn ghost">Сброс</button>
+    </form>
 
-<div id="error-banner" class="error hidden"></div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Job ID</th><th>Session</th><th>Status</th><th>Attempts</th>
+            <th>Вопрос</th><th>Ошибка</th><th>Created</th><th>Updated</th>
+          </tr>
+        </thead>
+        <tbody id="jobs-body"><tr><td colspan="8" class="muted">загрузка…</td></tr></tbody>
+      </table>
+    </div>
+    <div class="pager">
+      <button id="jobs-prev" class="btn ghost">← Назад</button>
+      <span id="jobs-page" class="muted">—</span>
+      <button id="jobs-next" class="btn ghost">Вперёд →</button>
+    </div>
+  </section>
+
+  <section class="panel hidden" id="panel-dlq">
+    <h2>Dead Letter Queue</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Message ID</th><th>Task</th><th>Job ID</th><th>Session</th><th>Error</th><th>Source</th></tr>
+        </thead>
+        <tbody id="dlq-body"><tr><td colspan="6" class="muted">загрузка…</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel hidden" id="panel-streams">
+    <h2>Redis Streams</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Stream</th><th>Группа</th><th>Length</th><th>Pending</th><th>Lag</th><th>Consumers</th></tr>
+        </thead>
+        <tbody id="streams-body"><tr><td colspan="6" class="muted">загрузка…</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <div id="error-banner" class="error hidden"></div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/dashboard.js"></script>
 {% endblock %}

@@ -32,7 +32,11 @@ function showError(message) {
 
 async function getJSON(url) {
   const resp = await fetch(url, { headers: { Accept: "application/json" } });
-  if (resp.status === 401) throw new Error("401: требуется admin token");
+  if (resp.status === 401) {
+    const next = encodeURIComponent(window.location.pathname + window.location.search);
+    window.location.href = "/login?next=" + next;
+    throw new Error("401: требуется вход");
+  }
   if (!resp.ok) throw new Error("HTTP " + resp.status);
   return resp.json();
 }

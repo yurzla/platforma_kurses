@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Вход · Courses Assistant{% endblock %}
+
+{% block body %}
+<div class="login-wrap">
+  <form class="login-card" method="post" action="/login">
+    <h1>Вход в админку</h1>
+    <input type="hidden" name="next" value="{{ next }}">
+    {% if error %}<div class="login-error">{{ error }}</div>{% endif %}
+    <label>Логин
+      <input name="username" value="{{ username|default('') }}" autocomplete="username" autofocus>
+    </label>
+    <label>Пароль
+      <input type="password" name="password" autocomplete="current-password">
+    </label>
+    <div class="login-actions">
+      <button class="btn" type="submit">Войти</button>
+      <button type="button" class="btn ghost" data-theme-toggle aria-pressed="false">Тема</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -9,6 +9,7 @@ import structlog
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
+from starlette.middleware.sessions import SessionMiddleware
 
 from courses_assistant.config import Settings, get_settings
 from courses_assistant.container import Container, build_container
@@ -20,7 +21,7 @@ from courses_assistant.domain.errors import (
     UserNotFound,
 )
 from courses_assistant.entrypoints.api.middleware import RequestContextMiddleware
-from courses_assistant.entrypoints.api.routers import admin, chat, dashboard, health, jobs
+from courses_assistant.entrypoints.api.routers import admin, auth, chat, dashboard, health, jobs
 
 logger = structlog.get_logger(__name__)
 
@@ -59,9 +60,17 @@ def create_app(settings: Settings | None = None, container: Container | None = N
     app.state.owns_container = owns_container
 
     app.add_middleware(RequestContextMiddleware)
+    app.add_middleware(
+        SessionMiddleware,
+        secret_key=settings.session_secret(),
+        same_site="lax",
+        https_only=settings.admin_cookie_secure,
+        max_age=settings.admin_session_max_age,
+    )
     app.include_router(health.router)
     app.include_router(chat.router)
     app.include_router(jobs.router)
+    app.include_router(auth.router)
     app.include_router(admin.router)
     app.include_router(dashboard.router)
     app.mount("/static", StaticFiles(directory=str(_STATIC_DIR)), name="static")

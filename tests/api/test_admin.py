@@ -1,4 +1,4 @@
-"""API-тесты админки и дашборда."""
+"""API-тесты админки, дашборда и входа."""
 
 from __future__ import annotations
 
@@ -36,9 +36,10 @@ def _seed_jobs(store: FakeStore) -> None:
     )
 
 
-def make_app(store: FakeStore, admin_token: str = ""):
+def make_app(store: FakeStore, username: str = "", password: str = ""):
     container, _, broker = build_test_container(store)
-    container.settings.admin_token = admin_token
+    container.settings.admin_username = username
+    container.settings.admin_password = password
     app = create_app(settings=container.settings, container=container)
     transport = httpx.ASGITransport(app=app)
     return httpx.AsyncClient(transport=transport, base_url="http://test"), broker
@@ -93,21 +94,68 @@ async def test_dlq_lists_entries() -> None:
     assert entries[0]["source_stream"] == "rag.requests"
 
 
-async def test_admin_requires_token_when_configured() -> None:
+async def test_open_access_when_no_credentials() -> None:
     store = FakeStore()
-    token = "s3cret"
-    ac, _ = make_app(store, admin_token=token)
+    ac, _ = make_app(store)
+    async with ac:
+        assert (await ac.get("/api/v1/admin/overview")).status_code == 200
+        assert (await ac.get("/dashboard")).status_code == 200
+        # /login без включённой аутентификации ведёт на дашборд
+        login = await ac.get("/login")
+        assert login.status_code == 303
+        assert login.headers["location"] == "/dashboard"
+
+
+async def test_admin_requires_login_when_configured() -> None:
+    store = FakeStore()
+    ac, _ = make_app(store, username="admin", password="s3cret")
     async with ac:
         unauthorized = await ac.get("/api/v1/admin/overview")
         assert unauthorized.status_code == 401
 
-        authorized = await ac.get(
-            "/api/v1/admin/overview", headers={"Authorization": f"Bearer {token}"}
+        bad = await ac.post(
+            "/login", data={"username": "admin", "password": "wrong", "next": "/dashboard"}
         )
+        assert bad.status_code == 401
+
+        ok = await ac.post(
+            "/login", data={"username": "admin", "password": "s3cret", "next": "/dashboard"}
+        )
+        assert ok.status_code == 303
+
+        authorized = await ac.get("/api/v1/admin/overview")
         assert authorized.status_code == 200
 
-        via_query = await ac.get("/api/v1/admin/overview", params={"token": token})
-        assert via_query.status_code == 200
+
+async def test_logout_clears_session() -> None:
+    store = FakeStore()
+    ac, _ = make_app(store, username="admin", password="s3cret")
+    async with ac:
+        await ac.post(
+            "/login", data={"username": "admin", "password": "s3cret", "next": "/dashboard"}
+        )
+        assert (await ac.get("/api/v1/admin/overview")).status_code == 200
+
+        logout = await ac.post("/logout")
+        assert logout.status_code == 303
+        assert (await ac.get("/api/v1/admin/overview")).status_code == 401
+
+
+async def test_dashboard_redirects_to_login() -> None:
+    store = FakeStore()
+    ac, _ = make_app(store, username="admin", password="s3cret")
+    async with ac:
+        denied = await ac.get("/dashboard")
+        assert denied.status_code == 307
+        assert denied.headers["location"].startswith("/login?next=")
+
+        await ac.post(
+            "/login", data={"username": "admin", "password": "s3cret", "next": "/dashboard"}
+        )
+        allowed = await ac.get("/dashboard")
+        assert allowed.status_code == 200
+        assert "Jobs" in allowed.text
+        assert "/static/dashboard.js" in allowed.text
 
 
 async def test_dashboard_renders() -> None:
@@ -120,13 +168,16 @@ async def test_dashboard_renders() -> None:
     assert "/static/dashboard.js" in response.text
 
 
-async def test_dashboard_requires_token_when_configured() -> None:
+async def test_login_page_and_theme_assets() -> None:
     store = FakeStore()
-    ac, _ = make_app(store, admin_token="s3cret")
+    ac, _ = make_app(store, username="admin", password="s3cret")
     async with ac:
-        denied = await ac.get("/dashboard")
-        assert denied.status_code == 401
+        page = await ac.get("/login")
+        assert page.status_code == 200
+        assert "Вход в админку" in page.text
+        assert "data-theme-toggle" in page.text
+        assert "/static/theme.js" in page.text
+        assert "/static/dashboard.js" not in page.text
 
-        allowed = await ac.get("/dashboard", params={"token": "s3cret"})
-        assert allowed.status_code == 200
-        assert "admin_token" in allowed.cookies
+        assert (await ac.get("/static/theme.js")).status_code == 200
+        assert (await ac.get("/static/dashboard.css")).status_code == 200

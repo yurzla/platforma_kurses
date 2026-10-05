@@ -77,12 +77,13 @@ Compose поднимает `postgres` (pgvector), `redis`, `ollama` (+ pull мо
 ## Дашборд
 
 Веб-дашборд: `http://localhost:8000/dashboard` — вкладки Jobs / DLQ / Streams,
-фильтры по статусу/сессии/вопросу, авто-обновление. Данные отдаёт read-only API
+фильтры по статусу/сессии/вопросу, авто-обновление и переключение светлой/тёмной
+темы (кнопка «Тема», выбор хранится в localStorage). Данные отдаёт read-only API
 `/api/v1/admin/*`.
 
-Если задан `ADMIN_TOKEN`, доступ к дашборду и админ-API требует токен:
-`http://localhost:8000/dashboard?token=<ADMIN_TOKEN>` (токен сохраняется в cookie)
-либо заголовок `Authorization: Bearer <ADMIN_TOKEN>` для API.
+Если заданы `ADMIN_USERNAME` и `ADMIN_PASSWORD`, доступ к дашборду и админ-API
+требует входа через форму `http://localhost:8000/login` (сессия в подписанной
+cookie). Пусто — доступ открыт.
 
 ## Ретенция
 
@@ -101,6 +102,9 @@ Compose поднимает `postgres` (pgvector), `redis`, `ollama` (+ pull мо
 | POST | `/api/v1/chat/sessions/{id}/ask` | задать вопрос → 202 `{job_id}` |
 | GET | `/api/v1/jobs/{job_id}` | статус job и ответ |
 | GET | `/health`, `/health/ready` | liveness / readiness |
+| GET | `/login` | форма входа в админку |
+| POST | `/login` | вход (логин/пароль) → сессия |
+| POST | `/logout` | выход (сброс сессии) |
 | GET | `/dashboard` | веб-дашборд (Jobs / DLQ / Streams) |
 | GET | `/api/v1/admin/overview` | счётчики job по статусам + метрики стримов |
 | GET | `/api/v1/admin/jobs` | список job-ов (`status`, `session_id`, `search`, `limit`, `offset`) |
@@ -151,4 +155,5 @@ make test-integration
 
 Планировщик/ретенция/админка: `STREAM_CRON`, `CRON_INTERVAL_SECONDS`,
 `JOB_RETENTION_DAYS`, `REDIS_STREAM_MAXLEN`, `REDIS_STREAM_EVENTS_MAXLEN`,
-`ADMIN_TOKEN` (пусто — доступ к дашборду открыт).
+`ADMIN_USERNAME`/`ADMIN_PASSWORD` (пусто — доступ к дашборду открыт),
+`ADMIN_SESSION_SECRET`, `ADMIN_COOKIE_SECURE`.
