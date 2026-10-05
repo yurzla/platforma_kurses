@@ -22,11 +22,15 @@ The system SHALL expose a liveness endpoint that always reports the process as a
 - **THEN** the readiness endpoint responds with HTTP 503 and identifies the unavailable dependency
 
 ### Requirement: Configuration from environment
-The system SHALL read all runtime configuration (database DSN, Redis URL, GigaChat credentials and endpoints, Ollama URL and embedding model) from environment variables with documented defaults for non-secret values.
+The system SHALL read all runtime configuration (database DSN, Redis URL, GigaChat credentials and endpoints, Ollama URL and embedding model, admin login credentials and session secret) from environment variables with documented defaults for non-secret values.
 
 #### Scenario: Missing required secret
 - **WHEN** the application starts without a required secret such as GigaChat credentials
 - **THEN** startup fails with a clear error naming the missing setting
+
+#### Scenario: Admin credentials optional
+- **WHEN** the admin username and password are not provided
+- **THEN** the application starts normally and the dashboard/admin API remain open
 
 ### Requirement: Database migrations
 The system SHALL manage the database schema with Alembic migrations that reproduce the existing 14-table course schema (including `chat_messages` with both `sources` and `used_chunk_ids`) and add the `jobs` table.

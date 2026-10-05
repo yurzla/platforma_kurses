@@ -34,24 +34,62 @@ The system SHALL expose per-stream metrics including length and consumer-group p
 - **WHEN** a client requests stream metrics
 - **THEN** the system returns, for each operational stream, its length and — where a consumer group is configured — pending, lag, and consumer count
 
-### Requirement: Optional admin access token
-The system SHALL allow protecting the dashboard and admin API with a configured token, while remaining open when no token is configured.
-
-#### Scenario: Token configured and missing
-- **WHEN** an admin token is configured and a client calls the dashboard or admin API without a valid token
-- **THEN** the system responds with HTTP 401
-
-#### Scenario: Token supplied
-- **WHEN** an admin token is configured and the client supplies it via Authorization header, cookie, or query parameter
-- **THEN** the request is served
-
-#### Scenario: No token configured
-- **WHEN** no admin token is configured
-- **THEN** the dashboard and admin API are accessible without a token
-
 ### Requirement: Dashboard page
-The system SHALL serve a human-readable dashboard page presenting jobs, dead-letter entries, and stream metrics with automatic refresh.
+The system SHALL serve a human-readable dashboard page presenting jobs, dead-letter entries, and stream metrics with automatic refresh, and SHALL provide a control to switch between light and dark themes.
 
 #### Scenario: Dashboard rendered
 - **WHEN** a client requests the dashboard page
 - **THEN** the system returns an HTML page with sections for jobs, DLQ, and streams and the assets to refresh them
+
+#### Scenario: Theme control present
+- **WHEN** the dashboard page is served
+- **THEN** it includes a theme toggle control
+
+### Requirement: Admin login (username/password)
+The system SHALL protect the dashboard and admin API with a username and password when both are configured, and SHALL leave them open when no credentials are configured.
+
+#### Scenario: Login required and missing
+- **WHEN** credentials are configured and a client calls the admin API without an authenticated session
+- **THEN** the system responds with HTTP 401
+
+#### Scenario: Successful login
+- **WHEN** a client submits the correct username and password to the login form
+- **THEN** the system establishes an authenticated session and serves the dashboard and admin API
+
+#### Scenario: Invalid credentials
+- **WHEN** a client submits an incorrect username or password
+- **THEN** the system responds with HTTP 401 and does not establish a session
+
+#### Scenario: No credentials configured
+- **WHEN** no admin username/password are configured
+- **THEN** the dashboard and admin API are accessible without login
+
+### Requirement: Admin session and logout
+The system SHALL keep the authenticated session in a signed, HttpOnly cookie and SHALL allow the operator to log out.
+
+#### Scenario: Session persists
+- **WHEN** a client logs in and then loads the dashboard or calls the admin API
+- **THEN** the requests are served using the session cookie
+
+#### Scenario: Logout
+- **WHEN** an authenticated client calls the logout endpoint
+- **THEN** the session is cleared and subsequent admin requests require login again
+
+#### Scenario: HTML page without session
+- **WHEN** an unauthenticated client requests the dashboard HTML page
+- **THEN** the system redirects to the login page with a `next` parameter pointing back to the requested page
+
+### Requirement: Theme switching
+The system SHALL allow switching between light and dark themes on the dashboard and login pages, and SHALL remember the operator's choice.
+
+#### Scenario: Toggle theme
+- **WHEN** the operator activates the theme toggle
+- **THEN** the interface switches between light and dark themes immediately
+
+#### Scenario: Preference persists
+- **WHEN** the operator has chosen a theme and reloads the page or opens another page of the interface
+- **THEN** the previously chosen theme is applied without a flash of the other theme
+
+#### Scenario: Default to system preference
+- **WHEN** no theme has been chosen yet
+- **THEN** the initial theme follows the operating system's color-scheme preference
