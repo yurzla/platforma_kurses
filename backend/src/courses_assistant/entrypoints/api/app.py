@@ -58,10 +58,10 @@ def create_app(settings: Settings | None = None, container: Container | None = N
     app.add_middleware(RequestContextMiddleware)
     app.add_middleware(
         SessionMiddleware,
-        secret_key=settings.session_secret(),
+        secret_key=settings.resolved_session_secret(),
         same_site="lax",
-        https_only=settings.admin_cookie_secure,
-        max_age=settings.admin_session_max_age,
+        https_only=settings.cookie_secure,
+        max_age=settings.session_max_age,
     )
     app.include_router(health.router)
     app.include_router(chat.router)

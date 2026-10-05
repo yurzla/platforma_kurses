@@ -21,25 +21,6 @@ The system SHALL expose a liveness endpoint that always reports the process as a
 - **WHEN** PostgreSQL or Redis is unreachable
 - **THEN** the readiness endpoint responds with HTTP 503 and identifies the unavailable dependency
 
-### Requirement: Configuration from environment
-The system SHALL read runtime configuration from environment variables with documented defaults for non-secret values. The backend SHALL read database, Redis, GigaChat, Ollama, admin, and API settings. The web service SHALL read only its own settings (API base URL, host, port, and log level) and SHALL NOT require database, Redis, or LLM configuration to start.
-
-#### Scenario: Missing required secret
-- **WHEN** the backend starts without a required secret such as GigaChat credentials
-- **THEN** startup fails with a clear error naming the missing setting
-
-#### Scenario: Admin credentials optional
-- **WHEN** the admin username and password are not provided
-- **THEN** the application starts normally and the admin API remains open
-
-#### Scenario: Service endpoints configured
-- **WHEN** the API and web services start
-- **THEN** the API listens on `API_PORT` (default `5000`), the web service listens on `WEB_PORT` (default `8000`), and the web service reaches the API at `API_BASE_URL`
-
-#### Scenario: Web configured independently
-- **WHEN** the web service starts without any database, Redis, or LLM settings
-- **THEN** it starts normally and serves pages and proxies requests to the API
-
 ### Requirement: Database migrations
 The system SHALL manage the database schema with Alembic migrations that reproduce the existing 14-table course schema (including `chat_messages` with both `sources` and `used_chunk_ids`) and add the `jobs` table.
 
@@ -69,3 +50,26 @@ The system SHALL be startable with a single `docker compose up` command that run
 #### Scenario: Separate images
 - **WHEN** the backend and web images are built
 - **THEN** the web image contains only the web package and its runtime dependencies and does not include the database, queue, or LLM libraries
+
+### Requirement: Runtime configuration from environment
+The system SHALL read runtime configuration from environment variables with documented defaults for non-secret values. The backend SHALL read database, Redis, GigaChat, Ollama, session, and API settings. The web service SHALL read only its own settings (API base URL, host, port, and log level) and SHALL NOT require database, Redis, or LLM configuration to start.
+
+#### Scenario: Missing required secret
+- **WHEN** the backend starts without a required secret such as GigaChat credentials
+- **THEN** startup fails with a clear error naming the missing setting
+
+#### Scenario: Session settings configured
+- **WHEN** the backend starts with session settings `SESSION_SECRET`, `COOKIE_SECURE`, and `SESSION_MAX_AGE`
+- **THEN** the session cookie is signed with the configured secret and uses the configured security and lifetime settings
+
+#### Scenario: Session secret missing
+- **WHEN** no session secret is configured
+- **THEN** the backend generates an ephemeral secret for the process and logs a warning
+
+#### Scenario: Service endpoints configured
+- **WHEN** the API and web services start
+- **THEN** the API listens on `API_PORT` (default `5000`), the web service listens on `WEB_PORT` (default `8000`), and the web service reaches the API at `API_BASE_URL`
+
+#### Scenario: Web configured independently
+- **WHEN** the web service starts without any database, Redis, or LLM settings
+- **THEN** it starts normally and serves pages and proxies requests to the API

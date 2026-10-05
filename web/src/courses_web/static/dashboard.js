@@ -1,6 +1,9 @@
+const ROLES = ["student", "teacher", "admin"];
+
 const state = {
   tab: "jobs",
   jobs: { status: "", session_id: "", search: "", limit: 25, offset: 0, total: 0 },
+  users: { search: "", limit: 25, offset: 0, total: 0 },
 };
 
 const $ = (id) => document.getElementById(id);
@@ -48,7 +51,9 @@ function statusBadge(status) {
 function switchTab(tab) {
   state.tab = tab;
   document.querySelectorAll(".tab").forEach((b) => b.classList.toggle("active", b.dataset.tab === tab));
-  ["jobs", "dlq", "streams"].forEach((t) => $("panel-" + t).classList.toggle("hidden", t !== tab));
+  ["jobs", "dlq", "streams", "users"].forEach((t) =>
+    $("panel-" + t).classList.toggle("hidden", t !== tab)
+  );
   refresh();
 }
 
@@ -161,10 +166,84 @@ async function loadDlq() {
   }
 }
 
+function renderUsers(items) {
+  const body = $("users-body");
+  if (!items.length) {
+    body.innerHTML = '<tr><td colspan="5" class="muted">пусто</td></tr>';
+    return;
+  }
+  body.innerHTML = items
+    .map(
+      (u) => `
+    <tr data-user-id="${u.id}">
+      <td>${u.id}</td>
+      <td class="mono">${escapeHtml(u.email)}</td>
+      <td>${escapeHtml(u.name)}</td>
+      <td>
+        <select class="role-select">
+          ${ROLES.map(
+            (r) => `<option value="${r}" ${r === u.role ? "selected" : ""}>${r}</option>`
+          ).join("")}
+        </select>
+      </td>
+      <td><button class="btn save-role" type="button">Сохранить</button></td>
+    </tr>`
+    )
+    .join("");
+  body.querySelectorAll(".save-role").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const row = btn.closest("tr");
+      saveRole(Number(row.dataset.userId), row.querySelector(".role-select").value);
+    });
+  });
+}
+
+async function loadUsers() {
+  const p = new URLSearchParams();
+  if (state.users.search) p.set("search", state.users.search);
+  p.set("limit", state.users.limit);
+  p.set("offset", state.users.offset);
+  try {
+    const data = await getJSON("/api/v1/admin/users?" + p.toString());
+    state.users.total = data.total;
+    renderUsers(data.items);
+    const from = data.total === 0 ? 0 : data.offset + 1;
+    const to = Math.min(data.offset + data.limit, data.total);
+    $("users-page").textContent = `${from}–${to} из ${data.total}`;
+    $("users-prev").disabled = data.offset <= 0;
+    $("users-next").disabled = data.offset + data.limit >= data.total;
+  } catch (err) {
+    showError("Не удалось загрузить пользователей: " + err.message);
+  }
+}
+
+async function saveRole(userId, role) {
+  try {
+    const resp = await fetch("/api/v1/admin/users/" + userId, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      credentials: "same-origin",
+      body: JSON.stringify({ role: role }),
+    });
+    if (resp.status === 403) {
+      showError("Нельзя менять собственную роль");
+      return;
+    }
+    if (!resp.ok) {
+      showError("Не удалось изменить роль: HTTP " + resp.status);
+      return;
+    }
+    await loadUsers();
+  } catch (err) {
+    showError("Не удалось изменить роль: " + err.message);
+  }
+}
+
 async function refresh() {
   await loadOverview();
   if (state.tab === "jobs") await loadJobs();
   else if (state.tab === "dlq") await loadDlq();
+  else if (state.tab === "users") await loadUsers();
 }
 
 function init() {
@@ -195,6 +274,25 @@ function init() {
   $("jobs-next").addEventListener("click", () => {
     state.jobs.offset += state.jobs.limit;
     loadJobs();
+  });
+  $("u-apply").addEventListener("click", () => {
+    state.users.search = $("u-search").value;
+    state.users.offset = 0;
+    loadUsers();
+  });
+  $("u-reset").addEventListener("click", () => {
+    $("u-search").value = "";
+    state.users.search = "";
+    state.users.offset = 0;
+    loadUsers();
+  });
+  $("users-prev").addEventListener("click", () => {
+    state.users.offset = Math.max(0, state.users.offset - state.users.limit);
+    loadUsers();
+  });
+  $("users-next").addEventListener("click", () => {
+    state.users.offset += state.users.limit;
+    loadUsers();
   });
   document.querySelectorAll(".card").forEach((c) =>
     c.addEventListener("click", () => {

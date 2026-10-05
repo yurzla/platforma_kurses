@@ -13,8 +13,10 @@ from courses_assistant.adapters.llm.gigachat import GigaChatLLM
 from courses_assistant.adapters.persistence.database import create_engine, create_session_factory
 from courses_assistant.adapters.persistence.unit_of_work import SqlAlchemyUnitOfWork
 from courses_assistant.application.commands import (
+    ChangeUserRole,
     CreateChatSession,
     ProcessQuestion,
+    RegisterUser,
     RunCronTask,
     SendQuestion,
 )
@@ -77,6 +79,8 @@ def build_container(settings: Settings) -> Container:
             SendQuestion: handlers.send_question,
             ProcessQuestion: handlers.process_question,
             RunCronTask: handlers.run_cron_task,
+            RegisterUser: handlers.register_user,
+            ChangeUserRole: handlers.change_user_role,
         }
     )
 

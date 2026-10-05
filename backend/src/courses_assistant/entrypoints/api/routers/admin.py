@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
+from courses_assistant.application.commands import ChangeUserRole
 from courses_assistant.application.queries import (
     dlq_entries,
     get_job,
@@ -12,8 +13,12 @@ from courses_assistant.application.queries import (
     stream_overview,
 )
 from courses_assistant.container import Container
-from courses_assistant.domain.models import JobStatus
-from courses_assistant.entrypoints.api.dependencies import get_container, require_admin
+from courses_assistant.domain.errors import CannotChangeOwnRole, InvalidRole, UserNotFound
+from courses_assistant.domain.models import JobStatus, User
+from courses_assistant.entrypoints.api.dependencies import (
+    get_container,
+    require_admin,
+)
 from courses_assistant.entrypoints.api.schemas import (
     DlqEntry,
     JobListItem,
@@ -21,6 +26,9 @@ from courses_assistant.entrypoints.api.schemas import (
     JobRead,
     OverviewResponse,
     StreamStat,
+    UserListItem,
+    UserListResponse,
+    UserRoleUpdate,
 )
 
 router = APIRouter(
@@ -131,3 +139,44 @@ async def dlq(
 async def streams(container: Container = Depends(get_container)) -> list[StreamStat]:
     stats = await stream_overview(container.broker, _stream_targets(container))
     return [StreamStat(**stat) for stat in stats]
+
+
+@router.get("/users", response_model=UserListResponse)
+async def users(
+    search: str | None = Query(default=None, max_length=200),
+    limit: int = Query(default=50, ge=1, le=200),
+    offset: int = Query(default=0, ge=0),
+    container: Container = Depends(get_container),
+) -> UserListResponse:
+    async with container.uow_factory() as uow:
+        items = await uow.users.list(search=search, limit=limit, offset=offset)
+        total = await uow.users.count(search=search)
+    return UserListResponse(
+        items=[
+            UserListItem(id=user.id, email=user.email, name=user.name, role=user.role)
+            for user in items
+        ],
+        total=total,
+        limit=limit,
+        offset=offset,
+    )
+
+
+@router.patch("/users/{user_id}", response_model=UserListItem)
+async def change_user_role(
+    user_id: int,
+    payload: UserRoleUpdate,
+    actor: User = Depends(require_admin),
+    container: Container = Depends(get_container),
+) -> UserListItem:
+    try:
+        user = await container.handlers.change_user_role(
+            ChangeUserRole(actor_id=actor.id, user_id=user_id, role=payload.role)
+        )
+    except InvalidRole as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    except CannotChangeOwnRole as exc:
+        raise HTTPException(status_code=403, detail=str(exc)) from exc
+    except UserNotFound as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    return UserListItem(id=user.id, email=user.email, name=user.name, role=user.role)

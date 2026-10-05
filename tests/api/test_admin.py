@@ -1,4 +1,4 @@
-"""API-тесты админки, дашборд-данных и входа администратора."""
+"""API-тесты админки, дашборд-данных и доступа по роли."""
 
 from __future__ import annotations
 
@@ -7,6 +7,7 @@ from datetime import UTC, datetime, timedelta
 import httpx
 
 from courses_assistant.domain.models import JobStatus, QuestionJob
+from courses_assistant.domain.security import hash_password
 from courses_assistant.entrypoints.api.app import create_app
 from tests.api.test_api import build_test_container
 from tests.fakes import FakeStore
@@ -36,21 +37,29 @@ def _seed_jobs(store: FakeStore) -> None:
     )
 
 
-def make_app(store: FakeStore, username: str = "", password: str = ""):
+def make_app(store: FakeStore):
     container, _, broker = build_test_container(store)
-    container.settings.admin_username = username
-    container.settings.admin_password = password
     app = create_app(settings=container.settings, container=container)
     transport = httpx.ASGITransport(app=app)
     return httpx.AsyncClient(transport=transport, base_url="http://test"), broker
 
 
+def seed_admin(store: FakeStore, email: str = "admin@example.com", password: str = "s3cret"):
+    store.add_user(email, "Админ", hash_password(password), "admin")
+
+
+async def login(ac: httpx.AsyncClient, email: str, password: str) -> httpx.Response:
+    return await ac.post("/api/v1/auth/login", json={"email": email, "password": password})
+
+
 async def test_overview_counts_and_streams() -> None:
     store = FakeStore()
     _seed_jobs(store)
+    seed_admin(store)
     ac, broker = make_app(store)
     await broker.move_to_dead("rag.requests", "rag.dead", {"job_id": "x"}, "err")
     async with ac:
+        await login(ac, "admin@example.com", "s3cret")
         response = await ac.get("/api/v1/admin/overview")
     assert response.status_code == 200
     body = response.json()
@@ -61,8 +70,10 @@ async def test_overview_counts_and_streams() -> None:
 async def test_jobs_list_and_filters() -> None:
     store = FakeStore()
     _seed_jobs(store)
+    seed_admin(store)
     ac, _ = make_app(store)
     async with ac:
+        await login(ac, "admin@example.com", "s3cret")
         all_jobs = await ac.get("/api/v1/admin/jobs")
         assert all_jobs.status_code == 200
         assert all_jobs.json()["total"] == 2
@@ -80,11 +91,13 @@ async def test_jobs_list_and_filters() -> None:
 
 async def test_dlq_lists_entries() -> None:
     store = FakeStore()
+    seed_admin(store)
     ac, broker = make_app(store)
     await broker.move_to_dead(
         "rag.requests", "rag.dead", {"job_id": "j1", "session_id": 5}, "boom"
     )
     async with ac:
+        await login(ac, "admin@example.com", "s3cret")
         response = await ac.get("/api/v1/admin/dlq")
     assert response.status_code == 200
     entries = response.json()
@@ -94,47 +107,49 @@ async def test_dlq_lists_entries() -> None:
     assert entries[0]["source_stream"] == "rag.requests"
 
 
-async def test_open_access_when_no_credentials() -> None:
+async def test_anonymous_denied() -> None:
     store = FakeStore()
     ac, _ = make_app(store)
     async with ac:
-        assert (await ac.get("/api/v1/admin/overview")).status_code == 200
+        assert (await ac.get("/api/v1/admin/overview")).status_code == 401
         me = await ac.get("/api/v1/auth/me")
         assert me.status_code == 200
-        assert me.json()["role"] == "admin"
+        assert me.json()["role"] is None
 
 
-async def test_admin_requires_login_when_configured() -> None:
+async def test_non_admin_denied() -> None:
     store = FakeStore()
-    ac, _ = make_app(store, username="admin", password="s3cret")
+    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    ac, _ = make_app(store)
     async with ac:
-        unauthorized = await ac.get("/api/v1/admin/overview")
-        assert unauthorized.status_code == 401
+        ok = await login(ac, "s@example.com", "pw")
+        assert ok.status_code == 200
+        assert (await ac.get("/api/v1/admin/overview")).status_code == 403
 
-        bad = await ac.post(
-            "/api/v1/auth/admin/login", json={"username": "admin", "password": "wrong"}
-        )
+
+async def test_admin_access_by_role() -> None:
+    store = FakeStore()
+    seed_admin(store)
+    ac, _ = make_app(store)
+    async with ac:
+        bad = await login(ac, "admin@example.com", "wrong")
         assert bad.status_code == 401
 
-        ok = await ac.post(
-            "/api/v1/auth/admin/login", json={"username": "admin", "password": "s3cret"}
-        )
+        ok = await login(ac, "admin@example.com", "s3cret")
         assert ok.status_code == 200
         assert ok.json()["role"] == "admin"
 
-        authorized = await ac.get("/api/v1/admin/overview")
-        assert authorized.status_code == 200
+        assert (await ac.get("/api/v1/admin/overview")).status_code == 200
 
 
 async def test_logout_clears_session() -> None:
     store = FakeStore()
-    ac, _ = make_app(store, username="admin", password="s3cret")
+    seed_admin(store)
+    ac, _ = make_app(store)
     async with ac:
-        await ac.post(
-            "/api/v1/auth/admin/login", json={"username": "admin", "password": "s3cret"}
-        )
+        await login(ac, "admin@example.com", "s3cret")
         assert (await ac.get("/api/v1/admin/overview")).status_code == 200
 
-        logout = await ac.post("/api/v1/auth/admin/logout")
+        logout = await ac.post("/api/v1/auth/logout")
         assert logout.status_code == 200
         assert (await ac.get("/api/v1/admin/overview")).status_code == 401

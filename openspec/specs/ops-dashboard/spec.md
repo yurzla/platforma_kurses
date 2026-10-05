@@ -49,25 +49,6 @@ The system SHALL serve a human-readable dashboard page from the web service pres
 - **WHEN** the dashboard page is served
 - **THEN** it includes a theme toggle control
 
-### Requirement: Admin login (username/password)
-The system SHALL protect the admin API with a username and password when both are configured, and SHALL leave it open when no credentials are configured; the login form SHALL be served by the web service and SHALL authenticate against the JSON API.
-
-#### Scenario: Login required and missing
-- **WHEN** credentials are configured and a client calls the admin API without an authenticated session
-- **THEN** the system responds with HTTP 401
-
-#### Scenario: Successful login
-- **WHEN** a client submits the correct username and password to the login form served by the web service
-- **THEN** the API establishes an authenticated session and the web service serves the dashboard and admin API data
-
-#### Scenario: Invalid credentials
-- **WHEN** a client submits an incorrect username or password
-- **THEN** the system responds with HTTP 401 and does not establish a session
-
-#### Scenario: No credentials configured
-- **WHEN** no admin username/password are configured
-- **THEN** the admin API is accessible without login
-
 ### Requirement: Admin session and logout
 The system SHALL keep the authenticated session in a signed, HttpOnly cookie and SHALL allow the operator to log out.
 
@@ -97,3 +78,22 @@ The system SHALL allow switching between light and dark themes on the dashboard 
 #### Scenario: Default to system preference
 - **WHEN** no theme has been chosen yet
 - **THEN** the initial theme follows the operating system's color-scheme preference
+
+### Requirement: Admin authorization by role
+The system SHALL protect the admin API and the admin page so that they are accessible only to authenticated users whose role is `admin`.
+
+#### Scenario: Admin access granted
+- **WHEN** an authenticated user with role `admin` calls the admin API or requests the admin page
+- **THEN** the system returns the requested data or page
+
+#### Scenario: Non-admin access denied
+- **WHEN** an authenticated user whose role is not `admin` calls the admin API
+- **THEN** the system responds with HTTP 403
+
+#### Scenario: Anonymous access denied
+- **WHEN** an unauthenticated client calls the admin API
+- **THEN** the system responds with HTTP 401
+
+#### Scenario: Role change takes effect
+- **WHEN** a user's role is changed to `admin` or away from it
+- **THEN** subsequent admin requests are authorized according to the current role

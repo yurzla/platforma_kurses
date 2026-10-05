@@ -1,4 +1,4 @@
-"""Тесты web-сервиса: страницы, вход, прокси, дашборд."""
+"""Тесты web-сервиса: страницы, вход, регистрация, прокси, админ-панель."""
 
 from __future__ import annotations
 
@@ -18,11 +18,8 @@ from tests.api.test_api import build_test_container
 from tests.fakes import FakeStore
 
 
-def build_stack(store: FakeStore, *, admin: bool = False):
+def build_stack_full(store: FakeStore):
     container, _, _ = build_test_container(store)
-    if admin:
-        container.settings.admin_username = "admin"
-        container.settings.admin_password = "s3cret"
     api_app = create_api_app(settings=container.settings, container=container)
     api_client = httpx.AsyncClient(
         transport=httpx.ASGITransport(app=api_app), base_url="http://api"
@@ -31,6 +28,11 @@ def build_stack(store: FakeStore, *, admin: bool = False):
     web_client = httpx.AsyncClient(
         transport=httpx.ASGITransport(app=web_app), base_url="http://web"
     )
+    return web_client, api_client, web_app
+
+
+def build_stack(store: FakeStore):
+    web_client, api_client, _ = build_stack_full(store)
     return web_client, api_client
 
 
@@ -42,6 +44,10 @@ def seed_student_and_course(store: FakeStore) -> None:
     store.add_course(CourseDetail(id=10, title="Python", description="Основы", sections=[section]))
 
 
+def seed_admin(store: FakeStore) -> None:
+    store.add_user("admin@example.com", "Админ", hash_password("s3cret"), "admin")
+
+
 async def test_health() -> None:
     store = FakeStore()
     web, api = build_stack(store)
@@ -51,15 +57,78 @@ async def test_health() -> None:
     assert response.json()["status"] == "ok"
 
 
-async def test_login_page_has_role_switch() -> None:
+async def test_login_page_single_form() -> None:
     store = FakeStore()
     web, api = build_stack(store)
     async with web, api:
         response = await web.get("/login")
     assert response.status_code == 200
-    assert "Студент" in response.text
-    assert "Администратор" in response.text
+    assert "Регистрация" in response.text
+    assert 'name="email"' in response.text
+    assert "Администратор" not in response.text
     assert "data-theme-toggle" in response.text
+
+
+async def test_register_page_and_flow() -> None:
+    store = FakeStore()
+    web, api = build_stack(store)
+    async with web, api:
+        page = await web.get("/register")
+        assert page.status_code == 200
+        assert "Студент" in page.text
+        assert "Преподаватель" in page.text
+
+        response = await web.post(
+            "/register",
+            data={
+                "email": "t@example.com",
+                "name": "Препод",
+                "password": "secret",
+                "role": "teacher",
+                "password_confirm": "secret",
+            },
+        )
+        assert response.status_code == 303
+        assert response.headers["location"] == "/courses"
+
+        me = await web.get("/api/v1/auth/me", headers={"Accept": "application/json"})
+    assert me.json()["role"] == "teacher"
+
+
+async def test_register_rejects_admin_role() -> None:
+    store = FakeStore()
+    web, api = build_stack(store)
+    async with web, api:
+        response = await web.post(
+            "/register",
+            data={
+                "email": "hack@example.com",
+                "name": "Hack",
+                "password": "secret",
+                "role": "admin",
+                "password_confirm": "secret",
+            },
+        )
+    assert response.status_code == 422
+    assert store.user_profiles == {}
+
+
+async def test_register_preserves_utf8_name() -> None:
+    store = FakeStore()
+    web, api = build_stack(store)
+    async with web, api:
+        await web.post(
+            "/register",
+            data={
+                "email": "utf@example.com",
+                "name": "Студент Ёж",
+                "password": "secret",
+                "role": "student",
+                "password_confirm": "secret",
+            },
+        )
+        me = await web.get("/api/v1/auth/me", headers={"Accept": "application/json"})
+    assert me.json()["name"] == "Студент Ёж"
 
 
 async def test_student_login_flow_and_courses() -> None:
@@ -73,12 +142,7 @@ async def test_student_login_flow_and_courses() -> None:
 
         login = await web.post(
             "/login",
-            data={
-                "role": "student",
-                "email": "s@example.com",
-                "password": "pw",
-                "next": "/courses",
-            },
+            data={"email": "s@example.com", "password": "pw", "next": "/courses"},
         )
         assert login.status_code == 303
         assert login.headers["location"] == "/courses"
@@ -102,11 +166,10 @@ async def test_bad_login_shows_error() -> None:
     web, api = build_stack(store)
     async with web, api:
         response = await web.post(
-            "/login",
-            data={"role": "student", "email": "s@example.com", "password": "nope"},
+            "/login", data={"email": "s@example.com", "password": "nope"}
         )
     assert response.status_code == 401
-    assert "Неверный логин или пароль" in response.text
+    assert "Неверный email или пароль" in response.text
 
 
 async def test_proxy_forwards_auth_me() -> None:
@@ -115,29 +178,44 @@ async def test_proxy_forwards_auth_me() -> None:
     web, api = build_stack(store)
     async with web, api:
         await web.post(
-            "/login",
-            data={"role": "student", "email": "s@example.com", "password": "pw"},
+            "/login", data={"email": "s@example.com", "password": "pw"}
         )
         response = await web.get("/api/v1/auth/me", headers={"Accept": "application/json"})
     assert response.status_code == 200
     assert response.json()["role"] == "student"
 
 
-async def test_admin_dashboard_flow() -> None:
+async def test_sessions_not_shared_between_browsers() -> None:
     store = FakeStore()
-    web, api = build_stack(store, admin=True)
+    seed_student_and_course(store)
+    web, api, web_app = build_stack_full(store)
+    other = httpx.AsyncClient(
+        transport=httpx.ASGITransport(app=web_app), base_url="http://web"
+    )
+    async with web, api, other:
+        await web.post("/login", data={"email": "s@example.com", "password": "pw"})
+        mine = await web.get("/api/v1/auth/me", headers={"Accept": "application/json"})
+        anon = await other.get("/api/v1/auth/me", headers={"Accept": "application/json"})
+    assert mine.json()["role"] == "student"
+    assert anon.json()["role"] is None
+
+
+async def test_admin_panel_flow() -> None:
+    store = FakeStore()
+    seed_admin(store)
+    web, api = build_stack(store)
     async with web, api:
         redirect = await web.get("/dashboard")
         assert redirect.status_code == 303
-        assert "role=admin" in redirect.headers["location"]
+        assert "next=/dashboard" in redirect.headers["location"]
 
         await web.post(
-            "/login",
-            data={"role": "admin", "username": "admin", "password": "s3cret"},
+            "/login", data={"email": "admin@example.com", "password": "s3cret"}
         )
         dashboard = await web.get("/dashboard")
         assert dashboard.status_code == 200
-        assert "Jobs" in dashboard.text
+        assert "Админ панель" in dashboard.text
+        assert "Пользователи" in dashboard.text
         assert "/static/dashboard.js" in dashboard.text
 
 

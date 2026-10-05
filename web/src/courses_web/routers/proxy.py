@@ -6,7 +6,7 @@ import httpx
 from fastapi import APIRouter, Request
 from starlette.responses import Response
 
-from courses_web.client import forwarded_headers, relay_cookies
+from courses_web.client import forwarded_headers, relay_cookies, send_api
 
 router = APIRouter(tags=["proxy"])
 
@@ -26,7 +26,8 @@ _DROP_RESPONSE_HEADERS = {
 async def proxy(path: str, request: Request) -> Response:
     client: httpx.AsyncClient = request.app.state.client
     body = await request.body()
-    upstream = await client.request(
+    upstream = await send_api(
+        client,
         request.method,
         request.url.path,
         params=list(request.query_params.multi_items()),

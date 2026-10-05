@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from typing import Any
+from urllib.parse import parse_qsl
 
 from fastapi import APIRouter, Request
 from starlette.responses import HTMLResponse, RedirectResponse, Response
@@ -11,6 +12,18 @@ from courses_web.client import call_api, relay_cookies
 from courses_web.templating import templates
 
 router = APIRouter(tags=["pages"])
+
+_REGISTER_ROLES = ("student", "teacher")
+
+
+async def _form(request: Request) -> dict[str, str]:
+    """Разбор urlencoded-формы как UTF-8 (request.form() декодирует как latin-1)."""
+    content_type = request.headers.get("content-type", "")
+    if content_type.startswith("application/x-www-form-urlencoded"):
+        body = await request.body()
+        return dict(parse_qsl(body.decode("utf-8"), keep_blank_values=True))
+    form = await request.form()
+    return {key: str(value) for key, value in form.items()}
 
 
 def _safe_next(value: Any, fallback: str) -> str:
@@ -37,54 +50,92 @@ async def health() -> dict[str, str]:
 
 
 @router.get("/login", response_class=HTMLResponse)
-async def login_page(request: Request, role: str = "student", next: str = "") -> Response:
-    if role not in ("student", "admin"):
-        role = "student"
+async def login_page(request: Request, next: str = "") -> Response:
     return templates.TemplateResponse(
-        request, "login.html", {"role": role, "next": next, "me": {"role": None}}
+        request, "login.html", {"next": next, "me": {"role": None}}
     )
 
 
 @router.post("/login", response_class=HTMLResponse)
 async def login_submit(request: Request) -> Response:
-    form = await request.form()
-    role = str(form.get("role", "student"))
-    if role not in ("student", "admin"):
-        role = "student"
-    next_url = _safe_next(form.get("next"), "/dashboard" if role == "admin" else "/courses")
-    password = str(form.get("password", ""))
-
-    if role == "admin":
-        api_path = "/api/v1/auth/admin/login"
-        payload = {"username": str(form.get("username", "")), "password": password}
-    else:
-        api_path = "/api/v1/auth/student/login"
-        payload = {"email": str(form.get("email", "")), "password": password}
-
-    upstream = await call_api(request, "POST", api_path, json=payload)
+    form = await _form(request)
+    next_raw = form.get("next")
+    upstream = await call_api(
+        request,
+        "POST",
+        "/api/v1/auth/login",
+        json={"email": form.get("email", ""), "password": form.get("password", "")},
+    )
     if upstream.status_code == 200:
-        response = RedirectResponse(next_url, status_code=303)
+        role = upstream.json().get("role")
+        fallback = "/dashboard" if role == "admin" else "/courses"
+        response = RedirectResponse(_safe_next(next_raw, fallback), status_code=303)
         relay_cookies(response, upstream)
         return response
 
     context = {
-        "role": role,
-        "next": next_url,
-        "error": "Неверный логин или пароль",
-        "email": str(form.get("email", "")),
-        "username": str(form.get("username", "")),
+        "next": next_raw or "",
+        "error": "Неверный email или пароль",
+        "email": form.get("email", ""),
         "me": {"role": None},
     }
     return templates.TemplateResponse(request, "login.html", context, status_code=401)
 
 
+@router.get("/register", response_class=HTMLResponse)
+async def register_page(request: Request) -> Response:
+    return templates.TemplateResponse(
+        request, "register.html", {"roles": _REGISTER_ROLES, "me": {"role": None}}
+    )
+
+
+@router.post("/register", response_class=HTMLResponse)
+async def register_submit(request: Request) -> Response:
+    form = await _form(request)
+    role = form.get("role", "student")
+    context = {
+        "roles": _REGISTER_ROLES,
+        "email": form.get("email", ""),
+        "name": form.get("name", ""),
+        "role": role,
+        "me": {"role": None},
+    }
+    if role not in _REGISTER_ROLES:
+        context["error"] = "Роль недоступна при регистрации"
+        return templates.TemplateResponse(request, "register.html", context, status_code=422)
+
+    upstream = await call_api(
+        request,
+        "POST",
+        "/api/v1/auth/register",
+        json={
+            "email": form.get("email", ""),
+            "name": form.get("name", ""),
+            "password": form.get("password", ""),
+            "role": role,
+        },
+    )
+    if upstream.status_code == 201:
+        response = RedirectResponse("/courses", status_code=303)
+        relay_cookies(response, upstream)
+        return response
+
+    if upstream.status_code == 409:
+        context["error"] = "Пользователь с таким email уже зарегистрирован"
+    elif upstream.status_code == 422:
+        context["error"] = "Проверьте правильность заполнения полей"
+    else:
+        context["error"] = "Не удалось зарегистрироваться"
+    return templates.TemplateResponse(
+        request, "register.html", context, status_code=upstream.status_code
+    )
+
+
 @router.post("/logout")
 async def logout(request: Request) -> RedirectResponse:
-    admin = await call_api(request, "POST", "/api/v1/auth/admin/logout")
-    student = await call_api(request, "POST", "/api/v1/auth/student/logout")
+    upstream = await call_api(request, "POST", "/api/v1/auth/logout")
     response = RedirectResponse("/login", status_code=303)
-    relay_cookies(response, admin)
-    relay_cookies(response, student)
+    relay_cookies(response, upstream)
     return response
 
 
@@ -92,7 +143,7 @@ async def logout(request: Request) -> RedirectResponse:
 async def dashboard(request: Request) -> Response:
     me = await _me(request)
     if me.get("role") != "admin":
-        return RedirectResponse("/login?role=admin&next=/dashboard", status_code=303)
+        return RedirectResponse("/login?next=/dashboard", status_code=303)
     return templates.TemplateResponse(request, "dashboard.html", {"me": me})
 
 

@@ -3,12 +3,12 @@
   <nav class="tabs">
     <a class="tab {% if active == 'courses' %}active{% endif %}" href="/courses">Курсы</a>
     {% if me and me.role == 'admin' %}
-    <a class="tab {% if active == 'dashboard' %}active{% endif %}" href="/dashboard">Дашборд</a>
+    <a class="tab {% if active == 'dashboard' %}active{% endif %}" href="/dashboard">Админ панель</a>
     {% endif %}
   </nav>
   <div class="meta">
     {% if me and me.role == 'admin' %}Администратор
-    {% elif me and me.role == 'student' %}{{ me.name or me.email }}
+    {% elif me and me.role %}{{ me.name or me.email }}
     {% endif %}
   </div>
   <div class="actions">

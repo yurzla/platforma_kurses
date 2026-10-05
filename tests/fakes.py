@@ -146,6 +146,40 @@ class InMemoryUserRepository(UserRepository):
     async def create(self, email: str, name: str, password_hash: str, role: str) -> User:
         return self._store.add_user(email, name, password_hash, role)
 
+    async def list(
+        self,
+        search: str | None = None,
+        limit: int = 50,
+        offset: int = 0,
+    ) -> list[User]:
+        users = sorted(self._store.user_profiles.values(), key=lambda user: user.id)
+        if search:
+            needle = search.lower()
+            users = [
+                user
+                for user in users
+                if needle in user.email.lower() or needle in user.name.lower()
+            ]
+        return users[offset : offset + limit]
+
+    async def count(self, search: str | None = None) -> int:
+        users = list(self._store.user_profiles.values())
+        if search:
+            needle = search.lower()
+            users = [
+                user
+                for user in users
+                if needle in user.email.lower() or needle in user.name.lower()
+            ]
+        return len(users)
+
+    async def set_role(self, user_id: int, role: str) -> User | None:
+        user = self._store.user_profiles.get(user_id)
+        if user is None:
+            return None
+        user.role = role
+        return user
+
 
 class InMemoryCatalogRepository(CatalogRepository):
     def __init__(self, store: FakeStore) -> None:

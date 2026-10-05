@@ -36,3 +36,18 @@ class SubmitStepAnswer:
     course_id: int
     step_id: int
     answer: object | None
+
+
+@dataclass(slots=True, frozen=True)
+class RegisterUser:
+    email: str
+    name: str
+    password: str
+    role: str
+
+
+@dataclass(slots=True, frozen=True)
+class ChangeUserRole:
+    actor_id: int
+    user_id: int
+    role: str

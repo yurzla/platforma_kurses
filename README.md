@@ -94,17 +94,22 @@ Compose поднимает `postgres` (pgvector), `redis`, `ollama` (+ pull мо
 
 Web-сервис: `http://localhost:8000` — обучение и админка.
 
-- **Студент**: `/login` (вкладка «Студент») → `/courses` → курс → шаг (тесты,
-  автопроверка, прогресс) + RAG-панель «Ассистент».
-- **Администратор**: `/login` (вкладка «Администратор») → `/dashboard` — вкладки
-  Jobs / DLQ / Streams, фильтры, авто-обновление. Переключатель роли — на странице
-  входа; кнопка «Тема» переключает светлую/тёмную тему (localStorage).
+- **Вход** (`/login`) — единая форма email+password; роль определяется сервером.
+- **Регистрация** (`/register`) — самостоятельная, с ролью `student` или
+  `teacher`; роль `admin` при регистрации недоступна.
+- **Обучение**: `/courses` → курс → шаг (тесты, автопроверка, прогресс) +
+  RAG-панель «Ассистент».
+- **Администратор**: `/dashboard` («Админ панель») — вкладки Jobs / DLQ / Streams /
+  Пользователи, фильтры, авто-обновление; на вкладке «Пользователи» можно выдавать
+  роли (`student`/`teacher`/`admin`). Кнопка «Тема» переключает светлую/тёмную
+  тему (localStorage).
 - Web — только визуализация: данные берёт у API через прокси `/api/*`, cookie
   сессии пробрасываются как есть.
 
-Доступ администратора: если заданы `ADMIN_USERNAME` и `ADMIN_PASSWORD`, вход
-обязателен (сессия в подписанной cookie); пусто — админ-доступ открыт.
-Студенты входят по email/паролю из таблицы `users` (см. `scripts/create_user.py`).
+Права определяются ролью пользователя из таблицы `users` (`student`/`teacher`/`admin`),
+а не переменными окружения. Все входят по email/паролю; администратор создаётся
+только скриптом (см. `scripts/create_user.py`), а дальше роли выдаются на вкладке
+«Пользователи». Админ не может менять собственную роль.
 
 ## Ретенция
 
@@ -118,10 +123,9 @@ Web-сервис: `http://localhost:8000` — обучение и админка
 
 | Метод | Путь | Описание |
 |---|---|---|
-| POST | `/api/v1/auth/admin/login` | вход администратора (JSON) → сессия |
-| POST | `/api/v1/auth/admin/logout` | выход администратора |
-| POST | `/api/v1/auth/student/login` | вход студента (`email`, `password`) |
-| POST | `/api/v1/auth/student/logout` | выход студента |
+| POST | `/api/v1/auth/register` | регистрация (`email`, `name`, `password`, `role` = student/teacher) → сессия |
+| POST | `/api/v1/auth/login` | вход (`email`, `password`) → сессия |
+| POST | `/api/v1/auth/logout` | выход |
 | GET | `/api/v1/auth/me` | текущий пользователь (`role`, `id`, `name`, `email`) |
 | POST | `/api/v1/chat/sessions` | создать сессию (`course_id`, опц. `user_id`) → 201 |
 | GET | `/api/v1/chat/sessions/{id}/messages?limit=` | история сообщений |
@@ -137,6 +141,8 @@ Web-сервис: `http://localhost:8000` — обучение и админка
 | GET | `/api/v1/admin/jobs/{id}` | детали job |
 | GET | `/api/v1/admin/dlq` | записи DLQ (`rag.dead`, `rag.cron.dead`) |
 | GET | `/api/v1/admin/streams` | метрики Redis Streams |
+| GET | `/api/v1/admin/users` | список пользователей (`search`, `limit`, `offset`) |
+| PATCH | `/api/v1/admin/users/{id}` | смена роли пользователя (`role`) |
 
 Web-страницы (порт 8000): `/login`, `/logout`, `/dashboard`, `/courses`,
 `/courses/{id}`, `/courses/{id}/steps/{step_id}`, `/health`.
@@ -190,7 +196,8 @@ make test-integration
 Сервисы: `API_PORT` (:5000), `WEB_PORT` (:8000), `API_BASE_URL` (URL API для web,
 в compose — `http://api:5000`).
 
-Планировщик/ретенция/админка: `STREAM_CRON`, `CRON_INTERVAL_SECONDS`,
-`JOB_RETENTION_DAYS`, `REDIS_STREAM_MAXLEN`, `REDIS_STREAM_EVENTS_MAXLEN`,
-`ADMIN_USERNAME`/`ADMIN_PASSWORD` (пусто — админ-доступ открыт),
-`ADMIN_SESSION_SECRET`, `ADMIN_COOKIE_SECURE`.
+Сессия: `SESSION_SECRET` (ключ подписи cookie; пусто — эфемерный на процесс),
+`COOKIE_SECURE`, `SESSION_MAX_AGE`.
+
+Планировщик/ретенция: `STREAM_CRON`, `CRON_INTERVAL_SECONDS`, `JOB_RETENTION_DAYS`,
+`REDIS_STREAM_MAXLEN`, `REDIS_STREAM_EVENTS_MAXLEN`.

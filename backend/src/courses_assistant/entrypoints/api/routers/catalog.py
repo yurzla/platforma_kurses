@@ -8,7 +8,8 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from courses_assistant.application.commands import SubmitStepAnswer
 from courses_assistant.container import Container
-from courses_assistant.entrypoints.api.dependencies import get_container, require_student
+from courses_assistant.domain.models import User
+from courses_assistant.entrypoints.api.dependencies import get_container, require_user
 from courses_assistant.entrypoints.api.schemas import (
     AnswerRequest,
     AnswerResult,
@@ -25,22 +26,22 @@ router = APIRouter(prefix="/api/v1/courses", tags=["catalog"])
 
 @router.get("", response_model=list[CourseSummaryRead])
 async def list_courses(
-    user_id: int = Depends(require_student),
+    user: User = Depends(require_user),
     container: Container = Depends(get_container),
 ) -> list[CourseSummaryRead]:
     async with container.uow_factory() as uow:
-        courses = await uow.catalog.list_courses(user_id)
+        courses = await uow.catalog.list_courses(user.id)
     return [CourseSummaryRead(**asdict(course)) for course in courses]
 
 
 @router.get("/{course_id}", response_model=CourseDetailRead)
 async def get_course(
     course_id: int,
-    user_id: int = Depends(require_student),
+    user: User = Depends(require_user),
     container: Container = Depends(get_container),
 ) -> CourseDetailRead:
     async with container.uow_factory() as uow:
-        course = await uow.catalog.get_course(course_id, user_id)
+        course = await uow.catalog.get_course(course_id, user.id)
     if course is None:
         raise HTTPException(status_code=404, detail="Курс не найден")
     return CourseDetailRead(
@@ -79,11 +80,11 @@ async def get_course(
 async def get_step(
     course_id: int,
     step_id: int,
-    user_id: int = Depends(require_student),
+    user: User = Depends(require_user),
     container: Container = Depends(get_container),
 ) -> StepRead:
     async with container.uow_factory() as uow:
-        step = await uow.catalog.get_step(course_id, step_id, user_id)
+        step = await uow.catalog.get_step(course_id, step_id, user.id)
     if step is None:
         raise HTTPException(status_code=404, detail="Шаг не найден")
     return StepRead(
@@ -107,12 +108,12 @@ async def submit_answer(
     course_id: int,
     step_id: int,
     payload: AnswerRequest,
-    user_id: int = Depends(require_student),
+    user: User = Depends(require_user),
     container: Container = Depends(get_container),
 ) -> AnswerResult:
     result = await container.handlers.submit_step_answer(
         SubmitStepAnswer(
-            user_id=user_id, course_id=course_id, step_id=step_id, answer=payload.answer
+            user_id=user.id, course_id=course_id, step_id=step_id, answer=payload.answer
         )
     )
     return AnswerResult(

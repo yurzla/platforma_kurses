@@ -24,6 +24,24 @@ def relay_cookies(response: Response, upstream: httpx.Response) -> None:
         response.headers.append("set-cookie", cookie)
 
 
+async def send_api(
+    client: httpx.AsyncClient,
+    method: str,
+    path: str,
+    **kwargs: Any,
+) -> httpx.Response:
+    """Запрос к API без сохранения cookie в общем клиенте.
+
+    Cookie сессии пробрасываются вручную (заголовок `Cookie` туда, `Set-Cookie`
+    обратно), поэтому jar общего клиента нужно очищать: иначе сессия одного
+    браузера утечёт в запросы другого.
+    """
+    try:
+        return await client.request(method, path, **kwargs)
+    finally:
+        client.cookies.clear()
+
+
 async def call_api(
     request: Request,
     method: str,
@@ -40,4 +58,4 @@ async def call_api(
         kwargs["content"] = content
     if json is not None:
         kwargs["json"] = json
-    return await client.request(method, path, **kwargs)
+    return await send_api(client, method, path, **kwargs)

@@ -4,25 +4,14 @@
 
 {% block body %}
 <div class="login-wrap">
-  <form class="login-card" method="post" action="/login" id="login-form">
+  <form class="login-card" method="post" action="/login">
     <h1>Вход</h1>
-    <input type="hidden" name="role" id="role-input" value="{{ role }}">
     <input type="hidden" name="next" value="{{ next }}">
-
-    <div class="role-switch" role="tablist">
-      <button type="button" class="role-tab {% if role == 'student' %}active{% endif %}"
-              data-role="student" role="tab">Студент</button>
-      <button type="button" class="role-tab {% if role == 'admin' %}active{% endif %}"
-              data-role="admin" role="tab">Администратор</button>
-    </div>
 
     {% if error %}<div class="login-error">{{ error }}</div>{% endif %}
 
-    <label data-role-field="student">Email
+    <label>Email
       <input name="email" type="email" autocomplete="username" value="{{ email|default('') }}">
-    </label>
-    <label data-role-field="admin" class="hidden">Логин
-      <input name="username" autocomplete="username" value="{{ username|default('') }}">
     </label>
     <label>Пароль
       <input type="password" name="password" autocomplete="current-password">
@@ -30,29 +19,9 @@
 
     <div class="login-actions">
       <button class="btn" type="submit">Войти</button>
+      <a class="btn ghost" href="/register">Регистрация</a>
       <button type="button" class="btn ghost" data-theme-toggle aria-pressed="false">Тема</button>
     </div>
   </form>
 </div>
-{% endblock %}
-
-{% block scripts %}
-<script>
-  (function () {
-    var input = document.getElementById("role-input");
-    function apply(role) {
-      input.value = role;
-      document.querySelectorAll(".role-tab").forEach(function (t) {
-        t.classList.toggle("active", t.dataset.role === role);
-      });
-      document.querySelectorAll("[data-role-field]").forEach(function (f) {
-        f.classList.toggle("hidden", f.dataset.roleField !== role);
-      });
-    }
-    document.querySelectorAll(".role-tab").forEach(function (t) {
-      t.addEventListener("click", function () { apply(t.dataset.role); });
-    });
-    apply(input.value || "student");
-  })();
-</script>
 {% endblock %}

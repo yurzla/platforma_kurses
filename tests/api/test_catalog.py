@@ -41,7 +41,7 @@ def make_app(store: FakeStore):
 
 async def _login(ac: httpx.AsyncClient) -> None:
     await ac.post(
-        "/api/v1/auth/student/login", json={"email": "s@example.com", "password": "pw"}
+        "/api/v1/auth/login", json={"email": "s@example.com", "password": "pw"}
     )
 
 

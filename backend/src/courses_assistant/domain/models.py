@@ -13,6 +13,20 @@ class Role(StrEnum):
     SYSTEM = "system"
 
 
+class UserRole(StrEnum):
+    STUDENT = "student"
+    TEACHER = "teacher"
+    ADMIN = "admin"
+
+
+USER_ROLES: tuple[str, ...] = (UserRole.STUDENT, UserRole.TEACHER, UserRole.ADMIN)
+SELF_REGISTER_ROLES: tuple[str, ...] = (UserRole.STUDENT, UserRole.TEACHER)
+
+
+def is_admin(role: str) -> bool:
+    return role == UserRole.ADMIN
+
+
 class SourceType(StrEnum):
     THEORY = "theory"
     TASK = "task"

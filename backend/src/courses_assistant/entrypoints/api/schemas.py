@@ -56,14 +56,16 @@ class HealthRead(BaseModel):
     dependencies: dict[str, str] = Field(default_factory=dict)
 
 
-class AdminLoginRequest(BaseModel):
-    username: str = Field(min_length=1, max_length=200)
-    password: str = Field(min_length=1, max_length=400)
-
-
-class StudentLoginRequest(BaseModel):
+class LoginRequest(BaseModel):
     email: str = Field(min_length=3, max_length=320)
     password: str = Field(min_length=1, max_length=400)
+
+
+class RegisterRequest(BaseModel):
+    email: str = Field(min_length=3, max_length=320)
+    name: str = Field(min_length=1, max_length=200)
+    password: str = Field(min_length=6, max_length=400)
+    role: str = Field(default="student", max_length=20)
 
 
 class MeRead(BaseModel):
@@ -71,6 +73,25 @@ class MeRead(BaseModel):
     id: int | None = None
     name: str | None = None
     email: str | None = None
+
+
+class UserListItem(BaseModel):
+    id: int
+    email: str
+    name: str
+    role: str
+    created_at: datetime | None = None
+
+
+class UserListResponse(BaseModel):
+    items: list[UserListItem]
+    total: int
+    limit: int
+    offset: int
+
+
+class UserRoleUpdate(BaseModel):
+    role: str = Field(min_length=1, max_length=20)
 
 
 class CourseSummaryRead(BaseModel):

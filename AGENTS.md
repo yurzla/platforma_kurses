@@ -57,8 +57,10 @@ uv run python -m courses_assistant.scripts.import_step_sources --token "$access_
   переключатель Админ/Студент на `/login`. Web имеет свой `courses_web/{config,middleware}.py` и
   НЕ импортирует `courses_assistant`.
 - Web-тесты: `tests/web/test_web.py` (web-стек поверх API через `httpx.ASGITransport`).
-- Аутентификация (API): admin — `ADMIN_USERNAME`/`ADMIN_PASSWORD`; student — `users` +
-  `domain/security.py` (scrypt). Сессия — `SessionMiddleware`, ключи в `api/dependencies.py`.
+- Аутентификация (API): единый вход по `users` (`domain/security.py`, scrypt); права — по роли
+  (`student`/`teacher`/`admin`), `require_user`/`require_admin` в `api/dependencies.py`. Сессия —
+  `SessionMiddleware` (ключ `user`); регистрация (`/register`) даёт только `student`/`teacher`,
+  `admin` — скриптом `create_user --role admin`.
 
 ## БД и миграции
 
@@ -93,8 +95,9 @@ openspec archive <name> -y                                   # синкает д
   роняет холостое чтение) — использовать `STREAM_BLOCK_MS`.
 - `GIGACHAT_BASE_URL` должен указывать на JSON API (`https://api.giga.chat/v1`);
   `https://giga.chat/v1` отдаёт HTML со статусом 200.
-- Вход в админку опционален: задать одновременно `ADMIN_USERNAME` и `ADMIN_PASSWORD`
-  (форма `/login` в web, подписанная session-cookie); пусто → `/dashboard` и `/api/v1/admin/*` открыты.
+- Роли ограничены constraint `users_role_check` (`student|teacher|admin`). Доступ в
+  `/api/v1/admin/*` и `/dashboard` — по роли `admin` из БД (не по env). Админ не может менять
+  собственную роль; сессия подписывается `SESSION_SECRET` (пусто — эфемерный, только dev).
 - Порты: API `5000`, web `8000` (`API_PORT`/`WEB_PORT`), web ходит в API по `API_BASE_URL`.
 - Ключи ответов тестов: в дампе Stepik `block.options` их нет — только `/api/step-sources`
   (нужен токен автора курса; иначе шаги `grading=manual`). Импорт — `import_step_sources`.

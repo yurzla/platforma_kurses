@@ -8,8 +8,10 @@ from datetime import UTC, datetime, timedelta
 import structlog
 
 from courses_assistant.application.commands import (
+    ChangeUserRole,
     CreateChatSession,
     ProcessQuestion,
+    RegisterUser,
     RunCronTask,
     SendQuestion,
     SubmitStepAnswer,
@@ -20,17 +22,30 @@ from courses_assistant.config import Settings
 from courses_assistant.domain.catalog import StepResult
 from courses_assistant.domain.context import build_context
 from courses_assistant.domain.errors import (
+    CannotChangeOwnRole,
     CourseNotFound,
+    EmailAlreadyExists,
+    InvalidRole,
     JobNotFound,
     SessionNotFound,
     UserNotFound,
 )
-from courses_assistant.domain.models import Answer, ChatMessage, JobStatus, RetrievedChunk, Role
+from courses_assistant.domain.models import (
+    SELF_REGISTER_ROLES,
+    USER_ROLES,
+    Answer,
+    ChatMessage,
+    JobStatus,
+    RetrievedChunk,
+    Role,
+    User,
+)
 from courses_assistant.domain.quiz import (
     build_answer_key,
     correct_answer_for_display,
     grade,
 )
+from courses_assistant.domain.security import hash_password
 
 NO_MATERIALS_ANSWER = "Не удалось найти подходящие материалы в текущем курсе."
 NO_COURSE_ANSWER = "Материалы курса не найдены."
@@ -197,6 +212,31 @@ class Handlers:
             completed=True,
             progress_percent=percent,
         )
+
+    async def register_user(self, command: RegisterUser) -> User:
+        if command.role not in SELF_REGISTER_ROLES:
+            raise InvalidRole(f"Роль {command.role} недоступна при регистрации.")
+        async with self._uow_factory() as uow:
+            existing = await uow.users.get_by_email(command.email)
+            if existing is not None:
+                raise EmailAlreadyExists(f"Email {command.email} уже зарегистрирован.")
+            user = await uow.users.create(
+                command.email, command.name, hash_password(command.password), command.role
+            )
+            await uow.commit()
+        return user
+
+    async def change_user_role(self, command: ChangeUserRole) -> User:
+        if command.role not in USER_ROLES:
+            raise InvalidRole(f"Неизвестная роль: {command.role}")
+        if command.actor_id == command.user_id:
+            raise CannotChangeOwnRole("Нельзя менять собственную роль.")
+        async with self._uow_factory() as uow:
+            user = await uow.users.set_role(command.user_id, command.role)
+            if user is None:
+                raise UserNotFound(f"Пользователь {command.user_id} не найден.")
+            await uow.commit()
+        return user
 
     async def run_cron_task(self, command: RunCronTask) -> None:
         if command.name == "purge_terminal_jobs":

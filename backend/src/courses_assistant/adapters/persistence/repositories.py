@@ -7,7 +7,7 @@ from collections.abc import Sequence
 from datetime import UTC, datetime
 from typing import Any, cast
 
-from sqlalchemy import CursorResult, delete, func, select, update
+from sqlalchemy import CursorResult, delete, func, or_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from courses_assistant.adapters.persistence.orm import (
@@ -171,6 +171,41 @@ class SqlUserRepository(UserRepository):
         self._session.add(orm)
         await self._session.flush()
         return _to_user(orm)
+
+    @staticmethod
+    def _search_filter(search: str | None) -> list:
+        if not search:
+            return []
+        pattern = f"%{search}%"
+        return [or_(UserORM.email.ilike(pattern), UserORM.name.ilike(pattern))]
+
+    async def list(
+        self,
+        search: str | None = None,
+        limit: int = 50,
+        offset: int = 0,
+    ) -> list[User]:
+        stmt = select(UserORM).order_by(UserORM.id)
+        conditions = self._search_filter(search)
+        if conditions:
+            stmt = stmt.where(*conditions)
+        stmt = stmt.limit(limit).offset(offset)
+        rows = (await self._session.execute(stmt)).scalars().all()
+        return [_to_user(row) for row in rows]
+
+    async def count(self, search: str | None = None) -> int:
+        stmt = select(func.count()).select_from(UserORM)
+        conditions = self._search_filter(search)
+        if conditions:
+            stmt = stmt.where(*conditions)
+        return int((await self._session.execute(stmt)).scalar_one())
+
+    async def set_role(self, user_id: int, role: str) -> User | None:
+        result = await self._session.execute(
+            update(UserORM).where(UserORM.id == user_id).values(role=role).returning(UserORM)
+        )
+        orm = result.scalar_one_or_none()
+        return _to_user(orm) if orm else None
 
 
 class SqlCatalogRepository(CatalogRepository):

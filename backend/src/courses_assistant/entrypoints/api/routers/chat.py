@@ -8,7 +8,7 @@ from courses_assistant.application.commands import CreateChatSession
 from courses_assistant.application.queries import get_history
 from courses_assistant.container import Container
 from courses_assistant.entrypoints.api.dependencies import (
-    STUDENT_SESSION_KEY,
+    USER_SESSION_KEY,
     get_container,
 )
 from courses_assistant.entrypoints.api.schemas import MessageRead, SessionCreate, SessionRead
@@ -17,12 +17,12 @@ router = APIRouter(prefix="/api/v1/chat", tags=["chat"])
 
 
 def _resolve_user_id(request: Request, payload_user_id: int | None) -> int:
-    session_user = request.session.get(STUDENT_SESSION_KEY)
+    session_user = request.session.get(USER_SESSION_KEY)
     if session_user is not None:
         return int(session_user)
     if payload_user_id is not None:
         return payload_user_id
-    raise HTTPException(status_code=401, detail="Требуется вход студента")
+    raise HTTPException(status_code=401, detail="Требуется вход")
 
 
 @router.post("/sessions", response_model=SessionRead, status_code=201)

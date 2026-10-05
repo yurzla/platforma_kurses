@@ -68,6 +68,20 @@ class UserRepository(ABC):
     @abstractmethod
     async def create(self, email: str, name: str, password_hash: str, role: str) -> User: ...
 
+    @abstractmethod
+    async def list(
+        self,
+        search: str | None = None,
+        limit: int = 50,
+        offset: int = 0,
+    ) -> list[User]: ...
+
+    @abstractmethod
+    async def count(self, search: str | None = None) -> int: ...
+
+    @abstractmethod
+    async def set_role(self, user_id: int, role: str) -> User | None: ...
+
 
 class CatalogRepository(ABC):
     @abstractmethod

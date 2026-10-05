@@ -24,29 +24,12 @@ def test_defaults() -> None:
     assert settings.stream_requests == "rag.requests"
 
 
-def test_admin_auth_disabled_without_credentials() -> None:
-    settings = Settings(admin_username="", admin_password="")
-    assert settings.admin_auth_enabled() is False
-    assert settings.verify_admin("admin", "x") is False
+def test_resolved_session_secret_uses_configured() -> None:
+    assert Settings(session_secret="key").resolved_session_secret() == "key"
 
 
-def test_admin_auth_enabled_only_with_both_fields() -> None:
-    assert Settings(admin_username="admin", admin_password="").admin_auth_enabled() is False
-    assert Settings(admin_username="", admin_password="x").admin_auth_enabled() is False
-    assert Settings(admin_username="admin", admin_password="x").admin_auth_enabled() is True
-
-
-def test_verify_admin() -> None:
-    settings = Settings(admin_username="admin", admin_password="s3cret")
-    assert settings.verify_admin("admin", "s3cret") is True
-    assert settings.verify_admin("admin", "wrong") is False
-    assert settings.verify_admin("nobody", "s3cret") is False
-
-
-def test_session_secret_falls_back_to_credentials() -> None:
-    explicit = Settings(admin_session_secret="key")
-    assert explicit.session_secret() == "key"
-    derived = Settings(
-        admin_username="admin", admin_password="s3cret", admin_session_secret=""
-    )
-    assert len(derived.session_secret()) == 64
+def test_resolved_session_secret_ephemeral_when_missing() -> None:
+    settings = Settings(session_secret="")
+    secret = settings.resolved_session_secret()
+    assert secret
+    assert secret == settings.resolved_session_secret()

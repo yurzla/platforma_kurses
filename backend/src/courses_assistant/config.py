@@ -2,12 +2,27 @@
 
 from __future__ import annotations
 
-import hashlib
+import logging
 import secrets
 from functools import lru_cache
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+logger = logging.getLogger(__name__)
+
+_EPHEMERAL_SESSION_SECRET: str | None = None
+
+
+def _ephemeral_session_secret() -> str:
+    global _EPHEMERAL_SESSION_SECRET
+    if _EPHEMERAL_SESSION_SECRET is None:
+        _EPHEMERAL_SESSION_SECRET = secrets.token_urlsafe(32)
+        logger.warning(
+            "SESSION_SECRET не задан: сгенерирован эфемерный секрет. "
+            "Сессии не переживут рестарт; задайте SESSION_SECRET в проде."
+        )
+    return _EPHEMERAL_SESSION_SECRET
 
 
 class Settings(BaseSettings):
@@ -53,12 +68,10 @@ class Settings(BaseSettings):
     redis_stream_maxlen: int = 10_000
     redis_stream_events_maxlen: int = 1_000
 
-    # Админка/дашборд (доступ по логину и паролю)
-    admin_username: str = ""
-    admin_password: str = ""
-    admin_session_secret: str = ""
-    admin_cookie_secure: bool = False
-    admin_session_max_age: int = 60 * 60 * 12
+    # Сессия (подписанная cookie)
+    session_secret: str = ""
+    cookie_secure: bool = False
+    session_max_age: int = 60 * 60 * 12
 
     # Embeddings (Ollama)
     ollama_url: str = "http://localhost:11434/api/embed"
@@ -83,22 +96,9 @@ class Settings(BaseSettings):
             )
         return self.gigachat_credentials
 
-    def admin_auth_enabled(self) -> bool:
-        """Вход требуется, только если заданы и логин, и пароль."""
-        return bool(self.admin_username and self.admin_password)
-
-    def verify_admin(self, username: str, password: str) -> bool:
-        if not self.admin_auth_enabled():
-            return False
-        user_ok = secrets.compare_digest(username, self.admin_username)
-        pass_ok = secrets.compare_digest(password, self.admin_password)
-        return user_ok and pass_ok
-
-    def session_secret(self) -> str:
-        """Ключ подписи session-cookie."""
-        return self.admin_session_secret or hashlib.sha256(
-            f"{self.admin_username}:{self.admin_password}".encode()
-        ).hexdigest()
+    def resolved_session_secret(self) -> str:
+        """Ключ подписи session-cookie; при отсутствии — эфемерный на процесс."""
+        return self.session_secret or _ephemeral_session_secret()
 
 
 @lru_cache

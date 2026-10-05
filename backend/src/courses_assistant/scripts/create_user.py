@@ -17,6 +17,7 @@ from courses_assistant.adapters.persistence.database import (
 )
 from courses_assistant.adapters.persistence.orm import UserORM
 from courses_assistant.config import get_settings
+from courses_assistant.domain.models import USER_ROLES
 from courses_assistant.domain.security import hash_password
 
 app = typer.Typer(help="Создание пользователя.")
@@ -57,6 +58,8 @@ def main(  # noqa: PLR0913
     name: str = typer.Option("", "--name", "-n"),
     role: str = typer.Option("student", "--role", "-r"),
 ) -> None:
+    if role not in USER_ROLES:
+        raise typer.BadParameter(f"Роль должна быть одной из: {', '.join(USER_ROLES)}")
     asyncio.run(_run(email, password, name or email, role))
 
 
