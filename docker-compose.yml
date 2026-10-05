@@ -19,6 +19,14 @@ x-app-env: &app-env
   ADMIN_SESSION_SECRET: ${ADMIN_SESSION_SECRET:-}
   ADMIN_COOKIE_SECURE: ${ADMIN_COOKIE_SECURE:-false}
 
+x-backend-build: &backend-build
+  context: .
+  dockerfile: backend/Dockerfile
+
+x-web-build: &web-build
+  context: .
+  dockerfile: web/Dockerfile
+
 services:
   postgres:
     image: pgvector/pgvector:pg17
@@ -88,7 +96,7 @@ services:
     restart: "no"
 
   migrate:
-    build: .
+    build: *backend-build
     depends_on:
       postgres:
         condition: service_healthy
@@ -99,7 +107,7 @@ services:
     restart: "no"
 
   api:
-    build: .
+    build: *backend-build
     depends_on:
       migrate:
         condition: service_completed_successfully
@@ -109,6 +117,36 @@ services:
     command:
       - uvicorn
       - courses_assistant.entrypoints.api.app:create_app
+      - --factory
+      - --host
+      - 0.0.0.0
+      - --port
+      - "5000"
+    ports:
+      - "5000:5000"
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:5000/health').status==200 else 1)"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build: *web-build
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      API_BASE_URL: http://api:5000
+      WEB_HOST: 0.0.0.0
+      WEB_PORT: ${WEB_PORT:-8000}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    command:
+      - uvicorn
+      - courses_web.app:create_app
       - --factory
       - --host
       - 0.0.0.0
@@ -127,7 +165,7 @@ services:
       retries: 10
 
   worker:
-    build: .
+    build: *backend-build
     depends_on:
       migrate:
         condition: service_completed_successfully
@@ -137,7 +175,7 @@ services:
     command: ["python", "-m", "courses_assistant.entrypoints.worker"]
 
   scheduler:
-    build: .
+    build: *backend-build
     depends_on:
       migrate:
         condition: service_completed_successfully
@@ -147,7 +185,7 @@ services:
     command: ["python", "-m", "courses_assistant.entrypoints.scheduler"]
 
   cron:
-    build: .
+    build: *backend-build
     depends_on:
       migrate:
         condition: service_completed_successfully

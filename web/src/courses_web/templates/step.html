@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}{{ step.title or "Шаг" }} · Courses Assistant{% endblock %}
+
+{% block body %}
+{% with active = "courses" %}{% include "_topbar.html" %}{% endwith %}
+<main>
+  <p class="breadcrumbs"><a href="/courses">Курсы</a> / <a href="/courses/{{ course_id }}">Курс</a> / шаг {{ step.position }}</p>
+  <h1 class="page-title">{{ step.title or ("Шаг " ~ step.position) }}</h1>
+  <span class="step-type-badge">{{ step.type }}</span>
+
+  {% if step.body %}
+  <div class="step-body">{{ step.body | safe }}</div>
+  {% endif %}
+
+  <section class="answer-panel" id="answer-panel">
+    {% if step.grading == "auto" and step.type == "choice" and step.options and step.options.choices %}
+    <form id="answer-form" class="quiz-form">
+      {% for choice in step.options.choices %}
+      <label class="choice-option">
+        <input type="{{ 'checkbox' if step.options.is_multiple_choice else 'radio' }}"
+               name="choice" value="{{ choice.id }}">
+        <span>{{ choice.text | safe }}</span>
+      </label>
+      {% endfor %}
+      <button class="btn" type="submit">Ответить</button>
+    </form>
+    {% elif step.grading == "auto" %}
+    <form id="answer-form" class="quiz-form" data-input="true">
+      <label>Ответ
+        <input name="answer" type="text" value="{{ step.saved_answer|default('') }}" autocomplete="off">
+      </label>
+      <button class="btn" type="submit">Ответить</button>
+    </form>
+    {% else %}
+    <p class="muted">Это задание проверяется без автоматической оценки. Отметьте его как выполнённое.</p>
+    <form id="complete-form" class="quiz-form">
+      <button class="btn" type="submit">Отметить выполненным</button>
+    </form>
+    {% endif %}
+    <div id="answer-result" class="answer-result hidden"></div>
+  </section>
+
+  <section class="assistant-panel">
+    <h2>Ассистент</h2>
+    <div id="chat-log" class="chat-log"></div>
+    <form id="chat-form" class="chat-form">
+      <input id="chat-input" type="text" placeholder="Задайте вопрос по материалу…" autocomplete="off">
+      <button class="btn" type="submit">Спросить</button>
+    </form>
+  </section>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>window.STEP = {{ step | tojson }};</script>
+<script>window.COURSE_ID = {{ course_id }};</script>
+<script>window.ME = {{ me | tojson }};</script>
+<script src="/static/web.js"></script>
+{% endblock %}

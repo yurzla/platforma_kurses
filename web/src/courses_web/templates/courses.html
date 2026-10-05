@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Курсы · Courses Assistant{% endblock %}
+
+{% block body %}
+{% with active = "courses" %}{% include "_topbar.html" %}{% endwith %}
+<main>
+  <h1 class="page-title">Курсы</h1>
+  {% if not courses %}
+  <p class="muted">Доступных курсов нет.</p>
+  {% endif %}
+  <section class="course-grid">
+    {% for c in courses %}
+    <a class="course-card" href="/courses/{{ c.id }}">
+      <h2>{{ c.title }}</h2>
+      {% if c.description %}<p class="muted">{{ c.description }}</p>{% endif %}
+      <div class="course-meta">
+        <span>{{ c.lessons_count }} уроков</span>
+        <span>{{ c.steps_count }} шагов</span>
+        {% if c.enrolled and c.progress_percent is not none %}
+        <span class="progress">{{ c.progress_percent }}%</span>
+        {% endif %}
+      </div>
+    </a>
+    {% endfor %}
+  </section>
+</main>
+{% endblock %}

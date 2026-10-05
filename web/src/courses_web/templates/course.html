@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}{{ course.title }} · Courses Assistant{% endblock %}
+
+{% block body %}
+{% with active = "courses" %}{% include "_topbar.html" %}{% endwith %}
+<main>
+  <p class="breadcrumbs"><a href="/courses">Курсы</a> / {{ course.title }}</p>
+  <h1 class="page-title">{{ course.title }}</h1>
+  {% if course.description %}<p class="muted">{{ course.description }}</p>{% endif %}
+
+  {% for section in course.sections %}
+  <section class="section-block">
+    <h2>{{ section.title }}</h2>
+    {% for lesson in section.lessons %}
+    <div class="lesson-block">
+      <h3>{{ lesson.title }}</h3>
+      <ol class="step-list">
+        {% for s in lesson.steps %}
+        <li class="step-item {% if s.completed %}completed{% endif %}">
+          <a href="/courses/{{ course.id }}/steps/{{ s.id }}">
+            <span class="step-type">{{ s.type }}</span>
+            <span class="step-title">{{ s.title or ("Шаг " ~ s.position) }}</span>
+            {% if s.completed %}<span class="step-check">✓</span>{% endif %}
+          </a>
+        </li>
+        {% endfor %}
+      </ol>
+    </div>
+    {% endfor %}
+  </section>
+  {% endfor %}
+</main>
+{% endblock %}

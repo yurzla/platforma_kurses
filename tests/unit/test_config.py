@@ -46,5 +46,7 @@ def test_verify_admin() -> None:
 def test_session_secret_falls_back_to_credentials() -> None:
     explicit = Settings(admin_session_secret="key")
     assert explicit.session_secret() == "key"
-    derived = Settings(admin_username="admin", admin_password="s3cret")
+    derived = Settings(
+        admin_username="admin", admin_password="s3cret", admin_session_secret=""
+    )
     assert len(derived.session_secret()) == 64

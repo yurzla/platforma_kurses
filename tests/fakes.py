@@ -3,19 +3,29 @@
 from __future__ import annotations
 
 import uuid
-from collections.abc import Sequence
+from collections.abc import Iterator, Sequence
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from types import TracebackType
 
 from courses_assistant.application.ports import (
     LLM,
+    CatalogRepository,
     ChatRepository,
     CourseChunkRepository,
     Embedder,
     JobRepository,
     MessageBroker,
     UnitOfWork,
+    UserRepository,
+)
+from courses_assistant.domain.catalog import (
+    CourseDetail,
+    CourseSummary,
+    LessonSummary,
+    SectionSummary,
+    StepDetail,
+    StepSummary,
 )
 from courses_assistant.domain.models import (
     ChatMessage,
@@ -24,19 +34,42 @@ from courses_assistant.domain.models import (
     LLMMessage,
     QuestionJob,
     RetrievedChunk,
+    User,
 )
+from courses_assistant.domain.quiz import build_answer_key, grading_mode
 
 
 @dataclass
 class FakeStore:
     users: set[int] = field(default_factory=set)
     courses: set[int] = field(default_factory=set)
+    user_profiles: dict[int, User] = field(default_factory=dict)
+    user_password_hashes: dict[int, str] = field(default_factory=dict)
     sessions: dict[int, ChatSession] = field(default_factory=dict)
     messages: dict[int, list[ChatMessage]] = field(default_factory=dict)
     jobs: dict[str, QuestionJob] = field(default_factory=dict)
     chunks: list[RetrievedChunk] = field(default_factory=list)
+    courses_detail: dict[int, CourseDetail] = field(default_factory=dict)
+    answer_keys: dict[int, dict] = field(default_factory=dict)
+    step_bodies: dict[int, str] = field(default_factory=dict)
+    progress: dict[tuple[int, int], str] = field(default_factory=dict)
     session_seq: int = 0
     message_seq: int = 0
+    user_seq: int = 0
+
+    def add_course(self, course: CourseDetail) -> None:
+        self.courses_detail[course.id] = course
+
+    def next_user_id(self) -> int:
+        self.user_seq += 1
+        return self.user_seq
+
+    def add_user(self, email: str, name: str, password_hash: str, role: str = "student") -> User:
+        user = User(id=self.next_user_id(), email=email, name=name, role=role)
+        self.users.add(user.id)
+        self.user_profiles[user.id] = user
+        self.user_password_hashes[user.id] = password_hash
+        return user
 
     def next_session_id(self) -> int:
         self.session_seq += 1
@@ -91,6 +124,162 @@ class InMemoryCourseChunkRepository(CourseChunkRepository):
         limit: int,
     ) -> list[RetrievedChunk]:
         return self._store.chunks[:limit]
+
+
+class InMemoryUserRepository(UserRepository):
+    def __init__(self, store: FakeStore) -> None:
+        self._store = store
+
+    async def get(self, user_id: int) -> User | None:
+        return self._store.user_profiles.get(user_id)
+
+    async def get_by_email(self, email: str) -> User | None:
+        target = email.lower()
+        for user in self._store.user_profiles.values():
+            if user.email.lower() == target:
+                return user
+        return None
+
+    async def get_password_hash(self, user_id: int) -> str | None:
+        return self._store.user_password_hashes.get(user_id)
+
+    async def create(self, email: str, name: str, password_hash: str, role: str) -> User:
+        return self._store.add_user(email, name, password_hash, role)
+
+
+class InMemoryCatalogRepository(CatalogRepository):
+    def __init__(self, store: FakeStore) -> None:
+        self._store = store
+
+    def _all_steps(self) -> Iterator[tuple[CourseDetail, LessonSummary, StepSummary]]:
+        for course in self._store.courses_detail.values():
+            for section in course.sections:
+                for lesson in section.lessons:
+                    for step in lesson.steps:
+                        yield course, lesson, step
+
+    async def list_courses(self, user_id: int | None) -> list[CourseSummary]:
+        summaries: list[CourseSummary] = []
+        for course in self._store.courses_detail.values():
+            lessons = sum(len(section.lessons) for section in course.sections)
+            steps = sum(
+                len(lesson.steps) for section in course.sections for lesson in section.lessons
+            )
+            done = sum(
+                1
+                for _, _, step in self._all_steps()
+                if self._store.progress.get((user_id or 0, step.id)) in ("passed",)
+            )
+            percent = round(100.0 * done / steps, 2) if steps else 0.0
+            summaries.append(
+                CourseSummary(
+                    id=course.id,
+                    title=course.title,
+                    description=course.description,
+                    lessons_count=lessons,
+                    steps_count=steps,
+                    enrolled=user_id is not None and user_id in self._store.users,
+                    progress_percent=percent if user_id is not None else None,
+                )
+            )
+        return summaries
+
+    async def get_course(self, course_id: int, user_id: int | None) -> CourseDetail | None:
+        course = self._store.courses_detail.get(course_id)
+        if course is None:
+            return None
+        sections = []
+        for section in course.sections:
+            lessons = []
+            for lesson in section.lessons:
+                steps = []
+                for step in lesson.steps:
+                    status = self._store.progress.get((user_id or 0, step.id))
+                    steps.append(
+                        StepSummary(
+                            id=step.id,
+                            position=step.position,
+                            step_type=step.step_type,
+                            completed=status in ("passed",),
+                        )
+                    )
+                lessons.append(
+                    LessonSummary(
+                        id=lesson.id,
+                        title=lesson.title,
+                        position=lesson.position,
+                        steps=steps,
+                    )
+                )
+            sections.append(
+                SectionSummary(
+                    id=section.id,
+                    title=section.title,
+                    position=section.position,
+                    lessons=lessons,
+                )
+            )
+        return CourseDetail(
+            id=course.id,
+            title=course.title,
+            description=course.description,
+            sections=sections,
+        )
+
+    async def get_step(
+        self, course_id: int, step_id: int, user_id: int | None
+    ) -> StepDetail | None:
+        for course, lesson, step in self._all_steps():
+            if course.id != course_id or step.id != step_id:
+                continue
+            payload = self._store.answer_keys.get(step_id)
+            key = build_answer_key(step.step_type, payload)
+            mode = (
+                "auto"
+                if grading_mode(step.step_type) == "auto" and key is not None
+                else "manual"
+            )
+            options = None
+            if mode == "auto" and step.step_type == "choice" and key is not None:
+                options = {
+                    "choices": key["choices"],
+                    "is_multiple_choice": key["is_multiple_choice"],
+                }
+            status = self._store.progress.get((user_id or 0, step_id))
+            return StepDetail(
+                id=step.id,
+                course_id=course_id,
+                lesson_id=lesson.id,
+                position=step.position,
+                step_type=step.step_type,
+                title=None,
+                body=self._store.step_bodies.get(step_id),
+                options=options,
+                grading=mode,
+                completed=status in ("passed",),
+                saved_answer=None,
+                is_correct=None,
+            )
+        return None
+
+    async def get_answer_key(self, step_id: int) -> dict | None:
+        return self._store.answer_keys.get(step_id)
+
+    async def save_step_result(
+        self, user_id: int, step_id: int, *, status: str, score: float
+    ) -> None:
+        self._store.progress[(user_id, step_id)] = status
+
+    async def recompute_course_progress(self, user_id: int, course_id: int) -> float:
+        total = 0
+        done = 0
+        for course, _, step in self._all_steps():
+            if course.id != course_id:
+                continue
+            total += 1
+            if self._store.progress.get((user_id, step.id)) in ("passed",):
+                done += 1
+        return round(100.0 * done / total, 2) if total else 0.0
 
 
 class InMemoryJobRepository(JobRepository):
@@ -211,6 +400,8 @@ class InMemoryUnitOfWork(UnitOfWork):
         self.chat = InMemoryChatRepository(store)
         self.chunks = InMemoryCourseChunkRepository(store)
         self.jobs = InMemoryJobRepository(store)
+        self.users = InMemoryUserRepository(store)
+        self.catalog = InMemoryCatalogRepository(store)
 
     async def __aenter__(self) -> InMemoryUnitOfWork:
         return self

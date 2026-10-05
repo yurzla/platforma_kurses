@@ -56,11 +56,12 @@ jobs:
           enable-cache: true
       - run: uv python install 3.13
       - run: uv sync --frozen
-      - run: uv run alembic upgrade head
+      - run: uv run alembic -c backend/alembic.ini upgrade head
       - run: uv run pytest
 
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: docker build -t courses-assistant:ci .
+      - run: docker build -f backend/Dockerfile -t courses-assistant:ci .
+      - run: docker build -f web/Dockerfile -t courses-web:ci .

@@ -23,13 +23,13 @@ test-integration:
 	uv run pytest -m integration
 
 cov:
-	uv run pytest --cov=courses_assistant --cov-report=term-missing
+	uv run pytest --cov=courses_assistant --cov=courses_web --cov-report=term-missing
 
 migrate:
-	uv run alembic upgrade head
+	uv run alembic -c backend/alembic.ini upgrade head
 
 revision:
-	uv run alembic revision --autogenerate -m "$(m)"
+	uv run alembic -c backend/alembic.ini revision --autogenerate -m "$(m)"
 
 up:
 	docker compose up --build -d
@@ -38,7 +38,8 @@ down:
 	docker compose down
 
 logs:
-	docker compose logs -f api worker cron scheduler
+	docker compose logs -f api web worker cron scheduler
 
 build:
-	docker build -t courses-assistant:local .
+	docker build -f backend/Dockerfile -t courses-assistant:local .
+	docker build -f web/Dockerfile -t courses-web:local .
