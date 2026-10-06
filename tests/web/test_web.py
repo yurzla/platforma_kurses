@@ -306,6 +306,9 @@ async def test_static_assets_served() -> None:
         assert (await web.get("/static/theme.js")).status_code == 200
         assert (await web.get("/static/dashboard.css")).status_code == 200
         assert (await web.get("/static/web.js")).status_code == 200
+        css = await web.get("/static/web.css")
+    assert css.status_code == 200
+    assert "right: 20px; bottom: 20px" in css.text
 
 
 async def test_proxy_auto_refreshes_expired_access_token() -> None:

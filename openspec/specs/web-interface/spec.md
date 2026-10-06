@@ -64,12 +64,12 @@ The web service SHALL submit the login form to the single login API endpoint, SH
 
 ### Requirement: Floating RAG assistant widget
 
-The web service SHALL render a pinned assistant control at the bottom-left of the course page and the step page and SHALL open a RAG chat panel overlaid on the right side of the page when the control is activated, without shifting the page content. The control and the panel SHALL NOT be rendered on the courses list, the administrator page, the login page, or the registration page.
+The web service SHALL render a pinned assistant control at the bottom-right of the course page and the step page and SHALL open a RAG chat panel overlaid on the right side of the page when the control is activated, without shifting the page content. The control and the panel SHALL NOT be rendered on the courses list, the administrator page, the login page, or the registration page.
 
 #### Scenario: Assistant control visible on course and step pages
 
 - **WHEN** an authenticated user requests the course page or a step page
-- **THEN** the web service returns the page containing a fixed assistant control pinned at the bottom-left
+- **THEN** the web service returns the page containing a fixed assistant control pinned at the bottom-right
 
 #### Scenario: Assistant absent on the courses list
 
