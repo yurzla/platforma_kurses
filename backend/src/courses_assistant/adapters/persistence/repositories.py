@@ -46,6 +46,7 @@ from courses_assistant.domain.catalog import (
 from courses_assistant.domain.models import (
     ChatMessage,
     ChatSession,
+    ChatSessionSummary,
     JobStatus,
     QuestionJob,
     RefreshToken,
@@ -98,7 +99,7 @@ class SqlChatRepository(ChatRepository):
     def __init__(self, session: AsyncSession) -> None:
         self._session = session
 
-    async def add_session(self, user_id: int, course_id: int) -> int:
+    async def add_session(self, user_id: int, course_id: int | None) -> int:
         orm = ChatSessionORM(user_id=user_id, course_id=course_id)
         self._session.add(orm)
         await self._session.flush()
@@ -107,6 +108,31 @@ class SqlChatRepository(ChatRepository):
     async def get_session(self, session_id: int) -> ChatSession | None:
         orm = await self._session.get(ChatSessionORM, session_id)
         return _to_session(orm) if orm else None
+
+    async def list_sessions(self, user_id: int) -> list[ChatSessionSummary]:
+        last_message = (
+            select(ChatMessageORM.content)
+            .where(ChatMessageORM.session_id == ChatSessionORM.id)
+            .order_by(ChatMessageORM.created_at.desc(), ChatMessageORM.id.desc())
+            .limit(1)
+            .scalar_subquery()
+        )
+        result = await self._session.execute(
+            select(ChatSessionORM, CourseORM.title, last_message)
+            .outerjoin(CourseORM, CourseORM.id == ChatSessionORM.course_id)
+            .where(ChatSessionORM.user_id == user_id)
+            .order_by(ChatSessionORM.started_at.desc(), ChatSessionORM.id.desc())
+        )
+        return [
+            ChatSessionSummary(
+                id=session.id,
+                course_id=session.course_id,
+                course_title=course_title,
+                started_at=session.started_at,
+                last_message=last_message_text,
+            )
+            for session, course_title, last_message_text in result.all()
+        ]
 
     async def add_message(self, message: ChatMessage) -> int:
         orm = ChatMessageORM(
@@ -590,12 +616,18 @@ class SqlCourseChunkRepository(CourseChunkRepository):
 
     async def search(
         self,
-        course_id: int,
+        course_id: int | None,
         embedding: Sequence[float],
         model_name: str,
         limit: int,
     ) -> list[RetrievedChunk]:
         distance = ChunkEmbeddingORM.embedding.cosine_distance(list(embedding)).label("distance")
+        conditions = [
+            ChunkEmbeddingORM.model_name == model_name,
+            ContentChunkORM.source_type.in_(["theory", "task"]),
+        ]
+        if course_id is not None:
+            conditions.append(ContentChunkORM.course_id == course_id)
         stmt = (
             select(
                 ContentChunkORM.id,
@@ -606,11 +638,7 @@ class SqlCourseChunkRepository(CourseChunkRepository):
             )
             .join(ContentChunkORM, ContentChunkORM.id == ChunkEmbeddingORM.chunk_id)
             .outerjoin(LessonORM, LessonORM.id == ContentChunkORM.lesson_id)
-            .where(
-                ContentChunkORM.course_id == course_id,
-                ChunkEmbeddingORM.model_name == model_name,
-                ContentChunkORM.source_type.in_(["theory", "task"]),
-            )
+            .where(*conditions)
             .order_by(distance)
             .limit(limit)
         )

@@ -8,7 +8,7 @@ from dataclasses import dataclass
 @dataclass(slots=True, frozen=True)
 class CreateChatSession:
     user_id: int
-    course_id: int
+    course_id: int | None = None
 
 
 @dataclass(slots=True, frozen=True)

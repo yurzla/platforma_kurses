@@ -54,6 +54,28 @@ async def test_create_session_persists(handlers, store) -> None:
     assert store.sessions[session_id].course_id == 10
 
 
+async def test_create_session_without_course(handlers, store) -> None:
+    session_id = await handlers.create_session(CreateChatSession(user_id=1))
+    assert store.sessions[session_id].course_id is None
+
+
+async def test_process_question_global_uses_chunks(handlers, store) -> None:
+    session_id = await handlers.create_session(CreateChatSession(user_id=1))
+    store.chunks = [
+        RetrievedChunk(chunk_id=9, text="материал", source_type="theory", lesson="L", distance=0.3)
+    ]
+    job_id = await handlers.send_question(SendQuestion(session_id=session_id, question="вопрос"))
+
+    await handlers.process_question(
+        ProcessQuestion(job_id=job_id, session_id=session_id, question="вопрос")
+    )
+
+    job = store.jobs[job_id]
+    assert job.status == JobStatus.DONE
+    assert job.answer == "тестовый ответ"
+    assert job.sources[0]["chunk_id"] == 9
+
+
 async def test_send_question_unknown_session(handlers) -> None:
     with pytest.raises(SessionNotFound):
         await handlers.send_question(SendQuestion(session_id=123, question="?"))

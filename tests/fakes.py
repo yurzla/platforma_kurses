@@ -31,6 +31,7 @@ from courses_assistant.domain.catalog import (
 from courses_assistant.domain.models import (
     ChatMessage,
     ChatSession,
+    ChatSessionSummary,
     JobStatus,
     LLMMessage,
     QuestionJob,
@@ -88,7 +89,7 @@ class InMemoryChatRepository(ChatRepository):
     def __init__(self, store: FakeStore) -> None:
         self._store = store
 
-    async def add_session(self, user_id: int, course_id: int) -> int:
+    async def add_session(self, user_id: int, course_id: int | None) -> int:
         session_id = self._store.next_session_id()
         self._store.sessions[session_id] = ChatSession(
             id=session_id, user_id=user_id, course_id=course_id, started_at=datetime.now(UTC)
@@ -98,6 +99,27 @@ class InMemoryChatRepository(ChatRepository):
 
     async def get_session(self, session_id: int) -> ChatSession | None:
         return self._store.sessions.get(session_id)
+
+    async def list_sessions(self, user_id: int) -> list[ChatSessionSummary]:
+        summaries: list[ChatSessionSummary] = []
+        owned = [s for s in self._store.sessions.values() if s.user_id == user_id]
+        for session in sorted(owned, key=lambda s: s.started_at, reverse=True):
+            course = (
+                self._store.courses_detail.get(session.course_id)
+                if session.course_id is not None
+                else None
+            )
+            messages = self._store.messages.get(session.id, [])
+            summaries.append(
+                ChatSessionSummary(
+                    id=session.id,
+                    course_id=session.course_id,
+                    course_title=course.title if course else None,
+                    started_at=session.started_at,
+                    last_message=messages[-1].content if messages else None,
+                )
+            )
+        return summaries
 
     async def add_message(self, message: ChatMessage) -> int:
         message_id = self._store.next_message_id()
@@ -122,7 +144,7 @@ class InMemoryCourseChunkRepository(CourseChunkRepository):
 
     async def search(
         self,
-        course_id: int,
+        course_id: int | None,
         embedding: Sequence[float],
         model_name: str,
         limit: int,

@@ -9,13 +9,21 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class SessionCreate(BaseModel):
-    course_id: int = Field(gt=0)
+    course_id: int | None = Field(default=None, gt=0)
 
 
 class SessionRead(BaseModel):
     id: int
     user_id: int
     course_id: int | None
+
+
+class SessionListItemRead(BaseModel):
+    id: int
+    course_id: int | None
+    course_title: str | None = None
+    started_at: datetime
+    last_message: str | None = None
 
 
 class MessageRead(BaseModel):

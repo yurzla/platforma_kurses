@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Any
 from urllib.parse import parse_qsl
 
@@ -198,7 +199,54 @@ async def _courses_page(
     if context["pages"] and page > context["pages"]:
         return RedirectResponse(f"{path}?page={context['pages']}", status_code=303)
     me = await _me(request)
-    return _render(request, template, {"me": me, **context})
+    assistant = await _assistant_history_context(request)
+    return _render(
+        request,
+        template,
+        {"me": me, "assistant_mode": "history", **context, **assistant},
+    )
+
+
+def _format_started_at(value: Any) -> str:
+    if not isinstance(value, str):
+        return ""
+    try:
+        return datetime.fromisoformat(value).strftime("%d.%m.%Y %H:%M")
+    except ValueError:
+        return value
+
+
+async def _assistant_history_context(
+    request: Request, *, course_id: int | None = None
+) -> dict[str, Any]:
+    sessions_resp = await call_api(request, "GET", "/api/v1/chat/sessions")
+    sessions = sessions_resp.json() if sessions_resp.status_code == 200 else []
+
+    groups: dict[Any, dict[str, Any]] = {}
+    for session in sessions:
+        if course_id is not None and session.get("course_id") != course_id:
+            continue
+        group = groups.setdefault(
+            session.get("course_id"),
+            {"title": session.get("course_title") or "Все курсы", "sessions": []},
+        )
+        group["sessions"].append(
+            {
+                "id": session.get("id"),
+                "started_at": _format_started_at(session.get("started_at")),
+                "preview": (session.get("last_message") or "").strip()[:140],
+            }
+        )
+    return {"assistant_history": list(groups.values())}
+
+
+@router.get("/assistant/history", response_class=HTMLResponse)
+async def assistant_history(request: Request, course_id: int | None = None) -> Response:
+    me = await _me(request)
+    if not me.get("role"):
+        return HTMLResponse("", status_code=401)
+    context = await _assistant_history_context(request, course_id=course_id)
+    return _render(request, "_assistant_history.html", context)
 
 
 @router.get("/courses", response_class=HTMLResponse)
@@ -246,6 +294,7 @@ async def course(request: Request, course_id: int) -> Response:
         return HTMLResponse("<h1>Курс не найден</h1>", status_code=404)
     me = await _me(request)
     course_data = resp.json()
+    assistant = await _assistant_history_context(request, course_id=course_id)
     return _render(
         request,
         "course.html",
@@ -253,7 +302,9 @@ async def course(request: Request, course_id: int) -> Response:
             "me": me,
             "course": course_data,
             "course_id": course_id,
+            "assistant_mode": "course",
             "progress": _course_progress(course_id, course_data),
+            **assistant,
         },
     )
 
@@ -268,8 +319,15 @@ async def step(request: Request, course_id: int, step_id: int) -> Response:
     if resp.status_code != 200:
         return HTMLResponse("<h1>Шаг не найден</h1>", status_code=404)
     me = await _me(request)
+    assistant = await _assistant_history_context(request, course_id=course_id)
     return _render(
         request,
         "step.html",
-        {"me": me, "course_id": course_id, "step": resp.json()},
+        {
+            "me": me,
+            "course_id": course_id,
+            "assistant_mode": "course",
+            "step": resp.json(),
+            **assistant,
+        },
     )

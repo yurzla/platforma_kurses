@@ -73,12 +73,16 @@
     var chatInput = document.getElementById("chat-input");
     var courseId = parseInt(widget.dataset.courseId, 10) || null;
     var sessionId = null;
+    var historyPanel = document.getElementById("assistant-history");
+    var historyList = document.getElementById("assistant-history-list");
+    var backBtn = document.getElementById("assistant-back");
 
     function openPanel() {
       drawer.classList.add("open");
       drawer.setAttribute("aria-hidden", "false");
       toggle.setAttribute("aria-expanded", "true");
       chatInput.focus();
+      refreshHistory();
     }
 
     function closePanel() {
@@ -102,12 +106,35 @@
       return div;
     }
 
+    function clearLog() {
+      log.innerHTML = "";
+    }
+
+    function showChat() {
+      if (historyPanel) historyPanel.classList.add("hidden");
+      if (backBtn) backBtn.classList.remove("hidden");
+      log.classList.remove("hidden");
+    }
+
+    async function refreshHistory() {
+      if (!historyList) return;
+      var url = "/assistant/history";
+      if (courseId) url += "?course_id=" + courseId;
+      var resp = await fetch(url, {
+        headers: { Accept: "text/html" }, credentials: "same-origin",
+      });
+      if (resp.status === 401) { window.location.href = "/login"; return; }
+      if (!resp.ok) return;
+      historyList.innerHTML = await resp.text();
+    }
+
     async function ensureSession() {
       if (sessionId) return sessionId;
-      if (!courseId) return null;
+      var payload = {};
+      if (courseId) payload.course_id = courseId;
       var resp = await fetch("/api/v1/chat/sessions", {
         method: "POST", headers: jsonHeaders(), credentials: "same-origin",
-        body: JSON.stringify({ course_id: courseId }),
+        body: JSON.stringify(payload),
       });
       if (resp.status === 401) { window.location.href = "/login"; return null; }
       if (!resp.ok) return null;
@@ -116,15 +143,53 @@
       return sessionId;
     }
 
+    async function loadSession(id) {
+      var resp = await fetch("/api/v1/chat/sessions/" + id + "/messages?limit=50", {
+        headers: { Accept: "application/json" }, credentials: "same-origin",
+      });
+      if (resp.status === 401) { window.location.href = "/login"; return; }
+      if (!resp.ok) return;
+      var messages = await resp.json();
+      clearLog();
+      messages.forEach(function (message) {
+        append(message.role === "user" ? "user" : "assistant", message.content);
+      });
+      sessionId = id;
+      showChat();
+    }
+
+    if (historyList) {
+      historyList.addEventListener("click", function (event) {
+        var btn = event.target.closest(".history-session");
+        if (!btn) return;
+        loadSession(parseInt(btn.dataset.sessionId, 10));
+      });
+    }
+
+    if (backBtn) {
+      backBtn.addEventListener("click", async function () {
+        sessionId = null;
+        clearLog();
+        log.classList.add("hidden");
+        backBtn.classList.add("hidden");
+        if (historyPanel) historyPanel.classList.remove("hidden");
+        await refreshHistory();
+      });
+    }
+
     chatForm.addEventListener("submit", async function (event) {
       event.preventDefault();
       var question = chatInput.value.trim();
       if (!question) return;
       chatInput.value = "";
+      showChat();
       append("user", question);
       var placeholder = append("assistant", "…");
       var sid = await ensureSession();
-      if (!sid) { placeholder.textContent = "Не удалось создать сессию."; return; }
+      if (!sid) {
+        placeholder.textContent = "Не удалось создать сессию.";
+        return;
+      }
       var resp = await fetch("/api/v1/chat/sessions/" + sid + "/ask", {
         method: "POST", headers: jsonHeaders(), credentials: "same-origin",
         body: JSON.stringify({ question: question }),

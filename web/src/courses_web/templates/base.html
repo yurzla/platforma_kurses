@@ -22,8 +22,8 @@
 </head>
 <body>
   {% block body %}{% endblock %}
-  {% if me and me.role and course_id %}
-  <div class="assistant" data-course-id="{{ course_id }}">
+  {% if me and me.role and assistant_mode %}
+  <div class="assistant" data-mode="{{ assistant_mode }}" data-course-id="{{ course_id or '' }}">
     <button type="button" id="assistant-toggle" class="assistant-fab" aria-expanded="false" aria-controls="assistant-drawer">
       Ассистент
     </button>
@@ -32,7 +32,13 @@
         <h2>Ассистент</h2>
         <button type="button" id="assistant-close" class="assistant-close" aria-label="Закрыть">×</button>
       </header>
-      <div id="chat-log" class="chat-log"></div>
+      <div id="assistant-history" class="assistant-history">
+        <div id="assistant-history-list" class="assistant-history-list">
+          {% include "_assistant_history.html" %}
+        </div>
+      </div>
+      <button type="button" id="assistant-back" class="btn ghost hidden">← К истории</button>
+      <div id="chat-log" class="chat-log hidden"></div>
       <form id="chat-form" class="chat-form">
         <input id="chat-input" type="text" placeholder="Задайте вопрос по материалу…" autocomplete="off">
         <button class="btn" type="submit">Спросить</button>
@@ -41,6 +47,6 @@
   </div>
   {% endif %}
   {% block scripts %}{% endblock %}
-  {% if me and me.role and course_id %}<script src="{{ static_url('web.js') }}"></script>{% endif %}
+  {% if me and me.role and assistant_mode %}<script src="{{ static_url('web.js') }}"></script>{% endif %}
 </body>
 </html>

@@ -10,9 +10,33 @@ from courses_assistant.container import Container
 from courses_assistant.domain.models import User
 from courses_assistant.entrypoints.api.dependencies import get_container, require_user
 from courses_assistant.entrypoints.api.ownership import ensure_session_access
-from courses_assistant.entrypoints.api.schemas import MessageRead, SessionCreate, SessionRead
+from courses_assistant.entrypoints.api.schemas import (
+    MessageRead,
+    SessionCreate,
+    SessionListItemRead,
+    SessionRead,
+)
 
 router = APIRouter(prefix="/api/v1/chat", tags=["chat"])
+
+
+@router.get("/sessions", response_model=list[SessionListItemRead])
+async def list_sessions(
+    user: User = Depends(require_user),
+    container: Container = Depends(get_container),
+) -> list[SessionListItemRead]:
+    async with container.uow_factory() as uow:
+        sessions = await uow.chat.list_sessions(user.id)
+    return [
+        SessionListItemRead(
+            id=session.id,
+            course_id=session.course_id,
+            course_title=session.course_title,
+            started_at=session.started_at,
+            last_message=session.last_message,
+        )
+        for session in sessions
+    ]
 
 
 @router.post("/sessions", response_model=SessionRead, status_code=201)

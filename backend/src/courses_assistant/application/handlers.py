@@ -47,8 +47,7 @@ from courses_assistant.domain.quiz import (
 )
 from courses_assistant.domain.security import hash_password
 
-NO_MATERIALS_ANSWER = "Не удалось найти подходящие материалы в текущем курсе."
-NO_COURSE_ANSWER = "Материалы курса не найдены."
+NO_MATERIALS_ANSWER = "Не удалось найти подходящие материалы."
 
 logger = structlog.get_logger(__name__)
 
@@ -81,7 +80,9 @@ class Handlers:
         async with self._uow_factory() as uow:
             if not await uow.chat.user_exists(command.user_id):
                 raise UserNotFound(f"Пользователь {command.user_id} не найден.")
-            if not await uow.chat.course_exists(command.course_id):
+            if command.course_id is not None and not await uow.chat.course_exists(
+                command.course_id
+            ):
                 raise CourseNotFound(f"Курс {command.course_id} не найден.")
             session_id = await uow.chat.add_session(command.user_id, command.course_id)
         return session_id
@@ -145,28 +146,25 @@ class Handlers:
             )
 
             sources: list[dict] = []
-            if session.course_id is None:
-                answer_text = NO_COURSE_ANSWER
+            embedding = await self._embedder.embed(rewritten)
+            chunks = await uow.chunks.search(
+                course_id=session.course_id,
+                embedding=embedding,
+                model_name=self._settings.embedding_model,
+                limit=self._settings.retrieval_top_k,
+            )
+            if not chunks:
+                answer_text = NO_MATERIALS_ANSWER
             else:
-                embedding = await self._embedder.embed(rewritten)
-                chunks = await uow.chunks.search(
-                    course_id=session.course_id,
-                    embedding=embedding,
-                    model_name=self._settings.embedding_model,
-                    limit=self._settings.retrieval_top_k,
+                context = build_context(chunks)
+                answer_text = await generate_answer(
+                    question=command.question,
+                    context=context,
+                    history=history,
+                    llm=self._llm,
+                    temperature=self._settings.llm_temperature,
                 )
-                if not chunks:
-                    answer_text = NO_MATERIALS_ANSWER
-                else:
-                    context = build_context(chunks)
-                    answer_text = await generate_answer(
-                        question=command.question,
-                        context=context,
-                        history=history,
-                        llm=self._llm,
-                        temperature=self._settings.llm_temperature,
-                    )
-                    sources = [_chunk_to_source(chunk) for chunk in chunks]
+                sources = [_chunk_to_source(chunk) for chunk in chunks]
 
             chunk_ids = [source["chunk_id"] for source in sources]
             await uow.chat.add_message(

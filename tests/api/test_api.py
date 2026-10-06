@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from datetime import UTC, datetime
+
 import httpx
 import pytest
 
@@ -11,7 +13,7 @@ from courses_assistant.application.handlers import Handlers
 from courses_assistant.application.message_bus import MessageBus
 from courses_assistant.config import Settings
 from courses_assistant.container import Container
-from courses_assistant.domain.models import RetrievedChunk
+from courses_assistant.domain.models import ChatMessage, ChatSession, RetrievedChunk, Role
 from courses_assistant.entrypoints.api.app import create_app
 from tests.fakes import (
     FakeBroker,
@@ -131,6 +133,60 @@ async def test_chat_requires_auth(client) -> None:
     async with ac:
         response = await ac.post("/api/v1/chat/sessions", json={"course_id": 10})
     assert response.status_code == 401
+
+
+async def test_list_chat_sessions(client) -> None:
+    ac, _, store = client
+    async with ac:
+        assert (await ac.get("/api/v1/chat/sessions")).status_code == 401
+
+        await _register(ac)
+        created = await ac.post("/api/v1/chat/sessions", json={"course_id": 10})
+        session_id = created.json()["id"]
+        store.messages.setdefault(session_id, []).append(
+            ChatMessage(session_id=session_id, role=Role.USER, content="привет")
+        )
+
+        listed = await ac.get("/api/v1/chat/sessions")
+        assert listed.status_code == 200
+        body = listed.json()
+        assert [item["id"] for item in body] == [session_id]
+        assert body[0]["course_id"] == 10
+        assert body[0]["last_message"] == "привет"
+        assert body[0]["started_at"]
+
+        store.sessions[999] = ChatSession(
+            id=999, user_id=4242, course_id=10, started_at=datetime.now(UTC)
+        )
+        still_own = await ac.get("/api/v1/chat/sessions")
+        assert [item["id"] for item in still_own.json()] == [session_id]
+
+
+async def test_global_chat_session(client) -> None:
+    ac, container, store = client
+    async with ac:
+        await _register(ac)
+        created = await ac.post("/api/v1/chat/sessions", json={})
+        assert created.status_code == 201
+        assert created.json()["course_id"] is None
+        session_id = created.json()["id"]
+
+        store.chunks = [
+            RetrievedChunk(
+                chunk_id=1, text="материал", source_type="theory", lesson="L", distance=0.1
+            )
+        ]
+        accepted = await ac.post(
+            f"/api/v1/chat/sessions/{session_id}/ask", json={"question": "вопрос"}
+        )
+        job_id = accepted.json()["job_id"]
+        await container.handlers.process_question(
+            ProcessQuestion(job_id=job_id, session_id=session_id, question="вопрос")
+        )
+        done = await ac.get(f"/api/v1/jobs/{job_id}")
+    assert done.status_code == 200
+    assert done.json()["status"] == "done"
+    assert done.json()["answer"] == "ответ"
 
 
 async def test_unknown_course_returns_404(client) -> None:

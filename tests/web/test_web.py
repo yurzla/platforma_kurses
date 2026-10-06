@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from datetime import UTC, datetime
+
 import httpx
 
 from courses_assistant.domain.catalog import (
@@ -10,6 +12,7 @@ from courses_assistant.domain.catalog import (
     SectionSummary,
     StepSummary,
 )
+from courses_assistant.domain.models import ChatMessage, ChatSession, Role
 from courses_assistant.domain.security import hash_password
 from courses_assistant.entrypoints.api.app import create_app as create_api_app
 from courses_web.app import create_app as create_web_app
@@ -153,20 +156,26 @@ async def test_student_login_flow_and_courses() -> None:
         courses = await web.get("/courses")
         assert courses.status_code == 200
         assert "Python" in courses.text
-        assert 'id="assistant-toggle"' not in courses.text
-        assert "/static/web.js?v=" not in courses.text
+        assert 'id="assistant-toggle"' in courses.text
+        assert 'data-mode="history"' in courses.text
+        assert 'id="assistant-history"' in courses.text
+        assert 'id="assistant-course"' not in courses.text
+        assert "/static/web.js?v=" in courses.text
 
         course = await web.get("/courses/10")
         assert course.status_code == 200
         assert "Урок 1" in course.text
         assert 'id="assistant-toggle"' in course.text
         assert 'data-course-id="10"' in course.text
+        assert 'data-mode="course"' in course.text
+        assert 'id="assistant-history"' in course.text
         assert "/static/web.js?v=" in course.text
 
         step = await web.get("/courses/10/steps/101")
         assert step.status_code == 200
         assert "Ассистент" in step.text
         assert 'id="assistant-toggle"' in step.text
+        assert 'data-mode="course"' in step.text
 
 
 async def test_course_page_shows_progress_tabs_and_structure() -> None:
@@ -304,16 +313,16 @@ async def test_courses_pagination() -> None:
         page1 = await web.get("/courses")
         assert page1.status_code == 200
         assert page1.text.count('class="course-card"') == 10
-        assert "Курс 1<" in page1.text
-        assert "Курс 11<" not in page1.text
+        assert "<h2>Курс 1</h2>" in page1.text
+        assert "<h2>Курс 11</h2>" not in page1.text
         assert 'href="/courses?page=2"' in page1.text
         assert 'class="pagination"' in page1.text
 
         page2 = await web.get("/courses?page=2")
         assert page2.status_code == 200
         assert page2.text.count('class="course-card"') == 2
-        assert "Курс 11<" in page2.text
-        assert "Курс 12<" in page2.text
+        assert "<h2>Курс 11</h2>" in page2.text
+        assert "<h2>Курс 12</h2>" in page2.text
 
         over = await web.get("/courses?page=99", follow_redirects=False)
         assert over.status_code == 303
@@ -323,6 +332,69 @@ async def test_courses_pagination() -> None:
         assert my_page1.status_code == 200
         assert my_page1.text.count('class="course-card"') == 10
         assert 'href="/my-courses?page=2"' in my_page1.text
+
+
+async def test_assistant_history_on_course_lists() -> None:
+    store = FakeStore()
+    user = store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_course(CourseDetail(id=10, title="Python", sections=[]))
+    store.add_course(CourseDetail(id=11, title="Django", sections=[]))
+    store.sessions[1] = ChatSession(
+        id=1, user_id=user.id, course_id=10, started_at=datetime.now(UTC)
+    )
+    store.messages[1] = [ChatMessage(session_id=1, role=Role.USER, content="вопрос по python")]
+    store.sessions[2] = ChatSession(
+        id=2, user_id=user.id, course_id=11, started_at=datetime.now(UTC)
+    )
+    store.messages[2] = [ChatMessage(session_id=2, role=Role.USER, content="вопрос по django")]
+    web, api = build_stack(store)
+    async with web, api:
+        await web.post("/login", data={"email": "s@example.com", "password": "pw"})
+        page = await web.get("/courses")
+        my = await web.get("/my-courses")
+        course = await web.get("/courses/10")
+    assert page.status_code == 200
+    assert 'data-session-id="1"' in page.text
+    assert 'data-session-id="2"' in page.text
+    assert "вопрос по python" in page.text
+    assert "Python" in page.text
+    assert "Django" in page.text
+    assert "<details" in page.text
+    assert my.status_code == 200
+    assert 'class="history-session"' in my.text
+    assert course.status_code == 200
+    assert 'data-session-id="1"' in course.text
+    assert 'data-session-id="2"' not in course.text
+
+
+async def test_assistant_history_partial() -> None:
+    store = FakeStore()
+    user = store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_course(CourseDetail(id=10, title="Python", sections=[]))
+    store.add_course(CourseDetail(id=11, title="Django", sections=[]))
+    store.sessions[1] = ChatSession(
+        id=1, user_id=user.id, course_id=10, started_at=datetime.now(UTC)
+    )
+    store.messages[1] = [ChatMessage(session_id=1, role=Role.USER, content="вопрос по python")]
+    store.sessions[2] = ChatSession(
+        id=2, user_id=user.id, course_id=11, started_at=datetime.now(UTC)
+    )
+    store.messages[2] = [ChatMessage(session_id=2, role=Role.USER, content="вопрос по django")]
+    web, api = build_stack(store)
+    async with web, api:
+        anon = await web.get("/assistant/history")
+        await web.post("/login", data={"email": "s@example.com", "password": "pw"})
+        all_resp = await web.get("/assistant/history")
+        scoped = await web.get("/assistant/history?course_id=10")
+    assert anon.status_code == 401
+    assert all_resp.status_code == 200
+    assert 'data-session-id="1"' in all_resp.text
+    assert 'data-session-id="2"' in all_resp.text
+    assert "<details" in all_resp.text
+    assert scoped.status_code == 200
+    assert 'data-session-id="1"' in scoped.text
+    assert 'data-session-id="2"' not in scoped.text
+
 
 
 async def test_courses_single_page_has_no_pagination() -> None:

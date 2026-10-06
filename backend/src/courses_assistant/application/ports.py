@@ -15,6 +15,7 @@ from courses_assistant.domain.catalog import (
 from courses_assistant.domain.models import (
     ChatMessage,
     ChatSession,
+    ChatSessionSummary,
     JobStatus,
     LLMMessage,
     QuestionJob,
@@ -48,10 +49,13 @@ class TokenService(ABC):
 
 class ChatRepository(ABC):
     @abstractmethod
-    async def add_session(self, user_id: int, course_id: int) -> int: ...
+    async def add_session(self, user_id: int, course_id: int | None) -> int: ...
 
     @abstractmethod
     async def get_session(self, session_id: int) -> ChatSession | None: ...
+
+    @abstractmethod
+    async def list_sessions(self, user_id: int) -> list[ChatSessionSummary]: ...
 
     @abstractmethod
     async def add_message(self, message: ChatMessage) -> int: ...
@@ -154,7 +158,7 @@ class CourseChunkRepository(ABC):
     @abstractmethod
     async def search(
         self,
-        course_id: int,
+        course_id: int | None,
         embedding: Sequence[float],
         model_name: str,
         limit: int,

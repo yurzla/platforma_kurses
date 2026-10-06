@@ -154,11 +154,18 @@ main { padding: 24px; max-width: 1040px; margin: 0 auto; }
   min-height: 80px; max-height: 320px; overflow-y: auto; display: flex; flex-direction: column;
   gap: 8px; margin-bottom: 12px;
 }
-.chat-msg { padding: 8px 12px; border-radius: 10px; max-width: 85%; white-space: pre-wrap; }
+.chat-msg {
+  padding: 10px 14px; border-radius: 10px; max-width: 85%; white-space: pre-wrap;
+  font-size: 15px; line-height: 1.5;
+}
 .chat-msg.user { align-self: flex-end; background: var(--accent); color: #fff; }
 .chat-msg.assistant { align-self: flex-start; background: var(--panel-2); }
 .chat-form { display: flex; gap: 8px; }
-.chat-form input { flex: 1; padding: 8px 10px; background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); }
+.chat-form input {
+  flex: 1; padding: 10px 12px; background: var(--panel-2); border: 1px solid var(--border);
+  border-radius: 8px; color: var(--text); font-size: 15px;
+}
+.chat-form input:focus { outline: none; border-color: var(--accent); }
 
 .role-switch { display: flex; gap: 6px; margin-bottom: 8px; }
 .role-tab {
@@ -169,28 +176,67 @@ main { padding: 24px; max-width: 1040px; margin: 0 auto; }
 
 .assistant-fab {
   position: fixed; right: 20px; bottom: 20px; z-index: 60;
-  padding: 12px 20px; border: 1px solid var(--accent); border-radius: 999px;
-  background: var(--accent); color: #fff; font-size: 14px; font-weight: 600; cursor: pointer;
+  padding: 13px 22px; border: 1px solid var(--accent); border-radius: 999px;
+  background: var(--accent); color: #fff; font-size: 15px; font-weight: 600; cursor: pointer;
   box-shadow: 0 6px 20px rgba(0, 0, 0, .35);
 }
 .assistant-fab:hover { filter: brightness(1.08); }
 
 .assistant-drawer {
   position: fixed; top: 0; right: 0; z-index: 61;
-  display: flex; flex-direction: column; gap: 12px;
-  width: min(420px, 100vw); height: 100%;
-  padding: 16px; background: var(--panel); border-left: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: 14px;
+  width: min(440px, 100vw); height: 100%;
+  padding: 20px; background: var(--panel); border-left: 1px solid var(--border);
   box-shadow: -12px 0 32px rgba(0, 0, 0, .35);
   transform: translateX(100%); transition: transform .2s ease;
+  font-size: 15px;
 }
 .assistant-drawer.open { transform: none; }
+.assistant-drawer .btn { font-size: 15px; }
 
 .assistant-head { display: flex; align-items: center; justify-content: space-between; }
-.assistant-head h2 { margin: 0; font-size: 18px; }
+.assistant-head h2 { margin: 0; font-size: 20px; }
 .assistant-close {
-  border: none; background: transparent; color: var(--muted); font-size: 22px; line-height: 1;
+  border: none; background: transparent; color: var(--muted); font-size: 26px; line-height: 1;
   cursor: pointer; padding: 4px 8px;
 }
 .assistant-close:hover { color: var(--text); }
 
 .assistant-drawer .chat-log { flex: 1; max-height: none; margin-bottom: 0; }
+
+.assistant-history {
+  flex: 1; overflow-y: auto;
+}
+.assistant-history-list { display: flex; flex-direction: column; gap: 10px; }
+.history-group {
+  border: 1px solid var(--border); border-radius: 12px; background: var(--panel-2);
+}
+.history-course {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 12px 14px; font-size: 16px; color: var(--text); cursor: pointer; list-style: none;
+}
+.history-course::-webkit-details-marker { display: none; }
+.history-course::after {
+  content: ""; width: 8px; height: 8px; flex: none; margin-left: auto;
+  border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted);
+  transform: rotate(-45deg); transition: transform .15s ease;
+}
+.history-group[open] .history-course::after { transform: rotate(45deg); }
+.history-count {
+  min-width: 22px; padding: 1px 8px; border-radius: 999px; text-align: center;
+  background: var(--panel); border: 1px solid var(--border);
+  font-size: 12px; color: var(--muted);
+}
+.history-sessions {
+  list-style: none; margin: 0; padding: 0 10px 10px; display: flex; flex-direction: column; gap: 8px;
+}
+.history-session {
+  width: 100%; display: flex; flex-direction: column; gap: 3px; text-align: left;
+  padding: 10px 12px; background: var(--panel); border: 1px solid var(--border);
+  border-radius: 10px; color: var(--text); cursor: pointer; font-size: 15px;
+}
+.history-session:hover { border-color: var(--accent); }
+.history-date { font-size: 12px; color: var(--muted); }
+.history-preview {
+  font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}

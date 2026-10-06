@@ -73,6 +73,15 @@ class ChatSession:
 
 
 @dataclass(slots=True)
+class ChatSessionSummary:
+    id: int
+    course_id: int | None
+    course_title: str | None
+    started_at: datetime
+    last_message: str | None = None
+
+
+@dataclass(slots=True)
 class ChatMessage:
     session_id: int
     role: Role
