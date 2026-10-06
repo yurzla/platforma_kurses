@@ -139,7 +139,7 @@ The web service SHALL render the course page with a persistent left sidebar that
 
 ### Requirement: Formatted course description
 
-The web service SHALL render the course description as formatted text that preserves paragraph and line breaks, and the course import SHALL preserve the source description's paragraph and line breaks instead of collapsing the text into a single line.
+The web service SHALL render the course description as formatted text that preserves paragraph and line breaks, and the course import SHALL preserve the source description's paragraph and line breaks instead of collapsing the text into a single line. The course import SHALL decode HTML entities (such as `&nbsp;`, `&gt;`, `&amp;`) and normalize non-breaking spaces to plain spaces, so the stored description contains no markup tags, HTML entities, or non-breaking spaces.
 
 #### Scenario: Description line breaks preserved
 
@@ -150,6 +150,16 @@ The web service SHALL render the course description as formatted text that prese
 
 - **WHEN** a course with an HTML description containing paragraph or line-break markup is imported
 - **THEN** the stored description keeps the paragraph and line boundaries as newlines and contains no markup tags
+
+#### Scenario: Import decodes HTML entities
+
+- **WHEN** a course description contains HTML entities such as `&nbsp;` or `&gt;`
+- **THEN** the stored description contains the decoded characters with plain spaces instead of non-breaking spaces, and no entities remain
+
+#### Scenario: Existing descriptions are normalized
+
+- **WHEN** the description-normalization script runs over stored courses
+- **THEN** descriptions containing entities or non-breaking spaces are rewritten to the decoded text and clean descriptions are left unchanged
 
 ### Requirement: Module and lesson accordions on the course page
 
@@ -172,24 +182,53 @@ The web service SHALL present the course structure in the content section as col
 
 ### Requirement: My courses page
 
-The web service SHALL serve a «Мои курсы» page that lists only the courses the authenticated user has already started, showing each course's progress and lesson/step counts, and SHALL provide a navigation entry to this page for authenticated users. When the user has not started any course, the page SHALL show an empty-state message linking to the course catalog.
+The web service SHALL serve a «Мое обучение» page that lists only the courses the authenticated user has already started, showing each course's progress and lesson/step counts, and SHALL provide a navigation entry to this page for authenticated users. When the user has not started any course, the page SHALL show an empty-state message linking to the course catalog.
 
 #### Scenario: Only started courses listed
 
-- **WHEN** an authenticated user requests the «Мои курсы» page
+- **WHEN** an authenticated user requests the «Мое обучение» page
 - **THEN** the page lists exactly the courses in which the user has enrollment, together with their progress
 
 #### Scenario: Navigation entry available
 
 - **WHEN** an authenticated user views a learning page
-- **THEN** the navigation contains a link to the «Мои курсы» page
+- **THEN** the navigation contains a link to the «Мое обучение» page
 
 #### Scenario: Empty state
 
-- **WHEN** an authenticated user without enrollments requests the «Мои курсы» page
+- **WHEN** an authenticated user without enrollments requests the «Мое обучение» page
 - **THEN** the page shows a message that no course has been started yet and a link to the course catalog
 
 #### Scenario: Authentication required
 
-- **WHEN** an unauthenticated client requests the «Мои курсы» page
+- **WHEN** an unauthenticated client requests the «Мое обучение» page
 - **THEN** the web service redirects to the login page
+
+### Requirement: Course list pagination and layout
+
+The web service SHALL show the course lists (`/courses` and `/my-courses`) as pages of at most 10 courses, SHALL render page navigation (previous/next controls and page numbers) when more than one page exists, and SHALL lay the course cards out in two columns on wide screens and a single column on narrow screens.
+
+#### Scenario: At most ten courses per page
+
+- **WHEN** an authenticated user opens a course list page
+- **THEN** the page shows at most 10 course cards
+
+#### Scenario: Page navigation shown for multiple pages
+
+- **WHEN** the course list has more courses than fit on one page
+- **THEN** the page shows previous/next controls and page numbers linking to the other pages
+
+#### Scenario: Requesting a specific page
+
+- **WHEN** the user opens a course list page with the `page` parameter
+- **THEN** the page shows the corresponding slice of courses and highlights the current page number
+
+#### Scenario: No navigation for a single page
+
+- **WHEN** the course list fits on a single page
+- **THEN** the page shows no page navigation controls
+
+#### Scenario: Two-column card grid
+
+- **WHEN** a course list page is rendered on a wide screen
+- **THEN** the course cards are arranged in two columns, collapsing to a single column on narrow screens

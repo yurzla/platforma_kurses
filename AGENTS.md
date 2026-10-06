@@ -107,6 +107,9 @@ openspec archive <name> -y                                   # синкает д
 - Порты: API `5000`, web `8000` (`API_PORT`/`WEB_PORT`), web ходит в API по `API_BASE_URL`.
 - `chat`/`jobs` требуют входа и владения сессией: `POST /chat/sessions` не принимает `user_id`
   (сессия привязывается к текущему пользователю), история/`ask`/job доступны владельцу или `admin`.
+- `GET /api/v1/courses` отдаёт конверт `{items,total,limit,offset}` (BREAKING: раньше массив);
+  `enrolled`, `limit` (1..200, дефолт 50), `offset`; web-страницы `/courses` и `/my-courses` —
+  по 10 на страницу с `?page=N` и клампингом за границы.
 - Ключи ответов тестов: в дампе Stepik `block.options` их нет — только `/api/step-sources`
   (нужен токен автора курса; иначе шаги `grading=manual`). Импорт — `import_step_sources`.
 - Реальные секреты в `.env.example` не коммитить (только плейсхолдеры); `.env` в `.gitignore`.

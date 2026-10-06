@@ -1,0 +1,33 @@
+{% if pages > 1 %}
+<nav class="pagination" aria-label="Постраничная навигация">
+  {% if page > 1 %}
+  <a class="page-link" href="{{ base_path }}?page={{ page - 1 }}" rel="prev">‹</a>
+  {% else %}
+  <span class="page-link disabled" aria-disabled="true">‹</span>
+  {% endif %}
+
+  {% set window_start = [1, page - 2] | max %}
+  {% set window_end = [pages, page + 2] | min %}
+  {% if window_start > 1 %}
+  <a class="page-link" href="{{ base_path }}?page=1">1</a>
+  {% if window_start > 2 %}<span class="page-ellipsis">…</span>{% endif %}
+  {% endif %}
+
+  {% for p in range(window_start, window_end + 1) %}
+  <a class="page-link {% if p == page %}active{% endif %}"
+     href="{{ base_path }}?page={{ p }}"
+     {% if p == page %}aria-current="page"{% endif %}>{{ p }}</a>
+  {% endfor %}
+
+  {% if window_end < pages %}
+  {% if window_end < pages - 1 %}<span class="page-ellipsis">…</span>{% endif %}
+  <a class="page-link" href="{{ base_path }}?page={{ pages }}">{{ pages }}</a>
+  {% endif %}
+
+  {% if page < pages %}
+  <a class="page-link" href="{{ base_path }}?page={{ page + 1 }}" rel="next">›</a>
+  {% else %}
+  <span class="page-link disabled" aria-disabled="true">›</span>
+  {% endif %}
+</nav>
+{% endif %}

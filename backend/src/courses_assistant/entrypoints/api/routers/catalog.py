@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import asdict
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 
 from courses_assistant.application.commands import SubmitStepAnswer
 from courses_assistant.container import Container
@@ -14,6 +14,7 @@ from courses_assistant.entrypoints.api.schemas import (
     AnswerRequest,
     AnswerResult,
     CourseDetailRead,
+    CourseListResponse,
     CourseSummaryRead,
     LessonSummaryRead,
     SectionSummaryRead,
@@ -24,15 +25,25 @@ from courses_assistant.entrypoints.api.schemas import (
 router = APIRouter(prefix="/api/v1/courses", tags=["catalog"])
 
 
-@router.get("", response_model=list[CourseSummaryRead])
+@router.get("", response_model=CourseListResponse)
 async def list_courses(
     enrolled: bool = False,
+    limit: int = Query(default=50, ge=1, le=200),
+    offset: int = Query(default=0, ge=0),
     user: User = Depends(require_user),
     container: Container = Depends(get_container),
-) -> list[CourseSummaryRead]:
+) -> CourseListResponse:
     async with container.uow_factory() as uow:
-        courses = await uow.catalog.list_courses(user.id, enrolled_only=enrolled)
-    return [CourseSummaryRead(**asdict(course)) for course in courses]
+        courses = await uow.catalog.list_courses(
+            user.id, enrolled_only=enrolled, limit=limit, offset=offset
+        )
+        total = await uow.catalog.count_courses(user.id, enrolled_only=enrolled)
+    return CourseListResponse(
+        items=[CourseSummaryRead(**asdict(course)) for course in courses],
+        total=total,
+        limit=limit,
+        offset=offset,
+    )
 
 
 @router.get("/{course_id}", response_model=CourseDetailRead)

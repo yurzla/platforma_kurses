@@ -64,8 +64,11 @@ async def test_course_and_step_flow() -> None:
 
         courses = await ac.get("/api/v1/courses")
         assert courses.status_code == 200
-        assert courses.json()[0]["id"] == 10
-        assert courses.json()[0]["steps_count"] == 1
+        assert courses.json()["items"][0]["id"] == 10
+        assert courses.json()["items"][0]["steps_count"] == 1
+        assert courses.json()["total"] == 1
+        assert courses.json()["limit"] == 50
+        assert courses.json()["offset"] == 0
 
         course = await ac.get("/api/v1/courses/10")
         assert course.status_code == 200
@@ -103,15 +106,49 @@ async def test_list_courses_enrolled_filter() -> None:
         await _login(ac)
 
         all_courses = await ac.get("/api/v1/courses")
-        assert {c["id"] for c in all_courses.json()} == {10, 11}
+        assert {c["id"] for c in all_courses.json()["items"]} == {10, 11}
+        assert all_courses.json()["total"] == 2
 
         none_enrolled = await ac.get("/api/v1/courses", params={"enrolled": "true"})
-        assert none_enrolled.json() == []
+        assert none_enrolled.json()["items"] == []
+        assert none_enrolled.json()["total"] == 0
 
         await ac.post("/api/v1/courses/10/steps/101/answer", json={"answer": None})
 
         enrolled = await ac.get("/api/v1/courses", params={"enrolled": "true"})
-        assert [c["id"] for c in enrolled.json()] == [10]
+        assert [c["id"] for c in enrolled.json()["items"]] == [10]
+        assert enrolled.json()["total"] == 1
+
+
+async def test_list_courses_pagination() -> None:
+    store = FakeStore()
+    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    for course_id in range(1, 26):
+        step = StepSummary(id=course_id * 10, position=1, step_type="text")
+        lesson = LessonSummary(id=course_id, title=f"Урок {course_id}", position=1, steps=[step])
+        section = SectionSummary(id=course_id, title="Модуль", position=1, lessons=[lesson])
+        store.add_course(
+            CourseDetail(id=course_id, title=f"Курс {course_id}", sections=[section])
+        )
+    ac = make_app(store)
+    async with ac:
+        await _login(ac)
+
+        first = await ac.get("/api/v1/courses", params={"limit": 10, "offset": 0})
+        assert first.json()["total"] == 25
+        assert first.json()["limit"] == 10
+        assert first.json()["offset"] == 0
+        assert len(first.json()["items"]) == 10
+        assert first.json()["items"][0]["id"] == 1
+        assert first.json()["items"][-1]["id"] == 10
+
+        last = await ac.get("/api/v1/courses", params={"limit": 10, "offset": 20})
+        assert len(last.json()["items"]) == 5
+        assert last.json()["items"][0]["id"] == 21
+
+        beyond = await ac.get("/api/v1/courses", params={"limit": 10, "offset": 40})
+        assert beyond.json()["items"] == []
+        assert beyond.json()["total"] == 25
 
 
 async def test_manual_step_completion() -> None:

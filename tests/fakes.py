@@ -197,7 +197,22 @@ class InMemoryCatalogRepository(CatalogRepository):
                         yield course, lesson, step
 
     async def list_courses(
-        self, user_id: int | None, *, enrolled_only: bool = False
+        self,
+        user_id: int | None,
+        *,
+        enrolled_only: bool = False,
+        limit: int = 50,
+        offset: int = 0,
+    ) -> list[CourseSummary]:
+        summaries = await self._course_summaries(user_id, enrolled_only=enrolled_only)
+        return summaries[offset : offset + limit]
+
+    async def count_courses(self, user_id: int | None, *, enrolled_only: bool = False) -> int:
+        summaries = await self._course_summaries(user_id, enrolled_only=enrolled_only)
+        return len(summaries)
+
+    async def _course_summaries(
+        self, user_id: int | None, *, enrolled_only: bool
     ) -> list[CourseSummary]:
         summaries: list[CourseSummary] = []
         for course in self._store.courses_detail.values():

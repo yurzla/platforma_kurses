@@ -268,8 +268,20 @@ class SqlCatalogRepository(CatalogRepository):
     def __init__(self, session: AsyncSession) -> None:
         self._session = session
 
+    @staticmethod
+    def _enrollment_join(user_id: int | None):
+        condition = EnrollmentORM.course_id == CourseORM.id
+        if user_id is not None:
+            return condition & (EnrollmentORM.user_id == user_id)
+        return condition & (EnrollmentORM.user_id == -1)
+
     async def list_courses(
-        self, user_id: int | None, *, enrolled_only: bool = False
+        self,
+        user_id: int | None,
+        *,
+        enrolled_only: bool = False,
+        limit: int = 50,
+        offset: int = 0,
     ) -> list[CourseSummary]:
         lessons_count = (
             select(func.count())
@@ -286,19 +298,15 @@ class SqlCatalogRepository(CatalogRepository):
             .where(SectionORM.course_id == CourseORM.id)
             .scalar_subquery()
         )
-        join_condition = EnrollmentORM.course_id == CourseORM.id
-        if user_id is not None:
-            join_condition = join_condition & (EnrollmentORM.user_id == user_id)
-        else:
-            join_condition = join_condition & (EnrollmentORM.user_id == -1)
         stmt = (
             select(CourseORM, lessons_count, steps_count, EnrollmentORM.progress_percent)
-            .outerjoin(EnrollmentORM, join_condition)
+            .outerjoin(EnrollmentORM, self._enrollment_join(user_id))
             .where(CourseORM.is_published.is_(True))
             .order_by(CourseORM.id)
         )
         if enrolled_only:
             stmt = stmt.where(EnrollmentORM.progress_percent.is_not(None))
+        stmt = stmt.limit(limit).offset(offset)
         result = await self._session.execute(stmt)
         courses: list[CourseSummary] = []
         for course, lessons_total, steps_total, progress in result.all():
@@ -315,6 +323,17 @@ class SqlCatalogRepository(CatalogRepository):
                 )
             )
         return courses
+
+    async def count_courses(self, user_id: int | None, *, enrolled_only: bool = False) -> int:
+        stmt = (
+            select(func.count())
+            .select_from(CourseORM)
+            .outerjoin(EnrollmentORM, self._enrollment_join(user_id))
+            .where(CourseORM.is_published.is_(True))
+        )
+        if enrolled_only:
+            stmt = stmt.where(EnrollmentORM.progress_percent.is_not(None))
+        return int(await self._session.scalar(stmt) or 0)
 
     async def get_course(self, course_id: int, user_id: int | None) -> CourseDetail | None:
         course = await self._session.get(CourseORM, course_id)

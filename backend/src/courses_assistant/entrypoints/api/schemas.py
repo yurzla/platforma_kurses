@@ -103,6 +103,13 @@ class CourseSummaryRead(BaseModel):
     progress_percent: float | None = None
 
 
+class CourseListResponse(BaseModel):
+    items: list[CourseSummaryRead]
+    total: int
+    limit: int
+    offset: int
+
+
 class StepSummaryRead(BaseModel):
     id: int
     position: int

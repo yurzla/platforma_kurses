@@ -257,7 +257,7 @@ async def test_my_courses_lists_only_started() -> None:
         await web.post("/login", data={"email": "s@example.com", "password": "pw"})
         page = await web.get("/my-courses")
     assert page.status_code == 200
-    assert "Мои курсы" in page.text
+    assert "Мое обучение" in page.text
     assert 'href="/my-courses"' in page.text
     assert "Python" in page.text
     assert "OtherCourse" not in page.text
@@ -285,6 +285,55 @@ async def test_bad_login_shows_error() -> None:
         )
     assert response.status_code == 401
     assert "Неверный email или пароль" in response.text
+
+
+async def test_courses_pagination() -> None:
+    store = FakeStore()
+    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    user_id = next(iter(store.users))
+    for course_id in range(1, 13):
+        step = StepSummary(id=course_id * 10, position=1, step_type="text")
+        lesson = LessonSummary(id=course_id, title=f"Урок {course_id}", position=1, steps=[step])
+        section = SectionSummary(id=course_id, title="Модуль", position=1, lessons=[lesson])
+        store.add_course(CourseDetail(id=course_id, title=f"Курс {course_id}", sections=[section]))
+        store.progress[(user_id, course_id * 10)] = "passed"
+    web, api = build_stack(store)
+    async with web, api:
+        await web.post("/login", data={"email": "s@example.com", "password": "pw"})
+
+        page1 = await web.get("/courses")
+        assert page1.status_code == 200
+        assert page1.text.count('class="course-card"') == 10
+        assert "Курс 1<" in page1.text
+        assert "Курс 11<" not in page1.text
+        assert 'href="/courses?page=2"' in page1.text
+        assert 'class="pagination"' in page1.text
+
+        page2 = await web.get("/courses?page=2")
+        assert page2.status_code == 200
+        assert page2.text.count('class="course-card"') == 2
+        assert "Курс 11<" in page2.text
+        assert "Курс 12<" in page2.text
+
+        over = await web.get("/courses?page=99", follow_redirects=False)
+        assert over.status_code == 303
+        assert over.headers["location"] == "/courses?page=2"
+
+        my_page1 = await web.get("/my-courses")
+        assert my_page1.status_code == 200
+        assert my_page1.text.count('class="course-card"') == 10
+        assert 'href="/my-courses?page=2"' in my_page1.text
+
+
+async def test_courses_single_page_has_no_pagination() -> None:
+    store = FakeStore()
+    seed_student_and_course(store)
+    web, api = build_stack(store)
+    async with web, api:
+        await web.post("/login", data={"email": "s@example.com", "password": "pw"})
+        response = await web.get("/courses")
+    assert response.status_code == 200
+    assert 'class="pagination"' not in response.text
 
 
 async def test_proxy_forwards_auth_me() -> None:
@@ -345,6 +394,8 @@ async def test_static_assets_served() -> None:
         css = await web.get("/static/web.css")
     assert css.status_code == 200
     assert "right: 20px; bottom: 20px" in css.text
+    assert "repeat(2, minmax(0, 1fr))" in css.text
+    assert ".pagination" in css.text
 
 
 async def test_proxy_auto_refreshes_expired_access_token() -> None:

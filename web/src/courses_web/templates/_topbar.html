@@ -3,7 +3,7 @@
   <nav class="tabs">
     <a class="tab {% if active == 'courses' %}active{% endif %}" href="/courses">Курсы</a>
     {% if me and me.role %}
-    <a class="tab {% if active == 'my-courses' %}active{% endif %}" href="/my-courses">Мои курсы</a>
+    <a class="tab {% if active == 'my-courses' %}active{% endif %}" href="/my-courses">Мое обучение</a>
     {% endif %}
     {% if me and me.role == 'admin' %}
     <a class="tab {% if active == 'dashboard' %}active{% endif %}" href="/dashboard">Админ панель</a>

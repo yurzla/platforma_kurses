@@ -6,7 +6,6 @@
 from __future__ import annotations
 
 import asyncio
-import re
 
 import typer
 from sqlalchemy import text
@@ -14,19 +13,12 @@ from sqlalchemy.ext.asyncio import AsyncConnection, create_async_engine
 
 from courses_assistant.adapters.embeddings.ollama import OllamaEmbedder
 from courses_assistant.config import get_settings
+from courses_assistant.scripts.load_stepik import clean_text
 
 app = typer.Typer(help="Чанкинг и эмбеддинги материалов курса.")
 
 CHUNK_SIZE = 500
 CHUNK_OVERLAP = 50
-
-
-def clean_text(value: str | None) -> str:
-    if not value:
-        return ""
-    value = re.sub(r"<[^>]+>", " ", value)
-    value = re.sub(r"\s+", " ", value)
-    return value.strip()
 
 
 def split_into_chunks(value: str) -> list[str]:
@@ -139,7 +131,7 @@ async def _upsert_chunk(
     return int(inserted.scalar_one()), True
 
 
-async def _run() -> None:
+async def _run(rebuild: bool = False) -> None:
     settings = get_settings()
     embedder = OllamaEmbedder(
         url=settings.ollama_url,
@@ -152,6 +144,10 @@ async def _run() -> None:
     new_embeddings = 0
     try:
         async with engine.connect() as conn:
+            if rebuild:
+                await conn.execute(text("TRUNCATE content_chunks RESTART IDENTITY CASCADE"))
+                await conn.commit()
+                typer.echo("Существующие чанки и эмбеддинги удалены (--rebuild).")
             rows = (
                 await conn.execute(
                     text(
@@ -231,8 +227,12 @@ async def _run() -> None:
 
 
 @app.command()
-def main() -> None:
-    asyncio.run(_run())
+def main(
+    rebuild: bool = typer.Option(
+        False, "--rebuild", help="Удалить существующие чанки и эмбеддинги и построить заново."
+    ),
+) -> None:
+    asyncio.run(_run(rebuild=rebuild))
 
 
 if __name__ == "__main__":

@@ -132,7 +132,7 @@ Web-сервис: `http://localhost:8000` — обучение и админка
 | GET | `/api/v1/chat/sessions/{id}/messages?limit=` | история сообщений |
 | POST | `/api/v1/chat/sessions/{id}/ask` | задать вопрос → 202 `{job_id}` |
 | GET | `/api/v1/jobs/{job_id}` | статус job и ответ |
-| GET | `/api/v1/courses` | список курсов студента (с прогрессом) |
+| GET | `/api/v1/courses` | список курсов: `enrolled`, `limit` (1..200), `offset` → `{items,total,limit,offset}` |
 | GET | `/api/v1/courses/{id}` | курс: секции/уроки/шаги |
 | GET | `/api/v1/courses/{id}/steps/{step_id}` | шаг (без правильных ответов) |
 | POST | `/api/v1/courses/{id}/steps/{step_id}/answer` | ответ → проверка и прогресс |
@@ -146,7 +146,24 @@ Web-сервис: `http://localhost:8000` — обучение и админка
 | PATCH | `/api/v1/admin/users/{id}` | смена роли пользователя (`role`) |
 
 Web-страницы (порт 8000): `/login`, `/logout`, `/dashboard`, `/courses`,
-`/courses/{id}`, `/courses/{id}/steps/{step_id}`, `/health`.
+`/my-courses`, `/courses/{id}`, `/courses/{id}/steps/{step_id}`, `/health`.
+
+### Формат списка курсов (BREAKING)
+
+`GET /api/v1/courses` возвращает объект-конверт вместо массива:
+
+```json
+{
+  "items": [{ "id": 10, "title": "...", "enrolled": true, "progress_percent": 40.0, "...": "..." }],
+  "total": 42,
+  "limit": 50,
+  "offset": 0
+}
+```
+
+Параметры: `enrolled=true` — только курсы с прогрессом пользователя; `limit` (по умолчанию 50,
+1..200) и `offset` (по умолчанию 0). Web-страницы `/courses` и `/my-courses` запрашивают по 10
+курсов и нумеруют страницы через `?page=N` (1-based), пересчитывая в `limit/offset`.
 
 Swagger API: `http://localhost:5000/docs`.
 

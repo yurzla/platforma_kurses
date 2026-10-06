@@ -158,29 +158,60 @@ async def dashboard(request: Request) -> Response:
     return _render(request, "dashboard.html", {"me": me})
 
 
-@router.get("/courses", response_class=HTMLResponse)
-async def courses(request: Request) -> Response:
-    resp = await call_api(request, "GET", "/api/v1/courses")
+_COURSES_PAGE_SIZE = 10
+
+
+def _course_list_params(enrolled: bool, page: int) -> list[tuple[str, str]]:
+    params = [
+        ("limit", str(_COURSES_PAGE_SIZE)),
+        ("offset", str((page - 1) * _COURSES_PAGE_SIZE)),
+    ]
+    if enrolled:
+        params.append(("enrolled", "true"))
+    return params
+
+
+def _course_list_context(data: dict[str, Any], *, page: int, path: str) -> dict[str, Any]:
+    limit = int(data.get("limit", _COURSES_PAGE_SIZE)) or _COURSES_PAGE_SIZE
+    total = int(data.get("total", 0))
+    pages = (total + limit - 1) // limit if total else 0
+    return {
+        "courses": data.get("items", []),
+        "page": page,
+        "pages": pages,
+        "total": total,
+        "base_path": path,
+    }
+
+
+async def _courses_page(
+    request: Request, *, path: str, template: str, enrolled: bool, page: int
+) -> Response:
+    page = max(page, 1)
+    resp = await call_api(
+        request, "GET", "/api/v1/courses", params=_course_list_params(enrolled, page)
+    )
     if resp.status_code == 401:
-        return RedirectResponse("/login?next=/courses", status_code=303)
+        return RedirectResponse(f"/login?next={path}", status_code=303)
+    data = resp.json() if resp.status_code == 200 else {}
+    context = _course_list_context(data, page=page, path=path)
+    if context["pages"] and page > context["pages"]:
+        return RedirectResponse(f"{path}?page={context['pages']}", status_code=303)
     me = await _me(request)
-    return _render(
-        request,
-        "courses.html",
-        {"me": me, "courses": resp.json() if resp.status_code == 200 else []},
+    return _render(request, template, {"me": me, **context})
+
+
+@router.get("/courses", response_class=HTMLResponse)
+async def courses(request: Request, page: int = 1) -> Response:
+    return await _courses_page(
+        request, path="/courses", template="courses.html", enrolled=False, page=page
     )
 
 
 @router.get("/my-courses", response_class=HTMLResponse)
-async def my_courses(request: Request) -> Response:
-    resp = await call_api(request, "GET", "/api/v1/courses", params=[("enrolled", "true")])
-    if resp.status_code == 401:
-        return RedirectResponse("/login?next=/my-courses", status_code=303)
-    me = await _me(request)
-    return _render(
-        request,
-        "my_courses.html",
-        {"me": me, "courses": resp.json() if resp.status_code == 200 else []},
+async def my_courses(request: Request, page: int = 1) -> Response:
+    return await _courses_page(
+        request, path="/my-courses", template="my_courses.html", enrolled=True, page=page
     )
 
 

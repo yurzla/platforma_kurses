@@ -25,6 +25,7 @@ def clean_text(value: str | None) -> str:
     if not value:
         return ""
     value = re.sub(r"<[^>]+>", " ", value)
+    value = html.unescape(value)
     value = re.sub(r"\s+", " ", value)
     return value.strip()
 
@@ -43,6 +44,7 @@ def clean_description(value: str | None) -> str:
     text = _BLOCK_BREAK.sub("\n", text)
     text = re.sub(r"<[^>]+>", "", text)
     text = html.unescape(text)
+    text = text.replace("\u00a0", " ")
     lines = [re.sub(r"[ \t\f\v]+", " ", line).strip() for line in text.split("\n")]
     text = "\n".join(lines)
     text = re.sub(r"\n{3,}", "\n\n", text)
