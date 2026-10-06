@@ -111,7 +111,9 @@ class RefreshTokenRepository(ABC):
 
 class CatalogRepository(ABC):
     @abstractmethod
-    async def list_courses(self, user_id: int | None) -> list[CourseSummary]: ...
+    async def list_courses(
+        self, user_id: int | None, *, enrolled_only: bool = False
+    ) -> list[CourseSummary]: ...
 
     @abstractmethod
     async def get_course(self, course_id: int, user_id: int | None) -> CourseDetail | None: ...

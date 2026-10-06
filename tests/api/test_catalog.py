@@ -90,6 +90,30 @@ async def test_course_and_step_flow() -> None:
         assert course_after.json()["sections"][0]["lessons"][0]["steps"][0]["completed"] is True
 
 
+async def test_list_courses_enrolled_filter() -> None:
+    store = FakeStore()
+    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_course(build_course())
+    other_step = StepSummary(id=202, position=1, step_type="text")
+    other_lesson = LessonSummary(id=12, title="Урок", position=1, steps=[other_step])
+    other_section = SectionSummary(id=2, title="Модуль", position=1, lessons=[other_lesson])
+    store.add_course(CourseDetail(id=11, title="Other", sections=[other_section]))
+    ac = make_app(store)
+    async with ac:
+        await _login(ac)
+
+        all_courses = await ac.get("/api/v1/courses")
+        assert {c["id"] for c in all_courses.json()} == {10, 11}
+
+        none_enrolled = await ac.get("/api/v1/courses", params={"enrolled": "true"})
+        assert none_enrolled.json() == []
+
+        await ac.post("/api/v1/courses/10/steps/101/answer", json={"answer": None})
+
+        enrolled = await ac.get("/api/v1/courses", params={"enrolled": "true"})
+        assert [c["id"] for c in enrolled.json()] == [10]
+
+
 async def test_manual_step_completion() -> None:
     store = FakeStore()
     store.add_user("s@example.com", "Студент", hash_password("pw"), "student")

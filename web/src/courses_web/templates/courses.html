@@ -9,27 +9,6 @@
   {% if not courses %}
   <p class="muted">Доступных курсов нет.</p>
   {% endif %}
-  <section class="course-grid">
-    {% for c in courses %}
-    <a class="course-card" href="/courses/{{ c.id }}">
-      <div class="course-card-head">
-        <h2>{{ c.title }}</h2>
-        {% if c.enrolled and c.progress_percent is not none %}
-        <span class="course-badge">{{ c.progress_percent }}%</span>
-        {% endif %}
-      </div>
-      {% if c.description %}
-      <p class="course-desc">{{ c.description[:200] }}{% if c.description|length > 200 %}…{% endif %}</p>
-      {% endif %}
-      <div class="course-meta">
-        <span>{{ c.lessons_count }} уроков</span>
-        <span>{{ c.steps_count }} шагов</span>
-      </div>
-      {% if c.enrolled and c.progress_percent is not none %}
-      <div class="course-progress" aria-hidden="true"><span style="width: {{ c.progress_percent }}%"></span></div>
-      {% endif %}
-    </a>
-    {% endfor %}
-  </section>
+  {% include "_course_cards.html" %}
 </main>
 {% endblock %}

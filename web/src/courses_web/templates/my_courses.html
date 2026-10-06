@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Мои курсы · Courses Assistant{% endblock %}
+
+{% block body %}
+{% with active = "my-courses" %}{% include "_topbar.html" %}{% endwith %}
+<main>
+  <h1 class="page-title">Мои курсы</h1>
+  {% if not courses %}
+  <p class="muted">Вы ещё не начали ни одного курса. <a href="/courses">Перейти в каталог курсов</a>.</p>
+  {% endif %}
+  {% include "_course_cards.html" %}
+</main>
+{% endblock %}

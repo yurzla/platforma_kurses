@@ -26,11 +26,12 @@ router = APIRouter(prefix="/api/v1/courses", tags=["catalog"])
 
 @router.get("", response_model=list[CourseSummaryRead])
 async def list_courses(
+    enrolled: bool = False,
     user: User = Depends(require_user),
     container: Container = Depends(get_container),
 ) -> list[CourseSummaryRead]:
     async with container.uow_factory() as uow:
-        courses = await uow.catalog.list_courses(user.id)
+        courses = await uow.catalog.list_courses(user.id, enrolled_only=enrolled)
     return [CourseSummaryRead(**asdict(course)) for course in courses]
 
 

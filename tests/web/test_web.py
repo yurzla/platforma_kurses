@@ -239,6 +239,42 @@ async def test_course_card_truncates_description() -> None:
     assert "TAIL_MARKER" not in response.text
 
 
+async def test_my_courses_lists_only_started() -> None:
+    store = FakeStore()
+    seed_student_and_course(store)
+    other_step = StepSummary(id=202, position=1, step_type="text")
+    other_lesson = LessonSummary(id=12, title="Урок", position=1, steps=[other_step])
+    other_section = SectionSummary(id=2, title="Модуль", position=1, lessons=[other_lesson])
+    store.add_course(CourseDetail(id=11, title="OtherCourse", sections=[other_section]))
+    user_id = next(iter(store.users))
+    store.progress[(user_id, 101)] = "passed"
+    web, api = build_stack(store)
+    async with web, api:
+        denied = await web.get("/my-courses")
+        assert denied.status_code == 303
+        assert denied.headers["location"].startswith("/login")
+
+        await web.post("/login", data={"email": "s@example.com", "password": "pw"})
+        page = await web.get("/my-courses")
+    assert page.status_code == 200
+    assert "Мои курсы" in page.text
+    assert 'href="/my-courses"' in page.text
+    assert "Python" in page.text
+    assert "OtherCourse" not in page.text
+
+
+async def test_my_courses_empty_state() -> None:
+    store = FakeStore()
+    seed_student_and_course(store)
+    web, api = build_stack(store)
+    async with web, api:
+        await web.post("/login", data={"email": "s@example.com", "password": "pw"})
+        page = await web.get("/my-courses")
+    assert page.status_code == 200
+    assert "Вы ещё не начали ни одного курса" in page.text
+    assert 'href="/courses"' in page.text
+
+
 async def test_bad_login_shows_error() -> None:
     store = FakeStore()
     seed_student_and_course(store)

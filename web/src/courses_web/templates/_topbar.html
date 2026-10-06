@@ -2,6 +2,9 @@
   <div class="brand"><a href="/courses" class="brand-link">Courses&nbsp;Assistant</a> <span>· обучение</span></div>
   <nav class="tabs">
     <a class="tab {% if active == 'courses' %}active{% endif %}" href="/courses">Курсы</a>
+    {% if me and me.role %}
+    <a class="tab {% if active == 'my-courses' %}active{% endif %}" href="/my-courses">Мои курсы</a>
+    {% endif %}
     {% if me and me.role == 'admin' %}
     <a class="tab {% if active == 'dashboard' %}active{% endif %}" href="/dashboard">Админ панель</a>
     {% endif %}

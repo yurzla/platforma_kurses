@@ -268,7 +268,9 @@ class SqlCatalogRepository(CatalogRepository):
     def __init__(self, session: AsyncSession) -> None:
         self._session = session
 
-    async def list_courses(self, user_id: int | None) -> list[CourseSummary]:
+    async def list_courses(
+        self, user_id: int | None, *, enrolled_only: bool = False
+    ) -> list[CourseSummary]:
         lessons_count = (
             select(func.count())
             .select_from(LessonORM)
@@ -295,6 +297,8 @@ class SqlCatalogRepository(CatalogRepository):
             .where(CourseORM.is_published.is_(True))
             .order_by(CourseORM.id)
         )
+        if enrolled_only:
+            stmt = stmt.where(EnrollmentORM.progress_percent.is_not(None))
         result = await self._session.execute(stmt)
         courses: list[CourseSummary] = []
         for course, lessons_total, steps_total, progress in result.all():

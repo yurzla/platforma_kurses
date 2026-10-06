@@ -171,6 +171,19 @@ async def courses(request: Request) -> Response:
     )
 
 
+@router.get("/my-courses", response_class=HTMLResponse)
+async def my_courses(request: Request) -> Response:
+    resp = await call_api(request, "GET", "/api/v1/courses", params=[("enrolled", "true")])
+    if resp.status_code == 401:
+        return RedirectResponse("/login?next=/my-courses", status_code=303)
+    me = await _me(request)
+    return _render(
+        request,
+        "my_courses.html",
+        {"me": me, "courses": resp.json() if resp.status_code == 200 else []},
+    )
+
+
 def _course_progress(course_id: int, course: dict[str, Any]) -> dict[str, Any]:
     total = 0
     done = 0

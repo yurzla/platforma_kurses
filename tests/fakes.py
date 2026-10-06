@@ -196,19 +196,30 @@ class InMemoryCatalogRepository(CatalogRepository):
                     for step in lesson.steps:
                         yield course, lesson, step
 
-    async def list_courses(self, user_id: int | None) -> list[CourseSummary]:
+    async def list_courses(
+        self, user_id: int | None, *, enrolled_only: bool = False
+    ) -> list[CourseSummary]:
         summaries: list[CourseSummary] = []
         for course in self._store.courses_detail.values():
             lessons = sum(len(section.lessons) for section in course.sections)
-            steps = sum(
-                len(lesson.steps) for section in course.sections for lesson in section.lessons
-            )
+            course_steps = [
+                step
+                for section in course.sections
+                for lesson in section.lessons
+                for step in lesson.steps
+            ]
+            steps = len(course_steps)
             done = sum(
                 1
-                for _, _, step in self._all_steps()
+                for step in course_steps
                 if self._store.progress.get((user_id or 0, step.id)) in ("passed",)
             )
             percent = round(100.0 * done / steps, 2) if steps else 0.0
+            enrolled = user_id is not None and any(
+                (user_id, step.id) in self._store.progress for step in course_steps
+            )
+            if enrolled_only and not enrolled:
+                continue
             summaries.append(
                 CourseSummary(
                     id=course.id,
@@ -216,7 +227,7 @@ class InMemoryCatalogRepository(CatalogRepository):
                     description=course.description,
                     lessons_count=lessons,
                     steps_count=steps,
-                    enrolled=user_id is not None and user_id in self._store.users,
+                    enrolled=enrolled,
                     progress_percent=percent if user_id is not None else None,
                 )
             )
