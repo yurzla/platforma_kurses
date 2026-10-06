@@ -20,6 +20,8 @@ uv run pytest tests/unit/test_handlers.py::test_name   # один тест
 make up / make logs / make down           # docker compose
 uv run python -m courses_assistant.scripts.create_user --email s@x.io --password pw
 uv run python -m courses_assistant.scripts.import_step_sources --token "$access_token"
+uv run python -m courses_assistant.scripts.cleanup_empty_steps   # удаляет шаги без содержимого
+uv run python -m courses_assistant.scripts.renumber_steps       # позиции шагов внутри урока с 1
 ```
 
 Порядок перед завершением задачи: `lint → typecheck → test`.

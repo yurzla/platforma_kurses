@@ -171,6 +171,28 @@ async def courses(request: Request) -> Response:
     )
 
 
+def _course_progress(course_id: int, course: dict[str, Any]) -> dict[str, Any]:
+    total = 0
+    done = 0
+    next_href: str | None = None
+    for section in course.get("sections", []):
+        for lesson in section.get("lessons", []):
+            for step in lesson.get("steps", []):
+                total += 1
+                if step.get("completed"):
+                    done += 1
+                elif next_href is None:
+                    next_href = f"/courses/{course_id}/steps/{step.get('id')}"
+    percent = round(100.0 * done / total, 1) if total else 0.0
+    return {
+        "percent": percent,
+        "done": done,
+        "total": total,
+        "next_href": next_href,
+        "completed": total > 0 and done >= total,
+    }
+
+
 @router.get("/courses/{course_id}", response_class=HTMLResponse)
 async def course(request: Request, course_id: int) -> Response:
     resp = await call_api(request, "GET", f"/api/v1/courses/{course_id}")
@@ -179,10 +201,16 @@ async def course(request: Request, course_id: int) -> Response:
     if resp.status_code != 200:
         return HTMLResponse("<h1>Курс не найден</h1>", status_code=404)
     me = await _me(request)
+    course_data = resp.json()
     return _render(
         request,
         "course.html",
-        {"me": me, "course": resp.json(), "course_id": course_id},
+        {
+            "me": me,
+            "course": course_data,
+            "course_id": course_id,
+            "progress": _course_progress(course_id, course_data),
+        },
     )
 
 

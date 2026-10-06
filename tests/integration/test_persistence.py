@@ -17,10 +17,14 @@ from courses_assistant.adapters.persistence.orm import (
     ChatMessageORM,
     ChatSessionORM,
     CourseORM,
+    LessonORM,
+    SectionORM,
+    StepORM,
     UserORM,
 )
 from courses_assistant.adapters.persistence.unit_of_work import SqlAlchemyUnitOfWork
 from courses_assistant.domain.models import ChatMessage, Role
+from courses_assistant.scripts.renumber_steps import renumber_step_positions
 
 DATABASE_URL = os.getenv("INTEGRATION_DATABASE_URL")
 
@@ -76,4 +80,78 @@ async def test_session_and_history_roundtrip() -> None:
             if course_id is not None:
                 await session.execute(delete(CourseORM).where(CourseORM.id == course_id))
             await session.commit()
+        await engine.dispose()
+
+
+async def test_renumber_step_positions_per_lesson() -> None:
+    assert DATABASE_URL is not None
+    engine = create_async_engine(DATABASE_URL)
+    session_factory = async_sessionmaker(engine, expire_on_commit=False)
+
+    marker = uuid.uuid4().hex
+    course_id: int | None = None
+
+    try:
+        async with session_factory() as session:
+            course = CourseORM(title=f"Renumber {marker}")
+            session.add(course)
+            await session.flush()
+            section = SectionORM(course_id=course.id, position=1, title="Модуль")
+            session.add(section)
+            await session.flush()
+            lesson = LessonORM(section_id=section.id, title="Урок", position=1)
+            session.add(lesson)
+            await session.flush()
+            for position in (5, 7, 9):
+                session.add(
+                    StepORM(
+                        lesson_id=lesson.id,
+                        position=position,
+                        step_type="text",
+                        is_enabled=True,
+                    )
+                )
+            await session.commit()
+            course_id = course.id
+
+        async with engine.begin() as conn:
+            changed = await renumber_step_positions(conn, course_id=course_id)
+            assert changed == 3
+
+        async with session_factory() as session:
+            positions = (
+                (
+                    await session.execute(
+                        select(StepORM.position)
+                        .join(LessonORM, StepORM.lesson_id == LessonORM.id)
+                        .join(SectionORM, LessonORM.section_id == SectionORM.id)
+                        .where(SectionORM.course_id == course_id)
+                        .order_by(StepORM.position)
+                    )
+                )
+                .scalars()
+                .all()
+            )
+            assert list(positions) == [1, 2, 3]
+    finally:
+        async with session_factory() as session:
+            if course_id is not None:
+                step_ids = select(StepORM.id).join(
+                    LessonORM, StepORM.lesson_id == LessonORM.id
+                ).join(SectionORM, LessonORM.section_id == SectionORM.id).where(
+                    SectionORM.course_id == course_id
+                )
+                await session.execute(delete(StepORM).where(StepORM.id.in_(step_ids)))
+                await session.execute(
+                    delete(LessonORM).where(
+                        LessonORM.section_id.in_(
+                            select(SectionORM.id).where(SectionORM.course_id == course_id)
+                        )
+                    )
+                )
+                await session.execute(
+                    delete(SectionORM).where(SectionORM.course_id == course_id)
+                )
+                await session.execute(delete(CourseORM).where(CourseORM.id == course_id))
+                await session.commit()
         await engine.dispose()

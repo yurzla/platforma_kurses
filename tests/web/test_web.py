@@ -169,6 +169,61 @@ async def test_student_login_flow_and_courses() -> None:
         assert 'id="assistant-toggle"' in step.text
 
 
+async def test_course_page_shows_progress_tabs_and_structure() -> None:
+    store = FakeStore()
+    seed_student_and_course(store)
+    web, api = build_stack(store)
+    async with web, api:
+        await web.post("/login", data={"email": "s@example.com", "password": "pw"})
+        page = await web.get("/courses/10")
+    assert page.status_code == 200
+    assert "Содержание" in page.text
+    assert "Описание" in page.text
+    assert "Пройдено 0 из 1 шагов" in page.text
+    assert "Продолжить" in page.text
+    assert "data-course-tabs" in page.text
+    assert "Модуль 1" in page.text
+    assert "Урок 1" in page.text
+    assert "/courses/10/steps/101" in page.text
+    assert "/static/course.js?v=" in page.text
+
+
+async def test_course_page_progress_updates_after_step_passed() -> None:
+    store = FakeStore()
+    seed_student_and_course(store)
+    web, api = build_stack(store)
+    async with web, api:
+        await web.post("/login", data={"email": "s@example.com", "password": "pw"})
+        answer = await web.post(
+            "/api/v1/courses/10/steps/101/answer",
+            json={"answer": None},
+            headers={"Accept": "application/json"},
+        )
+        assert answer.status_code == 200
+        page = await web.get("/courses/10")
+    assert "Пройдено 1 из 1 шагов" in page.text
+    assert "Курс пройден" in page.text
+    assert "100%" in page.text
+
+
+async def test_course_description_preserves_line_breaks() -> None:
+    store = FakeStore()
+    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_course(
+        CourseDetail(
+            id=30,
+            title="Многострочный",
+            description="Первый абзац\n\nВторой абзац",
+        )
+    )
+    web, api = build_stack(store)
+    async with web, api:
+        await web.post("/login", data={"email": "s@example.com", "password": "pw"})
+        page = await web.get("/courses/30")
+    assert page.status_code == 200
+    assert "Первый абзац\n\nВторой абзац" in page.text
+
+
 async def test_course_card_truncates_description() -> None:
     store = FakeStore()
     store.add_user("s@example.com", "Студент", hash_password("pw"), "student")

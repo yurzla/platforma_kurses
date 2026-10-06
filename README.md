@@ -51,7 +51,8 @@ backend/                          distribution courses-assistant
                     broker/redis_streams
     entrypoints/    api (JSON), worker, cron, scheduler
     scripts/        db_bootstrap, stepik_dump, load_stepik, embed_chunks,
-                    create_user, import_step_sources
+                    create_user, import_step_sources, cleanup_empty_steps,
+                    renumber_steps
   alembic/          baseline (14 таблиц) + HNSW + jobs + updated_at index + step_sources
 web/                              distribution courses-web
   pyproject.toml  Dockerfile

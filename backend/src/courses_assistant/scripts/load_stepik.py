@@ -6,6 +6,7 @@
 from __future__ import annotations
 
 import asyncio
+import html
 import json
 import re
 from pathlib import Path
@@ -15,6 +16,7 @@ from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncConnection, create_async_engine
 
 from courses_assistant.config import get_settings
+from courses_assistant.scripts.renumber_steps import renumber_step_positions
 
 app = typer.Typer(help="Загрузка дампа Stepik в БД.")
 
@@ -25,6 +27,32 @@ def clean_text(value: str | None) -> str:
     value = re.sub(r"<[^>]+>", " ", value)
     value = re.sub(r"\s+", " ", value)
     return value.strip()
+
+
+_BLOCK_BREAK = re.compile(
+    r"<\s*/?\s*(?:p|div|br|li|ul|ol|h[1-6]|tr|table|blockquote|section)\b[^>]*>",
+    re.IGNORECASE,
+)
+
+
+def clean_description(value: str | None) -> str:
+    """Убирает разметку, но сохраняет абзацы и переносы строк описания."""
+    if not value:
+        return ""
+    text = value.replace("\r\n", "\n").replace("\r", "\n")
+    text = _BLOCK_BREAK.sub("\n", text)
+    text = re.sub(r"<[^>]+>", "", text)
+    text = html.unescape(text)
+    lines = [re.sub(r"[ \t\f\v]+", " ", line).strip() for line in text.split("\n")]
+    text = "\n".join(lines)
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return text.strip()
+
+
+def is_empty_step(block: dict) -> bool:
+    """Шаг пустой, если у него нет текстового содержимого."""
+    body = block.get("text")
+    return not body or not body.strip()
 
 
 async def load_course(conn: AsyncConnection, data: dict) -> None:
@@ -46,7 +74,9 @@ async def load_course(conn: AsyncConnection, data: dict) -> None:
         {
             "ext": ext_course_id,
             "title": course["title"],
-            "description": clean_text(course.get("description") or course.get("summary")),
+            "description": clean_description(
+                course.get("description") or course.get("summary")
+            ),
             "language": course.get("language", "ru"),
         },
     )
@@ -91,12 +121,17 @@ async def load_course(conn: AsyncConnection, data: dict) -> None:
         lesson_ext_to_db[lesson_ext] = res.scalar_one()
 
     steps_count = 0
+    skipped_empty = 0
     for ext_step_id, step in data["steps"].items():
         lesson_db = lesson_ext_to_db.get(step["lesson"])
         if not lesson_db:
             typer.echo(f"  ! step {ext_step_id}: lesson {step['lesson']} не найден")
             continue
         block = step["block"]
+        body = block.get("text")
+        if is_empty_step(block):
+            skipped_empty += 1
+            continue
         res = await conn.execute(
             text(
                 """
@@ -123,14 +158,16 @@ async def load_course(conn: AsyncConnection, data: dict) -> None:
                 "INSERT INTO step_contents (step_id, content_type, body, options) "
                 "VALUES (:step_id, 'html', :body, CAST(:options AS jsonb))"
             ),
-            {"step_id": step_db, "body": block.get("text"), "options": json.dumps(options)},
+            {"step_id": step_db, "body": body, "options": json.dumps(options)},
         )
         steps_count += 1
 
+    await renumber_step_positions(conn, course_db_id)
     await conn.commit()
     typer.echo(
         f"OK course {ext_course_id}: {course['title']} | "
-        f"секций {len(section_ext_to_db)}, уроков {len(lesson_ext_to_db)}, шагов {steps_count}"
+        f"секций {len(section_ext_to_db)}, уроков {len(lesson_ext_to_db)}, "
+        f"шагов {steps_count}, пустых пропущено {skipped_empty}"
     )
 
 

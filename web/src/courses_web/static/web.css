@@ -32,21 +32,86 @@ main { padding: 24px; max-width: 1040px; margin: 0 auto; }
 .course-progress { height: 6px; border-radius: 999px; background: var(--panel-2); overflow: hidden; }
 .course-progress span { display: block; height: 100%; background: var(--accent); border-radius: 999px; }
 
-.section-block { margin: 24px 0; }
-.lesson-block { margin: 16px 0 16px 12px; }
-.lesson-block h3 { margin: 8px 0; font-size: 15px; color: var(--muted); }
-.step-list { list-style: none; padding: 0; margin: 0; }
+.course-layout {
+  display: grid; grid-template-columns: minmax(220px, 280px) 1fr; gap: 24px;
+  align-items: start; margin-top: 8px;
+}
+.course-sidebar { position: sticky; top: 84px; display: flex; flex-direction: column; gap: 16px; }
+.course-progress-card {
+  display: flex; flex-direction: column; gap: 10px; padding: 18px;
+  background: var(--panel); border: 1px solid var(--border); border-radius: 14px;
+}
+.course-progress-value { font-size: 34px; font-weight: 700; line-height: 1; }
+.course-progress-bar { height: 8px; border-radius: 999px; background: var(--panel-2); overflow: hidden; }
+.course-progress-bar span { display: block; height: 100%; background: var(--accent); border-radius: 999px; }
+.course-progress-note { margin: 0; color: var(--muted); font-size: 13px; }
+.course-done-badge {
+  align-self: flex-start; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 600;
+  background: color-mix(in srgb, var(--ok) 15%, transparent); color: var(--ok);
+}
+.course-continue { text-align: center; }
+
+.course-nav { display: flex; flex-direction: column; gap: 6px; }
+.course-tab {
+  text-align: left; padding: 10px 14px; border: 1px solid var(--border); border-radius: 10px;
+  background: var(--panel); color: var(--muted); font-size: 14px; cursor: pointer;
+  transition: border-color .15s, color .15s, background .15s;
+}
+.course-tab:hover { color: var(--text); }
+.course-tab.active { color: var(--text); background: var(--panel-2); border-color: var(--accent); }
+
+.course-panel { min-width: 0; }
+.course-panel [data-panel] > :first-child { margin-top: 0; }
+.course-layout.tabs-ready .course-panel [data-panel] { display: none; }
+.course-layout.tabs-ready .course-panel [data-panel].active { display: block; }
+
+.module {
+  margin: 16px 0; background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+  overflow: hidden;
+}
+.module-head, .lesson-head {
+  display: flex; align-items: center; gap: 12px; padding: 14px 16px; cursor: pointer;
+  list-style: none;
+}
+.module-head::-webkit-details-marker, .lesson-head::-webkit-details-marker { display: none; }
+.module-head { font-weight: 600; }
+.module-head::before, .lesson-head::before {
+  content: "▸"; color: var(--muted); transition: transform .15s; flex: 0 0 auto;
+}
+.module[open] > .module-head::before, .lesson[open] > .lesson-head::before { transform: rotate(90deg); }
+.module-title, .lesson-title { flex: 1; min-width: 0; }
+.module-meta, .lesson-meta { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.module-body { padding: 0 12px 12px; }
+
+.lesson { margin: 8px 0; border: 1px solid var(--border); border-radius: 10px; background: var(--panel-2); }
+.lesson-head { font-weight: 500; font-size: 14px; }
+
+.step-list { list-style: none; padding: 0 8px 8px; margin: 0; }
 .step-item a {
   display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px;
   color: var(--text); text-decoration: none;
 }
-.step-item a:hover { background: var(--panel-2); }
+.step-item a:hover { background: var(--panel); }
 .step-item.completed .step-check { color: var(--ok); }
 .step-type {
   font-size: 11px; text-transform: uppercase; letter-spacing: .4px; color: var(--muted);
   min-width: 72px;
 }
 .step-title { flex: 1; }
+
+.course-description {
+  background: var(--panel); border: 1px solid var(--border); border-radius: 14px;
+  padding: 22px 24px; max-width: 72ch; font-size: 15px; line-height: 1.75;
+  white-space: pre-line; overflow-wrap: anywhere;
+}
+.course-description a { color: var(--accent); }
+
+@media (max-width: 760px) {
+  .course-layout { grid-template-columns: 1fr; }
+  .course-sidebar { position: static; }
+  .course-nav { flex-direction: row; }
+  .course-tab { flex: 1; text-align: center; }
+}
 
 .step-type-badge {
   display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px;

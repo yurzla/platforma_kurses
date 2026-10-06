@@ -4,31 +4,102 @@
 
 {% block body %}
 {% with active = "courses" %}{% include "_topbar.html" %}{% endwith %}
+{% set type_labels = {
+  "choice": "Тест",
+  "string": "Ввод",
+  "number": "Число",
+  "code": "Код",
+  "math": "Формула",
+  "free_answer": "Ответ",
+  "text": "Текст",
+  "video": "Видео",
+  "matching": "Сопоставление",
+  "sorting": "Сортировка"
+} %}
 <main>
   <p class="breadcrumbs"><a href="/courses">Курсы</a> / {{ course.title }}</p>
   <h1 class="page-title">{{ course.title }}</h1>
-  {% if course.description %}<p class="muted">{{ course.description }}</p>{% endif %}
 
-  {% for section in course.sections %}
-  <section class="section-block">
-    <h2>{{ section.title }}</h2>
-    {% for lesson in section.lessons %}
-    <div class="lesson-block">
-      <h3>{{ lesson.title }}</h3>
-      <ol class="step-list">
-        {% for s in lesson.steps %}
-        <li class="step-item {% if s.completed %}completed{% endif %}">
-          <a href="/courses/{{ course.id }}/steps/{{ s.id }}">
-            <span class="step-type">{{ s.type }}</span>
-            <span class="step-title">{{ s.title or ("Шаг " ~ s.position) }}</span>
-            {% if s.completed %}<span class="step-check">✓</span>{% endif %}
-          </a>
-        </li>
+  <div class="course-layout" data-course-tabs>
+    <aside class="course-sidebar">
+      <div class="course-progress-card">
+        <div class="course-progress-value">{{ '%g'|format(progress.percent) }}%</div>
+        <div class="course-progress-bar" role="progressbar" aria-valuenow="{{ progress.percent }}"
+             aria-valuemin="0" aria-valuemax="100" aria-label="Прогресс курса">
+          <span style="width: {{ progress.percent }}%"></span>
+        </div>
+        <p class="course-progress-note">Пройдено {{ progress.done }} из {{ progress.total }} шагов</p>
+        {% if progress.completed %}
+        <span class="course-done-badge">✓ Курс пройден</span>
+        {% elif progress.next_href %}
+        <a class="btn course-continue" href="{{ progress.next_href }}">Продолжить</a>
+        {% endif %}
+      </div>
+
+      <nav class="course-nav" role="tablist" aria-label="Разделы курса">
+        <button type="button" class="course-tab active" role="tab" id="tab-content"
+                data-tab="content" aria-controls="panel-content" aria-selected="true">Содержание</button>
+        <button type="button" class="course-tab" role="tab" id="tab-description"
+                data-tab="description" aria-controls="panel-description" aria-selected="false">Описание</button>
+      </nav>
+    </aside>
+
+    <div class="course-panel">
+      <section class="course-content-panel active" id="panel-content" data-panel="content"
+               role="tabpanel" aria-labelledby="tab-content">
+        {% if not course.sections %}
+        <p class="muted">В курсе пока нет материалов.</p>
+        {% endif %}
+        {% for section in course.sections %}
+        {% set section_index = loop.index0 %}
+        {% set section_steps = section.lessons | map(attribute='steps') | sum(start=[]) %}
+        {% set section_total = section_steps | length %}
+        {% set section_done = section_steps | selectattr('completed') | list | length %}
+        <details class="module" {% if section_index == 0 %}open{% endif %}>
+          <summary class="module-head">
+            <span class="module-title">{{ section.title }}</span>
+            <span class="module-meta">{{ section.lessons | length }} уроков · {{ section_done }}/{{ section_total }}</span>
+          </summary>
+          <div class="module-body">
+            {% for lesson in section.lessons %}
+            {% set lesson_total = lesson.steps | length %}
+            {% set lesson_done = lesson.steps | selectattr('completed') | list | length %}
+            <details class="lesson" {% if section_index == 0 and loop.first %}open{% endif %}>
+              <summary class="lesson-head">
+                <span class="lesson-title">{{ lesson.title }}</span>
+                <span class="lesson-meta">{{ lesson_done }}/{{ lesson_total }}</span>
+              </summary>
+              <ol class="step-list">
+                {% for s in lesson.steps %}
+                <li class="step-item {% if s.completed %}completed{% endif %}">
+                  <a href="/courses/{{ course.id }}/steps/{{ s.id }}">
+                    <span class="step-type">{{ type_labels.get(s.step_type, s.step_type) }}</span>
+                    <span class="step-title">Шаг {{ s.position }}</span>
+                    {% if s.completed %}<span class="step-check">✓</span>{% endif %}
+                  </a>
+                </li>
+                {% endfor %}
+              </ol>
+            </details>
+            {% endfor %}
+          </div>
+        </details>
         {% endfor %}
-      </ol>
+      </section>
+
+      <section class="course-description-panel" id="panel-description" data-panel="description"
+               role="tabpanel" aria-labelledby="tab-description">
+        {% if course.description %}
+        <div class="course-description">{{ course.description }}</div>
+        {% else %}
+        <p class="muted">Описание для этого курса пока не добавлено.</p>
+        {% endif %}
+      </section>
     </div>
-    {% endfor %}
-  </section>
-  {% endfor %}
+  </div>
 </main>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ static_url('course.js') }}" defer></script>
 {% endblock %}
