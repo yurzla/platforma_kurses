@@ -100,7 +100,11 @@
     function append(role, text) {
       var div = document.createElement("div");
       div.className = "chat-msg " + role;
-      div.textContent = text;
+      if (role === "assistant" && window.renderAssistantAnswer) {
+        div.appendChild(window.renderAssistantAnswer(text));
+      } else {
+        div.textContent = text;
+      }
       log.appendChild(div);
       log.scrollTop = log.scrollHeight;
       return div;
@@ -205,7 +209,13 @@
         var resp = await fetch("/api/v1/jobs/" + jobId, { headers: { Accept: "application/json" } });
         if (!resp.ok) continue;
         var data = await resp.json();
-        if (data.status === "done") { node.textContent = data.answer || ""; return; }
+        if (data.status === "done") {
+          var answer = data.answer || "";
+          node.textContent = "";
+          if (window.renderAssistantAnswer) node.appendChild(window.renderAssistantAnswer(answer));
+          else node.textContent = answer;
+          return;
+        }
         if (data.status === "failed") { node.textContent = "Ошибка: " + (data.error || "неизвестно"); return; }
       }
       node.textContent = "Превышено время ожидания ответа.";

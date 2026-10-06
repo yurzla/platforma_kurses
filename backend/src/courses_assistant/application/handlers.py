@@ -40,6 +40,7 @@ from courses_assistant.domain.models import (
     Role,
     User,
 )
+from courses_assistant.domain.prompts import build_course_catalog
 from courses_assistant.domain.quiz import (
     build_answer_key,
     correct_answer_for_display,
@@ -145,6 +146,13 @@ class Handlers:
                 ChatMessage(session_id=command.session_id, role=Role.USER, content=command.question)
             )
 
+            catalog = ""
+            if session.course_id is None:
+                courses = await uow.catalog.list_courses(
+                    session.user_id, limit=self._settings.catalog_prompt_limit
+                )
+                catalog = build_course_catalog(courses)
+
             sources: list[dict] = []
             embedding = await self._embedder.embed(rewritten)
             chunks = await uow.chunks.search(
@@ -153,7 +161,7 @@ class Handlers:
                 model_name=self._settings.embedding_model,
                 limit=self._settings.retrieval_top_k,
             )
-            if not chunks:
+            if not chunks and not catalog:
                 answer_text = NO_MATERIALS_ANSWER
             else:
                 context = build_context(chunks)
@@ -163,6 +171,7 @@ class Handlers:
                     history=history,
                     llm=self._llm,
                     temperature=self._settings.llm_temperature,
+                    catalog=catalog,
                 )
                 sources = [_chunk_to_source(chunk) for chunk in chunks]
 

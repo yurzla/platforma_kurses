@@ -83,6 +83,9 @@ class Settings(BaseSettings):
     embedding_dimension: int = 768
     retrieval_top_k: int = 5
 
+    # Каталог курсов в промпте ассистента (глобальные чаты)
+    catalog_prompt_limit: int = 50
+
     # GigaChat (LLM)
     gigachat_credentials: str = Field(default="")
     gigachat_scope: str = "GIGACHAT_API_PERS"

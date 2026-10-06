@@ -47,6 +47,6 @@
   </div>
   {% endif %}
   {% block scripts %}{% endblock %}
-  {% if me and me.role and assistant_mode %}<script src="{{ static_url('web.js') }}"></script>{% endif %}
+  {% if me and me.role and assistant_mode %}<script src="{{ static_url('assistant-format.js') }}"></script><script src="{{ static_url('web.js') }}"></script>{% endif %}
 </body>
 </html>

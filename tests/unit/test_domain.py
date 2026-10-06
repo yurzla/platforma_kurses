@@ -2,9 +2,14 @@
 
 from __future__ import annotations
 
+from courses_assistant.domain.catalog import CourseSummary
 from courses_assistant.domain.context import build_context
 from courses_assistant.domain.models import ChatMessage, RetrievedChunk, Role
-from courses_assistant.domain.prompts import build_answer_messages, build_rewrite_prompt
+from courses_assistant.domain.prompts import (
+    build_answer_messages,
+    build_course_catalog,
+    build_rewrite_prompt,
+)
 
 
 def _chunk(chunk_id: int, lesson: str | None = "Урок 1") -> RetrievedChunk:
@@ -40,6 +45,31 @@ def test_build_answer_messages_include_history_and_question() -> None:
     assert messages[2].content == "здравствуйте"
     assert messages[-1].role == Role.USER
     assert messages[-1].content == "что такое x?"
+
+
+def test_build_course_catalog_marks_enrolled() -> None:
+    catalog = build_course_catalog(
+        [
+            CourseSummary(id=1, title="Python", description="Основы языка", enrolled=True),
+            CourseSummary(id=2, title="Go", description=None),
+        ]
+    )
+    assert "«Python»" in catalog
+    assert "Основы языка" in catalog
+    assert "(вы записаны)" in catalog
+    assert "«Go»" in catalog
+
+
+def test_build_answer_messages_include_catalog() -> None:
+    messages = build_answer_messages("какой курс?", "контекст", catalog="- «Python»")
+    assert "КАТАЛОГ КУРСОВ ПЛАТФОРМЫ" in messages[0].content
+    assert "«Python»" in messages[0].content
+
+
+def test_system_prompt_requests_markdown() -> None:
+    messages = build_answer_messages("вопрос", "контекст")
+    assert "Markdown" in messages[0].content
+    assert "**жирным**" in messages[0].content
 
 
 def test_build_rewrite_prompt_without_history_returns_question() -> None:

@@ -160,6 +160,7 @@ async def test_student_login_flow_and_courses() -> None:
         assert 'data-mode="history"' in courses.text
         assert 'id="assistant-history"' in courses.text
         assert 'id="assistant-course"' not in courses.text
+        assert "/static/assistant-format.js?v=" in courses.text
         assert "/static/web.js?v=" in courses.text
 
         course = await web.get("/courses/10")

@@ -14,6 +14,7 @@ from courses_assistant.application.commands import (
 )
 from courses_assistant.application.handlers import NO_MATERIALS_ANSWER, Handlers
 from courses_assistant.config import Settings
+from courses_assistant.domain.catalog import CourseDetail
 from courses_assistant.domain.errors import SessionNotFound, UserNotFound
 from courses_assistant.domain.models import JobStatus, RetrievedChunk, Role
 from tests.fakes import FakeBroker, FakeEmbedder, FakeLLM, FakeStore, InMemoryUnitOfWork
@@ -74,6 +75,44 @@ async def test_process_question_global_uses_chunks(handlers, store) -> None:
     assert job.status == JobStatus.DONE
     assert job.answer == "тестовый ответ"
     assert job.sources[0]["chunk_id"] == 9
+
+
+async def test_process_question_global_uses_catalog_without_chunks(
+    handlers, store, llm
+) -> None:
+    session_id = await handlers.create_session(CreateChatSession(user_id=1))
+    store.add_course(CourseDetail(id=10, title="Python", description="Основы", sections=[]))
+    store.chunks = []
+    job_id = await handlers.send_question(
+        SendQuestion(session_id=session_id, question="какой курс посоветуешь?")
+    )
+
+    await handlers.process_question(
+        ProcessQuestion(
+            job_id=job_id, session_id=session_id, question="какой курс посоветуешь?"
+        )
+    )
+
+    job = store.jobs[job_id]
+    assert job.status == JobStatus.DONE
+    assert job.answer == "тестовый ответ"
+    assert "«Python»" in llm.calls[0][0].content
+
+
+async def test_process_question_global_without_catalog_returns_no_materials(
+    handlers, store
+) -> None:
+    session_id = await handlers.create_session(CreateChatSession(user_id=1))
+    store.chunks = []
+    job_id = await handlers.send_question(SendQuestion(session_id=session_id, question="вопрос"))
+
+    await handlers.process_question(
+        ProcessQuestion(job_id=job_id, session_id=session_id, question="вопрос")
+    )
+
+    job = store.jobs[job_id]
+    assert job.status == JobStatus.DONE
+    assert job.answer == NO_MATERIALS_ANSWER
 
 
 async def test_send_question_unknown_session(handlers) -> None:

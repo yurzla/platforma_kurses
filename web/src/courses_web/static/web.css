@@ -160,6 +160,20 @@ main { padding: 24px; max-width: 1040px; margin: 0 auto; }
 }
 .chat-msg.user { align-self: flex-end; background: var(--accent); color: #fff; }
 .chat-msg.assistant { align-self: flex-start; background: var(--panel-2); }
+.chat-msg .chat-code {
+  margin: 8px 0; padding: 10px 12px; background: var(--bg);
+  border: 1px solid var(--border); border-radius: 8px;
+  overflow-x: auto; white-space: pre;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px; line-height: 1.45;
+}
+.chat-msg .chat-code code { font: inherit; }
+.chat-msg .chat-code-inline {
+  padding: 1px 5px; background: var(--bg); border: 1px solid var(--border);
+  border-radius: 5px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px;
+}
 .chat-form { display: flex; gap: 8px; }
 .chat-form input {
   flex: 1; padding: 10px 12px; background: var(--panel-2); border: 1px solid var(--border);

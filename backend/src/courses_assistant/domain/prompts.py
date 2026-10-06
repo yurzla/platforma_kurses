@@ -4,12 +4,13 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 
+from courses_assistant.domain.catalog import CourseSummary
 from courses_assistant.domain.models import ChatMessage, LLMMessage, Role
 
 SYSTEM_PROMPT = """
         Ты - учебный ассистент образовательной платформы.
 
-        Ты отвечаешь студенту на вопросы по текущему курсу.
+        Ты отвечаешь студенту на вопросы по материалам курсов платформы.
 
         Правила:
         1. Используй предоставленные материалы курса.
@@ -19,25 +20,52 @@ SYSTEM_PROMPT = """
         5. Объясняй понятно и последовательно.
         6. История разговора нужна для понимания контекста вопроса,
         но не является источником учебных фактов.
+        7. Если студент просит совета, какой курс выбрать или с чего начать,
+        рекомендуй курсы только из "КАТАЛОГ КУРСОВ ПЛАТФОРМЫ", указывая их названия.
+        Не придумывай курсы, которых нет в каталоге.
+        8. Оформляй ответ в Markdown: важное выделяй **жирным**, многострочный код
+        заключай в блок ``` ... ```, короткие фрагменты кода — в `...`.
     """.strip()
 
 
-def build_answer_system_prompt(context: str) -> str:
-    return f"""
-    {SYSTEM_PROMPT}
+_CATALOG_DESCRIPTION_LIMIT = 300
 
-    МАТЕРИАЛЫ ТЕКУЩЕГО КУРСА:
 
-    {context}
-    """.strip()
+def build_course_catalog(
+    courses: Sequence[CourseSummary], max_description: int = _CATALOG_DESCRIPTION_LIMIT
+) -> str:
+    """Собирает текстовый каталог курсов для системного промпта."""
+    lines: list[str] = []
+    for course in courses:
+        description = " ".join((course.description or "").split())
+        if len(description) > max_description:
+            description = description[:max_description].rstrip() + "…"
+        line = f"- «{course.title}»"
+        if description:
+            line += f" — {description}"
+        if course.enrolled:
+            line += " (вы записаны)"
+        lines.append(line)
+    return "\n".join(lines)
+
+
+def build_answer_system_prompt(context: str, catalog: str = "") -> str:
+    sections = [SYSTEM_PROMPT]
+    if catalog:
+        sections.append(f"КАТАЛОГ КУРСОВ ПЛАТФОРМЫ:\n\n{catalog}")
+    sections.append(f"МАТЕРИАЛЫ КУРСА:\n\n{context}")
+    return "\n\n".join(sections).strip()
 
 
 def build_answer_messages(
     question: str,
     context: str,
     history: Sequence[ChatMessage] | None = None,
+    catalog: str = "",
 ) -> list[LLMMessage]:
-    messages = [LLMMessage(role=Role.SYSTEM, content=build_answer_system_prompt(context))]
+    messages = [
+        LLMMessage(role=Role.SYSTEM, content=build_answer_system_prompt(context, catalog))
+    ]
 
     for message in history or []:
         if message.role in (Role.USER, Role.ASSISTANT):
