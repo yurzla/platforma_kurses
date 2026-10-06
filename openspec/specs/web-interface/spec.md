@@ -300,3 +300,44 @@ be inserted as DOM nodes without interpreting raw HTML from the model.
 #### Scenario: Plain answer preserved
 - **WHEN** an assistant answer contains no Markdown
 - **THEN** the panel shows the text unchanged, preserving line breaks
+
+### Requirement: Assistant drawer placement and dismissal
+
+The assistant chat panel SHALL be rendered as a floating, rounded window positioned below the top
+navigation bar so that it does not cover the navigation bar, and SHALL close when the user clicks
+outside the panel. Clicking inside the panel SHALL NOT close it.
+
+#### Scenario: Panel below the navigation bar
+- **WHEN** the user opens the assistant panel
+- **THEN** the panel is shown below the top navigation bar without covering it
+
+#### Scenario: Rounded panel
+- **WHEN** the assistant panel is visible
+- **THEN** it is drawn as a rounded floating window
+
+#### Scenario: Outside click closes the panel
+- **WHEN** the assistant panel is open and the user clicks outside the panel
+- **THEN** the panel closes
+
+#### Scenario: Inside click keeps the panel open
+- **WHEN** the assistant panel is open and the user clicks inside the panel
+- **THEN** the panel stays open
+
+### Requirement: Assistant course context label
+
+On the course page and the step page the assistant panel SHALL display the title of the current
+course so that the user understands questions are answered only within that course. On the courses
+list and the «Мое обучение» list, where the assistant is not bound to a course, no course label
+SHALL be shown.
+
+#### Scenario: Course title shown on the course page
+- **WHEN** an authenticated user opens the assistant on the course page
+- **THEN** the panel shows a label with the current course title
+
+#### Scenario: Course title shown on the step page
+- **WHEN** an authenticated user opens the assistant on a step page
+- **THEN** the panel shows a label with the title of the step's course
+
+#### Scenario: No course label on list pages
+- **WHEN** an authenticated user opens the assistant on the courses list or the «Мое обучение» list
+- **THEN** the panel shows no course label

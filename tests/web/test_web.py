@@ -170,6 +170,8 @@ async def test_student_login_flow_and_courses() -> None:
         assert 'data-course-id="10"' in course.text
         assert 'data-mode="course"' in course.text
         assert 'id="assistant-history"' in course.text
+        assert "assistant-course-note" in course.text
+        assert "Ответы по курсу" in course.text
         assert "/static/web.js?v=" in course.text
 
         step = await web.get("/courses/10/steps/101")
@@ -177,6 +179,7 @@ async def test_student_login_flow_and_courses() -> None:
         assert "Ассистент" in step.text
         assert 'id="assistant-toggle"' in step.text
         assert 'data-mode="course"' in step.text
+        assert "assistant-course-note" in step.text
 
 
 async def test_course_page_shows_progress_tabs_and_structure() -> None:

@@ -32,6 +32,9 @@
         <h2>Ассистент</h2>
         <button type="button" id="assistant-close" class="assistant-close" aria-label="Закрыть">×</button>
       </header>
+      {% if assistant_mode == 'course' and assistant_course_title %}
+      <p class="assistant-course-note" title="{{ assistant_course_title }}">Ответы по курсу «{{ assistant_course_title }}»</p>
+      {% endif %}
       <div id="assistant-history" class="assistant-history">
         <div id="assistant-history-list" class="assistant-history-list">
           {% include "_assistant_history.html" %}

@@ -97,6 +97,12 @@
     });
     closeBtn.addEventListener("click", closePanel);
 
+    document.addEventListener("click", function (event) {
+      if (!drawer.classList.contains("open")) return;
+      if (widget.contains(event.target)) return;
+      closePanel();
+    });
+
     function append(role, text) {
       var div = document.createElement("div");
       div.className = "chat-msg " + role;

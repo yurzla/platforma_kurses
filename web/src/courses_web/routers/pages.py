@@ -303,6 +303,7 @@ async def course(request: Request, course_id: int) -> Response:
             "course": course_data,
             "course_id": course_id,
             "assistant_mode": "course",
+            "assistant_course_title": course_data.get("title"),
             "progress": _course_progress(course_id, course_data),
             **assistant,
         },
@@ -319,6 +320,9 @@ async def step(request: Request, course_id: int, step_id: int) -> Response:
     if resp.status_code != 200:
         return HTMLResponse("<h1>Шаг не найден</h1>", status_code=404)
     me = await _me(request)
+    step_data = resp.json()
+    course_resp = await call_api(request, "GET", f"/api/v1/courses/{course_id}")
+    course_title = course_resp.json().get("title") if course_resp.status_code == 200 else None
     assistant = await _assistant_history_context(request, course_id=course_id)
     return _render(
         request,
@@ -327,7 +331,8 @@ async def step(request: Request, course_id: int, step_id: int) -> Response:
             "me": me,
             "course_id": course_id,
             "assistant_mode": "course",
-            "step": resp.json(),
+            "assistant_course_title": course_title,
+            "step": step_data,
             **assistant,
         },
     )
