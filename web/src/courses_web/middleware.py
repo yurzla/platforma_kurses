@@ -28,4 +28,6 @@ class RequestContextMiddleware(BaseHTTPMiddleware):
         finally:
             structlog.contextvars.clear_contextvars()
         response.headers["X-Request-ID"] = request_id
+        if request.url.path.startswith("/static/"):
+            response.headers["Cache-Control"] = "no-cache"
         return response

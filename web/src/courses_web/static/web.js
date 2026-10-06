@@ -1,7 +1,6 @@
 (function () {
   var step = window.STEP || {};
   var courseId = window.COURSE_ID;
-  var me = window.ME || {};
 
   function jsonHeaders() {
     return { "Content-Type": "application/json", Accept: "application/json" };
@@ -64,10 +63,35 @@
     });
   }
 
-  var chatForm = document.getElementById("chat-form");
-  if (chatForm) {
+  var widget = document.querySelector(".assistant");
+  if (widget) {
+    var toggle = document.getElementById("assistant-toggle");
+    var drawer = document.getElementById("assistant-drawer");
+    var closeBtn = document.getElementById("assistant-close");
     var log = document.getElementById("chat-log");
+    var chatForm = document.getElementById("chat-form");
+    var chatInput = document.getElementById("chat-input");
+    var courseId = parseInt(widget.dataset.courseId, 10) || null;
     var sessionId = null;
+
+    function openPanel() {
+      drawer.classList.add("open");
+      drawer.setAttribute("aria-hidden", "false");
+      toggle.setAttribute("aria-expanded", "true");
+      chatInput.focus();
+    }
+
+    function closePanel() {
+      drawer.classList.remove("open");
+      drawer.setAttribute("aria-hidden", "true");
+      toggle.setAttribute("aria-expanded", "false");
+    }
+
+    toggle.addEventListener("click", function () {
+      if (drawer.classList.contains("open")) closePanel();
+      else openPanel();
+    });
+    closeBtn.addEventListener("click", closePanel);
 
     function append(role, text) {
       var div = document.createElement("div");
@@ -80,13 +104,13 @@
 
     async function ensureSession() {
       if (sessionId) return sessionId;
-      var body = { course_id: courseId };
-      if (me && me.id) body.user_id = me.id;
+      if (!courseId) return null;
       var resp = await fetch("/api/v1/chat/sessions", {
         method: "POST", headers: jsonHeaders(), credentials: "same-origin",
-        body: JSON.stringify(body),
+        body: JSON.stringify({ course_id: courseId }),
       });
       if (resp.status === 401) { window.location.href = "/login"; return null; }
+      if (!resp.ok) return null;
       var data = await resp.json();
       sessionId = data.id;
       return sessionId;
@@ -94,14 +118,13 @@
 
     chatForm.addEventListener("submit", async function (event) {
       event.preventDefault();
-      var input = document.getElementById("chat-input");
-      var question = input.value.trim();
+      var question = chatInput.value.trim();
       if (!question) return;
-      input.value = "";
+      chatInput.value = "";
       append("user", question);
       var placeholder = append("assistant", "…");
       var sid = await ensureSession();
-      if (!sid) return;
+      if (!sid) { placeholder.textContent = "Не удалось создать сессию."; return; }
       var resp = await fetch("/api/v1/chat/sessions/" + sid + "/ask", {
         method: "POST", headers: jsonHeaders(), credentials: "same-origin",
         body: JSON.stringify({ question: question }),

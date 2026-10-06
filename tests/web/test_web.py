@@ -67,6 +67,9 @@ async def test_login_page_single_form() -> None:
     assert 'name="email"' in response.text
     assert "Администратор" not in response.text
     assert "data-theme-toggle" in response.text
+    assert "assistant-toggle" not in response.text
+    assert "/static/web.css?v=" in response.text
+    assert "/static/web.js?v=" not in response.text
 
 
 async def test_register_page_and_flow() -> None:
@@ -150,14 +153,35 @@ async def test_student_login_flow_and_courses() -> None:
         courses = await web.get("/courses")
         assert courses.status_code == 200
         assert "Python" in courses.text
+        assert 'id="assistant-toggle"' not in courses.text
+        assert "/static/web.js?v=" not in courses.text
 
         course = await web.get("/courses/10")
         assert course.status_code == 200
         assert "Урок 1" in course.text
+        assert 'id="assistant-toggle"' in course.text
+        assert 'data-course-id="10"' in course.text
+        assert "/static/web.js?v=" in course.text
 
         step = await web.get("/courses/10/steps/101")
         assert step.status_code == 200
         assert "Ассистент" in step.text
+        assert 'id="assistant-toggle"' in step.text
+
+
+async def test_course_card_truncates_description() -> None:
+    store = FakeStore()
+    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_course(
+        CourseDetail(id=20, title="Длинный", description="x" * 200 + "TAIL_MARKER")
+    )
+    web, api = build_stack(store)
+    async with web, api:
+        await web.post("/login", data={"email": "s@example.com", "password": "pw"})
+        response = await web.get("/courses")
+    assert response.status_code == 200
+    assert "x" * 200 + "…" in response.text
+    assert "TAIL_MARKER" not in response.text
 
 
 async def test_bad_login_shows_error() -> None:
@@ -217,6 +241,7 @@ async def test_admin_panel_flow() -> None:
         assert "Админ панель" in dashboard.text
         assert "Пользователи" in dashboard.text
         assert "/static/dashboard.js" in dashboard.text
+        assert 'id="assistant-toggle"' not in dashboard.text
 
 
 async def test_static_assets_served() -> None:

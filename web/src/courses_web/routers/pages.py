@@ -179,7 +179,11 @@ async def course(request: Request, course_id: int) -> Response:
     if resp.status_code != 200:
         return HTMLResponse("<h1>Курс не найден</h1>", status_code=404)
     me = await _me(request)
-    return _render(request, "course.html", {"me": me, "course": resp.json()})
+    return _render(
+        request,
+        "course.html",
+        {"me": me, "course": resp.json(), "course_id": course_id},
+    )
 
 
 @router.get("/courses/{course_id}/steps/{step_id}", response_class=HTMLResponse)

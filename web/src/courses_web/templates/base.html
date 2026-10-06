@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Courses Assistant{% endblock %}</title>
-  <link rel="stylesheet" href="/static/dashboard.css">
-  <link rel="stylesheet" href="/static/web.css">
-  <script src="/static/theme.js" defer></script>
+  <link rel="stylesheet" href="{{ static_url('dashboard.css') }}">
+  <link rel="stylesheet" href="{{ static_url('web.css') }}">
+  <script src="{{ static_url('theme.js') }}" defer></script>
   <script>
     (function () {
       try {
@@ -22,6 +22,25 @@
 </head>
 <body>
   {% block body %}{% endblock %}
+  {% if me and me.role and course_id %}
+  <div class="assistant" data-course-id="{{ course_id }}">
+    <button type="button" id="assistant-toggle" class="assistant-fab" aria-expanded="false" aria-controls="assistant-drawer">
+      Ассистент
+    </button>
+    <aside id="assistant-drawer" class="assistant-drawer" aria-hidden="true">
+      <header class="assistant-head">
+        <h2>Ассистент</h2>
+        <button type="button" id="assistant-close" class="assistant-close" aria-label="Закрыть">×</button>
+      </header>
+      <div id="chat-log" class="chat-log"></div>
+      <form id="chat-form" class="chat-form">
+        <input id="chat-input" type="text" placeholder="Задайте вопрос по материалу…" autocomplete="off">
+        <button class="btn" type="submit">Спросить</button>
+      </form>
+    </aside>
+  </div>
+  {% endif %}
   {% block scripts %}{% endblock %}
+  {% if me and me.role and course_id %}<script src="{{ static_url('web.js') }}"></script>{% endif %}
 </body>
 </html>

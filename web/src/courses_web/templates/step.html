@@ -40,15 +40,6 @@
     {% endif %}
     <div id="answer-result" class="answer-result hidden"></div>
   </section>
-
-  <section class="assistant-panel">
-    <h2>Ассистент</h2>
-    <div id="chat-log" class="chat-log"></div>
-    <form id="chat-form" class="chat-form">
-      <input id="chat-input" type="text" placeholder="Задайте вопрос по материалу…" autocomplete="off">
-      <button class="btn" type="submit">Спросить</button>
-    </form>
-  </section>
 </main>
 {% endblock %}
 
@@ -56,5 +47,4 @@
 <script>window.STEP = {{ step | tojson }};</script>
 <script>window.COURSE_ID = {{ course_id }};</script>
 <script>window.ME = {{ me | tojson }};</script>
-<script src="/static/web.js"></script>
 {% endblock %}
