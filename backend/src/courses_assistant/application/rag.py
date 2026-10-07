@@ -33,9 +33,14 @@ async def generate_answer(
     history: Sequence[ChatMessage],
     llm: LLM,
     temperature: float = 0.2,
-    catalog: str = "",
+    current_course: tuple[int, str | None] | None = None,
+    recommended_courses: str = "",
 ) -> str:
     messages = build_answer_messages(
-        question=question, context=context, history=history, catalog=catalog
+        question=question,
+        context=context,
+        history=history,
+        current_course=current_course,
+        recommended_courses=recommended_courses,
     )
     return await llm.generate(messages, temperature=temperature)

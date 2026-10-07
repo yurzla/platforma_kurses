@@ -18,6 +18,7 @@ from courses_assistant.application.commands import (
 )
 from courses_assistant.application.ports import LLM, Embedder, MessageBroker, UnitOfWork
 from courses_assistant.application.rag import generate_answer, rewrite_question
+from courses_assistant.application.recommendations import rank_courses
 from courses_assistant.config import Settings
 from courses_assistant.domain.catalog import StepResult
 from courses_assistant.domain.context import build_context
@@ -30,6 +31,7 @@ from courses_assistant.domain.errors import (
     SessionNotFound,
     UserNotFound,
 )
+from courses_assistant.domain.formatting import normalize_answer_spacing
 from courses_assistant.domain.models import (
     SELF_REGISTER_ROLES,
     USER_ROLES,
@@ -40,11 +42,15 @@ from courses_assistant.domain.models import (
     Role,
     User,
 )
-from courses_assistant.domain.prompts import build_course_catalog
 from courses_assistant.domain.quiz import (
     build_answer_key,
     correct_answer_for_display,
     grade,
+)
+from courses_assistant.domain.recommendations import sanitize_course_recommendations
+from courses_assistant.domain.recommender import (
+    build_recommended_courses_section,
+    looks_like_course_query,
 )
 from courses_assistant.domain.security import hash_password
 
@@ -59,6 +65,9 @@ def _chunk_to_source(chunk: RetrievedChunk) -> dict:
         "source_type": chunk.source_type,
         "lesson": chunk.lesson,
         "distance": chunk.distance,
+        "course_id": chunk.course_id,
+        "course_title": chunk.course_title,
+        "course_url": f"/courses/{chunk.course_id}" if chunk.course_id is not None else None,
     }
 
 
@@ -146,12 +155,46 @@ class Handlers:
                 ChatMessage(session_id=command.session_id, role=Role.USER, content=command.question)
             )
 
-            catalog = ""
-            if session.course_id is None:
-                courses = await uow.catalog.list_courses(
-                    session.user_id, limit=self._settings.catalog_prompt_limit
+            if session.course_id is None and looks_like_course_query(command.question):
+                matches = await rank_courses(
+                    rewritten,
+                    llm=self._llm,
+                    embedder=self._embedder,
+                    recommender=uow.recommender,
+                    model_name=self._settings.embedding_model,
+                    top_k=self._settings.recommendation_top_k,
+                    margin=self._settings.recommendation_margin,
+                    min_score=self._settings.recommendation_min_score,
+                    candidate_limit=max(self._settings.recommendation_top_k * 4, 20),
                 )
-                catalog = build_course_catalog(courses)
+                if matches:
+                    recommended_courses = build_recommended_courses_section(
+                        matches,
+                        description_limit=self._settings.recommendation_description_limit,
+                    )
+                    recommended = await generate_answer(
+                        question=command.question,
+                        context="",
+                        history=history,
+                        llm=self._llm,
+                        temperature=self._settings.llm_temperature,
+                        recommended_courses=recommended_courses,
+                    )
+                    recommended = sanitize_course_recommendations(
+                        recommended, [(match.course_id, match.title) for match in matches]
+                    )
+                    recommended = normalize_answer_spacing(recommended)
+                    await uow.chat.add_message(
+                        ChatMessage(
+                            session_id=command.session_id,
+                            role=Role.ASSISTANT,
+                            content=recommended,
+                            sources=None,
+                            used_chunk_ids=[],
+                        )
+                    )
+                    await uow.jobs.mark_done(command.job_id, recommended, [], rewritten)
+                    return Answer(text=recommended, sources=[], rewritten_question=rewritten)
 
             sources: list[dict] = []
             embedding = await self._embedder.embed(rewritten)
@@ -161,19 +204,40 @@ class Handlers:
                 model_name=self._settings.embedding_model,
                 limit=self._settings.retrieval_top_k,
             )
-            if not chunks and not catalog:
+            source_courses: list[tuple[int, str | None]] = []
+            seen_course_ids: set[int] = set()
+            for chunk in chunks:
+                if chunk.course_id is None or chunk.course_id in seen_course_ids:
+                    continue
+                seen_course_ids.add(chunk.course_id)
+                source_courses.append((chunk.course_id, chunk.course_title))
+            if not chunks:
                 answer_text = NO_MATERIALS_ANSWER
             else:
                 context = build_context(chunks)
+                current_course: tuple[int, str | None] | None = None
+                if session.course_id is not None:
+                    title = next(
+                        (
+                            chunk.course_title
+                            for chunk in chunks
+                            if chunk.course_id == session.course_id
+                        ),
+                        None,
+                    )
+                    current_course = (session.course_id, title)
                 answer_text = await generate_answer(
                     question=command.question,
                     context=context,
                     history=history,
                     llm=self._llm,
                     temperature=self._settings.llm_temperature,
-                    catalog=catalog,
+                    current_course=current_course,
                 )
                 sources = [_chunk_to_source(chunk) for chunk in chunks]
+
+            answer_text = sanitize_course_recommendations(answer_text, source_courses)
+            answer_text = normalize_answer_spacing(answer_text)
 
             chunk_ids = [source["chunk_id"] for source in sources]
             await uow.chat.add_message(

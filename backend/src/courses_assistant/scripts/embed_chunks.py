@@ -49,12 +49,19 @@ async def _ensure_embedding(
 ) -> bool:
     existing = await conn.execute(
         text(
-            "SELECT id FROM chunk_embeddings WHERE chunk_id = :chunk_id AND model_name = :model"
+            "SELECT ce.id, cc.chunk_text FROM chunk_embeddings ce "
+            "JOIN content_chunks cc ON cc.id = ce.chunk_id "
+            "WHERE ce.chunk_id = :chunk_id AND ce.model_name = :model"
         ),
         {"chunk_id": chunk_id, "model": model},
     )
-    if existing.first():
+    row = existing.first()
+    if row and row[1] == chunk_text:
         return False
+    if row:
+        await conn.execute(
+            text("DELETE FROM chunk_embeddings WHERE id = :id"), {"id": row[0]}
+        )
 
     embedding = await embedder.embed(chunk_text)
     await conn.execute(
@@ -108,6 +115,10 @@ async def _upsert_chunk(
         )
         row = existing.first()
         if row:
+            await conn.execute(
+                text("UPDATE content_chunks SET chunk_text = :chunk_text WHERE id = :id"),
+                {"chunk_text": chunk_text, "id": row[0]},
+            )
             return int(row[0]), False
 
     inserted = await conn.execute(

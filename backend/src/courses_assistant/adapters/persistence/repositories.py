@@ -31,6 +31,7 @@ from courses_assistant.application.ports import (
     CatalogRepository,
     ChatRepository,
     CourseChunkRepository,
+    CourseRecommender,
     JobRepository,
     RefreshTokenRepository,
     UserRepository,
@@ -55,6 +56,7 @@ from courses_assistant.domain.models import (
     User,
 )
 from courses_assistant.domain.quiz import build_answer_key, grading_mode
+from courses_assistant.domain.recommender import CourseMatch
 
 
 def _to_session(orm: ChatSessionORM) -> ChatSession:
@@ -635,9 +637,12 @@ class SqlCourseChunkRepository(CourseChunkRepository):
                 ContentChunkORM.source_type,
                 LessonORM.title,
                 distance,
+                ContentChunkORM.course_id,
+                CourseORM.title,
             )
             .join(ContentChunkORM, ContentChunkORM.id == ChunkEmbeddingORM.chunk_id)
             .outerjoin(LessonORM, LessonORM.id == ContentChunkORM.lesson_id)
+            .outerjoin(CourseORM, CourseORM.id == ContentChunkORM.course_id)
             .where(*conditions)
             .order_by(distance)
             .limit(limit)
@@ -650,6 +655,52 @@ class SqlCourseChunkRepository(CourseChunkRepository):
                 source_type=row[2],
                 lesson=row[3],
                 distance=float(row[4]),
+                course_id=row[5],
+                course_title=row[6],
+            )
+            for row in result.all()
+        ]
+
+
+class SqlCourseRecommender(CourseRecommender):
+    def __init__(self, session: AsyncSession) -> None:
+        self._session = session
+
+    async def similar_courses(
+        self,
+        embedding: Sequence[float],
+        *,
+        model_name: str,
+        limit: int,
+    ) -> list[CourseMatch]:
+        distance = ChunkEmbeddingORM.embedding.cosine_distance(list(embedding))
+        best_distance = func.min(distance).label("best_distance")
+        stmt = (
+            select(
+                ContentChunkORM.course_id,
+                CourseORM.title,
+                CourseORM.description,
+                best_distance,
+            )
+            .join(ContentChunkORM, ContentChunkORM.id == ChunkEmbeddingORM.chunk_id)
+            .join(CourseORM, CourseORM.id == ContentChunkORM.course_id)
+            .where(
+                ChunkEmbeddingORM.model_name == model_name,
+                ContentChunkORM.source_type == "course_description",
+                ContentChunkORM.course_id.is_not(None),
+                CourseORM.is_published.is_(True),
+            )
+            .group_by(ContentChunkORM.course_id, CourseORM.title, CourseORM.description)
+            .order_by(best_distance)
+            .limit(limit)
+        )
+        result = await self._session.execute(stmt)
+        return [
+            CourseMatch(
+                course_id=row[0],
+                title=row[1],
+                description=row[2],
+                score=1.0 - float(row[3]),
             )
             for row in result.all()
         ]

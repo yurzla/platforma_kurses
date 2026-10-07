@@ -23,6 +23,7 @@ from courses_assistant.domain.models import (
     RetrievedChunk,
     User,
 )
+from courses_assistant.domain.recommender import CourseMatch
 
 
 class LLM(ABC):
@@ -165,6 +166,18 @@ class CourseChunkRepository(ABC):
     ) -> list[RetrievedChunk]: ...
 
 
+class CourseRecommender(ABC):
+    @abstractmethod
+    async def similar_courses(
+        self,
+        embedding: Sequence[float],
+        *,
+        model_name: str,
+        limit: int,
+    ) -> list[CourseMatch]:
+        """Возвращает курсы, ближайшие к вектору запроса (по course_description)."""
+
+
 class JobRepository(ABC):
     @abstractmethod
     async def add(self, session_id: int, question: str, message_id: str | None) -> QuestionJob: ...
@@ -231,6 +244,7 @@ class UnitOfWork(ABC):
     users: UserRepository
     catalog: CatalogRepository
     refresh_tokens: RefreshTokenRepository
+    recommender: CourseRecommender
 
     @abstractmethod
     async def __aenter__(self) -> UnitOfWork: ...

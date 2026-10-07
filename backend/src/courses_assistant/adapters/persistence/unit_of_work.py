@@ -10,6 +10,7 @@ from courses_assistant.adapters.persistence.repositories import (
     SqlCatalogRepository,
     SqlChatRepository,
     SqlCourseChunkRepository,
+    SqlCourseRecommender,
     SqlJobRepository,
     SqlRefreshTokenRepository,
     SqlUserRepository,
@@ -18,6 +19,7 @@ from courses_assistant.application.ports import (
     CatalogRepository,
     ChatRepository,
     CourseChunkRepository,
+    CourseRecommender,
     JobRepository,
     RefreshTokenRepository,
     UnitOfWork,
@@ -35,6 +37,7 @@ class SqlAlchemyUnitOfWork(UnitOfWork):
         self.users: UserRepository
         self.catalog: CatalogRepository
         self.refresh_tokens: RefreshTokenRepository
+        self.recommender: CourseRecommender
 
     async def __aenter__(self) -> SqlAlchemyUnitOfWork:
         self._session = self._session_factory()
@@ -44,6 +47,7 @@ class SqlAlchemyUnitOfWork(UnitOfWork):
         self.users = SqlUserRepository(self._session)
         self.catalog = SqlCatalogRepository(self._session)
         self.refresh_tokens = SqlRefreshTokenRepository(self._session)
+        self.recommender = SqlCourseRecommender(self._session)
         return self
 
     async def __aexit__(

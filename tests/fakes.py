@@ -13,6 +13,7 @@ from courses_assistant.application.ports import (
     CatalogRepository,
     ChatRepository,
     CourseChunkRepository,
+    CourseRecommender,
     Embedder,
     JobRepository,
     MessageBroker,
@@ -40,6 +41,7 @@ from courses_assistant.domain.models import (
     User,
 )
 from courses_assistant.domain.quiz import build_answer_key, grading_mode
+from courses_assistant.domain.recommender import CourseMatch
 
 
 @dataclass
@@ -52,6 +54,7 @@ class FakeStore:
     messages: dict[int, list[ChatMessage]] = field(default_factory=dict)
     jobs: dict[str, QuestionJob] = field(default_factory=dict)
     chunks: list[RetrievedChunk] = field(default_factory=list)
+    recommendations: list[CourseMatch] = field(default_factory=list)
     courses_detail: dict[int, CourseDetail] = field(default_factory=dict)
     answer_keys: dict[int, dict] = field(default_factory=dict)
     step_bodies: dict[int, str] = field(default_factory=dict)
@@ -150,6 +153,20 @@ class InMemoryCourseChunkRepository(CourseChunkRepository):
         limit: int,
     ) -> list[RetrievedChunk]:
         return self._store.chunks[:limit]
+
+
+class InMemoryCourseRecommender(CourseRecommender):
+    def __init__(self, store: FakeStore) -> None:
+        self._store = store
+
+    async def similar_courses(
+        self,
+        embedding: Sequence[float],
+        *,
+        model_name: str,
+        limit: int,
+    ) -> list[CourseMatch]:
+        return self._store.recommendations[:limit]
 
 
 class InMemoryUserRepository(UserRepository):
@@ -520,6 +537,7 @@ class InMemoryUnitOfWork(UnitOfWork):
         self.users = InMemoryUserRepository(store)
         self.catalog = InMemoryCatalogRepository(store)
         self.refresh_tokens = InMemoryRefreshTokenRepository(store)
+        self.recommender = InMemoryCourseRecommender(store)
 
     async def __aenter__(self) -> InMemoryUnitOfWork:
         return self

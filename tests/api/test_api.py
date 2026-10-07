@@ -111,7 +111,13 @@ async def test_full_ask_flow(client) -> None:
 
         store.chunks = [
             RetrievedChunk(
-                chunk_id=1, text="материал", source_type="theory", lesson="L", distance=0.1
+                chunk_id=1,
+                text="материал",
+                source_type="theory",
+                lesson="L",
+                distance=0.1,
+                course_id=10,
+                course_title="Python",
             )
         ]
         await container.handlers.process_question(

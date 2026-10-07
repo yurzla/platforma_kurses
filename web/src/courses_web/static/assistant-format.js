@@ -1,9 +1,13 @@
 (function () {
   "use strict";
 
+  function isPortalTarget(target) {
+    return target.charAt(0) === "/" && target.indexOf("//") === -1;
+  }
+
   function renderInline(text) {
     var span = document.createElement("span");
-    var pattern = /(\*\*([^*]+)\*\*|`([^`]+)`)/g;
+    var pattern = /(\*\*([^*]+)\*\*|`([^`]+)`|\[([^\]]+)\]\(\s*([^)\s]+)\s*\))/g;
     var last = 0;
     var match;
     while ((match = pattern.exec(text)) !== null) {
@@ -14,11 +18,19 @@
         var strong = document.createElement("strong");
         strong.textContent = match[2];
         span.appendChild(strong);
-      } else {
+      } else if (match[3] !== undefined) {
         var code = document.createElement("code");
         code.className = "chat-code-inline";
         code.textContent = match[3];
         span.appendChild(code);
+      } else if (isPortalTarget(match[5].trim())) {
+        var link = document.createElement("a");
+        link.className = "chat-link";
+        link.href = match[5].trim();
+        link.textContent = match[4];
+        span.appendChild(link);
+      } else {
+        span.appendChild(document.createTextNode(match[0]));
       }
       last = match.index + match[0].length;
     }

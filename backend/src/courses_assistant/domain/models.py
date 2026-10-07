@@ -99,6 +99,8 @@ class RetrievedChunk:
     source_type: str
     lesson: str | None
     distance: float
+    course_id: int | None = None
+    course_title: str | None = None
 
 
 @dataclass(slots=True)
