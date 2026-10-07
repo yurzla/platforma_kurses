@@ -133,6 +133,13 @@ def test_system_prompt_forbids_extra_courses() -> None:
     assert "рекомендуемые курсы оформляй ТОЛЬКО маркированным списком" in content
     assert "запрещено выводить курсы одной строкой через запятую" in content
 
+def test_system_prompt_requires_link_for_course_mention() -> None:
+    content = build_answer_messages("вопрос", "контекст")[0].content
+    assert "Любое упоминание курса" in content
+    assert "Markdown-ссылкой [«Название»](/courses/ID)" in content
+    assert "Не упоминай курс без ссылки" in content
+
+
 def test_build_rewrite_prompt_without_history_returns_question() -> None:
     assert build_rewrite_prompt("вопрос", []) == "вопрос"
 

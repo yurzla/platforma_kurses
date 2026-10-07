@@ -83,7 +83,10 @@ ensure the «Источники:» block starts on its own line, splitting the l
 it after other text on the same line, and placing a blank line before it. The system SHALL instruct
 the model to present recommended courses only as a Markdown bullet list, one course per line as
 `- [«Название»](/courses/ID) — краткое описание`, and never as a comma-separated enumeration of
-course links.
+course links. The system SHALL further instruct the model that every mention of a course — in the
+answer text, in a list, or in the «Источники:» block — MUST be a Markdown link `[«Название»](/courses/ID)`
+whose title is taken verbatim from the provided data, and that a course MUST NOT be mentioned without
+such a link.
 
 #### Scenario: Answer formatted in Markdown
 - **WHEN** the assistant generates an answer
@@ -92,6 +95,12 @@ course links.
 #### Scenario: Course reference uses a Markdown link
 - **WHEN** the assistant refers to a platform course in its answer
 - **THEN** the prompt instructs the model to use a Markdown link to that course page
+
+#### Scenario: Every course mention is a Markdown link
+- **WHEN** the assistant mentions a course in the answer text, in a list, or in the «Источники:» block
+- **THEN** the prompt instructs the model to format that mention as a Markdown link `[«Название»](/courses/ID)`
+- **AND** the prompt instructs the model to take the link title verbatim from the provided data
+- **AND** the prompt forbids mentioning a course without a Markdown link
 
 #### Scenario: Blocks and list items separated by blank lines
 - **WHEN** the assistant generates an answer with several blocks or list items
