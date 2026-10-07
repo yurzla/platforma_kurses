@@ -7,6 +7,9 @@ RAG-ассистент образовательной платформы. uv-wor
 (Redis Streams), HTTP отдаёт `202` + job_id. PostgreSQL+pgvector, GigaChat (LLM), Ollama
 (embeddings). Подробности: `README.md`, схема БД: `docs/DB_SCHEMA.md`.
 
+**Разработка ведётся по OpenSpec.** Любое изменение кода проходит через OpenSpec-воркфлоу
+(proposal → specs/design → tasks → apply → archive). Правки кода без OpenSpec-изменения не допускаются.
+
 ## Команды (всё через uv)
 
 ```bash
@@ -78,8 +81,9 @@ uv run python -m courses_assistant.scripts.renumber_steps       # позиции
 
 ## OpenSpec (обязательно для изменений поведения)
 
-Поведение описано в `openspec/specs/<capability>/spec.md`; используй навыки/команды `.opencode`
-(`openspec-propose` → `openspec-apply-change` → `openspec-archive-change`).
+Разработка ведётся по OpenSpec; поведение описано в `openspec/specs/<capability>/spec.md`.
+Любые правки кода — только после оформления OpenSpec-изменения и строго по нему. Навыки/команды
+`.opencode`: `openspec-propose` → `openspec-apply-change` → `openspec-archive-change`.
 
 ```bash
 openspec new change <name>                                   # НЕ `openspec change new`
