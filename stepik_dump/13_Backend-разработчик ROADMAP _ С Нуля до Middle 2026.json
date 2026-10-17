@@ -1,0 +1,1004 @@
+{
+  "course_id": 13,
+  "course_title": "Backend-разработчик ROADMAP | С Нуля до Middle 2026",
+  "status": "review_template",
+  "source_note": "Generated from edu_platform_kurses.sql. The database contains the questions but no choices or correct-answer keys.",
+  "choice_questions": [
+    {
+      "step_id": 1939,
+      "question_html": "<h2>Базы данных (ACID)</h2>\n\n<p>Что гарантирует свойство <strong>Изоляция (Isolation)</strong> в транзакциях ACID?</p>",
+      "answer_options": [
+        "Что параллельные транзакции не видят промежуточных изменений друг друга и не влияют на результаты друг друга",
+        "Что транзакция либо выполняется полностью, либо не выполняется вовсе",
+        "Что после успешного завершения транзакции изменения сохраняются даже при сбое системы",
+        "Что данные в базе всегда соответствуют бизнес-правилам и ограничениям"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1935,
+      "question_html": "<h2>Python (Изменяемость и аргументы по умолчанию)</h2>\n\n<p>Что <strong>выведет </strong>следующий код при <strong>двукратном вызове</strong> функции <code>add_item</code> без передачи второго аргумента?</p>\n\n<pre><code class=\"language-python\">def add_item(item, target_list=[]):\n    target_list.append(item)\n    return target_list\n\nprint(add_item(1))\nprint(add_item(2))</code></pre>",
+      "answer_options": [
+        "[1, 2]\n[1, 2]",
+        "[1]\n[2]",
+        "[1]\n[1, 2]",
+        "TypeError: mutable default argument"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1948,
+      "question_html": "<h2>Архитектура (Message Brokers)</h2>\n\n<p>При проектировании асинхронной системы на базе RabbitMQ или Kafka вы выбрали гарантию доставки «At-least-once» (как минимум один раз). Какую архитектурную проблему вы обязаны решить на стороне потребителя (consumer)?</p>",
+      "answer_options": [
+        "Идемпотентность обработки сообщений, чтобы повторная доставка не приводила к дублированию эффектов",
+        "Сжатие сообщений для экономии места в очереди",
+        "Шифрование сообщений при передаче между брокером и потребителем",
+        "Автоматическое масштабирование consumer-группы при росте нагрузки"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2042,
+      "question_html": "<h2>Базы данных (JPA/Hibernate и блокировки)</h2>\n\n<p>Вы разрабатываете систему бронирования билетов, где высока вероятность одновременных попыток изменить одну и ту же запись (высокая конкуренция / high contention). Использование оптимистичных блокировок (<code>@Version</code>) приводит к частым <code>OptimisticLockException</code> и бесконечным ретраям. Какое решение наиболее целесообразно в данном сценарии?</p>",
+      "answer_options": [
+        "Перейти на пессимистичную блокировку (например, SELECT ... FOR UPDATE или @Lock(LockModeType.PESSIMISTIC_WRITE)) для критичных операций",
+        "Увеличить размер пула соединений, чтобы ретраи выполнялись быстрее",
+        "Отключить @Version и разрешить последнюю запись побеждать (last write wins)",
+        "Перенести проверку версии на уровень приложения и убрать её из БД"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2013,
+      "question_html": "<h2>Архитектура (Интерфейсы)</h2>\n\n<p>Согласно идиоматичному подходу к проектированию в Go, <strong>кто</strong> и <strong>где</strong> должен определять интерфейс?</p>",
+      "answer_options": [
+        "Потребитель интерфейса, в том пакете, где он используется",
+        "Реализующий тип, в том же файле, где объявлена структура",
+        "Только стандартная библиотека, чтобы избежать дублирования",
+        "Отдельный пакет models, чтобы все интерфейсы были в одном месте"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2018,
+      "question_html": "<h2>Наблюдаемость (Profiling)</h2>\n\n<p>Какой стандартный инструмент в экосистеме Go используется для поиска узких мест в потреблении CPU и памяти (анализ кучи, блокировок) в работающем приложении?</p>",
+      "answer_options": [
+        "pprof (net/http/pprof и runtime/pprof)",
+        "golangci-lint",
+        "go vet",
+        "delve (dlv)"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2034,
+      "question_html": "<h2>Исключения (Checked vs Unchecked)</h2>\n\n<p>Какое из следующих исключений является <strong>Checked Exception</strong> (проверяемым), которое компилятор обязывает либо обработать в <code>try-catch</code>, либо объявить в сигнатуре метода через <code>throws</code>?</p>",
+      "answer_options": [
+        "IOException",
+        "NullPointerException",
+        "IllegalArgumentException",
+        "ArithmeticException"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1955,
+      "question_html": "<h2>Системный дизайн (CAP-теорема)</h2>\n\n<p>Согласно CAP-теореме, при возникновении сетевого разделения (Partition tolerance, P) между узлами распределенной системы, разработчик вынужден сделать выбор между:</p>",
+      "answer_options": [
+        "Согласованностью (Consistency) и доступностью (Availability)",
+        "Скоростью (Performance) и стоимостью (Cost)",
+        "Шардированием (Sharding) и репликацией (Replication)",
+        "Синхронностью (Sync) и асинхронностью (Async)"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1956,
+      "question_html": "<h2>Базы данных (Пул соединений)</h2>\n\n<p>Почему в продакшене категорически не рекомендуется создавать новое подключение к базе данных (PostgreSQL/MySQL) на каждый HTTP-запрос, и зачем используют пулы соединений (например, SQLAlchemy QueuePool или PgBouncer)?</p>",
+      "answer_options": [
+        "Создание соединения — дорогая операция (TCP, TLS, аутентификация), пул переиспользует уже открытые соединения и ограничивает их число",
+        "Пул соединений нужен только для шифрования трафика между приложением и БД",
+        "Без пула невозможно использовать транзакции в PostgreSQL",
+        "Пул соединений автоматически шардирует данные между репликами"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1937,
+      "question_html": "<h2>Архитектура и Concurrency (GIL)</h2>\n\n<p>Какую главную проблему для многопоточных (threading) Python-приложений создает GIL (Global Interpreter Lock) в CPython?</p>",
+      "answer_options": [
+        "Не позволяет нескольким потокам одновременно выполнять Python-байткод на разных ядрах CPU, что мешает CPU-bound многопоточности",
+        "Запрещает использовать потоки в Python вообще",
+        "Приводит к обязательному использованию asyncio вместо threading",
+        "Блокирует работу сборщика мусора во время выполнения потоков"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2048,
+      "question_html": "<h2>Наблюдаемость (Observability в Kubernetes)</h2>\n\n<p>При развертывании Spring Boot приложения в Kubernetes с использованием Spring Actuator, в чем ключевое различие между <code>livenessProbe</code> и <code>readinessProbe</code>?</p>",
+      "answer_options": [
+        "livenessProbe определяет, нужно ли перезапустить контейнер; readinessProbe — готов ли он принимать трафик",
+        "livenessProbe проверяет только порт, readinessProbe — только БД",
+        "readinessProbe используется только при деплое, livenessProbe — только в рантайме",
+        "livenessProbe и readinessProbe полностью взаимозаменяемы"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2016,
+      "question_html": "<h2>Обработка ошибок (Контекст и трассировка)</h2>\n\n<p>Почему при возврате ошибки из нижних слоев приложения (например, из репозитория) в Go принято использовать <code>fmt.Errorf(\"failed to get user: %w\", err)</code> вместо простого <code>return err</code>?</p>",
+      "answer_options": [
+        "Чтобы добавить контекст и сохранить исходную ошибку в цепочке для errors.Is/errors.As",
+        "Чтобы ошибка автоматически логировалась в stdout",
+        "Чтобы избежать паники при возврате ошибки",
+        "Чтобы компилятор не выдавал предупреждение о необработанной ошибке"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2015,
+      "question_html": "<h2>Конкурентность (Ограничение параллелизма)</h2>\n\n<p>Вам нужно обработать 10 000 задач, но вы не хотите \"положить\" базу данных, создав 10 000 горутин одновременно. Какой современный (Go 1.21+) и идиоматичный способ ограничить степень параллелизма?</p>",
+      "answer_options": [
+        "Использовать errgroup с SetLimit или семафор на буферизованном канале",
+        "Запустить 10 000 горутин и полагаться на планировщик Go",
+        "Использовать sync.Mutex вокруг каждой задачи",
+        "Увеличить GOMAXPROCS до 10 000"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2050,
+      "question_html": "<h2>Современная Java (Virtual Threads, Java 21)</h2>\n\n<p>В Java 21 виртуальные потоки (Virtual Threads / Project Loom) стали стабильной фичей. В чем их главное архитектурное преимущество перед традиционными платформенными потоками (Platform Threads) для I/O-bound задач (например, HTTP-запросы, JDBC)?</p>",
+      "answer_options": [
+        "Позволяют создавать сотни тысяч дешевых потоков, которые не блокируют ОС-потоки во время I/O",
+        "Автоматически распараллеливают CPU-bound задачи на все ядра",
+        "Полностью заменяют реактивное программирование и WebFlux",
+        "Убирают необходимость в пулах соединений к БД"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1938,
+      "question_html": "<h2>Веб-протоколы (HTTP и REST)</h2>\n\n<p>Какой HTTP-метод является идемпотентным и предназначен для <strong>полной</strong> замены ресурса по известному URI?</p>",
+      "answer_options": [
+        "PUT",
+        "POST",
+        "PATCH",
+        "CONNECT"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1928,
+      "question_html": "<h3>Какой главный риск использования ИИ для новичка?</h3>",
+      "answer_options": [
+        "Копирование кода без понимания, что ведет к иллюзии компетентности и пробелам в знаниях",
+        "ИИ всегда генерирует нерабочий код",
+        "ИИ запрещено использовать в коммерческой разработке",
+        "ИИ увеличивает время обучения в 10 раз"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2011,
+      "question_html": "<h2>Конкурентность (Утечки горутин)</h2>\n\n<p>Что произойдет с горутиной, если она заблокируется на чтении из небуферизованного канала, в который никто никогда не запишет данные, и при этом в ней не используется <code>context</code> с таймаутом?</p>",
+      "answer_options": [
+        "Она останется заблокированной навсегда — это утечка горутины",
+        "Она автоматически завершится через 30 секунд",
+        "Go runtime обнаружит это и вызовет panic",
+        "Она будет перезапущена планировщиком"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1927,
+      "question_html": "<h3>Какой язык программирования вы выбрали (больше нравится)?</h3>",
+      "answer_options": [
+        "Python",
+        "PHP",
+        "Go",
+        "Java"
+      ],
+      "suggested_correct_option_index": null,
+      "needs_review": true
+    },
+    {
+      "step_id": 2001,
+      "question_html": "<h2>Интерфейсы (Неявная реализация)</h2>\n\n<p>Как в Go структура <code>User</code> реализует интерфейс <code>Printer</code>?</p>\n\n<pre><code class=\"language-go\">type Printer interface {\n    Print()\n}\n\ntype User struct {\n    Name string\n}</code></pre>",
+      "answer_options": [
+        "Нужно добавить метод Print() к User — реализация неявная, без ключевого слова implements",
+        "Нужно объявить type User struct implements Printer",
+        "Нужно зарегистрировать User в реестре интерфейсов через init()",
+        "Нужно использовать дженерики: type User[T Printer] struct"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1975,
+      "question_html": "<h2>Работа с сессиями и HTTP</h2>\n\n<p>Как PHP по умолчанию связывает HTTP-запрос конкретного пользователя с его данными в суперглобальном массиве <code>$_SESSION</code>?</p>",
+      "answer_options": [
+        "Через cookie PHPSESSID, который хранит идентификатор сессии",
+        "Через заголовок Authorization: Bearer <session_id>",
+        "Через скрытое поле формы session_id в каждом запросе",
+        "Через IP-адрес пользователя"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1929,
+      "question_html": "<h3>С чего лучше всего начать своё обучение?</h3>",
+      "answer_options": [
+        "С выбора одного языка и базового синтаксиса + практики",
+        "С изучения Kubernetes и микросервисов",
+        "С прочтения всех книг по архитектуре",
+        "С изучения 5 языков одновременно"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1950,
+      "question_html": "<h2>Кэширование (Production)</h2>\n\n<p>Что такое «Cache Stampede» (или «Dog-piling») и как с ним борются в высоконагруженных системах?</p>",
+      "answer_options": [
+        "Это ситуация, когда множество запросов одновременно пытаются пересчитать один и тот же устаревший ключ; борются через mutex/локи, раннее обновление, jitter TTL",
+        "Это переполнение Redis по памяти; борются увеличением maxmemory",
+        "Это атака на кэш; борются WAF",
+        "Это потеря ключей при рестарте Redis; борются AOF"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2030,
+      "question_html": "<h2>Коллекции (Контракт equals и hashCode)</h2>\n\n<p>Вы создали класс <code>User</code> и переопределили в нем метод <code>equals()</code>, но забыли переопределить <code>hashCode()</code>. Что произойдет, если вы попытаетесь использовать объекты <code>User</code> в качестве ключей в <code>HashMap</code>?</p>",
+      "answer_options": [
+        "HashMap может не найти ключ: равные по equals объекты могут попасть в разные бакеты из-за разных hashCode",
+        "HashMap выбросит IllegalStateException",
+        "HashMap автоматически вызовет equals для всех ключей",
+        "Ничего не изменится — HashMap использует только equals"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2033,
+      "question_html": "<h2>Spring Boot (Внедрение зависимостей)</h2>\n\n<p>Какой способ внедрения зависимостей (Dependency Injection) в Spring Boot считается <strong>наиболее рекомендуемым</strong> с точки зрения архитектуры и тестируемости?</p>",
+      "answer_options": [
+        "Внедрение через конструктор (constructor injection)",
+        "Внедрение через поле с @Autowired",
+        "Внедрение через setter",
+        "Внедрение через статические фабрики"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1952,
+      "question_html": "<h2>API Design (Идемпотентность)</h2>\n\n<p>Вы разрабатываете REST API для создания платежа (метод <code>POST /payments</code>). Клиент может случайно отправить один и тот же запрос дважды из-за таймаута сети. Какое решение является отраслевым стандартом для предотвращения двойного списания?</p>",
+      "answer_options": [
+        "Idempotency-Key: клиент генерирует уникальный ключ, сервер обрабатывает повторно только один раз",
+        "Увеличить таймаут на клиенте",
+        "Запретить повторные POST-запросы на уровне Nginx",
+        "Использовать GET вместо POST"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2007,
+      "question_html": "<h2>Инициализация пакета (<code>init</code>)</h2>\n\n<p>Когда и сколько раз выполняется функция <code>init()</code> в пакете Go?</p>",
+      "answer_options": [
+        "Один раз при инициализации пакета, до main()",
+        "При каждом импорте пакета",
+        "При каждом вызове функции из пакета",
+        "Только при явном вызове init()"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2000,
+      "question_html": "<h2>Конкурентность (Каналы)</h2>\n\n<p>Что произойдет при выполнении этого кода?</p>\n\n<pre><code class=\"language-go\">package main\n\nfunc main() {\n    ch := make(chan int)\n    ch &lt;- 42\n}</code></pre>",
+      "answer_options": [
+        "Deadlock: отправка в небуферизованный канал блокируется, так как нет получателя",
+        "Код успешно завершится, значение потеряется",
+        "Паника: cannot send to nil channel",
+        "Компилятор не соберет код"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2036,
+      "question_html": "<h2>Современная Java (Records)</h2>\n\n<p>Для чего предназначены <code>record</code> (записи), появившиеся как стабильная фича в Java 16?</p>",
+      "answer_options": [
+        "Для компактного объявления неизменяемых классов-носителей данных с автоматическими equals/hashCode/toString",
+        "Для создания изменяемых POJO с сеттерами",
+        "Для замены интерфейсов",
+        "Для организации многопоточности"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1941,
+      "question_html": "<h2>ООП в Python (Магические методы)</h2>\n\n<p>В чем разница между методами <code>__new__</code> и <code>__init__</code> при создании экземпляра класса?</p>",
+      "answer_options": [
+        "__new__ создает объект и возвращает его, __init__ инициализирует уже созданный объект",
+        "__new__ вызывается после __init__",
+        "__new__ используется только для классов-наследников object",
+        "Разницы нет, это синонимы"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1985,
+      "question_html": "<h2>Архитектура (Event-Driven и DDD)</h2>\n\n<p>В предметно-ориентированном проектировании (DDD) для чего используются <strong>Доменные события</strong> (Domain Events)?</p>",
+      "answer_options": [
+        "Для фиксации значимых изменений в домене и асинхронной реакции других частей системы",
+        "Для логирования HTTP-запросов",
+        "Для управления транзакциями БД",
+        "Для маршрутизации запросов между микросервисами"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1983,
+      "question_html": "<h2>Очереди сообщений (Message Brokers)</h2>\n\n<p>Для чего в архитектуре очередей (например, RabbitMQ) используется концепция <strong>Dead Letter Queue (DLQ)</strong>?</p>",
+      "answer_options": [
+        "Для сохранения сообщений, которые не удалось обработать, чтобы их можно было проанализировать и переобработать",
+        "Для ускорения обработки сообщений",
+        "Для шифрования сообщений",
+        "Для автоматического масштабирования consumer-ов"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1976,
+      "question_html": "<h2>Базы данных (Транзакции в PDO)</h2>\n\n<p>Какая последовательность действий с объектом PDO является корректной и безопасной для выполнения транзакции?</p>",
+      "answer_options": [
+        "beginTransaction() → выполнение запросов → commit(), а при ошибке — rollBack()",
+        "commit() → beginTransaction() → rollBack()",
+        "beginTransaction() → rollBack() → commit()",
+        "execute() → beginTransaction() → commit()"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2038,
+      "question_html": "<h2>Инструменты сборки (Maven)</h2>\n\n<p>В файле <code>pom.xml</code> зависимость объявлена с тегом <code>&lt;scope&gt;test&lt;/scope&gt;</code> (например, JUnit или Mockito). Что это означает?</p>",
+      "answer_options": [
+        "Зависимость доступна только при компиляции и запуске тестов, но не попадает в runtime/артефакт",
+        "Зависимость доступна только в runtime",
+        "Зависимость обязательна для компиляции основного кода",
+        "Зависимость будет скачана только при первом тесте"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1988,
+      "question_html": "<h2>Архитектура (Stateless и масштабирование)</h2>\n\n<p>Вы масштабируете PHP-приложение (например, на Symfony или Laravel) на несколько серверов за балансировщиком нагрузки (Load Balancer). Какое архитектурное изменение является <strong>обязательным</strong> для корректной работы аутентификации пользователей?</p>",
+      "answer_options": [
+        "Вынести сессии в общее хранилище (Redis/БД) или перейти на stateless-токены (JWT)",
+        "Увеличить memory_limit на каждом сервере",
+        "Включить sticky sessions на балансировщике и больше ничего не менять",
+        "Хранить сессии в файлах на каждом сервере"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2005,
+      "question_html": "<h2>Контекст (Context)</h2>\n\n<p>Какова основная цель передачи <code>context.Context</code> в качестве первого аргумента функций, работающих с сетью или базами данных?</p>",
+      "answer_options": [
+        "Управление отменой, таймаутами и передачей request-scoped данных по цепочке вызовов",
+        "Автоматическое логирование всех запросов",
+        "Кэширование результатов запросов",
+        "Шифрование данных при передаче"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1936,
+      "question_html": "<h2>Структуры данных (Сложность алгоритмов)</h2>\n\n<p>Какова средняя временная сложность (Big O) операции поиска значения по ключу в словаре (<code>dict</code>) Python?</p>",
+      "answer_options": [
+        "O(1)",
+        "O(log n)",
+        "O(n)",
+        "O(n log n)"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1986,
+      "question_html": "<h2>Продакшн (Профилирование)</h2>\n\n<p>Какой подход является наиболее эффективным и безопасным для поиска узких мест (bottlenecks) в производительности PHP-скрипта в продакшене?</p>",
+      "answer_options": [
+        "Использовать APM/профайлер (Blackfire, Tideways) с минимальным оверхедом и выборочным семплированием",
+        "Включить xdebug с режимом profile на всех запросах",
+        "Добавить var_dump в горячие точки кода",
+        "Замерять время только через microtime(true) в начале и конце скрипта"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1944,
+      "question_html": "<h2>Контейнеризация (Docker)</h2>\n\n<p>Для чего нужен файл <code>.dockerignore</code> в корне проекта при сборке Docker-образа?</p>",
+      "answer_options": [
+        "Чтобы исключить ненужные файлы из контекста сборки и уменьшить размер образа/ускорить сборку",
+        "Чтобы указать, какие контейнеры игнорировать при docker ps",
+        "Чтобы запретить запуск контейнера от root",
+        "Чтобы автоматически удалять старые образы"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1942,
+      "question_html": "<h2>Тестирование (Unit-тесты)</h2>\n\n<p>Какова основная цель использования \"моков\" (mocks) в модульном тестировании (например, в библиотеке <code>unittest.mock</code> или <code>pytest-mock</code>)?</p>",
+      "answer_options": [
+        "Изолировать тестируемый код от внешних зависимостей (БД, API, времени) и контролировать их поведение",
+        "Ускорить выполнение тестов за счет кэширования",
+        "Автоматически генерировать тестовые данные",
+        "Заменить интеграционные тесты"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1982,
+      "question_html": "<h2>Базы данных (Уровни изоляции транзакций)</h2>\n\n<p>В MySQL (InnoDB) уровень изоляции транзакций по умолчанию — <code>REPEATABLE READ</code>. Какую конкретную аномалию предотвращает этот уровень по сравнению с <code>READ COMMITTED</code>, гарантируя, что повторное чтение той же строки в рамках одной транзакции вернет те же данные, даже если другая транзакция изменила и закоммитила их?</p>",
+      "answer_options": [
+        "Неповторяющееся чтение (non-repeatable read)",
+        "Грязное чтение (dirty read)",
+        "Фантомное чтение (phantom read)",
+        "Потерянное обновление (lost update)"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2004,
+      "question_html": "<h2>Карты (Maps) и конкурентность</h2>\n\n<p>Что произойдет, если две разные горутины попытаются одновременно записать данные в одну и ту же стандартную карту (<code>map</code>) в Go?</p>",
+      "answer_options": [
+        "Runtime обнаружит data race и вызовет fatal error (concurrent map writes)",
+        "Записи выполнятся последовательно, ошибки не будет",
+        "Вторая запись молча перезапишет первую",
+        "Компилятор запретит такой код"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2045,
+      "question_html": "<h2>Многопоточность (ThreadPoolExecutor)</h2>\n\n<p>Вы настроили <code>ThreadPoolExecutor</code> с параметрами: <code>corePoolSize = 5</code>, <code>maximumPoolSize = 10</code>, и очередью <code>LinkedBlockingQueue</code> емкостью 100. Что произойдет, если одновременно подать на выполнение 116 задач?</p>",
+      "answer_options": [
+        "5 задач выполняются, 100 попадут в очередь, 10 задач будут созданы сверх core до max, а 1 задача будет отклонена (RejectedExecutionException)",
+        "Все 116 задач выполнятся параллельно",
+        "Будет создано 116 потоков",
+        "Задачи будут бесконечно ждать в очереди"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1940,
+      "question_html": "<h2>Git (Контроль версий)</h2>\n\n<p>В чем ключевое отличие <code>git rebase</code> от <code>git merge</code> при интеграции изменений из ветки <code>feature</code> в ветку <code>main</code>?</p>",
+      "answer_options": [
+        "Rebase переписывает историю, перенося коммиты поверх main; merge создает новый коммит слияния, сохраняя историю",
+        "Rebase создает merge-коммит, а merge переписывает историю",
+        "Они полностью идентичны",
+        "Rebase работает только с удаленными ветками"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1971,
+      "question_html": "<h2>Современный PHP (Nullsafe оператор)</h2>\n\n<p>Для чего предназначен оператор <code>?-&gt;</code> (nullsafe operator), добавленный в PHP 8.0?</p>",
+      "answer_options": [
+        "Для безопасного вызова методов/свойств, не выбрасывая ошибку, если объект null (возвращает null)",
+        "Для приведения типов к null",
+        "Для объявления nullable-типов в сигнатурах",
+        "Для сравнения с null без ==="
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1969,
+      "question_html": "<h2>Безопасность (SQL-инъекции)</h2>\n\n<p>Какой подход является <strong>единственно надежным</strong> стандартом для защиты от SQL-инъекций при работе с базой данных через PDO в PHP?</p>",
+      "answer_options": [
+        "Подготовленные выражения (prepared statements) с параметрами (bindValue/bindParam)",
+        "Экранирование через addslashes()",
+        "Использование htmlspecialchars()",
+        "Замена кавычек через str_replace()"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1943,
+      "question_html": "<h2>Современный Python (Type Hinting)</h2>\n\n<p>Какой из вариантов является корректной и современной (Python 3.9+) аннотацией типов для функции, которая принимает список целых чисел и возвращает строку?</p>",
+      "answer_options": [
+        "def f(nums: list[int]) -> str: ...",
+        "def f(nums: List[int]) -> String: ...",
+        "def f(nums: list) -> str: ...",
+        "def f(nums: [int]) -> str: ..."
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1973,
+      "question_html": "<h2>ООП (Трейты)</h2>\n\n<p>Какую основную проблему решают трейты (<code>trait</code>) в PHP?</p>",
+      "answer_options": [
+        "Позволяют переиспользовать методы в разных классах без наследования (обход одиночного наследования)",
+        "Заменяют интерфейсы",
+        "Обеспечивают множественное наследование классов",
+        "Автоматически сериализуют объекты"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1949,
+      "question_html": "<h2>Concurrency (Asyncio)</h2>\n\n<p>Что произойдет, если внутри асинхронной функции (<code>async def</code>) выполнить тяжелую синхронную CPU-bound операцию (например, <code>time.sleep(5)</code> или обработку большого массива данных в цикле)?</p>",
+      "answer_options": [
+        "Заблокируется event loop, и все другие корутины не смогут выполняться до завершения операции",
+        "Операция выполнится в отдельном потоке автоматически",
+        "Python выбросит исключение",
+        "Корутина будет приостановлена, а event loop продолжит работу"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2029,
+      "question_html": "<h2>Core Java (Строки и пул строк)</h2>\n\n<p>Что выведет следующий код?</p>\n\n<pre><code class=\"language-java\">String s1 = \"Java\";\nString s2 = new String(\"Java\");\nString s3 = s2.intern();\n\nSystem.out.println(s1 == s2);\nSystem.out.println(s1 == s3);</code></pre>",
+      "answer_options": [
+        "false\nfalse",
+        "true\ntrue",
+        "false\ntrue",
+        "true\nfalse"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 2012,
+      "question_html": "<h2>Базы данных (Пул соединений)</h2>\n\n<p>Каково значение по умолчанию для <code>MaxOpenConns</code> в стандартном пакете <code>database/sql</code> и какую опасность это несет в продакшене?</p>",
+      "answer_options": [
+        "0 (неограниченно) — может привести к исчерпанию соединений БД и отказу сервиса",
+        "10 — слишком мало для продакшена",
+        "100 — слишком много для продакшена",
+        "-1 — пул отключен"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1987,
+      "question_html": "<h2>Базы данных (Селективность индексов)</h2>\n\n<p>Почему добавление индекса на поле <code>is_published</code> (типа BOOLEAN или TINYINT, где значения распределены примерно 50/50 или 90/10) в большой таблице часто не ускоряет, а замедляет выполнение <code>SELECT</code> запросов в PostgreSQL или MySQL?</p>",
+      "answer_options": [
+        "Низкая селективность: планировщик все равно выбирает Seq Scan, а индекс добавляет накладные расходы на поддержку и вставку",
+        "Индексы на BOOLEAN запрещены в PostgreSQL",
+        "MySQL не умеет использовать такие индексы",
+        "Индекс всегда ускоряет SELECT"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1947,
+      "question_html": "<h2>Базы данных (Индексация)</h2>\n\n<p>В PostgreSQL создан составной B-Tree индекс по полям <code>(last_name, first_name, age)</code>. Какой из следующих запросов <strong>НЕ</strong> сможет эффективно использовать этот индекс для поиска (произойдет Full Scan или сканирование только части индекса)?</p>",
+      "answer_options": [
+        "WHERE age = 30",
+        "WHERE last_name = 'Ivanov'",
+        "WHERE last_name = 'Ivanov' AND first_name = 'Ivan'",
+        "WHERE last_name = 'Ivanov' AND first_name = 'Ivan' AND age = 30"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2049,
+      "question_html": "<h2>Архитектура (Circuit Breaker)</h2>\n\n<p>Какую главную проблему решает паттерн \"Circuit Breaker\" (Автоматический выключатель, например, Resilience4j) при взаимодействии микросервисов?</p>",
+      "answer_options": [
+        "Предотвращает каскадные отказы, быстро возвращая ошибку при недоступности зависимости и давая ей время восстановиться",
+        "Шифрует трафик между сервисами",
+        "Балансирует нагрузку между инстансами",
+        "Автоматически масштабирует сервис"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2010,
+      "question_html": "<h2>Продакшн (Graceful Shutdown)</h2>\n\n<p>Какой подход является корректным и безопасным для остановки HTTP-сервера в Go при получении сигнала завершения (например, SIGTERM) в продакшене?</p>",
+      "answer_options": [
+        "Вызвать server.Shutdown(ctx) с таймаутом, дождаться завершения активных запросов, затем закрыть ресурсы",
+        "Сразу вызвать os.Exit(0)",
+        "Закрыть listener без ожидания активных запросов",
+        "Проигнорировать сигнал и положиться на убийство процесса"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1953,
+      "question_html": "<h2>Архитектура (Clean/Hexagonal Architecture)</h2>\n\n<p>Каково главное правило зависимостей (Dependency Rule) в Чистой архитектуре (Clean Architecture) или Гексагональной архитектуре?</p>",
+      "answer_options": [
+        "Зависимости направлены внутрь: внутренние слои (domain/use cases) не знают о внешних (БД, HTTP, UI)",
+        "Зависимости направлены наружу: domain зависит от инфраструктуры",
+        "Все слои могут зависеть друг от друга без ограничений",
+        "Зависимости разрешены только через глобальные синглтоны"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2044,
+      "question_html": "<h2>Продакшн (JVM и утечки памяти)</h2>\n\n<p>Какая из перечисленных ситуаций является наиболее частой причиной утечки памяти (Memory Leak) в долгоживущем Java-приложении?</p>",
+      "answer_options": [
+        "Коллекции (например, статические Map/List), которые бесконечно накапливают объекты и не очищаются",
+        "Использование примитивов вместо оберток",
+        "Слишком частый вызов System.gc()",
+        "Использование final-полей"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1981,
+      "question_html": "<h2>Продакшн (Производительность PHP)</h2>\n\n<p>Какую основную задачу решает расширение <strong>OPcache</strong> в продакшен-окружении PHP, и почему его отключение резко снижает производительность?</p>",
+      "answer_options": [
+        "Кэширует скомпилированный байткод, избавляя от повторной компиляции скриптов на каждом запросе",
+        "Кэширует результаты SQL-запросов",
+        "Сжимает ответы HTTP",
+        "Управляет сессиями пользователей"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2002,
+      "question_html": "<h2>Указатели и методы (Receivers)</h2>\n\n<p>Почему в следующем коде метод <code>Increment</code> не изменяет поле <code>Count</code> структуры <code>Counter</code>?</p>\n\n<pre><code class=\"language-go\">type Counter struct {\n    Count int\n}\n\nfunc (c Counter) Increment() {\n    c.Count++\n}</code></pre>",
+      "answer_options": [
+        "Получатель (receiver) передан по значению — метод работает с копией структуры",
+        "Поле Count объявлено без указателя",
+        "В Go нельзя изменять поля структур в методах",
+        "Нужно использовать ключевое слово this"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1972,
+      "question_html": "<h2>Экосистема (Composer и PSR)</h2>\n\n<p>За что именно отвечает стандарт <strong>PSR-4</strong> в современной PHP-разработке?</p>",
+      "answer_options": [
+        "За правила автозагрузки классов по namespace и структуре директорий",
+        "За стиль оформления кода",
+        "За интерфейс логирования",
+        "За HTTP-клиент"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1968,
+      "question_html": "<h2>ООП (Наследование и Интерфейсы)</h2>\n\n<p>В чем заключается ключевое ограничение наследования в PHP при использовании абстрактных классов и интерфейсов?</p>",
+      "answer_options": [
+        "Класс может наследовать только один абстрактный класс, но реализовывать много интерфейсов",
+        "Класс может наследовать много абстрактных классов",
+        "Интерфейсы могут содержать реализацию методов до PHP 8.0",
+        "Абстрактные классы нельзя использовать с трейтами"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1954,
+      "question_html": "<h2>Продакшн (12-Factor App)</h2>\n\n<p>Согласно методологии <strong>Twelve-Factor</strong> <strong>App</strong>, как правильно обрабатывать логи (logs) в <strong>современном облачном</strong> приложении?</p>",
+      "answer_options": [
+        "Писать логи в stdout/stderr как поток событий, а сбор и маршрутизацию отдать окружению",
+        "Писать логи только в файлы на диске",
+        "Хранить логи в базе данных приложения",
+        "Отправлять логи напрямую в Telegram"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2037,
+      "question_html": "<h2>Базы данных (JPA/Hibernate)</h2>\n\n<p>Что такое проблема <strong>N+1</strong> в Hibernate/JPA и как её чаще всего решают?</p>",
+      "answer_options": [
+        "Это выполнение 1 запроса для списка + N запросов для связанных сущностей; решают через JOIN FETCH, @EntityGraph или @BatchSize",
+        "Это выполнение N+1 транзакций; решают через @Transactional",
+        "Это ошибка в пуле соединений; решают увеличением пула",
+        "Это проблема кэша второго уровня; решают отключением кэша"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2046,
+      "question_html": "<h2>Распределенные системы (Идемпотентность)</h2>\n\n<p>Ваш микросервис потребляет события из Kafka с гарантией доставки \"at-least-once\". Как наиболее надежно обеспечить идемпотентность обработки платежа, чтобы избежать двойного списания при повторной доставке сообщения?</p>",
+      "answer_options": [
+        "Хранить уникальный идентификатор события/платежа в БД и проверять его перед обработкой (deduplication table)",
+        "Увеличить количество партиций",
+        "Использовать auto-commit в Kafka",
+        "Отключить ретраи на стороне consumer"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1998,
+      "question_html": "<h2>Слайсы (Slices) и лежащий в основе массив</h2>\n\n<p>Что выведет следующий код?</p>\n\n<pre><code class=\"language-go\">package main\n\nimport \"fmt\"\n\nfunc main() {\n    a := []int{1, 2, 3}\n    b := a\n    b[0] = 99\n    fmt.Println(a[0])\n}</code></pre>",
+      "answer_options": [
+        "99",
+        "1",
+        "0",
+        "panic: index out of range"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1970,
+      "question_html": "<h2>Массивы и ссылки</h2>\n\n<p>Что выведет этот код?</p>\n\n<pre><code class=\"language-php\">$arr = [1, 2, 3];\nforeach ($arr as &amp;$value) {}\nforeach ($arr as $value) {}\nprint_r($arr);</code></pre>",
+      "answer_options": [
+        "Array ( [0] => 1 [1] => 2 [2] => 2 )",
+        "Array ( [0] => 1 [1] => 2 [2] => 3 )",
+        "Array ( [0] => 3 [1] => 3 [2] => 3 )",
+        "Array ( [0] => 1 [1] => 1 [2] => 1 )"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2041,
+      "question_html": "<h2>Spring Framework (Проксирование и транзакции)</h2>\n\n<p>Что произойдет, если метод <code>A()</code>, <strong>не</strong> аннотированный <code>@Transactional</code>, внутри одного и того же класса вызовет метод <code>B()</code>, который аннотирован <code>@Transactional</code>?</p>",
+      "answer_options": [
+        "Транзакция не применится: вызов идет через this, минуя прокси",
+        "Транзакция применится, так как Spring перехватывает все вызовы",
+        "Произойдет ошибка компиляции",
+        "Будет создано две транзакции"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2017,
+      "question_html": "<h2>Базы данных (Контекст в запросах)</h2>\n\n<p>Зачем в методах работы с БД (например, <code>db.QueryContext</code>) обязательно передавать <code>context.Context</code>, полученный из HTTP-запроса?</p>",
+      "answer_options": [
+        "Чтобы при отмене/таймауте запроса запрос к БД был отменен и не занимал ресурсы",
+        "Чтобы автоматически логировать SQL",
+        "Чтобы кэшировать результаты запроса",
+        "Чтобы шифровать данные в БД"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1980,
+      "question_html": "<h2>Архитектура (SOLID и Dependency Inversion)</h2>\n\n<p>Как принцип <strong>инверсии зависимостей</strong> (Dependency Inversion Principle, буква \"D\" в SOLID) правильно применяется в современной PHP-разработке?</p>",
+      "answer_options": [
+        "Модули верхнего уровня и нижнего уровня зависят от абстракций (интерфейсов), а не друг от друга",
+        "Все зависимости создаются через new внутри классов",
+        "Используются только статические методы",
+        "Зависимости передаются через глобальные переменные"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1999,
+      "question_html": "<h2>Ключевое слово <code>defer</code></h2>\n\n<p>Что выведет этот код?</p>\n\n<pre><code class=\"language-go\">package main\n\nimport \"fmt\"\n\nfunc main() {\n    i := 1\n    defer fmt.Println(\"Defer 1:\", i)\n    i = 2\n    defer fmt.Println(\"Defer 2:\", i)\n    fmt.Println(\"Main:\", i)\n}</code></pre>",
+      "answer_options": [
+        "Main: 2\nDefer 2: 2\nDefer 1: 1",
+        "Main: 1\nDefer 1: 1\nDefer 2: 2",
+        "Defer 1: 1\nDefer 2: 2\nMain: 2",
+        "Main: 2\nDefer 1: 2\nDefer 2: 2"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2043,
+      "question_html": "<h2>Архитектура (Гексагональная / Ports and Adapters)</h2>\n\n<p>Согласно принципам Гексагональной архитектуры (Clean Architecture), где должны находиться JPA-сущности (классы с аннотациями <code>@Entity</code>) и от чего они должны зависеть?</p>",
+      "answer_options": [
+        "В инфраструктурном слое (adapters/out/persistence), они не должны проникать в domain",
+        "В domain-слое, так как это бизнес-модель",
+        "В слое use cases",
+        "В отдельном пакете shared, доступном всем слоям"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1979,
+      "question_html": "<h2>Базы данных (Проблема N+1)</h2>\n\n<p>При использовании ORM (например, Doctrine или Eloquent) вы получаете список из 100 сущностей <code>Post</code>, а затем в цикле обращаетесь к свойству <code>$post-&gt;author</code>. Это приводит к 101 запросу к базе данных (проблема N+1). Какой подход является наиболее правильным и эффективным для решения этой проблемы?</p>",
+      "answer_options": [
+        "Использовать жадную загрузку (eager loading) связей: with()/join fetch в одном запросе",
+        "Увеличить лимит соединений к БД",
+        "Включить кэш второго уровня",
+        "Заменить ORM на чистый SQL везде"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2003,
+      "question_html": "<h2>Обработка ошибок (Modern Go)</h2>\n\n<p>Какой современный (Go 1.13+) и идиоматичный способ проверить, является ли возвращенная ошибка <code>err</code> конкретной ошибкой <code>ErrNotFound</code> (или содержит её в цепочке обернутых ошибок)?</p>",
+      "answer_options": [
+        "errors.Is(err, ErrNotFound)",
+        "err == ErrNotFound",
+        "err.Error() == ErrNotFound.Error()",
+        "errors.As(err, &ErrNotFound)"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1984,
+      "question_html": "<h2>Кэширование (Стратегии инвалидации)</h2>\n\n<p>При использовании паттерна <strong>Cache-aside</strong> (Lazy Loading) с Redis, что является наиболее безопасным действием при <em>обновлении</em> данных в основной базе данных, чтобы избежать рассинхронизации кэша и БД?</p>",
+      "answer_options": [
+        "Обновить БД и удалить (invalidate) соответствующий ключ из кэша",
+        "Обновить БД и записать новое значение в кэш без удаления",
+        "Удалить ключ из кэша до обновления БД",
+        "Ничего не делать, TTL сам обновит"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2006,
+      "question_html": "<h2>Дженерики (Generics, Go 1.18+)</h2>\n\n<p>Как правильно объявить обобщенную (generic) функцию в современном Go, которая принимает слайс любого типа и возвращает его длину?</p>",
+      "answer_options": [
+        "func Len[T any](s []T) int { return len(s) }",
+        "func Len(s []interface{}) int { return len(s) }",
+        "func Len[T](s []T) int { return len(s) }",
+        "func Len(s []T) int { return len(s) }"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1974,
+      "question_html": "<h2>Обработка ошибок (PHP 7+)</h2>\n\n<p>Какой базовый интерфейс реализуют <strong>все</strong> выбрасываемые ошибки и исключения в PHP 7 и выше (включая фатальные ошибки типа <code>TypeError</code> или <code>DivisionByZeroError</code>)?</p>",
+      "answer_options": [
+        "Throwable",
+        "Exception",
+        "Error",
+        "RuntimeException"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2019,
+      "question_html": "<h2>Тестирование (Mocking)</h2>\n\n<p>Вы пишете юнит-тест для use-case слоя, который зависит от интерфейса <code>UserRepository</code>. Как правильно изолировать этот тест от реальной базы данных?</p>",
+      "answer_options": [
+        "Создать мок-реализацию UserRepository (gomock/mockery) и внедрить её в тестируемый сервис",
+        "Поднять реальную БД в тесте",
+        "Использовать глобальную переменную с тестовыми данными",
+        "Пропустить тест, если БД недоступна"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1951,
+      "question_html": "<h2>Базы данных (Блокировки)</h2>\n\n<p>Для чего используется конструкция <code>SELECT ... FOR UPDATE</code> в SQL-запросе внутри транзакции?</p>",
+      "answer_options": [
+        "Для пессимистичной блокировки выбранных строк до конца транзакции, чтобы другие транзакции не могли их изменить",
+        "Для чтения без блокировок",
+        "Для автоматического коммита после SELECT",
+        "Для отката транзакции при ошибке"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2014,
+      "question_html": "<h2>Производительность (Escape Analysis)</h2>\n\n<p>Что произойдет с переменной, созданной внутри функции, если функция возвращает указатель на эту переменную (<code>return &amp;myVar</code>)?</p>",
+      "answer_options": [
+        "Переменная «убежит» в кучу (heap), а не останется на стеке — это escape analysis",
+        "Программа не скомпилируется",
+        "Переменная будет удалена сборщиком мусора сразу после return",
+        "Это приведет к панике"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2031,
+      "question_html": "<h2>Современная Java (Optional)</h2>\n\n<p>Какой из следующих вариантов использования <code>Optional</code> в Java считается <strong>антипаттерном</strong> и плохой практикой?</p>",
+      "answer_options": [
+        "Использовать Optional в полях класса или в параметрах методов",
+        "Возвращать Optional из репозитория",
+        "Использовать orElseThrow для получения значения",
+        "Применять map/filter для цепочек"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2035,
+      "question_html": "<h2>Многопоточность (Ключевое слово volatile)</h2>\n\n<p>Что гарантирует ключевое слово <code>volatile</code> при применении к переменной в многопоточной среде?</p>",
+      "answer_options": [
+        "Видимость изменений между потоками (чтение/запись идут в основную память, минуя кэш)",
+        "Атомарность составных операций (например, i++)",
+        "Взаимное исключение (как synchronized)",
+        "Автоматическую сериализацию доступа"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2047,
+      "question_html": "<h2>Базы данных (Пул соединений HikariCP)</h2>\n\n<p>HikariCP является пулом соединений по умолчанию в Spring Boot. Какая распространенная ошибка конфигурации HikariCP может привести к деградации производительности базы данных?</p>",
+      "answer_options": [
+        "Установка слишком большого maximumPoolSize, из-за чего БД получает больше соединений, чем может обработать",
+        "Установка minimumIdle = 0",
+        "Использование connectionTimeout по умолчанию",
+        "Включение leakDetectionThreshold"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1967,
+      "question_html": "<h2>Современный PHP (Match vs Switch)</h2>\n\n<p>Что выведет следующий код в PHP 8+?</p>\n\n<pre><code class=\"language-php\">$status = \"200\";\n$result = match($status) {\n    200 =&gt; \"OK\",\n    404 =&gt; \"Not Found\",\n    default =&gt; \"Unknown\"\n};\necho $result;</code></pre>",
+      "answer_options": [
+        "Unknown",
+        "OK",
+        "Not Found",
+        "TypeError"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2032,
+      "question_html": "<h2>ООП и Современная Java (Интерфейсы)</h2>\n\n<p>Начиная с Java 8, интерфейсы могут содержать реализацию методов. Какое ключевое слово используется для объявления такого метода в интерфейсе?</p>",
+      "answer_options": [
+        "default",
+        "static",
+        "abstract",
+        "final"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    }
+  ]
+}

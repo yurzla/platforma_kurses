@@ -1,0 +1,7 @@
+{
+  "course_id": 6,
+  "course_title": "Фулстек-разработка веб-сервиса на TypeScript, Reaсt, Node.js",
+  "status": "review_template",
+  "source_note": "Generated from edu_platform_kurses.sql. The database contains the questions but no choices or correct-answer keys.",
+  "choice_questions": []
+}

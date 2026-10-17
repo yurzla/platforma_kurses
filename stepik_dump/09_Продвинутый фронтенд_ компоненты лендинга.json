@@ -1,0 +1,191 @@
+{
+  "course_id": 9,
+  "course_title": "Продвинутый фронтенд: компоненты лендинга",
+  "status": "review_template",
+  "source_note": "Generated from edu_platform_kurses.sql. The database contains the questions but no choices or correct-answer keys.",
+  "choice_questions": [
+    {
+      "step_id": 1351,
+      "question_html": "<p>&nbsp;Имеется&nbsp;<code>flexbox</code>&nbsp;контейнер с двумя потомками:</p>\n\n<pre><code>&lt;!doctype html&gt;\n&lt;html&gt;\n  &lt;head&gt;\n    &lt;style&gt;\n      .flexbox {\n        background: gray;\n        display: flex;\n        padding: 5px;\n        width: 300px;\n        .item {\n          background: lightblue;\n          border: 1px solid blue;\n          text-align: center;         \n          flex: 0 0 25%;\n          width: 150px;\n        }\n      }\n    &lt;/style&gt;\n  &lt;/head&gt;\n  &lt;body&gt;\n    &lt;div class=\"flexbox\"&gt;\n      &lt;div class=\"item\"&gt;A&lt;/div&gt;\n      &lt;div class=\"item\"&gt;B&lt;/div&gt;\n    &lt;/div&gt;\n  &lt;/body&gt;\n&lt;/html&gt;\n\n\n</code></pre>\n\n<p>&nbsp;</p>\n\n<p>Изучите код и предскажите результат рендера:</p>\n\n<p><strong>Вариант 1</strong></p>\n\n<p><img alt=\"\" name=\"Screenshot 2025-06-23 at 08.50.24.png\" src=\"https://ucarecdn.stepik.net/5f882e20-82e9-4a8e-84b6-8bfbae56b956/\" width=\"300\"></p>\n\n<p><strong>Вариант 2</strong></p>\n\n<p><img alt=\"\" name=\"Screenshot 2025-06-23 at 08.56.41.png\" src=\"https://ucarecdn.stepik.net/de02c4aa-2b11-4e76-bb1c-e60554d9cd98/\" width=\"600\"></p>\n\n<p><strong>Вариант 3</strong></p>\n\n<p><img alt=\"\" name=\"Screenshot 2025-06-23 at 08.56.57.png\" src=\"https://ucarecdn.stepik.net/866a933c-04ea-4772-9684-1da42404d126/\" width=\"300\"></p>\n\n<p><strong>Вариант 4</strong></p>\n\n<p><img alt=\"\" name=\"Screenshot 2025-06-23 at 08.58.39.png\" src=\"https://ucarecdn.stepik.net/190adc1e-5ebc-4e16-8bec-186dc22416db/\" width=\"300\"></p>\n\n<p><strong>Вариант 5</strong></p>\n\n<p><img alt=\"\" name=\"Screenshot 2025-06-23 at 09.18.25.png\" src=\"https://ucarecdn.stepik.net/bc60a47e-0e75-44f3-923e-365980c7f751/\" width=\"300\"></p>",
+      "answer_options": [
+        "Вариант 1",
+        "Вариант 2",
+        "Вариант 3",
+        "Вариант 4",
+        "Вариант 5"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1349,
+      "question_html": "<p>&nbsp;Имеется&nbsp;<code>flexbox</code>&nbsp;контейнер с двумя дочерними элементами:</p>\n\n<pre><code>&lt;!doctype html&gt;\n&lt;html&gt;\n  &lt;head&gt;\n    &lt;style&gt;\n      .flexbox {\n        background: gray;\n        display: flex;\n        padding: 5px;\n        width: 300px;\n        .item {\n          background: lightblue;\n          border: 1px solid blue;\n          text-align: center;\n        }\n      }\n    &lt;/style&gt;\n  &lt;/head&gt;\n  &lt;body&gt;\n    &lt;div class=\"flexbox\"&gt;\n      &lt;div class=\"item\"&gt;A&lt;/div&gt;\n      &lt;div class=\"item\"&gt;B&lt;/div&gt;\n    &lt;/div&gt;\n  &lt;/body&gt;\n&lt;/html&gt;\n\n\n</code></pre>\n\n<p>&nbsp;</p>\n\n<p>Изучите код и предскажите результат рендера:</p>\n\n<p><strong>Вариант 1</strong></p>\n\n<p><img alt=\"\" name=\"Screenshot 2025-06-23 at 08.50.24.png\" src=\"https://ucarecdn.stepik.net/5f882e20-82e9-4a8e-84b6-8bfbae56b956/\" width=\"300\"></p>\n\n<p><strong>Вариант 2</strong></p>\n\n<p><img alt=\"\" name=\"Screenshot 2025-06-23 at 08.56.41.png\" src=\"https://ucarecdn.stepik.net/de02c4aa-2b11-4e76-bb1c-e60554d9cd98/\" width=\"600\"></p>\n\n<p><strong>Вариант 3</strong></p>\n\n<p><img alt=\"\" name=\"Screenshot 2025-06-23 at 08.56.57.png\" src=\"https://ucarecdn.stepik.net/866a933c-04ea-4772-9684-1da42404d126/\" width=\"300\"></p>\n\n<p><strong>Вариант 4</strong></p>\n\n<p><img alt=\"\" name=\"Screenshot 2025-06-23 at 08.58.39.png\" src=\"https://ucarecdn.stepik.net/190adc1e-5ebc-4e16-8bec-186dc22416db/\" width=\"300\"></p>\n\n<p><strong>Вариант 5</strong></p>\n\n<p><img alt=\"\" name=\"Screenshot 2025-06-23 at 09.18.25.png\" src=\"https://ucarecdn.stepik.net/bc60a47e-0e75-44f3-923e-365980c7f751/\" width=\"300\"></p>",
+      "answer_options": [
+        "Вариант 1",
+        "Вариант 2",
+        "Вариант 3",
+        "Вариант 4",
+        "Вариант 5"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1327,
+      "question_html": "<p>Мы создаём инстанс&nbsp;<code>IntersectionObserver</code>, в качестве корневого элемента используем вьюпорт и параметр&nbsp;<code>rootMargin</code>&nbsp;задан как:</p>\n\n<p><code>rootMargin = 100px -100px -100px -100px</code><span style=\"color:#ff4363;\">&nbsp;</span></p>\n\n<p>&nbsp;</p>\n\n<p>Порядок в&nbsp;<code>rootMargin</code>:</p>\n\n<p><code>rootMargin = top right bottom left</code></p>\n\n<p>&nbsp;</p>\n\n<p>При ширине вьюпорта 1000px,&nbsp;какой будет ширина отслеживаемой зоны пересечения?&nbsp;</p>",
+      "answer_options": [
+        "800px",
+        "900px",
+        "1000px",
+        "1200px"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1325,
+      "question_html": "<p>Закрепим теорию.</p>\n\n<p>В&nbsp;<code>IntersectionObserver API</code>&nbsp;в качестве корневого элемента можно задать ...</p>\n\n<p>&nbsp;</p>\n\n<p><em>Если нужна подсказка, вот&nbsp;<a href=\"https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API\" rel=\"noopener noreferrer nofollow\">ссылка на документацию</a>.</em></p>",
+      "answer_options": [
+        "только вьюпорт (viewport)",
+        "любой DOM-элемент, являющийся предком отслеживаемого",
+        "любой DOM-элемент на странице",
+        "только <body>"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1302,
+      "question_html": "<p>Изучите код</p>\n\n<pre><code>&lt;!DOCTYPE html&gt;\n&lt;html&gt;\n  &lt;head&gt;\n    &lt;style&gt;\n      * {\n        box-sizing: border-box;\n        border: 0 solid;\n        margin: 0;\n        padding: 0;\n      }\n      body {\n        padding: 2rem;\n      }\n      div {\n        background: linear-gradient(white, red);\n        clip-path: circle(50px at 50px 0px);\n        height: 10rem;\n        position: relative;\n      }\n    &lt;/style&gt;\n  &lt;/head&gt;\n  &lt;body&gt;\n    &lt;div&gt;&lt;/div&gt;\n  &lt;/body&gt;\n&lt;/html&gt;\n</code></pre>\n\n<p>Какой будет результат рендера?</p>\n\n<p><strong>Вариант 1</strong></p>\n\n<p><img alt=\"\" name=\"Screenshot 2025-06-11 at 15.58.59.png\" src=\"https://ucarecdn.stepik.net/9309c548-bfd0-4b31-bd22-4aa74202fdb2/\" style=\"border:4px solid #dee1eb;\" width=\"350\"></p>\n\n<p><strong>Вариант 2</strong></p>\n\n<p><img alt=\"\" name=\"Screenshot 2025-06-11 at 15.58.51.png\" src=\"https://ucarecdn.stepik.net/be44e19e-6a57-454c-9df2-c9aca5cdef55/\" style=\"border:4px solid #dee1eb;\" width=\"350\"></p>\n\n<p><strong>Вариант 3</strong></p>\n\n<p><img alt=\"\" name=\"Screenshot 2025-06-11 at 15.59.11.png\" src=\"https://ucarecdn.stepik.net/4b31148d-4f4d-4e77-af83-9de22d392ecd/\" style=\"border:4px solid #dee1eb;\" width=\"350\"></p>\n\n<p><strong>Вариант 4</strong></p>\n\n<p><img alt=\"\" name=\"Screenshot 2025-06-11 at 15.58.41.png\" src=\"https://ucarecdn.stepik.net/38d71664-9355-4d68-84fc-73128c980d1e/\" style=\"border:4px solid #dee1eb;\" width=\"350\"></p>",
+      "answer_options": [
+        "Вариант 1",
+        "Вариант 2",
+        "Вариант 3",
+        "Вариант 4"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1338,
+      "question_html": "<p>Выберите корректное решение для вызова функции <code>step</code>&nbsp;с частотой равной частоте обновления экрана.</p>\n\n<p><strong>Вариант 1</strong></p>\n\n<pre><code class=\"language-javascript\">function step(timestamp) {\n  // some logic here\n  // ...\n}\n\nrequestAnimationFrame(step)\n\n</code></pre>\n\n<p><strong>Вариант 2</strong></p>\n\n<pre><code class=\"language-javascript\">function step(timestamp) {\n  // some logic here\n  // ...\n  requestAnimationFrame(step)\n}\n\nrequestAnimationFrame(step)</code></pre>\n\n<p><strong>&nbsp;Вариант 3</strong></p>\n\n<pre><code class=\"language-javascript\">function step() {\n  // some logic here\n  // ...\n}\n\nsetInterval(step, {frequency: \"FPS\"})</code></pre>\n\n<p><strong>&nbsp;&nbsp;Вариант 4</strong></p>\n\n<pre><code class=\"language-javascript\">function step() {\n  // some logic here\n  // ...\n  requestAnimationFrame(step)\n}\n\nsetInterval(step)</code></pre>\n\n<p>&nbsp;</p>\n\n<p><em>Если нужна подсказка, вот&nbsp;<a href=\"https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame\" rel=\"noopener noreferrer nofollow\">ссылка на документацию</a>.</em></p>",
+      "answer_options": [
+        "Вариант 1",
+        "Вариант 2",
+        "Вариант 3",
+        "Вариант 4"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1290,
+      "question_html": "<p>Потренируемся составлять правила используя псевдоклассы типа&nbsp;<code>nth-*</code>.</p>\n\n<p>Как получить доступ к последним 5 элементам в списке?</p>",
+      "answer_options": [
+        ":nth-last-child(5)",
+        ":nth-last-child(-n+5)",
+        ":nth-child(n+5)",
+        ":nth-last-of-type(5)"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1301,
+      "question_html": "<p>Подкрепим теорию тестами.</p>\n\n<p>Какую фигуру создаст следующий полигон?</p>\n\n<pre><code>clip-path: polygon(0% 0%, 100% 0%, 40% 100%);</code></pre>",
+      "answer_options": [
+        "Треугольник",
+        "Прямоугольник",
+        "Трапеция",
+        "Пятиугольник"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1339,
+      "question_html": "<p>При частоте перерисовки монитора 60Hz, сколько раз в секунду будет вызвана функция <code>step</code>?</p>\n\n<pre><code>function step(timestamp) {\n  // some logic here\n  // ...\n  requestAnimationFrame(step)\n}\n\nrequestAnimationFrame(step)</code></pre>",
+      "answer_options": [
+        "30",
+        "60",
+        "120",
+        "зависит от нагрузки на CPU"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1350,
+      "question_html": "<p>&nbsp;Имеется&nbsp;<code>flexbox</code>&nbsp;контейнер с двумя дочерними элементами (код идентичен предыдущей задаче):</p>\n\n<pre><code>&lt;!doctype html&gt;\n&lt;html&gt;\n  &lt;head&gt;\n    &lt;style&gt;\n      .flexbox {\n        background: gray;\n        display: flex;\n        padding: 5px;\n        width: 300px;\n        .item {\n          background: lightblue;\n          border: 1px solid blue;\n          text-align: center;\n\n          /* ??? */ \n        }\n      }\n    &lt;/style&gt;\n  &lt;/head&gt;\n  &lt;body&gt;\n    &lt;div class=\"flexbox\"&gt;\n      &lt;div class=\"item\"&gt;A&lt;/div&gt;\n      &lt;div class=\"item\"&gt;B&lt;/div&gt;\n    &lt;/div&gt;\n  &lt;/body&gt;\n&lt;/html&gt;\n\n\n</code></pre>\n\n<p>&nbsp;</p>\n\n<p>Какое правило <code>flex</code> нужно указать для потомков, чтобы они заняли по 50% от ширины своего родителя и рендер выглядел следующим образом?</p>\n\n<p><img alt=\"\" name=\"Screenshot 2025-06-23 at 08.50.24.png\" src=\"https://ucarecdn.stepik.net/b7a4101e-d268-4a14-9aba-cf5dcea4ffcd/\" width=\"300\"></p>",
+      "answer_options": [
+        "flex: 0 0 50%;",
+        "flex: 1;",
+        "flex: 1 1 50%;",
+        "flex: 0 1 auto;"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1291,
+      "question_html": "<p>Для календаря, организованного в виде CSS Grid<em>&nbsp;</em>c&nbsp;7-ью столбцами, нужно сделать подсветку воскресенья (столбец 7).</p>\n\n<p><img alt=\"\" height=\"379\" name=\"Calendar (2).png\" src=\"https://ucarecdn.stepik.net/267f6b15-40e8-44fe-8f63-f6f6c7de88ec/\" width=\"442\"></p>\n\n<p>Какое правило вы будете использовать для доступа к этим ячейкам?</p>",
+      "answer_options": [
+        ":nth-child(7n)",
+        ":nth-child(7n+1)",
+        ":nth-child(7n-1)",
+        ":nth-child(7n+7)"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1352,
+      "question_html": "<p>&nbsp;Имеется <code>flexbox</code>&nbsp;контейнер. Обратите внимание на значения&nbsp;&nbsp;<code>flex-shrink</code>&nbsp;у дочерних элементов:</p>\n\n<pre><code>&lt;!doctype html&gt;\n&lt;html&gt;\n  &lt;head&gt;\n    &lt;style&gt;\n      .flexbox {\n        background: gray;\n        display: flex;\n        padding: 5px;\n        width: 300px;\n        .item {\n          background: lightblue;\n          border: 1px solid blue;\n          text-align: center;\n          flex: 0 0 300px;\n          &amp;:nth-child(1) {\n            flex-shrink: 1;\n          }\n          &amp;:nth-child(2) {\n            flex-shrink: 2;\n          }\n        }\n      }\n    &lt;/style&gt;\n  &lt;/head&gt;\n  &lt;body&gt;\n    &lt;div class=\"flexbox\"&gt;\n      &lt;div class=\"item\"&gt;A&lt;/div&gt;\n      &lt;div class=\"item\"&gt;B&lt;/div&gt;\n    &lt;/div&gt;\n  &lt;/body&gt;\n&lt;/html&gt;\n\n\n</code></pre>\n\n<p>&nbsp;</p>\n\n<p>Изучите код и предскажите результат рендера:</p>\n\n<p><strong>Вариант 1</strong></p>\n\n<p><img alt=\"\" name=\"Screenshot 2025-06-23 at 08.50.24.png\" src=\"https://ucarecdn.stepik.net/5f882e20-82e9-4a8e-84b6-8bfbae56b956/\" width=\"300\"></p>\n\n<p><strong>Вариант 2</strong></p>\n\n<p><img alt=\"\" name=\"Screenshot 2025-06-23 at 08.56.41.png\" src=\"https://ucarecdn.stepik.net/de02c4aa-2b11-4e76-bb1c-e60554d9cd98/\" width=\"600\"></p>\n\n<p><strong>Вариант 3</strong></p>\n\n<p><img alt=\"\" name=\"Screenshot 2025-06-23 at 08.56.57.png\" src=\"https://ucarecdn.stepik.net/866a933c-04ea-4772-9684-1da42404d126/\" width=\"300\"></p>\n\n<p><strong>Вариант 4</strong></p>\n\n<p>&nbsp;<img alt=\"\" name=\"Screenshot 2025-06-23 at 09.26.35.png\" src=\"https://ucarecdn.stepik.net/e6a60e02-f709-4895-9fb7-daae98bac758/\" width=\"300\"></p>\n\n<p><strong>Вариант 5</strong></p>\n\n<p>&nbsp;<img alt=\"\" name=\"Screenshot 2025-06-23 at 09.26.41.png\" src=\"https://ucarecdn.stepik.net/2beb3f8e-88b9-4a57-a7b1-6e500a60cecb/\" width=\"300\"></p>",
+      "answer_options": [
+        "Вариант 1",
+        "Вариант 2",
+        "Вариант 3",
+        "Вариант 4",
+        "Вариант 5"
+      ],
+      "suggested_correct_option_index": 3,
+      "needs_review": false
+    },
+    {
+      "step_id": 1312,
+      "question_html": "<p>Закрепим теорию.</p>\n\n<p>Какое значение метод <code>getBoundingClientRect()</code> НЕ возвращает?</p>\n\n<p>&nbsp;</p>\n\n<p><em>Если нужна подсказка, вот&nbsp;<a href=\"https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect\" rel=\"noopener noreferrer nofollow\">ссылка на документацию</a>.</em></p>",
+      "answer_options": [
+        "width",
+        "height",
+        "top",
+        "scrollTop"
+      ],
+      "suggested_correct_option_index": 3,
+      "needs_review": false
+    },
+    {
+      "step_id": 1303,
+      "question_html": "<p>Изучите код</p>\n\n<pre><code>&lt;!DOCTYPE html&gt;\n&lt;html&gt;\n  &lt;head&gt;\n    &lt;style&gt;\n      * {\n        box-sizing: border-box;\n        border: 0 solid;\n        margin: 0;\n        padding: 0;\n      }\n      body {\n        padding: 2rem;\n      }\n      div {\n        background: red;\n        clip-path: circle(50px at 50px 50px);\n        height: 10rem;\n        position: relative;\n        &amp;:before {\n          background: green;\n          content: \"\";\n          inset: 0;\n          position: absolute;\n        }\n      }\n    &lt;/style&gt;\n  &lt;/head&gt;\n  &lt;body&gt;\n    &lt;div&gt;&lt;/div&gt;\n  &lt;/body&gt;\n&lt;/html&gt;\n</code></pre>\n\n<p>Какой будет результат рендера?</p>\n\n<p><strong>Вариант 1</strong></p>\n\n<p><img alt=\"\" name=\"Screenshot 2025-06-11 at 15.53.46.png\" src=\"https://ucarecdn.stepik.net/cd9ea2ba-3d3e-4329-98c4-064ec03b6266/\" style=\"border:4px solid #dee1eb;\" width=\"350\"></p>\n\n<p><strong>Вариант 2</strong></p>\n\n<p><img alt=\"\" name=\"Screenshot 2025-06-11 at 15.53.24.png\" src=\"https://ucarecdn.stepik.net/c6641840-43cc-4ecf-b7e9-7ab198de61c7/\" style=\"border:4px solid #dee1eb;\" width=\"350\"></p>\n\n<p><strong>Вариант 3</strong></p>\n\n<p><img alt=\"\" name=\"Screenshot 2025-06-11 at 15.54.05.png\" src=\"https://ucarecdn.stepik.net/06ceedbb-a7ad-4eec-b2fc-a14a14a5d9cc/\" style=\"border:4px solid #dee1eb;\" width=\"350\"></p>\n\n<p><strong>Вариант 4</strong></p>\n\n<p><img alt=\"\" name=\"Screenshot 2025-06-11 at 15.54.17.png\" src=\"https://ucarecdn.stepik.net/e715ea34-c61f-4e2a-a3cc-6a846c99ea2a/\" style=\"border:4px solid #dee1eb;\" width=\"350\"></p>",
+      "answer_options": [
+        "Вариант 1",
+        "Вариант 2",
+        "Вариант 3",
+        "Вариант 4"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1326,
+      "question_html": "<p>Мы создаём инстанс&nbsp;<code>IntersectionObserver</code>, в качестве корневого элемента используем вьюпорт и параметр&nbsp;<code>rootMargin</code>&nbsp;задаём как:</p>\n\n<p><code>rootMargin = 100px 0 -100px 0</code><span style=\"color:#ff4363;\">&nbsp;</span></p>\n\n<p>&nbsp;</p>\n\n<p>Порядок в&nbsp;<code>rootMargin</code>:</p>\n\n<p><code>rootMargin = top right bottom left</code></p>\n\n<p>&nbsp;</p>\n\n<p>При высоте вьюпорта в 1000px,&nbsp;какой будет высота отслеживаемой зоны пересечения?&nbsp;</p>",
+      "answer_options": [
+        "800px",
+        "900px",
+        "1000px",
+        "1200px"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    }
+  ]
+}

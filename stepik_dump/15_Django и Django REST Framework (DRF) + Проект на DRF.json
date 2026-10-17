@@ -1,0 +1,128 @@
+{
+  "course_id": 15,
+  "course_title": "Django и Django REST Framework (DRF) + Проект на DRF",
+  "status": "review_template",
+  "source_note": "Generated from edu_platform_kurses.sql. The database contains the questions but no choices or correct-answer keys.",
+  "choice_questions": [
+    {
+      "step_id": 2154,
+      "question_html": "<h2><strong>В каком файле обычно определяются функции-представления (views) в приложении Django?</strong></h2>",
+      "answer_options": [
+        "models.py",
+        "views.py",
+        "urls.py",
+        "admin.py"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 2158,
+      "question_html": "<h2><strong>Где в проекте Django хранятся статические файлы<br>\n(CSS, JavaScript, изображения) в режиме разработки?</strong></h2>",
+      "answer_options": [
+        "В папке media/",
+        "В папке static/",
+        "В папке templates/",
+        "В папке fixtures/"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 2152,
+      "question_html": "<h2><strong>Как называется встроенный интерфейс для управления данными в Django?</strong></h2>",
+      "answer_options": [
+        "Django Shell",
+        "Django Admin",
+        "Django ORM",
+        "Django Migrations"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 2157,
+      "question_html": "<h2><strong>Какая команда запускает встроенный сервер разработки Django?</strong></h2>",
+      "answer_options": [
+        "python manage.py startserver",
+        "python manage.py runserver",
+        "python manage.py serve",
+        "django-admin run"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 2149,
+      "question_html": "<h2><strong>Как называется файл, в котором определяются маршруты (URL-адреса) в проекте Django?</strong></h2>",
+      "answer_options": [
+        "routes.py",
+        "urls.py",
+        "links.py",
+        "paths.py"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 2155,
+      "question_html": "<h2><strong>Какой метод HTTP чаще всего используется для отправки данных формы в Django?</strong></h2>",
+      "answer_options": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 2153,
+      "question_html": "<h2><strong>Какой язык используется для написания шаблонов в Django по умолчанию?</strong></h2>",
+      "answer_options": [
+        "Jinja2",
+        "Django Template Language (DTL)",
+        "Mako",
+        "Handlebars"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 2150,
+      "question_html": "<h2><strong>Какой класс используется для создания моделей данных в Django?</strong></h2>",
+      "answer_options": [
+        "models.Model",
+        "models.Base",
+        "models.Entity",
+        "models.Data"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2156,
+      "question_html": "<h2><strong>Какой командой создаётся новое приложение (app) в проекте Django?</strong></h2>",
+      "answer_options": [
+        "python manage.py createapp <name>",
+        "python manage.py startapp <name>",
+        "python manage.py newapp <name>",
+        "django-admin createapp <name>"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 2151,
+      "question_html": "<h2><strong>Какой командой создаётся новая миграция для изменений в моделях?</strong></h2>",
+      "answer_options": [
+        "python manage.py makemigrations",
+        "python manage.py migrate",
+        "python manage.py createmigrations",
+        "python manage.py schema"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    }
+  ]
+}

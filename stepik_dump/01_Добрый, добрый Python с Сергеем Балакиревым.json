@@ -1,0 +1,512 @@
+{
+  "course_id": 1,
+  "course_title": "Добрый, добрый Python с Сергеем Балакиревым",
+  "status": "review_template",
+  "source_note": "Generated from edu_platform_kurses.sql. The database contains the questions but no choices or correct-answer keys.",
+  "choice_questions": [
+    {
+      "step_id": 27,
+      "question_html": "<p><strong>Подвиг 4.</strong> Какой тип данных отобразит команда <code>print(type(3.67))</code>?</p>\n\n<p>Ответить нужно без запуска этой строчки программы, используя только собственные знания.</p>",
+      "answer_options": [
+        "<class 'int'>",
+        "<class 'float'>",
+        "<class 'str'>",
+        "<class 'bool'>"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 120,
+      "question_html": "<p><strong>Подвиг 5.</strong> Что возвратит метод String.find, если указанный фрагмент не будет найден в строке?</p>",
+      "answer_options": [
+        "-1",
+        "0",
+        "None",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 79,
+      "question_html": "<p><strong>Подвиг 8.</strong> Какой результат (True или False) будет получен при выполнении команды bool(12)?</p>\n\n<p>Ответить нужно без ее исполнения.</p>",
+      "answer_options": [
+        "True",
+        "False",
+        "None",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 148,
+      "question_html": "<p><strong>Подвиг 5.</strong> По какому индексу можно обратиться к целочисленному значению 5, записанному в списке ниже:</p>\n\n<pre><code>a = [0, True, \"Москва\", 5, False, \"Омск\"]</code></pre>\n\n<p>Отметьте все возможные варианты.</p>",
+      "answer_options": [
+        "3",
+        "-3",
+        "2",
+        "-4"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 105,
+      "question_html": "<p><strong>Подвиг 3.</strong> Имеется программа:</p>\n\n<pre><code>s = 'Балакирев'\nprint(s[-4])</code></pre>\n\n<p>Что будет выведено на экран?</p>",
+      "answer_options": [
+        "к",
+        "и",
+        "р",
+        "е"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 21,
+      "question_html": "<p><strong>Подвиг 10.</strong> Выберите верные варианты присвоения данных переменной b (считается, что других переменных в программе нет).</p>",
+      "answer_options": [
+        "b = 10",
+        "b == 10",
+        "10 = b",
+        "b ="
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 14,
+      "question_html": "<p><strong>Подвиг 3.</strong> Отметьте все верные варианты использования оператора присваивания.</p>",
+      "answer_options": [
+        "x = 5",
+        "5 = x",
+        "x == 5",
+        "x :="
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 145,
+      "question_html": "<p><strong>Подвиг 2.</strong> Какая конструкция или функция позволяют задавать списки? Укажите все верные варианты.</p>",
+      "answer_options": [
+        "[]",
+        "list()",
+        "{}",
+        "tuple()"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 169,
+      "question_html": "<p><strong>Подвиг 11.</strong> Какой результат сравнения будет получен при выполнении команды:</p>\n\n<pre><code>[1, 2, 3, 7] &gt; [1, 2, 3, \"5\"]</code></pre>",
+      "answer_options": [
+        "Возникнет TypeError",
+        "True",
+        "False",
+        "Будет выполнено сравнение строк"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 73,
+      "question_html": "<p><strong>Подвиг 2.</strong> Какой результат (True или False) будет получен при выполнении команды 10 &gt; 5? Ответить нужно без ее исполнения.</p>",
+      "answer_options": [
+        "True",
+        "False",
+        "None",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 19,
+      "question_html": "<p><strong>Подвиг 8.</strong> Выберите только допустимые имена переменных.</p>\n\n<p>P.S. Все буквы латинские</p>",
+      "answer_options": [
+        "my_value",
+        "2value",
+        "my-value",
+        "class"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 74,
+      "question_html": "<p><strong>Подвиг 3.</strong> Какой результат (True или False) будет получен при выполнении команды 10 &lt; 10? Ответить нужно без ее исполнения.</p>",
+      "answer_options": [
+        "True",
+        "False",
+        "None",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 106,
+      "question_html": "<p><strong>Подвиг 4.</strong> Имеется программа:</p>\n\n<pre><code>s = 'Балакирев'\nprint(s[9])</code></pre>\n\n<p>Что будет выведено на экран?<br>\n </p>",
+      "answer_options": [
+        "Возникнет IndexError",
+        "к",
+        "в",
+        "Будет выведена пустая строка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 15,
+      "question_html": "<p><strong>Подвиг 4. </strong>Что происходит при присваивании одной переменной другой (a = b)?</p>",
+      "answer_options": [
+        "a начнёт ссылаться на то же значение (объект), что и b",
+        "Значение b будет скопировано только в памяти",
+        "Переменная b удалится",
+        "Переменные a и b поменяются местами"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 75,
+      "question_html": "<p><strong>Подвиг 4.</strong> Какой результат (True или False) будет получен при выполнении команды 10 &lt;= 10? Ответить нужно без ее исполнения.</p>",
+      "answer_options": [
+        "True",
+        "False",
+        "None",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 12,
+      "question_html": "<p><strong>Подвиг 1.</strong> Что представляет собой переменная в Python?</p>",
+      "answer_options": [
+        "Имя, связанное со значением в памяти",
+        "Неизменяемый тип данных",
+        "Функция вывода",
+        "Комментарии в программе"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 188,
+      "question_html": "<p><strong>Подвиг 5.</strong> Имеется многомерный список:</p>\n\n<p><code>a = [True, [1, 0, [\"True\", [\"Истина\", \"Ложь\"], \"F\"]], False]</code></p>\n\n<p>Какую команду следует выполнить, чтобы удалить элемент со значением \"F\"?</p>",
+      "answer_options": [
+        "del a[1][2][2]",
+        "del a[2]",
+        "del a[1][2][1]",
+        "del a[1][1][2]"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 35,
+      "question_html": "<p><strong>Подвиг 12.</strong> Какой тип данных мы увидим, выполнив строчку print(type(8/2)) в Python 3?</p>",
+      "answer_options": [
+        "<class 'int'>",
+        "<class 'float'>",
+        "<class 'str'>",
+        "<class 'complex'>"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 103,
+      "question_html": "<p><strong>Подвиг 1.</strong> К какому типу данных относятся строки?</p>",
+      "answer_options": [
+        "str",
+        "int",
+        "list",
+        "bool"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 22,
+      "question_html": "<p><strong>Подвиг 11.</strong> Что произойдет, если функции type присвоить число 7 (type = 7)?</p>",
+      "answer_options": [
+        "Встроенная функцию type нельзя будет вызвать, пока имя не будет освобождено",
+        "Python запретит присваивание",
+        "Число 7 автоматически превратится в тип данных",
+        "Ничего не изменится"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 187,
+      "question_html": "<p><strong>Подвиг 4.</strong> Имеется вложенный список:</p>\n\n<p><code>a = [True, [1, 0, [\"True\", [\"Истина\", \"Ложь\"], \"False\"]], False]</code></p>\n\n<p>Как записать индексы, чтобы обратиться к элементу со значением \"Истина\"?</p>",
+      "answer_options": [
+        "a[1][2][1][0]",
+        "a[1][2][0]",
+        "a[2][1][0]",
+        "a[1][1][2]"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 18,
+      "question_html": "<p><strong>Подвиг 7.</strong> Для чего используется функция type?</p>",
+      "answer_options": [
+        "Для получения типа объекта",
+        "Для преобразования строки в число",
+        "Для вывода текста на экран",
+        "Для создания новой переменной"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 57,
+      "question_html": "<p><strong>Подвиг 8. </strong>Выберите команду, которая позволяет сохранять одно целое введенное с клавиатуры число.<br>\n </p>",
+      "answer_options": [
+        "int(input())",
+        "input(int())",
+        "input()",
+        "str(input())"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 92,
+      "question_html": "<p><strong>Подвиг 3.</strong> Как обозначается символ переноса на новую строку?</p>",
+      "answer_options": [
+        "\\\\n",
+        "\\\\t",
+        "\\\\r",
+        "\\\\b"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 43,
+      "question_html": "<p><strong>Подвиг 4.</strong> Какую команду следует записать, чтобы использовать модуль math в программе?</p>",
+      "answer_options": [
+        "import math",
+        "include math",
+        "using math",
+        "from math import all"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 20,
+      "question_html": "<p><strong>Подвиг 9.</strong> Различаются ли имена переменных arg, Arg, ARG интерпретатором языка Python?</p>",
+      "answer_options": [
+        "Да, это три разных имени",
+        "Нет, регистр не важен",
+        "Различаются только arg и Arg",
+        "Это синтаксическая ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 13,
+      "question_html": "<p><strong>Подвиг 2.</strong> Что делает оператор присваивания (=)?</p>",
+      "answer_options": [
+        "Связывает имя переменной со значением",
+        "Сравнивает два значения",
+        "Удаляет переменную",
+        "Выводит значение на экран"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 58,
+      "question_html": "<p><strong>Подвиг 9.</strong> Выберите команду, которая позволяет сохранять строку, введенную с клавиатуры.</p>",
+      "answer_options": [
+        "input()",
+        "int(input())",
+        "float(input())",
+        "str()"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 144,
+      "question_html": "<p><strong>Подвиг 1.</strong> К каким типам данных относится список?</p>",
+      "answer_options": [
+        "Изменяемый последовательный тип",
+        "Неизменяемый числовой тип",
+        "Строковый тип",
+        "Логический тип"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 16,
+      "question_html": "<p><strong>Подвиг 5.</strong> Как называется присваивание вида a = b = c = 0?</p>",
+      "answer_options": [
+        "Множественное присваивание",
+        "Параллельное сравнение",
+        "Цепочка условий",
+        "Распаковка списка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 94,
+      "question_html": "<p><strong>Подвиг 5.</strong> Выберите все верные утверждения, касающиеся следующей строки:</p>\n\n<pre><code>fio = \"Сергей\\\nБалакирев\"</code></pre>",
+      "answer_options": [
+        "Обратный слеш продолжает строку без перевода строки",
+        "В значении будет символ перевода строки",
+        "Это синтаксическая ошибка",
+        "Строка станет кортежем"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 166,
+      "question_html": "<p><strong>Подвиг 8.</strong> Какой результат сравнения будет получен при выполнении команды:</p>\n\n<pre><code>[1, 2, 3] &lt; [1, 2, 3, 4]</code></pre>",
+      "answer_options": [
+        "True",
+        "False",
+        "TypeError",
+        "None"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 25,
+      "question_html": "<p><strong>Подвиг 2.</strong> К какому типу данных относится числовой тип float?</p>",
+      "answer_options": [
+        "Вещественный тип",
+        "Целочисленный тип",
+        "Строковый тип",
+        "Логический тип"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 165,
+      "question_html": "<p><strong>Подвиг 7.</strong> Какой результат сравнения будет получен при выполнении команды:</p>\n\n<pre><code>[1, 2, 3] &gt; [1, 1, 10]</code></pre>",
+      "answer_options": [
+        "True",
+        "False",
+        "TypeError",
+        "None"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 167,
+      "question_html": "<p><strong>Подвиг 9.</strong> Какой результат сравнения будет получен при выполнении команды:</p>\n\n<pre><code>[1, 2, 3] &gt;= [1, 2, 3]</code></pre>",
+      "answer_options": [
+        "True",
+        "False",
+        "TypeError",
+        "None"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 91,
+      "question_html": "<p><strong>Подвиг 2.</strong> В каких кавычках можно задать многострочные строки (без использования символа переноса строки)?</p>",
+      "answer_options": [
+        "В тройных одинарных или тройных двойных кавычках",
+        "Только в одинарных кавычках",
+        "Только в двойных кавычках",
+        "В квадратных скобках"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 26,
+      "question_html": "<p><strong>Подвиг 3.</strong> Какой тип данных отобразит команда <code>print(type(-36))</code>?</p>\n\n<p>Ответить нужно без запуска этой строчки программы, используя только собственные знания.</p>",
+      "answer_options": [
+        "<class 'int'>",
+        "<class 'float'>",
+        "<class 'str'>",
+        "<class 'bool'>"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 119,
+      "question_html": "<p><strong>Подвиг 4.</strong> Что возвратит метод String.index, если указанный фрагмент не будет найден в строке?</p>",
+      "answer_options": [
+        "Возникнет ValueError",
+        "-1",
+        "None",
+        "0"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 80,
+      "question_html": "<p><strong>Подвиг 9.</strong> Какой результат (True или False) будет получен при выполнении команды bool(4-4)?</p>\n\n<p>Ответить нужно без ее исполнения.</p>",
+      "answer_options": [
+        "False",
+        "True",
+        "None",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 90,
+      "question_html": "<p><strong>Подвиг 1.</strong> В каких кавычках можно задать строки?</p>",
+      "answer_options": [
+        "В одинарных и двойных кавычках",
+        "Только в одинарных кавычках",
+        "Только в двойных кавычках",
+        "Только в тройных кавычках"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 17,
+      "question_html": "<p><strong>Подвиг 6.</strong> Как называется присваивание вида <code>a, b = 1, 2</code>?</p>",
+      "answer_options": [
+        "Множественное присваивание",
+        "Цепочное присваивание",
+        "Сравнение значений",
+        "Присваивание по ссылке"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 168,
+      "question_html": "<p><strong>Подвиг 10.</strong> Какой результат сравнения будет получен при выполнении команды:</p>\n\n<pre><code>[1, 2, 3, \"4\"] &gt; [1, 2, 3, \"5\"]</code></pre>",
+      "answer_options": [
+        "False",
+        "True",
+        "TypeError",
+        "None"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    }
+  ]
+}

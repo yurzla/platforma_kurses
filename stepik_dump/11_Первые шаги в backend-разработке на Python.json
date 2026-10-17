@@ -1,0 +1,1556 @@
+{
+  "course_id": 11,
+  "course_title": "Первые шаги в backend-разработке на Python",
+  "status": "review_template",
+  "source_note": "Generated from edu_platform_kurses.sql. The database contains the questions but no choices or correct-answer keys.",
+  "choice_questions": [
+    {
+      "step_id": 1444,
+      "question_html": "<p>Что выведет код?</p>\n\n<pre><code class=\"language-python\">value = 10\nvalue = \"десять\"\nprint(type(value))\n</code></pre>",
+      "answer_options": [
+        "<class 'int'>",
+        "<class 'str'>",
+        "<class 'float'>",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1579,
+      "question_html": "<p>Чем отличается Docker-образ (image) от контейнера?</p>",
+      "answer_options": [
+        "Образ — это запущенный экземпляр контейнера",
+        "Контейнер — это шаблон для создания образов",
+        "Образ — это шаблон, а контейнер — запущенный экземпляр образа",
+        "Это одно и то же"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1481,
+      "question_html": "<p>Что выведет код?</p>\n\n<pre><code class=\"language-python\">nums = {1, 2, 2, 3, 3, 3}\nprint(nums)\n</code></pre>",
+      "answer_options": [
+        "{1, 2, 2, 3, 3, 3}",
+        "{1, 2, 3}",
+        "[1, 2, 3]",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1606,
+      "question_html": "<p>Чего <strong>не должен</strong> делать слой репозиториев согласно теории?</p>",
+      "answer_options": [
+        "Работать с AsyncSession",
+        "Знать про ORM-модель User",
+        "Управлять транзакциями (делать commit)",
+        "Выполнять запросы к базе данных"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1482,
+      "question_html": "<p>Что является <strong>ключом</strong>, а что — <strong>значением</strong> в этом словаре?</p>\n\n<pre><code class=\"language-python\">user = {\n    \"name\": \"Алексей\",\n    \"age\": 25\n}\n</code></pre>",
+      "answer_options": [
+        "\"name\" и \"age\" — значения, \"Алексей\" и 25 — ключи",
+        "\"name\" и \"age\" — ключи, \"Алексей\" и 25 — значения",
+        "Все является ключами",
+        "Все является значениями"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1436,
+      "question_html": "<p>Что делает оператор <code>=</code> в Python?</p>",
+      "answer_options": [
+        "Сравнивает два значения",
+        "Присваивает значение переменной",
+        "Проверяет равенство",
+        "Создает новую переменную"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1583,
+      "question_html": "<p>Для чего в <code>docker-compose.yml</code> описывается секция <code>networks</code> и сеть <code>app-tier</code>?</p>",
+      "answer_options": [
+        "Для проброса портов на хост-машину",
+        "Для хранения данных базы данных",
+        "Чтобы контейнеры могли общаться друг с другом по именам сервисов",
+        "Для автоматической пересборки образов"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1514,
+      "question_html": "<p>Как обычно называется столбец, используемый как простой первичный ключ?</p>",
+      "answer_options": [
+        "key",
+        "primary",
+        "id",
+        "user_id"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1530,
+      "question_html": "<p>Какой запрос <strong>удалит только пользователя</strong> с <code>id = 5</code> из таблицы <code>users</code>?</p>",
+      "answer_options": [
+        "DELETE FROM users WHERE id = 5;",
+        "DELETE users WHERE id = 5;",
+        "REMOVE FROM users WHERE id = 5;",
+        "DELETE * FROM users WHERE id = 5;"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1465,
+      "question_html": "<p>Что выведет следующий код?</p>\n\n<pre><code class=\"language-python\">text = \"Python\"\nprint(text[2])\n</code></pre>",
+      "answer_options": [
+        "P",
+        "y",
+        "t",
+        "h"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1546,
+      "question_html": "<p>Что делает такой запрос?</p>\n\n<pre><code class=\"language-sql\">SELECT user_id, SUM(amount) AS total_amount\nFROM orders\nGROUP BY user_id\nHAVING SUM(amount) &gt; 1000;\n</code></pre>",
+      "answer_options": [
+        "Выбирает всех пользователей, у которых есть заказы",
+        "Считает сумму всех заказов для каждого пользователя и оставляет только тех, у кого сумма > 1000",
+        "Выбирает все заказы с суммой > 1000",
+        "Считает среднюю сумму заказов для каждого пользователя"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1576,
+      "question_html": "<p>Как добавить в проект зависимости <code>fastapi</code>, <code>uvicorn</code>, <code>psycopg</code>, <code>sqlalchemy</code>, <code>alembic</code> через Poetry?</p>",
+      "answer_options": [
+        "poetry install fastapi uvicorn psycopg sqlalchemy alembic",
+        "poetry add fastapi uvicorn psycopg sqlalchemy alembic",
+        "pip install fastapi uvicorn psycopg sqlalchemy alembic",
+        "poetry get fastapi uvicorn psycopg sqlalchemy alembic"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1494,
+      "question_html": "<p>Какой блок кода выполнится в данном примере?</p>\n\n<pre><code class=\"language-python\">score = 75\n\nif score &gt;= 90:\n    print(\"Отлично\")\nelif score &gt;= 70:\n    print(\"Хорошо\")\nelse:\n    print(\"Нужно подтянуться\")\n</code></pre>",
+      "answer_options": [
+        "Отлично",
+        "Хорошо",
+        "Нужно подтянуться",
+        "Ничего из перечисленного"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1513,
+      "question_html": "<p>Какое утверждение о первичном ключе (PRIMARY KEY) верно?</p>",
+      "answer_options": [
+        "Может содержать NULL",
+        "Может быть неуникальным",
+        "Всегда уникален и не может быть NULL",
+        "Может использоваться только для строковых данных"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1561,
+      "question_html": "<p>Где можно использовать <code>await</code>?</p>",
+      "answer_options": [
+        "В любой функции",
+        "Только внутри `async def` функций",
+        "Только на верхнем уровне модуля",
+        "Внутри циклов `for` и `while`"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1529,
+      "question_html": "<p>Нужно изменить возраст пользователя с <code>id = 1</code> на <code>30</code>. Какой запрос корректный?</p>",
+      "answer_options": [
+        "UPDATE users SET age = 30 WHERE id = 1;",
+        "UPDATE users WHERE id = 1 SET age = 30;",
+        "MODIFY users SET age = 30 WHERE id = 1;",
+        "ALTER users SET age = 30 WHERE id = 1;"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1631,
+      "question_html": "<p>Как в роутере <code>create_user_endpoint</code> реагируют на бизнес-исключение <code>UserAlreadyExistsError</code>?</p>",
+      "answer_options": [
+        "Возвращают статус 500",
+        "Возвращают статус 404",
+        "Возвращают статус 400 с сообщением об ошибке",
+        "Игнорируют и создают пользователя"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1558,
+      "question_html": "<p>Почему в синхронной программе с долгими операциями ввода-вывода (I/O) процесс «просто висит»?</p>",
+      "answer_options": [
+        "Из-за ошибок в коде",
+        "Потому что процессор перегружен",
+        "Потому что программа ждет завершения операции, блокируя выполнение остального кода",
+        "Из-за нехватки оперативной памяти"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1545,
+      "question_html": "<p>Какой запрос вернёт <strong>имя пользователя и сумму его заказов</strong>, объединяя таблицы <code>users</code> и <code>orders</code> по полю <code>user_id</code>?</p>",
+      "answer_options": [
+        "SELECT users.name, SUM(orders.amount) FROM users JOIN orders ON users.id = orders.user_id GROUP BY users.name;",
+        "SELECT users.name, SUM(orders.amount) FROM users, orders WHERE users.id = orders.user_id;",
+        "SELECT users.name, SUM(orders.amount) FROM users LEFT JOIN orders ON users.id = orders.user_id;",
+        "SELECT users.name, SUM(orders.amount) FROM users INNER JOIN orders ON users.id = orders.user_id;"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1443,
+      "question_html": "<p>Что означает выражение «Python — язык с динамической типизацией»?</p>",
+      "answer_options": [
+        "Тип переменной определяется при ее объявлении и не может быть изменен",
+        "Тип переменной определяется во время выполнения и может меняться",
+        "Все переменные должны быть одного типа",
+        "Типы данных не важны"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1447,
+      "question_html": "<p>Что произойдёт, если заменить строку</p>\n\n<pre><code class=\"language-python\">age = int(input(\"Введите возраст: \"))\n</code></pre>\n\n<p>на</p>\n\n<pre><code class=\"language-python\">age = input(\"Введите возраст: \")\n</code></pre>\n\n<p>и оставить <code>print(f\"Через год вам будет {age + 1}\")</code> без изменений?</p>",
+      "answer_options": [
+        "Программа выведет возраст + 1",
+        "Программа выведет ошибку, так как нельзя сложить строку и число",
+        "Программа выведет возраст без изменений",
+        "Программа не выполнится"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1598,
+      "question_html": "<p>Зачем в <code>docker-compose.yml</code> у сервиса <code>fastapi-project</code> указано <code>depends_on: - postgres</code>?</p>",
+      "answer_options": [
+        "Для автоматического создания базы данных",
+        "Чтобы `fastapi-project` запускался после `postgres`",
+        "Чтобы `postgres` мог обращаться к `fastapi-project`",
+        "Для проброса портов"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1479,
+      "question_html": "<p>Что выведет код?</p>\n\n<pre><code class=\"language-python\">numbers = [10, 20, 30]\nnumbers[1] = 99\nprint(numbers)\n</code></pre>",
+      "answer_options": [
+        "[10, 20, 30]",
+        "[10, 99, 30]",
+        "[99, 20, 30]",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1586,
+      "question_html": "<p>Для чего используется инструмент <code>pre-commit</code> в проекте?</p>",
+      "answer_options": [
+        "Для автоматического деплоя приложения",
+        "Для запуска тестов перед коммитом",
+        "Для автоматической проверки и форматирования кода перед коммитом",
+        "Для управления зависимостями"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1591,
+      "question_html": "<p>Какой объект в SQLAlchemy описывает общий базовый класс для всех ORM-моделей в твоём коде?</p>",
+      "answer_options": [
+        "engine",
+        "AsyncSessionLocal",
+        "Base",
+        "AsyncSession"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1480,
+      "question_html": "<p>Чем множество (<code>set</code>) отличается от списка (<code>list</code>)?</p>",
+      "answer_options": [
+        "Множество хранит элементы в порядке добавления",
+        "Множество может хранить дубликаты",
+        "Множество хранит только уникальные элементы и не гарантирует порядок",
+        "Список не может содержать строки"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1581,
+      "question_html": "<p>Зачем в Dockerfile устанавливать переменную окружения <code>POETRY_VIRTUALENVS_CREATE=false</code>?</p>",
+      "answer_options": [
+        "Чтобы Poetry не создавал виртуальное окружение внутри контейнера, а ставил пакеты глобально",
+        "Чтобы Poetry не задавал интерактивные вопросы при установке",
+        "Чтобы Poetry создал виртуальное окружение в папке проекта",
+        "Чтобы Poetry не кэшировал зависимости"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1527,
+      "question_html": "<p>Какой запрос <strong>добавит</strong> нового пользователя в таблицу <code>users</code>?</p>\n\n<p>Нужно вставить пользователя с именем <code>Иван</code>, email <code>ivan@example.com</code> и возрастом <code>28</code>.</p>",
+      "answer_options": [
+        "INSERT INTO users (name, email, age) VALUES ('Иван', 'ivan@example.com', 28);",
+        "INSERT users (name, email, age) VALUES ('Иван', 'ivan@example.com', 28);",
+        "INSERT INTO users VALUES ('Иван', 'ivan@example.com', 28);",
+        "UPDATE users SET name='Иван', email='ivan@example.com', age=28;"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1578,
+      "question_html": "<p>Какая команда запустит файл <code>main.py</code> внутри виртуального окружения Poetry <strong>без</strong> входа в <code>poetry shell</code>?</p>",
+      "answer_options": [
+        "poetry run python main.py",
+        "python main.py",
+        "poetry exec python main.py",
+        "poetry shell && python main.py"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1575,
+      "question_html": "<p>Какая команда инициализирует новый проект Poetry в текущей папке?</p>",
+      "answer_options": [
+        "poetry install",
+        "poetry new",
+        "poetry init",
+        "pip install poetry"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1448,
+      "question_html": "<p>Пользователь ввёл <code>18</code>. Что выведет программа?</p>\n\n<pre><code class=\"language-python\">age = int(input(\"Введите возраст: \"))\nprint(f\"Через год вам будет {age + 1}\")\n</code></pre>",
+      "answer_options": [
+        "Через год вам будет 18",
+        "Через год вам будет 19",
+        "Через год вам будет 181",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1604,
+      "question_html": "<p>Какое направление зависимостей является корректным для слоистой архитектуры, описанной в уроке?</p>",
+      "answer_options": [
+        "Репозитории -> Сервисы -> API",
+        "API -> Репозитории -> Сервисы",
+        "API -> Сервисы -> Репозитории",
+        "Сервисы -> API -> Репозитории"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1603,
+      "question_html": "<p>Зачем в проекте вводят трёхуровневую архитектуру?</p>",
+      "answer_options": [
+        "Чтобы усложнить код",
+        "Для улучшения читаемости, тестируемости и масштабируемости",
+        "Чтобы уменьшить количество файлов",
+        "Для увеличения скорости работы приложения"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1451,
+      "question_html": "<p>Что нужно сделать, чтобы программа корректно работала, если пользователь вводит целые числа, но мы хотим через год выводить возраст <strong>с плавающей точкой</strong> (например, <code>19.0</code>)?</p>",
+      "answer_options": [
+        "Использовать `float(input(...))` для возраста",
+        "Использовать `int(input(...))` для возраста",
+        "Использовать `str(input(...))` для возраста",
+        "Ничего не менять"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1483,
+      "question_html": "<p>Что выведет код?</p>\n\n<pre><code class=\"language-python\">user = {\"name\": \"Алексей\", \"age\": 25}\nprint(\"age\" in user)\nprint(\"Алексей\" in user)\n</code></pre>",
+      "answer_options": [
+        "True\\nTrue",
+        "True\\nFalse",
+        "False\\nTrue",
+        "False\\nFalse"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1600,
+      "question_html": "<p>Что делает команда:</p>\n\n<pre><code>poetry run alembic revision --autogenerate -m \"create users table\"</code></pre>",
+      "answer_options": [
+        "Применяет все миграции",
+        "Создает новую миграцию на основе разницы между моделями и текущей схемой БД",
+        "Откатывает последнюю миграцию",
+        "Удаляет все миграции"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1625,
+      "question_html": "<p>Какую роль играет модель <code>UserUpdate</code>?</p>",
+      "answer_options": [
+        "Описывает данные для создания пользователя",
+        "Описывает данные для полного обновления пользователя",
+        "Описывает данные для частичного обновления пользователя",
+        "Описывает данные для ответа API"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1499,
+      "question_html": "<p>Что произойдёт при выполнении кода?</p>\n\n<pre><code class=\"language-python\">class Group:\n    def __init__(self, users):\n        self.users = users\n\n    def __len__(self):\n        return len(self.users)\n\ng = Group([\"Аня\", \"Олег\", \"Иван\"])\nprint(len(g))\n</code></pre>",
+      "answer_options": [
+        "Выведет 3",
+        "Выведет ошибку",
+        "Выведет список пользователей",
+        "Выведет None"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1526,
+      "question_html": "<p>Какая команда SQL используется для выборки данных из таблицы?</p>",
+      "answer_options": [
+        "GET",
+        "SELECT",
+        "SHOW",
+        "FETCH"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1462,
+      "question_html": "<p>Что в Python считается строкой?</p>",
+      "answer_options": [
+        "Только текст в одинарных кавычках",
+        "Только текст в двойных кавычках",
+        "Последовательность символов в одинарных или двойных кавычках",
+        "Любой текст, не являющийся числом"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1435,
+      "question_html": "<p>Какое из имён <strong>можно</strong> использовать как имя переменной в Python?</p>",
+      "answer_options": [
+        "2age",
+        "user-name",
+        "user_name",
+        "class"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1613,
+      "question_html": "<p>Какой тип возвращает функция <code>list_users</code> в репозитории?</p>",
+      "answer_options": [
+        "User",
+        "list[User]",
+        "AsyncSession",
+        "None"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1580,
+      "question_html": "<p>Для чего в <code>Dockerfile</code> используется инструкция <code>WORKDIR /app</code>?</p>",
+      "answer_options": [
+        "Устанавливает переменную окружения",
+        "Создает папку /app и делает ее рабочей директорией внутри контейнера",
+        "Копирует файлы в папку /app",
+        "Запускает приложение из папки /app"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1516,
+      "question_html": "<p>В таблице <code>orders</code> есть столбец <code>user_id</code>, который ссылается на <code>users.id</code>. Что такое <code>user_id</code>?</p>",
+      "answer_options": [
+        "Первичный ключ",
+        "Внешний ключ",
+        "Индекс",
+        "Уникальное ограничение"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1438,
+      "question_html": "<p>Какой тип данных будет у значения <code>3.14</code> в Python?</p>",
+      "answer_options": [
+        "int",
+        "float",
+        "str",
+        "bool"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1577,
+      "question_html": "<p>Где будут жить зависимости проекта при использовании Poetry?</p>",
+      "answer_options": [
+        "В глобальном Python",
+        "В папке `.venv` внутри проекта",
+        "В системной папке `site-packages`",
+        "В файле `pyproject.toml`"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1434,
+      "question_html": "<p>Что такое переменная в Python?</p>",
+      "answer_options": [
+        "Ссылка на область памяти",
+        "Имя для хранения данных",
+        "Тип данных",
+        "Функция"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1612,
+      "question_html": "<p>Как API-слой реагирует на <code>UserNotFoundError</code> в <code>get_user_endpoint</code>?</p>",
+      "answer_options": [
+        "Возвращает статус 400",
+        "Возвращает статус 404",
+        "Возвращает статус 500",
+        "Возвращает пустой ответ"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1518,
+      "question_html": "<p>Какая из пар чаще всего реализуется как связь «многие ко многим» (M:N)?</p>",
+      "answer_options": [
+        "Пользователи и заказы",
+        "Студенты и курсы",
+        "Пользователи и паспорта",
+        "Товары и категории"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1511,
+      "question_html": "<p>Что такое строка (row) в таблице?</p>",
+      "answer_options": [
+        "Столбец таблицы",
+        "Одна запись в таблице",
+        "Название таблицы",
+        "Тип данных"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1562,
+      "question_html": "<p>За что отвечает цикл событий (event loop) в <code>asyncio</code>?</p>",
+      "answer_options": [
+        "За создание потоков",
+        "За управление выполнением корутин и переключение между ними во время ожидания",
+        "За выполнение CPU-интенсивных задач",
+        "За управление памятью"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1528,
+      "question_html": "<p>Какой запрос выберет <strong>только столбцы</strong> <code>name</code> и <code>email</code> из таблицы <code>users</code>?</p>",
+      "answer_options": [
+        "SELECT name, email FROM users;",
+        "SELECT ALL FROM users;",
+        "SELECT * FROM users;",
+        "GET name, email FROM users;"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1624,
+      "question_html": "<p>Какое поле <strong>обязательно</strong> должно быть в <code>UserCreate</code> согласно коду?</p>",
+      "answer_options": [
+        "id",
+        "email",
+        "is_active",
+        "created_at"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1468,
+      "question_html": "<p>Что выведет код?</p>\n\n<pre><code class=\"language-python\">a = 10\nb = 3\nprint(a // b, a % b)\n</code></pre>",
+      "answer_options": [
+        "3.33 1",
+        "3 1",
+        "4 1",
+        "3 0"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1544,
+      "question_html": "<p>Чем <code>HAVING</code> отличается от <code>WHERE</code>?</p>",
+      "answer_options": [
+        "Нет разницы",
+        "`WHERE` фильтрует строки до группировки, `HAVING` — после",
+        "`HAVING` фильтрует строки до группировки, `WHERE` — после",
+        "`WHERE` используется только с `JOIN`"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1619,
+      "question_html": "<p>Что означает аббревиатура CRUD?</p>",
+      "answer_options": [
+        "Create, Read, Update, Delete",
+        "Create, Read, Upload, Download",
+        "Copy, Read, Update, Delete",
+        "Create, Request, Update, Delete"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1611,
+      "question_html": "<p>В коде сервиса:</p>\n\n<pre><code class=\"language-python\">existing_user = await users_repo.get_user_by_email(session, email)\nif existing_user is not None:\n    raise UserAlreadyExistsError\n</code></pre>\n\n<p>Что делает эта проверка с точки зрения бизнес-логики?</p>",
+      "answer_options": [
+        "Проверяет, активен ли пользователь",
+        "Проверяет, существует ли уже пользователь с таким email",
+        "Проверяет, существует ли пользователь с таким id",
+        "Проверяет, не пустой ли email"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1609,
+      "question_html": "<p>Какая ответственность у API-слоя (<code>routes/users.py</code>)?</p>",
+      "answer_options": [
+        "Работа с базой данных",
+        "Бизнес-логика",
+        "Прием HTTP-запросов, вызов сервисов и возврат ответов",
+        "Определение структуры таблиц"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1632,
+      "question_html": "<p>Что позволяет делать Swagger UI по адресу <code>/docs</code> в FastAPI?</p>",
+      "answer_options": [
+        "Просматривать логи приложения",
+        "Тестировать API-эндпоинты прямо из браузера",
+        "Редактировать код приложения",
+        "Управлять базой данных"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1498,
+      "question_html": "<p>За что отвечает магический метод <code>__str__</code> в классе?</p>\n\n<pre><code class=\"language-python\">class User:\n    def __str__(self):\n        return \"Пользователь\"\n</code></pre>",
+      "answer_options": [
+        "За сравнение объектов",
+        "За создание объекта",
+        "За строковое представление объекта для `print()`",
+        "За удаление объекта"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1597,
+      "question_html": "<p>Какой сервис в <code>docker-compose.yml</code> отвечает за запуск PostgreSQL?</p>\n\n<pre><code>services:\n  fastapi-project:\n    ...\n  postgres:\n    image: postgres:16\n    ...\n</code></pre>",
+      "answer_options": [
+        "fastapi-project",
+        "postgres",
+        "app-tier",
+        "db"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1464,
+      "question_html": "<p>Что будет выведено на экран?</p>\n\n<pre><code class=\"language-python\">name = \"Алексей\"\nage = 25\nprint(f\"Меня зовут {name}, мне {age} лет\")\n</code></pre>",
+      "answer_options": [
+        "Меня зовут name, мне age лет",
+        "Меня зовут Алексей, мне 25 лет",
+        "Меня зовут {name}, мне {age} лет",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1478,
+      "question_html": "<p>Какое из выражений создаёт список в Python?</p>",
+      "answer_options": [
+        "(1, 2, 3)",
+        "{1, 2, 3}",
+        "[1, 2, 3]",
+        "`<1, 2, 3>`"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1495,
+      "question_html": "<p>Сколько раз будет выполнено тело цикла?</p>\n\n<pre><code class=\"language-python\">count = 0\n\nwhile count &lt; 3:\n    print(\"Счётчик:\", count)\n    count = count + 1\n</code></pre>",
+      "answer_options": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1519,
+      "question_html": "<p>Что из перечисленного является <strong>отдельной базой данных</strong> в PostgreSQL?</p>",
+      "answer_options": [
+        "public",
+        "users",
+        "app_db",
+        "postgres"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1441,
+      "question_html": "<p>Что выведет следующий код?</p>\n\n<pre><code class=\"language-python\">x = 7\nprint(type(x))\n</code></pre>",
+      "answer_options": [
+        "<class 'float'>",
+        "<class 'int'>",
+        "<class 'str'>",
+        "<class 'bool'>"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1521,
+      "question_html": "<p>Как называется схема, которая по умолчанию используется во многих установках PostgreSQL?</p>",
+      "answer_options": [
+        "main",
+        "default",
+        "public",
+        "dbo"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1587,
+      "question_html": "<p>Что делает команда:</p>\n\n<pre><code>poetry run pre-commit install</code></pre>",
+      "answer_options": [
+        "Устанавливает зависимости pre-commit",
+        "Активирует git-хуки pre-commit для текущего репозитория",
+        "Запускает все проверки pre-commit",
+        "Обновляет конфигурацию pre-commit"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1439,
+      "question_html": "<p>Какой тип данных у значения <code>\"Привет\"</code>?</p>",
+      "answer_options": [
+        "int",
+        "float",
+        "str",
+        "bool"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1584,
+      "question_html": "<p>Зачем создаётся файл <code>local.env</code> и подключается через <code>env_file</code> в <code>docker-compose.yml</code>?</p>",
+      "answer_options": [
+        "Для хранения исходного кода",
+        "Для хранения паролей и других переменных окружения, не попадающих в git",
+        "Для конфигурации сети",
+        "Для автоматической сборки образов"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1590,
+      "question_html": "<p>Какой формат строки подключения используется для асинхронного подключения к PostgreSQL через <code>asyncpg</code>?</p>",
+      "answer_options": [
+        "postgresql://user:pass@host:port/db",
+        "postgresql+asyncpg://user:pass@host:port/db",
+        "postgres+asyncpg://user:pass@host:port/db",
+        "asyncpg://user:pass@host:port/db"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1437,
+      "question_html": "<p>Что будет храниться в переменной <code>x</code> после выполнения кода?</p>\n\n<pre><code class=\"language-python\">x = 5\nx = 10\n</code></pre>",
+      "answer_options": [
+        "5",
+        "10",
+        "15",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1582,
+      "question_html": "<p>Что делает команда:</p>\n\n<pre><code>docker run --name pg \\\\\n  -e POSTGRES_USER=app \\\\\n  -e POSTGRES_PASSWORD=secret \\\\\n  -e POSTGRES_DB=app_db \\\\\n  -p 5432:5432 \\\\\n  -d postgres:16\n</code></pre>",
+      "answer_options": [
+        "Создает и запускает контейнер с PostgreSQL 16 в фоновом режиме",
+        "Собирает образ PostgreSQL 16",
+        "Останавливает контейнер с PostgreSQL",
+        "Подключается к контейнеру с PostgreSQL"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1547,
+      "question_html": "<p>Чем <code>LEFT JOIN</code> отличается от <code>INNER JOIN</code>?</p>",
+      "answer_options": [
+        "Нет разницы",
+        "`LEFT JOIN` возвращает все строки из левой таблицы, даже если нет совпадений",
+        "`LEFT JOIN` возвращает все строки из правой таблицы",
+        "`INNER JOIN` возвращает все строки из левой таблицы"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1628,
+      "question_html": "<p>Почему в репозиторных функциях <code>update_user</code> и <code>delete_user</code> используется <code>flush()</code>, но не вызывается <code>commit()</code>?</p>",
+      "answer_options": [
+        "Чтобы изменения не попали в БД",
+        "Чтобы отправить SQL-запрос в БД, но оставить управление транзакцией на сервисный слой",
+        "Чтобы ускорить работу функции",
+        "Это ошибка, должен быть commit()"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1522,
+      "question_html": "<p>Что из перечисленного НЕ является объектом PostgreSQL?</p>",
+      "answer_options": [
+        "Таблица",
+        "Схема",
+        "Docker-контейнер",
+        "База данных"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1601,
+      "question_html": "<p>Что делает функция-зависимость <code>get_async_session</code> в <code>fastapi_project/dependencies.py</code>?  </p>\n\n<pre><code class=\"language-python\">async def get_async_session() -&gt; AsyncGenerator[AsyncSession, None]:\n    async with AsyncSessionLocal() as session:\n        yield session\n</code></pre>",
+      "answer_options": [
+        "Создает движок БД",
+        "Создает и автоматически закрывает сессию для каждого запроса",
+        "Выполняет запросы к БД",
+        "Управляет миграциями"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1637,
+      "question_html": "<p>За что отвечает следующий фрагмент в <code>main.py</code>?</p>\n\n<pre><code class=\"language-python\">app.mount(\n    \"/frontend\",\n    StaticFiles(directory=\"frontend\", html=True),\n    name=\"frontend\",\n)\n</code></pre>",
+      "answer_options": [
+        "Подключает API роутер",
+        "Раздает статические файлы из папки `frontend` по URL `/frontend`",
+        "Настраивает CORS",
+        "Запускает сервер"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1595,
+      "question_html": "<p>Какой атрибут в классе модели <code>User</code> задаёт имя таблицы в базе данных?</p>",
+      "answer_options": [
+        "__name__",
+        "__table__",
+        "__tablename__",
+        "__table_name__"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1630,
+      "question_html": "<p>Какой HTTP-статус возвращает эндпоинт <code>DELETE /users/{user_id}</code> при успешном удалении пользователя?</p>",
+      "answer_options": [
+        "200 OK",
+        "201 CREATED",
+        "204 NO CONTENT",
+        "404 NOT FOUND"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1633,
+      "question_html": "<p>Почему документация в <code>/docs</code> автоматически знает про поля <code>email</code>, <code>is_active</code>, <code>created_at</code> в ответах?</p>",
+      "answer_options": [
+        "Из-за аннотаций в ORM-модели",
+        "Из-за Pydantic-схемы `UserRead`, указанной в `response_model`",
+        "Из-за настроек в `pyproject.toml`",
+        "Из-за комментариев в коде"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1589,
+      "question_html": "<p>Зачем в проекте используется ORM (на примере SQLAlchemy)?</p>",
+      "answer_options": [
+        "Для автоматического создания API",
+        "Для работы с БД через Python-классы, а не через чистый SQL",
+        "Для управления зависимостями",
+        "Для развертывания приложения"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1621,
+      "question_html": "<p>Какой HTTP-метод чаще всего используется для чтения списка или одного ресурса (операция <strong>Read</strong>)?</p>",
+      "answer_options": [
+        "POST",
+        "GET",
+        "PATCH",
+        "DELETE"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1635,
+      "question_html": "<p>Какую роль играет фронтенд в общей схеме «браузер → фронтенд → API → БД»?</p>",
+      "answer_options": [
+        "Он хранит данные",
+        "Он выполняет бизнес-логику",
+        "Он является клиентом, который отправляет запросы к API",
+        "Он управляет базой данных"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1450,
+      "question_html": "<p>Зачем перед строкой в <code>print</code> используется буква <code>f</code>?</p>\n\n<pre><code class=\"language-python\">print(f\"Через год вам будет {age + 1}\")\n</code></pre>",
+      "answer_options": [
+        "Для обозначения начала строки",
+        "Для включения режима f-строк, позволяющего вставлять значения переменных",
+        "Для форматирования числа с плавающей точкой",
+        "Это синтаксическая ошибка"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1627,
+      "question_html": "<p>Что <strong>делает</strong> функция <code>update_user</code> в репозитории (<code>repositories/users.py</code>)?</p>",
+      "answer_options": [
+        "Проверяет, существует ли пользователь",
+        "Обновляет поля ORM-объекта и отправляет UPDATE в БД, но не коммитит",
+        "Удаляет пользователя",
+        "Создает нового пользователя"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1593,
+      "question_html": "<p>Что делает параметр <code>expire_on_commit=False</code> в <code>async_sessionmaker</code>?</p>",
+      "answer_options": [
+        "Запрещает коммит",
+        "Запрещает обновление объекта после коммита",
+        "После коммита объект остается доступным для использования",
+        "Автоматически закрывает сессию"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1449,
+      "question_html": "<p>Какой тип данных будет у переменной <code>age</code> после выполнения строки:<br>\n(при условии, что пользователь ввёл корректное число)?</p>\n\n<pre><code class=\"language-python\">age = int(input(\"Введите возраст: \"))\n</code></pre>",
+      "answer_options": [
+        "str",
+        "float",
+        "int",
+        "bool"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1531,
+      "question_html": "<p>Какая пара «тип данных → пример значения» указана верно для SQL?</p>",
+      "answer_options": [
+        "VARCHAR(100) -> 100",
+        "INT -> 'hello'",
+        "BOOLEAN -> TRUE",
+        "DATE -> 12:30:00"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1442,
+      "question_html": "<p>Какой результат будет у выражения <code>2 + 3 * 4</code> в Python?</p>",
+      "answer_options": [
+        "20",
+        "14",
+        "24",
+        "9"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1608,
+      "question_html": "<p>Какая роль у кастомных исключений <code>UserAlreadyExistsError</code> и <code>UserNotFoundError</code>?</p>",
+      "answer_options": [
+        "Для обработки ошибок на уровне API",
+        "Для описания бизнес-ошибок на уровне сервисов",
+        "Для обработки ошибок базы данных",
+        "Для логирования"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1520,
+      "question_html": "<p>Что такое схема (schema) в PostgreSQL?</p>",
+      "answer_options": [
+        "База данных",
+        "Пространство имен для группировки таблиц",
+        "Таблица",
+        "Тип данных"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1605,
+      "question_html": "<p>За что отвечает слой репозиториев (<code>repositories/users.py</code>)?</p>",
+      "answer_options": [
+        "За бизнес-логику",
+        "За инкапсуляцию работы с базой данных (CRUD-операции)",
+        "За обработку HTTP-запросов",
+        "За аутентификацию"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1626,
+      "question_html": "<p>Зачем в <code>UserRead</code> указан <code>model_config = ConfigDict(from_attributes=True)</code>?</p>",
+      "answer_options": [
+        "Чтобы валидировать данные",
+        "Чтобы Pydantic мог создавать схему из ORM-объекта",
+        "Чтобы сериализовать в JSON",
+        "Чтобы сделать поля необязательными"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1574,
+      "question_html": "<p>За что в проекте отвечает файл <code>pyproject.toml</code> при использовании Poetry?</p>",
+      "answer_options": [
+        "Хранит список зависимостей и настройки проекта",
+        "Хранит код приложения",
+        "Управляет версиями Python",
+        "Содержит конфигурацию Docker"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1440,
+      "question_html": "<p>Какой тип данных у значения <code>True</code>?</p>",
+      "answer_options": [
+        "int",
+        "float",
+        "str",
+        "bool"
+      ],
+      "suggested_correct_option_index": 3,
+      "needs_review": false
+    },
+    {
+      "step_id": 1497,
+      "question_html": "<p>Что такое <code>self</code> в методах класса?</p>\n\n<pre><code class=\"language-python\">class User:\n    def __init__(self, name):\n        self.name = name\n</code></pre>",
+      "answer_options": [
+        "Ссылка на класс",
+        "Ссылка на экземпляр класса (объект)",
+        "Имя переменной",
+        "Ключевое слово"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1636,
+      "question_html": "<p>Где по теории урока рекомендуется разместить файл <code>index.html</code> с фронтендом?</p>",
+      "answer_options": [
+        "В корне проекта",
+        "В папке `src`",
+        "В папке `frontend`",
+        "В папке `static`"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1523,
+      "question_html": "<p>Что описывает следующая структура?</p>\n\n<pre><code class=\"language-sql\">PostgreSQL сервер\n└── database: app_db\n    └── schema: public\n        ├── table: users\n        └── table: orders\n</code></pre>",
+      "answer_options": [
+        "Структуру таблиц",
+        "Иерархию объектов в PostgreSQL",
+        "Схему связей между таблицами",
+        "Структуру проекта"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1542,
+      "question_html": "<p>Какая функция относится к <strong>агрегатным</strong> в SQL?</p>",
+      "answer_options": [
+        "NOW()",
+        "COUNT()",
+        "UPPER()",
+        "LENGTH()"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1622,
+      "question_html": "<p>Какой путь и метод из списка соответствует операции <strong>Delete</strong> для пользователя с id = 1?</p>",
+      "answer_options": [
+        "GET /users/1",
+        "POST /users/1",
+        "DELETE /users/1",
+        "PATCH /users/1"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1446,
+      "question_html": "<p>Для чего в примере используется функция <code>int(...)</code>?</p>\n\n<pre><code class=\"language-python\">age = int(input(\"Введите возраст: \"))\n</code></pre>",
+      "answer_options": [
+        "Для вывода возраста",
+        "Для преобразования введенной строки в целое число",
+        "Для проверки возраста",
+        "Для форматирования строки"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1517,
+      "question_html": "<p>Какой тип связи описывает ситуацию: один пользователь — много заказов?</p>",
+      "answer_options": [
+        "Один к одному (1:1)",
+        "Один ко многим (1:N)",
+        "Многие ко многим (M:N)",
+        "Многие к одному (N:1)"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1585,
+      "question_html": "<p>Какой командой запускают все сервисы, описанные в <code>docker-compose.yml</code>, с пересборкой образов?</p>",
+      "answer_options": [
+        "docker-compose up",
+        "docker-compose start",
+        "docker-compose up --build",
+        "docker-compose build"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1543,
+      "question_html": "<p>Что делает конструкция <code>GROUP BY user_id</code> в запросе?</p>\n\n<pre><code class=\"language-sql\">SELECT user_id, COUNT(*) \nFROM orders\nGROUP BY user_id;\n</code></pre>",
+      "answer_options": [
+        "Сортирует по user_id",
+        "Фильтрует по user_id",
+        "Группирует строки по уникальным значениям user_id",
+        "Объединяет таблицы"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1512,
+      "question_html": "<p>Что такое столбец (column) в таблице?</p>",
+      "answer_options": [
+        "Строка таблицы",
+        "Отдельное свойство сущности, описываемое в таблице",
+        "Первичный ключ",
+        "Связь с другой таблицей"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1563,
+      "question_html": "<p>Что делает <code>asyncio.create_task(fetch_data(1))</code> в примере?</p>\n\n<pre><code class=\"language-python\">task1 = asyncio.create_task(fetch_data(1))\n</code></pre>",
+      "answer_options": [
+        "Сразу выполняет `fetch_data(1)`",
+        "Создает задачу для параллельного выполнения `fetch_data(1)` в цикле событий",
+        "Возвращает результат `fetch_data(1)`",
+        "Отменяет `fetch_data(1)`"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1616,
+      "question_html": "<p>Какая из проблем <strong>не относится</strong> к подходу «всё в одном файле main.py», описанному в уроке?</p>",
+      "answer_options": [
+        "Сложно читать и менять код",
+        "Тяжело тестировать логику",
+        "Снижение производительности приложения",
+        "Изменение логики тянет за собой переписывание эндпоинтов"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1496,
+      "question_html": "<p>Что делает ключевое слово <code>return</code> в функции?</p>\n\n<pre><code class=\"language-python\">def add(a, b):\n    result = a + b\n    return result\n</code></pre>",
+      "answer_options": [
+        "Выводит результат на экран",
+        "Завершает функцию и возвращает значение",
+        "Создает новую переменную",
+        "Вызывает другую функцию"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1614,
+      "question_html": "<p>Где в структуре проекта, описанной в уроке, должен лежать файл с роутером пользователей?</p>",
+      "answer_options": [
+        "src/fastapi_project/services/users.py",
+        "src/fastapi_project/repositories/users.py",
+        "src/fastapi_project/routes/users.py",
+        "src/fastapi_project/models.py"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1463,
+      "question_html": "<p>Что делает операция <code>+</code> для строк в Python?</p>\n\n<pre><code class=\"language-python\">first_name = \"Алексей\"\nlast_name = \"Иванов\"\nfull_name = first_name + \" \" + last_name\n</code></pre>",
+      "answer_options": [
+        "Складывает строки как числа",
+        "Объединяет (склеивает) строки",
+        "Сравнивает строки",
+        "Удаляет пробелы"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1599,
+      "question_html": "<p>Для чего используется команда:</p>\n\n<pre><code>poetry run alembic init migrations</code></pre>",
+      "answer_options": [
+        "Для создания первой миграции",
+        "Для инициализации Alembic в проекте и создания папки migrations",
+        "Для применения миграций",
+        "Для отката миграций"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1467,
+      "question_html": "<p>Каков результат выполнения выражения:</p>\n\n<pre><code class=\"language-python\">result = 2 + 3 * 4\nprint(result)\n</code></pre>",
+      "answer_options": [
+        "20",
+        "14",
+        "24",
+        "9"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1596,
+      "question_html": "<p>Какое поле в модели <code>User</code> является первичным ключом согласно твоему коду?</p>",
+      "answer_options": [
+        "email",
+        "id",
+        "is_active",
+        "created_at"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1466,
+      "question_html": "<p>Что выведет следующий код?</p>\n\n<pre><code class=\"language-python\">text = \"Python\"\nprint(text[1:4])\n</code></pre>",
+      "answer_options": [
+        "Pyt",
+        "yth",
+        "tho",
+        "hon"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1515,
+      "question_html": "<p>Что такое внешний ключ (FOREIGN KEY)?</p>",
+      "answer_options": [
+        "Столбец, который уникально идентифицирует строку в таблице",
+        "Столбец, который ссылается на первичный ключ в другой таблице",
+        "Индекс для ускорения поиска",
+        "Ограничение на уникальность значения"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1607,
+      "question_html": "<p>Где по архитектуре <strong>должна находиться</strong> проверка «пользователь с таким email уже существует»?</p>",
+      "answer_options": [
+        "В слое репозиториев",
+        "В сервисном слое",
+        "В API-слое",
+        "В модели данных"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1560,
+      "question_html": "<p>Что делает ключевое слово <code>await</code>?</p>",
+      "answer_options": [
+        "Приостанавливает выполнение корутины и передает управление циклу событий",
+        "Запускает корутину",
+        "Отменяет корутину",
+        "Возвращает результат корутины"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1510,
+      "question_html": "<p>Что является основной формой хранения данных в реляционной базе данных?</p>",
+      "answer_options": [
+        "Списки",
+        "Словари",
+        "Таблицы",
+        "Файлы"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1594,
+      "question_html": "<p>Что делает класс <code>Settings(BaseSettings)</code> в <code>settings.py</code>?</p>",
+      "answer_options": [
+        "Загружает и валидирует настройки из переменных окружения и .env файлов",
+        "Создает подключение к БД",
+        "Определяет модели данных",
+        "Настраивает логирование"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1620,
+      "question_html": "<p>Какому HTTP-методу обычно соответствует операция <strong>Create</strong> в CRUD при работе с REST API?</p>",
+      "answer_options": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1615,
+      "question_html": "<p>Почему такая архитектура облегчает тестирование?</p>",
+      "answer_options": [
+        "Уменьшается количество кода",
+        "Слои можно тестировать изолированно, подменяя зависимости",
+        "Автоматически генерируются тесты",
+        "Ускоряется выполнение тестов"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1617,
+      "question_html": "<p>Появилась новая сущность <code>Todo</code>. В каком наборе файлов её стоит реализовать, следуя описанной архитектуре?</p>",
+      "answer_options": [
+        "models.py, routes/todos.py, services/todos.py, repositories/todos.py",
+        "models.py, main.py",
+        "routes/todos.py, database.py",
+        "services/todos.py, settings.py"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1559,
+      "question_html": "<p>Что такое корутина в контексте <code>asyncio</code>?</p>",
+      "answer_options": [
+        "Обычная функция",
+        "Функция, объявленная с `async def`, которая может быть приостановлена и возобновлена",
+        "Поток выполнения",
+        "Процесс"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1610,
+      "question_html": "<p>В каком файле по описанной структуре <strong>логичнее всего</strong> разместить код, который выполняет <code>select(User).where(User.id == user_id)</code>?</p>",
+      "answer_options": [
+        "routes/users.py",
+        "services/users.py",
+        "repositories/users.py",
+        "models.py"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1592,
+      "question_html": "<p>За что отвечает параметр <code>echo=True</code> при создании <code>engine</code> через <code>create_async_engine</code>?</p>",
+      "answer_options": [
+        "Включает логирование выполняемых SQL-запросов",
+        "Включает кэширование запросов",
+        "Отключает логирование",
+        "Ускоряет выполнение запросов"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1524,
+      "question_html": "<p>Для чего в реляционной базе данных нужны связи между таблицами (через внешние ключи)?</p>",
+      "answer_options": [
+        "Для увеличения скорости работы",
+        "Для обеспечения целостности данных и возможности строить запросы с JOIN",
+        "Для уменьшения размера базы данных",
+        "Для шифрования данных"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1629,
+      "question_html": "<p>Что проверяет сервисная функция <code>update_user</code> перед изменением email?</p>\n\n<pre><code class=\"language-python\">if email is not None:\n    existing = await users_repo.get_user_by_email(session, email)\n    if existing is not None and existing.id != user.id:\n        raise UserAlreadyExistsError\n</code></pre>",
+      "answer_options": [
+        "Что пользователь с таким email уже существует",
+        "Что новый email не занят другим пользователем",
+        "Что email не пустой",
+        "Что у пользователя есть права на изменение email"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1623,
+      "question_html": "<p>Для какой задачи используется модель <code>UserCreate</code>?</p>",
+      "answer_options": [
+        "Для ответа API",
+        "Для валидации данных при создании пользователя",
+        "Для обновления пользователя",
+        "Для удаления пользователя"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    }
+  ]
+}

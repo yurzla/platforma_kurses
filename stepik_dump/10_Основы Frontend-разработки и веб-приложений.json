@@ -1,0 +1,226 @@
+{
+  "course_id": 10,
+  "course_title": "Основы Frontend-разработки и веб-приложений",
+  "status": "review_template",
+  "source_note": "Generated from edu_platform_kurses.sql. The database contains the questions but no choices or correct-answer keys.",
+  "choice_questions": [
+    {
+      "step_id": 1404,
+      "question_html": "<p>Что позволяет делать <strong>DOM API</strong> в браузере?</p>",
+      "answer_options": [
+        "Выполнять сетевые запросы к серверу",
+        "Управлять структурой, стилями и содержимым HTML-документа",
+        "Хранить данные в браузере пользователя",
+        "Обрабатывать события браузера, такие как клики и прокрутка"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1399,
+      "question_html": "<p>Почему <code>setTimeout(fn, 0)</code> не выполняется сразу?</p>",
+      "answer_options": [
+        "Потому что минимальная задержка setTimeout составляет 4 миллисекунды",
+        "Потому что функция помещается в очередь задач и выполняется только после того, как основной поток JavaScript освободится",
+        "Потому что JavaScript является многопоточным языком и выполняет задачу в отдельном потоке",
+        "Потому что setTimeout всегда выполняется после полной загрузки страницы"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1406,
+      "question_html": "<p>Зачем браузер использует <strong>cache</strong> ресурсов?</p>",
+      "answer_options": [
+        "Для повышения безопасности сайта",
+        "Для ускорения загрузки страницы и снижения нагрузки на сервер",
+        "Для хранения пользовательских данных, таких как логины и пароли",
+        "Для автоматического обновления контента на странице"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1379,
+      "question_html": "<p>Что из перечисленного <strong>верно</strong> о роли сервера в веб-приложении?</p>",
+      "answer_options": [
+        "Сервер отвечает только за отдачу статических файлов (HTML, CSS, JS)",
+        "Сервер отвечает за отображение интерфейса и взаимодействие с пользователем",
+        "Сервер хранит данные, обрабатывает логику приложения и отвечает на запросы клиента",
+        "Сервер выполняется в браузере пользователя"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1383,
+      "question_html": "<p>Что из перечисленного верно о <strong>HttpOnly cookies</strong>?</p>",
+      "answer_options": [
+        "Они доступны для чтения и изменения через JavaScript",
+        "Они используются только для хранения настроек темы и языка",
+        "Они недоступны для чтения через JavaScript, но автоматически отправляются браузером на сервер",
+        "Они хранятся в LocalStorage"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1384,
+      "question_html": "<p>Почему <strong>токены</strong> популярны в современных фронтенд-приложениях?</p>",
+      "answer_options": [
+        "Они позволяют хранить всю информацию о пользователе на клиенте",
+        "Они не требуют хранения состояния на сервере и хорошо масштабируются",
+        "Они более безопасны, чем сессии, и никогда не могут быть украдены",
+        "Они автоматически отправляются браузером с каждым запросом"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1402,
+      "question_html": "<p>Какое свойство лучше использовать для анимаций с точки зрения производительности?</p>",
+      "answer_options": [
+        "width",
+        "left",
+        "transform",
+        "margin"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1381,
+      "question_html": "<p>Для чего нужен <strong>DNS</strong>?</p>",
+      "answer_options": [
+        "Для шифрования данных между клиентом и сервером",
+        "Для перевода доменных имен в IP-адреса",
+        "Для хранения cookies и других данных пользователя",
+        "Для балансировки нагрузки между серверами"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1405,
+      "question_html": "<p>Что позволяет делать <strong>Fetch API</strong> в браузере?</p>",
+      "answer_options": [
+        "Управлять DOM-деревом",
+        "Выполнять асинхронные HTTP-запросы к серверу",
+        "Хранить данные в LocalStorage и SessionStorage",
+        "Изменять CSS-стили элементов"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1400,
+      "question_html": "<p>Какие элементы <strong>не попадают</strong> в рендер-дерево?</p>",
+      "answer_options": [
+        "Элементы с `display: none`",
+        "Элементы с `visibility: hidden`",
+        "Элементы `<head>`",
+        "Все перечисленное"
+      ],
+      "suggested_correct_option_index": 3,
+      "needs_review": false
+    },
+    {
+      "step_id": 1382,
+      "question_html": "<p>Что делает механизм <strong>CORS</strong> в браузере?</p>",
+      "answer_options": [
+        "Шифрует данные, передаваемые между клиентом и сервером",
+        "Проверяет, имеет ли право клиент с одного домена делать запросы к серверу на другом домене",
+        "Хранит данные пользователя на сервере",
+        "Обеспечивает кэширование ресурсов"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1403,
+      "question_html": "<p>Какой атрибут позволяет <strong>не блокировать </strong>построение DOM скриптом?</p>",
+      "answer_options": [
+        "async",
+        "defer",
+        "src",
+        "type=\"module\""
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1398,
+      "question_html": "<p>Зачем нужен <strong>Event Loop</strong>?</p>",
+      "answer_options": [
+        "Для выполнения JavaScript в нескольких потоках одновременно",
+        "Для управления асинхронными операциями и обеспечения неблокирующего выполнения кода",
+        "Для компиляции JavaScript в машинный код",
+        "Для управления памятью браузера"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1380,
+      "question_html": "<p>Какая из характеристик <strong>верна</strong> для <strong>HTTPS</strong>?</p>",
+      "answer_options": [
+        "Передает данные в открытом виде",
+        "Использует шифрование для защиты передаваемых данных",
+        "Работает медленнее, чем HTTP, из-за шифрования",
+        "Не поддерживается современными браузерами"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1397,
+      "question_html": "<p>Что представляет собой <strong>DOM</strong>?</p>",
+      "answer_options": [
+        "Формат данных для обмена между клиентом и сервером",
+        "Объектную модель документа, представленную в виде дерева узлов",
+        "Протокол для передачи данных",
+        "Хранилище для cookies"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1429,
+      "question_html": "<p>Какие подходы к CSS вы предпочитаете использовать в своих проектах?</p>",
+      "answer_options": [
+        "БЭМ",
+        "SASS/SCSS",
+        "CSS Modules",
+        "CSS-in-JS",
+        "Atomic CSS (например, Tailwind CSS)",
+        "Type-safe CSS (например, Vanilla Extract)"
+      ],
+      "suggested_correct_option_index": null,
+      "needs_review": false
+    },
+    {
+      "step_id": 1396,
+      "question_html": "<p>Что браузер делает <strong>в первую очередь</strong> после ввода URL?</p>",
+      "answer_options": [
+        "Запрашивает HTML-страницу с сервера",
+        "Отправляет запрос к DNS-серверу для получения IP-адреса",
+        "Строит DOM-дерево",
+        "Загружает CSS и JavaScript"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1401,
+      "question_html": "<p>Что происходит при изменении свойства <code>width</code>?</p>",
+      "answer_options": [
+        "Запускается только перерисовка (paint)",
+        "Запускается перерасчет макета (reflow) и перерисовка (paint)",
+        "Ничего не происходит, пока не изменится `height`",
+        "Запускается только композиция (composite)"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    }
+  ]
+}

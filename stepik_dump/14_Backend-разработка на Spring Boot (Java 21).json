@@ -1,0 +1,248 @@
+{
+  "course_id": 14,
+  "course_title": "Backend-разработка на Spring Boot (Java 21)",
+  "status": "review_template",
+  "source_note": "Generated from edu_platform_kurses.sql. The database contains the questions but no choices or correct-answer keys.",
+  "choice_questions": [
+    {
+      "step_id": 2058,
+      "question_html": "<p>Какая команда Maven собирает проект в исполняемый JAR-файл?</p><br><br><em>Правильный ответ: C. Команда <code>mvn package</code> упаковывает скомпилированный код в JAR/WAR в папке <code>target</code>.</em>",
+      "answer_options": [
+        "mvn compile",
+        "mvn test",
+        "mvn package",
+        "mvn install"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 2114,
+      "question_html": "<p>Зачем использовать Testcontainers вместо встроенной базы H2?</p><br><br><em>Правильный ответ: B. Testcontainers поднимает настоящую базу данных в Docker-контейнере, устраняя расхождения SQL-диалектов между H2 и боевой СУБД и делая тесты достовернее.</em>",
+      "answer_options": [
+        "Testcontainers работает быстрее, чем H2, потому что не запускает JVM",
+        "Testcontainers поднимает настоящую базу данных в Docker-контейнере, устраняя расхождения SQL-диалектов между H2 и боевой СУБД и делая тесты достовернее",
+        "Testcontainers не требует установленного Docker",
+        "H2 не поддерживает транзакции, поэтому её нельзя использовать в тестах"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 2081,
+      "question_html": "<p>Чем <code>@RestController</code> отличается от <code>@Controller</code>?</p><br><br><em>Правильный ответ: B. <code>@RestController</code> объединяет <code>@Controller</code> и <code>@ResponseBody</code>, поэтому возвращаемые значения сериализуются в тело ответа (как правило, в JSON).</em>",
+      "answer_options": [
+        "@RestController работает только с GET-запросами, а @Controller — со всеми",
+        "@RestController объединяет @Controller и @ResponseBody, поэтому возвращаемые значения сериализуются в тело ответа (как правило, в JSON)",
+        "@RestController не может обрабатывать параметры пути @PathVariable",
+        "Разницы нет, это полные синонимы"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 2091,
+      "question_html": "<p>Какая аннотация делает метод сервиса транзакционным, обеспечивая откат изменений при ошибке?</p><br><br><em>Правильный ответ: C. <code>@Transactional</code> оборачивает выполнение метода в транзакцию: при возникновении <code>RuntimeException</code> все изменения в БД откатываются.</em>",
+      "answer_options": [
+        "@Rollback",
+        "@Commit",
+        "@Transactional",
+        "@EnableTransactionManagement"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 2082,
+      "question_html": "<p>Какая аннотация используется, чтобы получить данные из тела HTTP-запроса (например, JSON) и преобразовать их в объект?</p><br><br><em>Правильный ответ: C. <code>@RequestBody</code> связывает тело запроса с параметром метода, выполняя десериализацию (обычно из JSON с помощью Jackson).</em>",
+      "answer_options": [
+        "@RequestParam",
+        "@PathVariable",
+        "@RequestBody",
+        "@RequestHeader"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 2106,
+      "question_html": "<p>Почему для хранения паролей используют <code>BCryptPasswordEncoder</code>, а не обычное сравнение строк?</p><br><br><em>Правильный ответ: C. BCrypt применяет необратимое хеширование с уникальной «солью» и настраиваемой стоимостью, поэтому исходный пароль нельзя восстановить, а перебор затруднён.</em>",
+      "answer_options": [
+        "BCrypt сжимает пароль, экономя место в базе данных",
+        "BCrypt шифрует пароль обратимым ключом, чтобы его можно было восстановить",
+        "BCrypt применяет необратимое хеширование с уникальной «солью» и настраиваемой стоимостью, поэтому исходный пароль нельзя восстановить, а перебор затруднён",
+        "BCrypt автоматически проверяет пароль на сложность при сохранении"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 2131,
+      "question_html": "<p>Что задаёт параметр <code>-p 8080:8080</code> в команде <code>docker run</code>?</p><br><br><em>Правильный ответ: C. Флаг <code>-p хост:контейнер</code> пробрасывает порт: запросы на порт 8080 хост-машины перенаправляются в порт 8080 внутри контейнера, делая приложение доступным снаружи.</em>",
+      "answer_options": [
+        "Устанавливает порт, на котором контейнер слушает внутри своей сети",
+        "Задаёт количество портов, которые можно открыть в контейнере",
+        "Пробрасывает порт: запросы на порт 8080 хост-машины перенаправляются в порт 8080 внутри контейнера, делая приложение доступным снаружи",
+        "Ограничивает контейнер одним портом 8080"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 2123,
+      "question_html": "<p>Что произойдёт, если выполнить <code>rebase</code> для ветки, которая уже отправлена (push) и используется другими разработчиками?</p><br><br><em>Правильный ответ: C. Rebase переписывает историю коммитов, поэтому для уже опубликованных и разделяемых веток это создаёт расхождение с копиями других разработчиков. Rebase безопасен только для локальных, ещё не отправленных коммитов.</em>",
+      "answer_options": [
+        "Ничего страшного не произойдёт, rebase всегда безопасен",
+        "Git автоматически запретит rebase для отправленной ветки",
+        "Rebase переписывает историю коммитов, поэтому для уже опубликованных и разделяемых веток это создаёт расхождение с копиями других разработчиков",
+        "Rebase удалит все коммиты других разработчиков из удалённого репозитория"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 2066,
+      "question_html": "<p>Какая аннотация используется для метода в <code>@Configuration</code>-классе, чтобы зарегистрировать возвращаемый объект как бин?</p><br><br><em>Правильный ответ: C. Метод, помеченный <code>@Bean</code> внутри <code>@Configuration</code>-класса, регистрирует своё возвращаемое значение в контейнере как бин.</em>",
+      "answer_options": [
+        "@Component",
+        "@Service",
+        "@Bean",
+        "@Autowired"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 2065,
+      "question_html": "<p>Какой способ внедрения зависимостей считается предпочтительным в Spring?</p><br><br><em>Правильный ответ: B. Конструкторное внедрение позволяет делать зависимости <code>final</code>, гарантирует полную инициализацию объекта и упрощает тестирование.</em>",
+      "answer_options": [
+        "Внедрение через поле с @Autowired",
+        "Конструкторное внедрение",
+        "Внедрение через сеттер",
+        "Внедрение через статические методы"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 2098,
+      "question_html": "<p>Для чего используется аннотация <code>@RestControllerAdvice</code>?</p><br><br><em>Правильный ответ: C. Класс с <code>@RestControllerAdvice</code> централизованно перехватывает исключения из всех контроллеров и формирует ответы (с автоматической сериализацией в JSON).</em>",
+      "answer_options": [
+        "Для автоматической регистрации всех контроллеров в приложении",
+        "Для настройки CORS-политики на уровне всего приложения",
+        "Класс с @RestControllerAdvice централизованно перехватывает исключения из всех контроллеров и формирует ответы (с автоматической сериализацией в JSON)",
+        "Для валидации входящих DTO на уровне приложения"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 2057,
+      "question_html": "<p>На какую папку должна указывать переменная окружения <code>JAVA_HOME</code>?</p><br><br><em>Правильный ответ: B. <code>JAVA_HOME</code> указывает на корневой каталог JDK; путь к <code>bin</code> инструменты формируют сами.</em>",
+      "answer_options": [
+        "На папку bin внутри JDK",
+        "На корневой каталог JDK",
+        "На папку с проектами Maven",
+        "На директорию ~/.m2"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 2073,
+      "question_html": "<p>Что обеспечивает механизм автоконфигурации Spring Boot?</p><br><br><em>Правильный ответ: B. Автоконфигурация настраивает бины (сервер, источник данных и т.д.) на основе того, какие библиотеки присутствуют в classpath, используя условные аннотации <code>@Conditional</code>.</em>",
+      "answer_options": [
+        "Автоматически генерирует REST-контроллеры для всех сущностей",
+        "Автоконфигурация настраивает бины (сервер, источник данных и т.д.) на основе того, какие библиотеки присутствуют в classpath, используя условные аннотации @Conditional",
+        "Компилирует Java-код в нативный бинарник",
+        "Управляет версиями зависимостей в pom.xml"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 2113,
+      "question_html": "<p>Какая аннотация загружает полный контекст приложения для интеграционного тестирования?</p><br><br><em>Правильный ответ: C. <code>@SpringBootTest</code> поднимает весь контекст приложения (все бины), что подходит для интеграционных тестов. Остальные аннотации загружают только отдельные срезы (web-слой, JPA-слой) или вовсе не используют контекст Spring.</em>",
+      "answer_options": [
+        "@WebMvcTest",
+        "@DataJpaTest",
+        "@SpringBootTest",
+        "@ExtendWith(MockitoExtension.class)"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 2090,
+      "question_html": "<p>Какое утверждение о JPA и Hibernate верно?</p><br><br><em>Правильный ответ: B. JPA (Jakarta Persistence API) задаёт стандарт ORM, а Hibernate является его конкретной реализацией, которую Spring Boot использует по умолчанию.</em>",
+      "answer_options": [
+        "Hibernate — это стандарт, а JPA — его реализация",
+        "JPA (Jakarta Persistence API) задаёт стандарт ORM, а Hibernate является его конкретной реализацией, которую Spring Boot использует по умолчанию",
+        "JPA и Hibernate — это одно и то же, просто разные названия",
+        "JPA — это библиотека для работы с JSON, а Hibernate — для работы с БД"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 2130,
+      "question_html": "<p>В чём разница между образом (image) и контейнером (container) в Docker?</p><br><br><em>Правильный ответ: B. Образ — это статический «слепок» приложения с окружением; контейнер — это работающий экземпляр, созданный из образа (из одного образа можно запустить несколько контейнеров).</em>",
+      "answer_options": [
+        "Образ — это запущенный процесс, а контейнер — файл на диске",
+        "Образ — это статический «слепок» приложения с окружением; контейнер — это работающий экземпляр, созданный из образа (из одного образа можно запустить несколько контейнеров)",
+        "Контейнер хранится на Docker Hub, а образ — только локально",
+        "Разницы нет, это синонимы"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 2105,
+      "question_html": "<p>В чём разница между аутентификацией и авторизацией?</p><br><br><em>Правильный ответ: B. Аутентификация устанавливает личность пользователя (логин/пароль), а авторизация определяет его права на выполнение действий (роли, разрешения).</em>",
+      "answer_options": [
+        "Аутентификация проверяет права, а авторизация — личность",
+        "Аутентификация устанавливает личность пользователя (логин/пароль), а авторизация определяет его права на выполнение действий (роли, разрешения)",
+        "Это синонимы, обозначающие вход в систему",
+        "Аутентификация работает только с JWT, а авторизация — с сессиями"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 2074,
+      "question_html": "<p>Какой уровень логирования является наименее детальным (выводит меньше всего сообщений)?</p><br><br><em>Правильный ответ: D. Порядок уровней: TRACE &lt; DEBUG &lt; INFO &lt; WARN &lt; ERROR. Уровень ERROR самый высокий, поэтому при нём выводятся только сообщения об ошибках — наименьшее число сообщений.</em>",
+      "answer_options": [
+        "TRACE",
+        "DEBUG",
+        "INFO",
+        "ERROR"
+      ],
+      "suggested_correct_option_index": 3,
+      "needs_review": false
+    },
+    {
+      "step_id": 2097,
+      "question_html": "<p>Какая аннотация запускает валидацию объекта, переданного в метод контроллера?</p><br><br><em>Правильный ответ: B. <code>@Valid</code> перед параметром метода (обычно вместе с <code>@RequestBody</code>) запускает проверку ограничений Bean Validation; при ошибке выбрасывается <code>MethodArgumentNotValidException</code>.</em>",
+      "answer_options": [
+        "@NotNull",
+        "@Valid",
+        "@Validated",
+        "@Check"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 2122,
+      "question_html": "<p>Какая команда переносит изменения из рабочей копии в индекс (staging area)?</p><br><br><em>Правильный ответ: B. <code>git add</code> добавляет изменения в индекс (область подготовки); затем <code>git commit</code> фиксирует содержимое индекса в репозитории.</em>",
+      "answer_options": [
+        "git commit",
+        "git add",
+        "git push",
+        "git stage --all"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    }
+  ]
+}

@@ -1,0 +1,512 @@
+{
+  "course_id": 7,
+  "course_title": "Разработка AI/LLM-приложений на Python: от идеи до релиза",
+  "status": "review_template",
+  "source_note": "Generated from edu_platform_kurses.sql. The database contains the questions but no choices or correct-answer keys.",
+  "choice_questions": [
+    {
+      "step_id": 1196,
+      "question_html": "<h2>Как отреагирует модель, если запрос будет без идентификатора, например, “Отмени заказ“?</h2>\n\n<h3>Примечание: для этого возможно придется изменить программу</h3>",
+      "answer_options": [
+        "Модель попросит уточнить идентификатор заказа, так как он является обязательным параметром для вызова функции",
+        "Модель вызовет функцию cancel_order с пустым order_id",
+        "Модель вернет ошибку о невозможности обработки запроса",
+        "Модель проигнорирует запрос"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1169,
+      "question_html": "<p>Какие компоненты промпта использованы в следующем примере?</p>\n\n<p><code>Ты учитель по истории в университете. Твоя задача рассказать про столетнюю войну.</code></p>",
+      "answer_options": [
+        "Инструкция и контекст",
+        "Контекст и входные данные",
+        "Только инструкция",
+        "Формат вывода и инструкция"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1090,
+      "question_html": "<h2>Какой этап должен быть следующим после MVP?</h2>",
+      "answer_options": [
+        "Запуск MVP",
+        "Масштабирование MVP",
+        "Создание нового PoC",
+        "Сбор обратной связи"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1217,
+      "question_html": "<h2>Как расшифровывается RAG в контексте LLM?</h2>",
+      "answer_options": [
+        "Retrieval-Augmented Generation",
+        "Real-time Artificial Generation",
+        "Random Access Generation",
+        "Recursive Algorithmic Generation"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1078,
+      "question_html": "<h2><strong>Что из перечисленного НЕ является рекомендуемым способом монетизации MVP?</strong></h2>",
+      "answer_options": [
+        "Продажа персональных данных пользователей третьим лицам",
+        "Ежемесячная подписка",
+        "Сервисный сбор",
+        "Таргетированная реклама"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1048,
+      "question_html": "<h2>Какие запросы вернут уникальные значения из столбца&nbsp;<code>department_name</code>&nbsp;в таблице&nbsp;<code>employees</code>?</h2>\n\n<h3>Тема: SQL</h3>\n\n<h3>Примечание: используется синтаксис&nbsp;PostgreSQL</h3>",
+      "answer_options": [
+        "SELECT DISTINCT department_name FROM employees;",
+        "SELECT UNIQUE department_name FROM employees;",
+        "SELECT department_name FROM employees GROUP BY department_name;",
+        "SELECT department_name FROM employees;"
+      ],
+      "suggested_correct_option_index": null,
+      "needs_review": false
+    },
+    {
+      "step_id": 1113,
+      "question_html": "<h2>Что такое базовая модель (Foundation Model)?</h2>",
+      "answer_options": [
+        "Модель, обученная на больших массивах данных без учителя (Pretrain)",
+        "Модель, прошедшая дообучение на инструкциях (SFT)",
+        "Модель, созданная для решения одной конкретной задачи",
+        "Модель, которая не требует обучения"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1045,
+      "question_html": "<h2>Как создать новую git-ветку и переключиться на нее?</h2>\n\n<h3>Тема: git</h3>",
+      "answer_options": [
+        "git checkout -b branch-name",
+        "git branch branch-name",
+        "git switch -c branch-name",
+        "git merge branch-name"
+      ],
+      "suggested_correct_option_index": null,
+      "needs_review": false
+    },
+    {
+      "step_id": 1102,
+      "question_html": "<h2>Выберите все наборы весовых коэффициентов, при которых значение выходного нейрона e&nbsp;(<strong>2</strong>) будет корректно определяться на основе входных нейронов a, b, c, d (1, 3, 2, 2 соответственно)</h2>\n\n<p><strong>Формула</strong>:&nbsp;<span class=\"math-tex\">\\\\(e = a\\\\cdot w_1 + b\\\\cdot w_2 + c\\\\cdot w_3 + d \\\\cdot w_4 + w0\\\\)</span></p>\n\n<p><img alt=\"\" height=\"395\" name=\"image.png\" src=\"https://ucarecdn.stepik.net/215251aa-b156-4d93-920a-0c0e9c1394cd/\" width=\"467\"></p>",
+      "answer_options": [
+        "w1=0.25, w2=0.25, w3=0.25, w4=0.25, w0=0",
+        "w1=1, w2=0, w3=0, w4=0, w0=1",
+        "w1=0.5, w2=0.5, w3=0, w4=0, w0=0",
+        "w1=0, w2=0, w3=0, w4=0, w0=2"
+      ],
+      "suggested_correct_option_index": null,
+      "needs_review": false
+    },
+    {
+      "step_id": 1108,
+      "question_html": "<h2>В чем заключается суть принципа \"<strong>Garbage in — garbage out\"?</strong></h2>",
+      "answer_options": [
+        "Качество выходных данных модели напрямую зависит от качества входных данных",
+        "Модель всегда выдает мусорные ответы",
+        "Для обучения модели нужны только чистые данные",
+        "Модель не может обрабатывать текстовые данные"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1075,
+      "question_html": "<h2><strong>Чему должна научить история компании Theranos?</strong></h2>",
+      "answer_options": [
+        "Необходимости реальной проверки работоспособности технологии (PoC) перед привлечением инвестиций",
+        "Важности маркетинга для стартапа",
+        "Тому, что можно обманывать инвесторов",
+        "Тому, что медицинские технологии не нужны"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1046,
+      "question_html": "<h2>Какая ветка по умолчанию будет создана в GitHub-репозитории?</h2>\n\n<h3>Примечание: рассматривается случай, когда вы добавили какой-то файл в репозиторий через веб-интерфейс</h3>\n\n<h3>Тема: GitHub</h3>",
+      "answer_options": [
+        "main",
+        "master",
+        "develop",
+        "default"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1044,
+      "question_html": "<h2>Как вызвать родительский метод invoke в дочернем классе?</h2>\n\n<h3>Примечание: в дочернем классе может быть своя реализация метода invoke</h3>\n\n<h3>Тема: Python и ООП</h3>",
+      "answer_options": [
+        "super().invoke()",
+        "parent.invoke()",
+        "self.invoke()",
+        "base.invoke()"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1103,
+      "question_html": "<h2>Какой алгоритм позволяет корректировать весовые коэффициенты в нейронных сетях?</h2>",
+      "answer_options": [
+        "Алгоритм обратного распространения ошибки (Backpropagation)",
+        "Алгоритм градиентного спуска",
+        "Алгоритм k-ближайших соседей",
+        "Алгоритм случайного леса"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1042,
+      "question_html": "<h2>Как запустить Python-скрипт с названием app.py?</h2>\n\n<h3>Тема: Основы разработки на Python</h3>",
+      "answer_options": [
+        "python app.py",
+        "run app.py",
+        "start app.py",
+        "execute app.py"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1061,
+      "question_html": "<h2>Какое из перечисленных определений ближе к понятию \"Цифровой продукт\" в контексте текста?</h2>",
+      "answer_options": [
+        "Программное обеспечение или сервис, который решает проблему пользователя и распространяется через интернет",
+        "Любой физический товар, продающийся в интернете",
+        "Веб-сайт компании",
+        "Мобильное приложение"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1047,
+      "question_html": "<h2>Какого инструмента/сервиса в экосистеме GitHub не существует?</h2>\n\n<h3>Тема: GitHub</h3>",
+      "answer_options": [
+        "GitHub Database",
+        "GitHub Actions",
+        "GitHub Pages",
+        "GitHub Copilot"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1139,
+      "question_html": "<h2>Обратите внимание, что для бенчмарка&nbsp;<strong>ruCodeEval рассчитывается несколько значений. Как думаете, для чего?</strong></h2>\n\n<p><img alt=\"\" height=\"209\" name=\"image.png\" src=\"https://ucarecdn.stepik.net/fda458c9-d1fd-452d-ad45-08a615778ffa/\" width=\"774\"></p>\n\n<h3><strong>Подсказка: вспомните про HumanEval</strong></h3>",
+      "answer_options": [
+        "Для учета нескольких попыток генерации кода (pass@1, pass@10 и т.д.)",
+        "Для разных языков программирования",
+        "Для разных версий модели",
+        "Для разных типов задач"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1115,
+      "question_html": "<h2><strong>Кто такие AI-тренеры и какую роль они играют в процессе обучения LLM</strong>?</h2>",
+      "answer_options": [
+        "Специалисты, создающие инструкции для дообучения модели (SFT)",
+        "Люди, которые обучают модель с нуля",
+        "Программисты, пишущие код для модели",
+        "Пользователи, которые тестируют модель"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1121,
+      "question_html": "<h2>Сколько токенов займет следующий тест при токенизации?</h2>\n\n<h3><strong>Токенизатор</strong></h3>\n\n<p><a href=\"https://tiktokenizer.vercel.app/?model=meta-llama%2FMeta-Llama-3-8B\" target=\"_blank\" rel=\"noopener noreferrer nofollow\">Ссылка на инструмент</a></p>\n\n<p>meta-llama/Meta-Llama-3-8B</p>\n\n<h3>Текст</h3>\n\n<pre><code>«Мой дядя самых честных правил,\nКогда не в шутку занемог,\nОн уважать себя заставил\nИ лучше выдумать не мог.\nЕго пример другим наука;\nНо, боже мой, какая скука\nС больным сидеть и день и ночь,\nНе отходя ни шагу прочь!\nКакое низкое коварство\nПолуживого забавлять,\nЕму подушки поправлять,\nПечально подносить лекарство,\nВздыхать и думать про себя:\nКогда же черт возьмет тебя!»</code></pre>",
+      "answer_options": [
+        "Около 100 токенов",
+        "Около 200 токенов",
+        "Около 300 токенов",
+        "Около 50 токенов"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1151,
+      "question_html": "<h2>Скачайте модель llama3.2:3b и определите длину её контекстного окна</h2>",
+      "answer_options": [
+        "128000 токенов",
+        "8000 токенов",
+        "32000 токенов",
+        "4096 токенов"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1152,
+      "question_html": "<h2>Скачайте модель llama3.2:3b и определите её системное сообщение по умолчанию</h2>\n\n<p>Возможно пока непонятен смысл системного сообщения, т.к. мы будем разбирать его дальше. Если в кратце, то это начальная инструкция, которая дается LLM и задает некоторый тон разговора.</p>",
+      "answer_options": [
+        "Системное сообщение отсутствует",
+        "You are a helpful AI assistant.",
+        "You are a friendly chatbot.",
+        "Ты — полезный ассистент."
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1083,
+      "question_html": "<h2>Выберите наиболее подходящую формулировку проблемы</h2>",
+      "answer_options": [
+        "Студенты тратят много времени на поиск достоверной информации о курсах у старшекурсников",
+        "Студентам нравится общаться со старшекурсниками",
+        "Университет не предоставляет достаточно курсов",
+        "Старшекурсники не помнят содержание курсов"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1145,
+      "question_html": "<h2>Выберите все верные утверждения о бенчмарках</h2>",
+      "answer_options": [
+        "Бенчмарки могут быть использованы для обучения моделей, что снижает их объективность",
+        "Бенчмарки — это единственный способ оценки качества LLM",
+        "Бенчмарки помогают сравнивать разные модели между собой",
+        "Публичные бенчмарки всегда объективны"
+      ],
+      "suggested_correct_option_index": null,
+      "needs_review": false
+    },
+    {
+      "step_id": 1218,
+      "question_html": "<h2>Решение каких задач теоретически можно улучшить с помощью RAG?</h2>",
+      "answer_options": [
+        "Вопросно-ответные системы по внутренней базе знаний",
+        "Генерация стихов",
+        "Обучение модели с нуля",
+        "Создание изображений"
+      ],
+      "suggested_correct_option_index": null,
+      "needs_review": false
+    },
+    {
+      "step_id": 1049,
+      "question_html": "<h2>Какой результат вернет запрос с CROSS JOIN?</h2>\n\n<h3>Тема: SQL</h3>",
+      "answer_options": [
+        "Декартово произведение строк двух таблиц",
+        "Пересечение строк двух таблиц",
+        "Объединение строк двух таблиц",
+        "Разность строк двух таблиц"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1197,
+      "question_html": "<h2>Как отреагирует модель, если запрос будет требовать другой функции, например, “Доставь заказ ко мне домой“?</h2>\n\n<h3>Примечание: для этого возможно придется изменить программу</h3>",
+      "answer_options": [
+        "Модель не найдет подходящий инструмент и ответит, что не может выполнить запрос",
+        "Модель вызовет функцию cancel_order",
+        "Модель вызовет функцию get_order_status",
+        "Модель вернет ошибку"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1074,
+      "question_html": "<h2><strong>Какова основная цель создания Proof of Concept (PoC)?</strong></h2>",
+      "answer_options": [
+        "Подтвердить техническую реализуемость ключевой идеи продукта",
+        "Создать полноценный продукт",
+        "Привлечь инвестиции",
+        "Протестировать маркетинговую стратегию"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1077,
+      "question_html": "<h2><strong>Что является основной целью MVP?</strong></h2>",
+      "answer_options": [
+        "Создать минимально работающий продукт для проверки гипотез и получения обратной связи",
+        "Создать идеальный продукт",
+        "Максимизировать прибыль",
+        "Привлечь как можно больше пользователей"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1105,
+      "question_html": "<h2>Выберите только один вариант ответа, в котором все архитектуры нейронных сетей действительно существуют</h2>",
+      "answer_options": [
+        "CNN, RNN, Transformer",
+        "CNN, RNN, LSTM",
+        "CNN, RNN, GRU",
+        "CNN, RNN, MLP"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1069,
+      "question_html": "<h2>Человек издал книгу со стихами, сгенерированными с помощью бесплатного сервиса ии-стих-генератор.рф, в 2023 году. Книга стала бестселлером в 2025 году. Владелец сервиса начал судебный процесс с автором книги из-за несогласованного использования интеллектуального труда. Кто все-таки является автором стихов?</h2>\n\n<h3>Примечание 1: Сервис ии-стих-генератор.рф в 2023 году не имел ограничений на использование стихов</h3>\n\n<h3>Примечание 2: В суде человек защищался тем, что при генерации задавал начальные настройки и долго экспериментировал с запросами для генерации стиха, что является творческими усилиями и подтверждает авторство согласно статье 1228 в гражданском кодексе РФ</h3>",
+      "answer_options": [
+        "Автором является человек, так как он приложил творческие усилия для генерации стихов",
+        "Автором является владелец сервиса",
+        "Автором является искусственный интеллект",
+        "Автор не определен"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1219,
+      "question_html": "<h2>Выберите все потенциальные ошибки и проблемы при реализации RAG</h2>",
+      "answer_options": [
+        "Низкое качество данных в хранилище знаний",
+        "Нерелевантный поиск документов",
+        "Передача слишком большого контекста в LLM",
+        "Все перечисленное"
+      ],
+      "suggested_correct_option_index": null,
+      "needs_review": false
+    },
+    {
+      "step_id": 1086,
+      "question_html": "<h2>Выберите все подходящие причины для данного кейса, почему не стоило уделять больше времени на улучшение алгоритма?</h2>",
+      "answer_options": [
+        "Целью PoC было проверить реализуемость, а не достичь идеального качества",
+        "Качество было приемлемым для MVP",
+        "Дальнейшее улучшение потребовало бы слишком много ресурсов",
+        "Алгоритм уже был идеальным"
+      ],
+      "suggested_correct_option_index": null,
+      "needs_review": false
+    },
+    {
+      "step_id": 1211,
+      "question_html": "<h2>Какова длина вектора у текста, который прошел векторизацию через модель от Mistral AI?</h2>\n\n<h3>Возможно потребуется запустить код с предыдущего степа или заглянуть в документацию mistral ai</h3>",
+      "answer_options": [
+        "1024",
+        "768",
+        "1536",
+        "2048"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1122,
+      "question_html": "<h2>Какие слова из указанных помещаются в один токен?</h2>\n\n<h3><strong>Токенизатор</strong></h3>\n\n<p><a href=\"https://tiktokenizer.vercel.app/?model=meta-llama%2FMeta-Llama-3-8B\" target=\"_blank\" rel=\"noopener noreferrer nofollow\">Ссылка на инструмент</a></p>\n\n<p>meta-llama/Meta-Llama-3-8B</p>\n\n<h3>Текст</h3>\n\n<pre><code>«Мой дядя самых честных правил,\nКогда не в шутку занемог,\nОн уважать себя заставил\nИ лучше выдумать не мог.\nЕго пример другим наука;\nНо, боже мой, какая скука\nС больным сидеть и день и ночь,\nНе отходя ни шагу прочь!\nКакое низкое коварство\nПолуживого забавлять,\nЕму подушки поправлять,\nПечально подносить лекарство,\nВздыхать и думать про себя:\nКогда же черт возьмет тебя!»</code></pre>",
+      "answer_options": [
+        "«Мой",
+        "«дядя",
+        "«самых",
+        "«честных"
+      ],
+      "suggested_correct_option_index": null,
+      "needs_review": false
+    },
+    {
+      "step_id": 1144,
+      "question_html": "<h2>Можно ли считать лидерборд публичного бенчмарка значительным основанием при выборе LLM для вашего проекта?</h2>",
+      "answer_options": [
+        "Нет, так как бенчмарки не отражают специфику вашей задачи",
+        "Да, это единственный критерий выбора",
+        "Да, если модель лидирует по всем бенчмаркам",
+        "Нет, так как бенчмарки всегда подделаны"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1114,
+      "question_html": "<h2><strong>Какой этап следует после Pretraining?</strong></h2>",
+      "answer_options": [
+        "Supervised Fine-Tuning (SFT)",
+        "Масштабирование",
+        "Создание PoC",
+        "Токенизация"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1068,
+      "question_html": "<h2>Выберите кейсы, для которых имеет смысл использовать LLM</h2>",
+      "answer_options": [
+        "Автоматизация HR",
+        "Автоматизация технической поддержки",
+        "Автоматизация продаж",
+        "Маркетинг"
+      ],
+      "suggested_correct_option_index": null,
+      "needs_review": false
+    },
+    {
+      "step_id": 1150,
+      "question_html": "<h2>Скачайте модель llama3.2:3b и определите её вес в гигабайтах</h2>",
+      "answer_options": [
+        "2.0 GB",
+        "3.2 GB",
+        "1.0 GB",
+        "5.0 GB"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1062,
+      "question_html": "<h2>Какой реальный фактор благоприятно влияет&nbsp;сегодня на создание цифровых продуктов согласно тексту?</h2>",
+      "answer_options": [
+        "Доступность искусственного интеллекта",
+        "Снижение конкуренции",
+        "Увеличение стоимости разработки",
+        "Отсутствие инвестиций"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1072,
+      "question_html": "<h2><strong>В чем заключается основное различие между \"проблемой\" и \"болью\" с точки зрения потребительского поведения?</strong></h2>",
+      "answer_options": [
+        "«Боль» — это более острая форма проблемы, требующая немедленного решения",
+        "«Проблема» — это более острая форма «боли»",
+        "Это синонимы",
+        "«Проблема» всегда связана с деньгами, а «боль» — нет"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1168,
+      "question_html": "<p>Какие компоненты промпта использованы в следующем примере?</p>\n\n<p><code>Твоя задача придумать шутку на предложенную пользователем тему. Тема пользователя: {user_theme}. Ответ дай в формате JSON c полями theme и description</code></p>",
+      "answer_options": [
+        "Инструкция, входные данные и формат вывода",
+        "Инструкция и контекст",
+        "Только инструкция",
+        "Контекст и входные данные"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    }
+  ]
+}

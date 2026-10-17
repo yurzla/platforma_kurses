@@ -1,0 +1,2388 @@
+{
+  "course_id": 12,
+  "course_title": "Первые шаги в backend-разработке на Go",
+  "status": "review_template",
+  "source_note": "Generated from edu_platform_kurses.sql. The database contains the questions but no choices or correct-answer keys.",
+  "choice_questions": [
+    {
+      "step_id": 1849,
+      "question_html": "<p>Зачем нужен <code>ports: \"8080:8080\"</code> для <code>app</code>?</p>",
+      "answer_options": [
+        "Чтобы приложение могло подключаться к базе данных",
+        "Чтобы открыть порт приложения на хост-машине",
+        "Чтобы сохранить данные приложения между перезапусками",
+        "Чтобы автоматически пересобирать образ приложения"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1869,
+      "question_html": "<p>Как обычно задают связь Task → User?</p>",
+      "answer_options": [
+        "В структуре `User` добавляют поле `TaskID uint`",
+        "В структуре `Task` добавляют поле `UserID uint`",
+        "Создают отдельную таблицу для связи `task_user`",
+        "Используют интерфейсы для связи"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1828,
+      "question_html": "<p><code>PORT</code> обычно хранит…</p>",
+      "answer_options": [
+        "Строку подключения к базе данных",
+        "Номер порта, на котором запускается сервер",
+        "Путь к файлу с настройками",
+        "Имя пользователя базы данных"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1751,
+      "question_html": "<p>Какой запрос <strong>добавит</strong> нового пользователя в таблицу <code>users</code>?</p>\n\n<p>Нужно вставить пользователя с именем <code>Иван</code>, email <code>ivan@example.com</code> и возрастом <code>28</code>.</p>",
+      "answer_options": [
+        "INSERT INTO users (name, email, age) VALUES ('Иван', 'ivan@example.com', 28);",
+        "INSERT users (name, email, age) VALUES ('Иван', 'ivan@example.com', 28);",
+        "INSERT INTO users VALUES ('Иван', 'ivan@example.com', 28);",
+        "UPDATE users SET name='Иван', email='ivan@example.com', age=28;"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1662,
+      "question_html": "<p>Какое значение получит переменная <code>var s string</code>, если ей ничего не присваивать?</p>",
+      "answer_options": [
+        "nil",
+        "0",
+        "\"\"",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1643,
+      "question_html": "<p>Go — это…</p>",
+      "answer_options": [
+        "Интерпретируемый язык",
+        "Компилируемый язык",
+        "Язык разметки",
+        "Язык запросов"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1883,
+      "question_html": "<p>Почему зависимости через интерфейсы помогают тестам?</p>",
+      "answer_options": [
+        "Позволяют заменить реальную зависимость на мок-объект",
+        "Автоматически генерируют тесты",
+        "Ускоряют выполнение кода",
+        "Уменьшают размер кода"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1753,
+      "question_html": "<p>Нужно изменить возраст пользователя с <code>id = 1</code> на <code>30</code>. Какой запрос корректный?</p>",
+      "answer_options": [
+        "UPDATE users SET age = 30 WHERE id = 1;",
+        "UPDATE users WHERE id = 1 SET age = 30;",
+        "MODIFY users SET age = 30 WHERE id = 1;",
+        "ALTER users SET age = 30 WHERE id = 1;"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1704,
+      "question_html": "<p><code>struct</code> в Go — это…</p>",
+      "answer_options": [
+        "Пользовательский тип данных, объединяющий поля",
+        "Функция для работы с данными",
+        "Интерфейс для работы с методами",
+        "Пакет для работы с БД"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1868,
+      "question_html": "<p>Связь “один ко многим” означает…</p>",
+      "answer_options": [
+        "Один объект имеет ровно один связанный объект",
+        "Один объект имеет много связанных объектов",
+        "Много объектов имеют много связанных объектов",
+        "Много объектов имеют один связанный объект"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1911,
+      "question_html": "<p>Если <code>title == nil</code> и <code>done == nil</code>, что правильнее вернуть?</p>",
+      "answer_options": [
+        "200 OK",
+        "400 Bad Request",
+        "404 Not Found",
+        "500 Internal Server Error"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1680,
+      "question_html": "<p>Какие циклы есть в Go?</p>",
+      "answer_options": [
+        "for, while, do-while",
+        "Только for",
+        "Только while",
+        "for и while"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1782,
+      "question_html": "<p>Конкурентность — это когда программа…</p>",
+      "answer_options": [
+        "Выполняет несколько задач одновременно на нескольких ядрах",
+        "Умеет работать с несколькими задачами, переключаясь между ними",
+        "Использует многопоточность",
+        "Использует асинхронность"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1835,
+      "question_html": "<p>Почему в <code>Load()</code> часто используют <code>strings.TrimSpace</code>?</p>",
+      "answer_options": [
+        "Чтобы удалить пробелы в начале и конце строки",
+        "Чтобы преобразовать строку в число",
+        "Чтобы объединить строки",
+        "Чтобы заменить подстроку"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1725,
+      "question_html": "<p>Почему тип <code>EmailNotifier</code> подходит под интерфейс <code>Notifier</code>?</p>",
+      "answer_options": [
+        "Потому что он реализует все методы интерфейса `Notifier`",
+        "Потому что он объявлен с ключевым словом `implements`",
+        "Потому что он наследуется от `Notifier`",
+        "Потому что он создан с помощью `new(Notifier)`"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1658,
+      "question_html": "<p>В Go оператор <code>:=</code> можно использовать…</p>",
+      "answer_options": [
+        "Только внутри функций",
+        "Только на уровне пакета",
+        "И внутри функций, и на уровне пакета",
+        "Только в циклах"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1696,
+      "question_html": "<p>Почему после вызова <code>Increment(a)</code> (где <code>Increment(x int)</code>) переменная <code>a</code> не меняется?</p>",
+      "answer_options": [
+        "Потому что Go передает аргументы по ссылке",
+        "Потому что Go передает аргументы по значению (создает копию)",
+        "Потому что `Increment` не возвращает значение",
+        "Потому что `a` объявлена как константа"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1909,
+      "question_html": "<p>Что означает запрос <code>GET /tasks?done=true</code>?</p>",
+      "answer_options": [
+        "Получить все задачи",
+        "Получить только выполненные задачи",
+        "Получить только невыполненные задачи",
+        "Получить задачу с id=done"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1841,
+      "question_html": "<p>Docker image — это…</p>",
+      "answer_options": [
+        "Запущенный экземпляр контейнера",
+        "Шаблон для создания контейнеров",
+        "Файл с настройками Docker",
+        "Сетевой интерфейс Docker"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1808,
+      "question_html": "<p>Зачем запускать <code>go test -race</code> или <code>go run -race</code>?</p>",
+      "answer_options": [
+        "Для ускорения выполнения программы",
+        "Для обнаружения гонок данных",
+        "Для автоматического форматирования кода",
+        "Для компиляции программы"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1691,
+      "question_html": "<p>Что означает “множественный return” в Go?</p>",
+      "answer_options": [
+        "Функция может возвращать несколько значений",
+        "Функция может иметь несколько `return`",
+        "Функция может быть вызвана несколько раз",
+        "Функция может быть рекурсивной"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1834,
+      "question_html": "<p>Если <code>PORT</code> не задан, <code>Load()</code> должна…</p>",
+      "answer_options": [
+        "Использовать порт по умолчанию",
+        "Вернуть ошибку",
+        "Использовать случайный порт",
+        "Не запускать сервер"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1803,
+      "question_html": "<p>Какая рекомендация верная?</p>",
+      "video": null,
+      "options": {
+        "is_multiple_choice": false
+      },
+      "answer_options": [
+        "Всегда `Lock()` и `Unlock()` парно, часто через `defer`",
+        "Всегда `Lock()` и `Unlock()` парно, но без `defer`",
+        "Можно забыть про `Unlock()`",
+        "Использовать `defer` только для `Lock()`"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1900,
+      "question_html": "<p>Где должны лежать вызовы <code>db.Create(...)</code>, <code>db.Find(...)</code>, <code>db.First(...)</code>?</p>",
+      "answer_options": [
+        "В handler-слое",
+        "В service-слое",
+        "В repository-слое",
+        "В main-файле"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1721,
+      "question_html": "<p>Что такое receiver в объявлении метода <code>func (u User) Print()</code>?</p>",
+      "answer_options": [
+        "Параметр функции",
+        "Тип, к которому привязан метод",
+        "Возвращаемое значение",
+        "Имя функции"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1831,
+      "question_html": "<p>Почему <code>.env</code> не кладут в репозиторий?</p>",
+      "answer_options": [
+        "Он слишком большой",
+        "В нем могут быть секреты (пароли, ключи)",
+        "Он не используется в разработке",
+        "Он не читается приложением"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1907,
+      "question_html": "<p>Что означает query параметр <code>offset</code>?</p>",
+      "answer_options": [
+        "Сколько записей вернуть",
+        "Сколько записей пропустить",
+        "Порядок сортировки",
+        "Фильтр по полю"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1787,
+      "question_html": "<p>Channel (канал) — это…</p>",
+      "answer_options": [
+        "Тип данных для хранения чисел",
+        "Типизированная труба для передачи данных между горутинами",
+        "Сетевой протокол",
+        "Функция для работы с файлами"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1797,
+      "question_html": "<p>Data race — это ситуация, когда…",
+      "answer_options": [
+        "Несколько горутин одновременно обращаются к одной памяти, и хотя бы одна пишет",
+        "Несколько горутин одновременно читают одну память",
+        "Программа использует слишком много памяти",
+        "Программа работает слишком медленно"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1660,
+      "question_html": "<p>Что происходит при записи <code>x := 10</code>?</p>",
+      "answer_options": [
+        "Объявляется переменная `x` и ей присваивается значение 10",
+        "Значение 10 сравнивается с `x`",
+        "Переменная `x` увеличивается на 10",
+        "Создается константа `x`"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1890,
+      "question_html": "<p>В REST ресурс <code>tasks</code> — это…</p>",
+      "answer_options": [
+        "Действие, которое нужно выполнить",
+        "Сущность, с которой работает API",
+        "Метод HTTP-запроса",
+        "Формат данных"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1688,
+      "question_html": "<p>Каким ключевым словом объявляются функции в Go?</p>",
+      "answer_options": [
+        "function",
+        "func",
+        "def",
+        "fn"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1826,
+      "question_html": "<p>Почему настройки приложения не стоит хардкодить в коде?</p>",
+      "answer_options": [
+        "Это замедляет работу приложения",
+        "Это усложняет перенос приложения между средами (dev, prod)",
+        "Это увеличивает размер кода",
+        "Это небезопасно"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1804,
+      "question_html": "<p>Почему часто пишут <code>mu.Lock(); defer mu.Unlock()</code>?</p>",
+      "answer_options": [
+        "Чтобы гарантировать `Unlock()` даже при панике или `return`",
+        "Чтобы ускорить выполнение",
+        "Чтобы избежать дедлока",
+        "Это синтаксическое требование"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1677,
+      "question_html": "<p>В коде:</p>\n\n<pre><code class=\"language-go\">if n := len(\"hello\"); n &gt; 3 { ... }</code></pre>\n\n<p>переменная <code>n</code> доступна…</p>",
+      "answer_options": [
+        "Во всей программе",
+        "Только внутри блока `if` и `else`",
+        "Только внутри функции `main`",
+        "Только внутри блока `if`"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1906,
+      "question_html": "<p>Что означает query параметр <code>limit</code>?</p>",
+      "answer_options": [
+        "Максимальное количество записей в ответе",
+        "Количество пропускаемых записей",
+        "Номер страницы",
+        "Общее количество записей"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1695,
+      "question_html": "<p>Что делает оператор <code>&amp;</code> в выражении <code>p := &amp;x</code>?</p>",
+      "answer_options": [
+        "Умножает `x` на 2",
+        "Возвращает адрес переменной `x`",
+        "Возвращает значение по адресу `x`",
+        "Создает копию `x`"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1871,
+      "question_html": "<p>Что означает “следовать конвенциям” в GORM?</p>",
+      "answer_options": [
+        "Использовать специальные теги для каждого поля",
+        "Называть поля и таблицы по правилам, которые GORM понимает автоматически",
+        "Писать SQL-запросы вручную",
+        "Использовать только один тип данных"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1789,
+      "question_html": "<p>Что значит, что операции с каналом “блокируют” по умолчанию?</p>",
+      "answer_options": [
+        "Отправка/получение ждут, пока другая сторона не будет готова",
+        "Канал закрывается после каждой операции",
+        "Операции выполняются мгновенно",
+        "Канал можно использовать только один раз"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1736,
+      "question_html": "<p>Что такое столбец (column) в таблице?</p>",
+      "answer_options": [
+        "Строка таблицы",
+        "Отдельное свойство сущности",
+        "Название таблицы",
+        "Связь с другой таблицей"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1818,
+      "question_html": "<p>Какой командой создают <code>go.mod</code>?</p>",
+      "answer_options": [
+        "go get",
+        "go mod init",
+        "go mod tidy",
+        "go create mod"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1894,
+      "question_html": "<p>Клиент вызывает <code>GET /tasks/:id</code>, но такой задачи нет. Что вернуть?</p>",
+      "answer_options": [
+        "200 OK",
+        "400 Bad Request",
+        "404 Not Found",
+        "500 Internal Server Error"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1860,
+      "question_html": "<p>Какие зависимости нужны для работы с GORM и Postgres?</p>",
+      "answer_options": [
+        "gorm.io/gorm и gorm.io/driver/postgres",
+        "gorm.io/gorm и github.com/lib/pq",
+        "gorm.io/driver/postgres и github.com/jackc/pgx",
+        "Только gorm.io/gorm"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1740,
+      "question_html": "<p>В таблице <code>orders</code> есть столбец <code>user_id</code>, который ссылается на <code>users.id</code>. Что такое <code>user_id</code>?</p>",
+      "answer_options": [
+        "Первичный ключ",
+        "Внешний ключ",
+        "Индекс",
+        "Уникальное ограничение"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1814,
+      "question_html": "<p>Gin — это…</p>",
+      "answer_options": [
+        "ORM для Go",
+        "Web-фреймворк для Go",
+        "Менеджер пакетов",
+        "Инструмент для тестирования"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1766,
+      "question_html": "<p>Какая функция относится к <strong>агрегатным</strong> в SQL?</p>",
+      "answer_options": [
+        "NOW()",
+        "COUNT()",
+        "UPPER()",
+        "LENGTH()"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1746,
+      "question_html": "<p>Что из перечисленного НЕ является объектом PostgreSQL?</p>",
+      "answer_options": [
+        "Таблица",
+        "Схема",
+        "Docker-контейнер",
+        "База данных"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1855,
+      "question_html": "<p>Какое утверждение верное?</p>",
+      "answer_options": [
+        "ORM заменяет знание SQL",
+        "ORM ускоряет разработку, но нужно понимать БД и запросы",
+        "ORM всегда быстрее чистого SQL",
+        "ORM не нужен для сложных проектов"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1648,
+      "question_html": "<p>Какой командой Go создаёт исполняемый файл?</p>",
+      "answer_options": [
+        "go run",
+        "go build",
+        "go test",
+        "go install"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1652,
+      "question_html": "<p>Какой файл часто появляется рядом с <code>go.mod</code>?</p>",
+      "answer_options": [
+        "go.sum",
+        "go.lock",
+        "go.dep",
+        "vendor.json"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1645,
+      "question_html": "<p>Что обычно получается после сборки Go-приложения командой <code>go build</code>?</p>",
+      "answer_options": [
+        "Набор .class файлов",
+        "Один исполняемый файл",
+        "Динамическая библиотека",
+        "Docker-образ"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1829,
+      "question_html": "<p><code>DATABASE_URL</code> обычно хранит…</p>",
+      "answer_options": [
+        "Номер порта базы данных",
+        "Строку подключения к базе данных",
+        "Имя пользователя базы данных",
+        "Пароль от базы данных"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1738,
+      "question_html": "<p>Как обычно называется столбец, используемый как простой первичный ключ?</p>",
+      "answer_options": [
+        "key",
+        "primary",
+        "id",
+        "user_id"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1802,
+      "question_html": "<p>Что гарантирует использование <code>Mutex</code>?</p>",
+      "answer_options": [
+        "Что только одна горутина может находиться в критической секции",
+        "Что все горутины выполняются параллельно",
+        "Что программа не упадет",
+        "Что данные не будут потеряны"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1836,
+      "question_html": "<p>Если <code>cfg.Port = \"8080\"</code>, что нужно передать в <code>router.Run(...)</code>?</p>",
+      "answer_options": [
+        "`\"8080\"`",
+        "`\":8080\"`",
+        "`\"http://localhost:8080\"`",
+        "`\"./8080\"`"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1899,
+      "question_html": "<p>Где логичнее проверять <code>title</code> и <code>user_id</code> (по архитектуре урока)?</p>",
+      "answer_options": [
+        "В handler-слое",
+        "В service-слое",
+        "В repository-слое",
+        "В main-файле"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1816,
+      "question_html": "<p>Что является точкой входа в Go-программе?</p>",
+      "answer_options": [
+        "Функция `init()`",
+        "Функция `main()` в пакете `main`",
+        "Любая функция в пакете `main`",
+        "Пакет `entrypoint`"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1646,
+      "question_html": "<p>Когда чаще всего используют <code>go run</code>?</p>",
+      "answer_options": [
+        "Для сборки финального бинарника",
+        "Для быстрого запуска и проверки кода",
+        "Для запуска тестов",
+        "Для установки пакетов"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1874,
+      "question_html": "<p>Почему в проде обычно используют миграции отдельным инструментом?</p>",
+      "answer_options": [
+        "AutoMigrate не работает в проде",
+        "Нужны контролируемые изменения, история и откаты",
+        "Это быстрее",
+        "Это требование безопасности"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1644,
+      "question_html": "<p>Какое из утверждений лучше всего объясняет популярность Go в backend?</p>",
+      "answer_options": [
+        "Он самый быстрый",
+        "Он простой, производительный и с удобной конкурентностью",
+        "Он самый старый",
+        "У него самая большая экосистема"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1912,
+      "question_html": "<p>то должен вернуть API на <code>PATCH /tasks/:id</code>, если задачи нет?</p>",
+      "answer_options": [
+        "200 OK",
+        "400 Bad Request",
+        "404 Not Found",
+        "500 Internal Server Error"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1650,
+      "question_html": "<p>Какой суффикс имеют тестовые файлы в Go?</p>",
+      "answer_options": [
+        "_test.go",
+        ".test.go",
+        "test_",
+        "_spec.go"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1820,
+      "question_html": "<p>Какая запись создаёт обработчик для <code>GET /health</code>?</p>",
+      "answer_options": [
+        "router.GET(\"/health\", healthHandler)",
+        "router.Get(\"/health\", healthHandler)",
+        "router.GET(\"/health\", healthHandler())",
+        "router.GET(healthHandler, \"/health\")"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1901,
+      "question_html": "<p>Какой подход используется для “not found”?</p>",
+      "answer_options": [
+        "Возвращать `nil, nil`",
+        "Возвращать `nil, ErrNotFound`",
+        "Паниковать",
+        "Возвращать пустую структуру"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1743,
+      "question_html": "<p>Что из перечисленного является <strong>отдельной базой данных</strong> в PostgreSQL?</p>",
+      "answer_options": [
+        "public",
+        "users",
+        "app_db",
+        "postgres"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1784,
+      "question_html": "<p>Может ли программа быть конкурентной, но не параллельной?</p>",
+      "answer_options": [
+        "Да, если задачи переключаются на одном ядре",
+        "Нет, это одно и то же",
+        "Да, если использовать горутины",
+        "Нет, для конкурентности нужны несколько ядер"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1665,
+      "question_html": "<p>Какой формат-спецификатор печатает тип значения?</p>",
+      "answer_options": [
+        "%v",
+        "%T",
+        "%t",
+        "%d"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1748,
+      "question_html": "<p>Для чего в реляционной базе данных нужны связи между таблицами (через внешние ключи)?</p>",
+      "answer_options": [
+        "Для увеличения скорости работы",
+        "Для обеспечения целостности данных и возможности строить запросы с JOIN",
+        "Для уменьшения размера базы данных",
+        "Для шифрования данных"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1754,
+      "question_html": "<p>Какой запрос <strong>удалит только пользователя</strong> с <code>id = 5</code> из таблицы <code>users</code>?</p>",
+      "answer_options": [
+        "DELETE FROM users WHERE id = 5;",
+        "DELETE users WHERE id = 5;",
+        "REMOVE FROM users WHERE id = 5;",
+        "DELETE * FROM users WHERE id = 5;"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1892,
+      "question_html": "<p>Какой статус-код обычно возвращают при успешном <code>POST</code> (создание)?</p>",
+      "answer_options": [
+        "200 OK",
+        "201 Created",
+        "204 No Content",
+        "400 Bad Request"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1882,
+      "question_html": "<p>Главный плюс разделения handler/service/repository?</p>",
+      "answer_options": [
+        "Улучшение читаемости, тестируемости и масштабируемости",
+        "Уменьшение количества файлов",
+        "Ускорение работы приложения",
+        "Уменьшение размера кода"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1859,
+      "question_html": "<p>Что правильнее сделать, если <code>db.New()</code> вернул ошибку?</p>",
+      "answer_options": [
+        "Проигнорировать",
+        "Завершить приложение с логом ошибки",
+        "Продолжить работу без БД",
+        "Попробовать подключиться еще раз в цикле"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1708,
+      "question_html": "<p>Какое утверждение про массивы верное?</p>",
+      "answer_options": [
+        "Массив имеет фиксированную длину",
+        "Массив имеет динамическую длину",
+        "Массив может менять тип элементов",
+        "Массив не используется в Go"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1840,
+      "question_html": "<p>Контейнер в Docker — это…</p>",
+      "answer_options": [
+        "Шаблон для создания образов",
+        "Запущенный экземпляр образа",
+        "Файл с настройками",
+        "Сетевой интерфейс"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1755,
+      "question_html": "<p>Какая пара «тип данных → пример значения» указана верно для SQL?</p>",
+      "answer_options": [
+        "VARCHAR(100) -> 100",
+        "INT -> 'hello'",
+        "BOOLEAN -> TRUE",
+        "DATE -> 12:30:00"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1851,
+      "question_html": "<p>Зачем в compose для <code>app</code> указывают <code>depends_on</code> с условием <code>service_healthy</code> для <code>db</code>?</p>",
+      "answer_options": [
+        "Чтобы приложение запустилось только после готовности БД",
+        "Чтобы БД запустилась только после приложения",
+        "Для проброса портов",
+        "Для сохранения данных"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1673,
+      "question_html": "<p>Как в Go реализуется ветвление?</p>",
+      "answer_options": [
+        "Через `if/else`",
+        "Через `switch`",
+        "Через `for`",
+        "Через `if/else` и `switch`"
+      ],
+      "suggested_correct_option_index": 3,
+      "needs_review": false
+    },
+    {
+      "step_id": 1819,
+      "question_html": "<p>Как добавить Gin в зависимости проекта?</p>",
+      "answer_options": [
+        "go install github.com/gin-gonic/gin",
+        "go get github.com/gin-gonic/gin",
+        "go add github.com/gin-gonic/gin",
+        "go mod add github.com/gin-gonic/gin"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1690,
+      "question_html": "<p>Что верно про функции в Go?</p>",
+      "answer_options": [
+        "Могут возвращать только одно значение",
+        "Могут возвращать несколько значений",
+        "Не могут принимать аргументы",
+        "Не могут быть рекурсивными"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1812,
+      "question_html": "<p>Что ещё, кроме тела ответа (JSON), возвращает API?</p>",
+      "answer_options": [
+        "HTML-страницу",
+        "Статус-код",
+        "Файл",
+        "Изображение"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1837,
+      "question_html": "<p>Зачем подключают <code>godotenv</code>?</p>",
+      "answer_options": [
+        "Для загрузки переменных окружения из файла `.env`",
+        "Для работы с БД",
+        "Для создания HTTP-сервера",
+        "Для логирования"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1806,
+      "question_html": "<p>Что означает <code>wg.Add(3)</code>?</p>",
+      "answer_options": [
+        "Ожидаем завершения 3 горутин",
+        "Запускаем 3 горутины",
+        "Увеличиваем счетчик на 3",
+        "Уменьшаем счетчик на 3"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1913,
+      "question_html": "<p>Клиент прислал <code>limit=-5</code> или <code>offset=abc</code>. Что вернуть?</p>",
+      "answer_options": [
+        "200 OK",
+        "400 Bad Request",
+        "404 Not Found",
+        "500 Internal Server Error"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1790,
+      "question_html": "<p>Почему в Go рекомендуют передавать данные через каналы вместо общего доступа к памяти?</p>",
+      "answer_options": [
+        "Это быстрее",
+        "Это проще",
+        "Это позволяет избежать гонок данных",
+        "Это безопаснее"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1885,
+      "question_html": "<p>Для чего в <code>TaskRepository</code> добавили метод <code>Ping(ctx)</code>?</p>",
+      "answer_options": [
+        "Для проверки доступности БД",
+        "Для создания задачи",
+        "Для удаления задачи",
+        "Для получения списка задач"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1741,
+      "question_html": "<p>Какой тип связи описывает ситуацию: один пользователь — много заказов?</p>",
+      "answer_options": [
+        "Один к одному (1:1)",
+        "Один ко многим (1:N)",
+        "Многие ко многим (M:N)",
+        "Многие к одному (N:1)"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1705,
+      "question_html": "<p>Как обратиться к полю <code>Email</code> у переменной <code>u</code> типа <code>User</code>?</p>",
+      "answer_options": [
+        "u.Email",
+        "u->Email",
+        "u[Email]",
+        "u.Email()"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1728,
+      "question_html": "<p>Как понять, что поле/метод экспортируемое (публичное)?</p>",
+      "answer_options": [
+        "Имя начинается с заглавной буквы",
+        "Имя начинается со строчной буквы",
+        "Имя содержит подчеркивание",
+        "Имя содержит `public`"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1647,
+      "question_html": "<p>Что делает <code>go run</code> при запуске программы?</p>",
+      "answer_options": [
+        "Только компилирует",
+        "Только запускает",
+        "Компилирует и запускает",
+        "Интерпретирует"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1845,
+      "question_html": "<p>Что делает <code>docker compose up</code>?</p>",
+      "answer_options": [
+        "Собирает образы",
+        "Запускает все сервисы, описанные в `docker-compose.yml`",
+        "Останавливает все сервисы",
+        "Удаляет все контейнеры"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1881,
+      "question_html": "<p>“Тонкие handlers” — это когда…</p>",
+      "answer_options": [
+        "Handler содержит всю логику",
+        "Handler только принимает запрос и вызывает сервис",
+        "Handler только возвращает ответ",
+        "Handler не используется"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1785,
+      "question_html": "<p>Как в Go запускают функцию в отдельной goroutine?</p>",
+      "answer_options": [
+        "go myFunc()",
+        "goroutine myFunc()",
+        "async myFunc()",
+        "thread myFunc()"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1853,
+      "question_html": "<p>ORM — это…</p>",
+      "answer_options": [
+        "Object-Relational Mapping",
+        "Object-Resource Mapping",
+        "Open-Read Model",
+        "Optimized Row Manager"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1724,
+      "question_html": "<p>Как в Go тип “становится” реализацией интерфейса?</p>",
+      "answer_options": [
+        "Явно, с помощью `implements`",
+        "Неявно, если у типа есть все методы интерфейса",
+        "Через наследование",
+        "Через `new(Interface)`"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1867,
+      "question_html": "<p>Зачем в API обычно используют DTO?</p>",
+      "answer_options": [
+        "Для хранения данных в БД",
+        "Для отделения API-моделей от моделей БД",
+        "Для ускорения работы",
+        "Для логирования"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1678,
+      "question_html": "<p>Что верно про <code>switch</code> в Go?</p>",
+      "answer_options": [
+        "Нужен `break` после каждого `case`",
+        "Не нужен `break`, выполнение не проваливается дальше",
+        "Можно использовать только с числами",
+        "Нет `default`"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1767,
+      "question_html": "<p>  Что делает конструкция <code>GROUP BY user_id</code> в запросе?</p>\n\n<pre><code class=\"language-sql\">SELECT user_id, COUNT(*) \nFROM orders\nGROUP BY user_id;\n</code></pre>",
+      "answer_options": [
+        "Сортирует по user_id",
+        "Фильтрует по user_id",
+        "Группирует строки по уникальным значениям user_id",
+        "Объединяет таблицы"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1872,
+      "question_html": "<p>Что делает <code>AutoMigrate(&amp;User{}, &amp;Task{})</code>?</p>",
+      "answer_options": [
+        "Удаляет таблицы",
+        "Создает или обновляет таблицы в БД на основе моделей",
+        "Только создает таблицы",
+        "Только обновляет таблицы"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1898,
+      "question_html": "<p>Какое правило валидации есть в уроке?</p>",
+      "answer_options": [
+        "Проверка, что `title` не пустой и `user_id > 0`",
+        "Проверка, что `title` длиннее 10 символов",
+        "Проверка, что `user_id` существует в БД",
+        "Проверка, что `title` уникален"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1674,
+      "question_html": "<p>Какое требование к условию в <code>if</code> в Go?</p>",
+      "answer_options": [
+        "Условие может быть любого типа",
+        "Условие должно быть типа `bool`",
+        "Условие должно быть числом",
+        "Условие может быть строкой"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1689,
+      "question_html": "<p>Какой вариант корректно объявляет функцию сложения?</p>",
+      "answer_options": [
+        "func Add(a, b int) int { return a + b }",
+        "function Add(a, b int) int { return a + b }",
+        "def Add(a, b int) int { return a + b }",
+        "func Add(a int, b int) { return a + b }"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1877,
+      "question_html": "<p>Почему не стоит писать всю логику прямо в HTTP-handler’ах?</p>",
+      "answer_options": [
+        "Это замедляет работу",
+        "Это усложняет тестирование и переиспользование кода",
+        "Это небезопасно",
+        "Это увеличивает размер кода"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1737,
+      "question_html": "<p>Какое утверждение о первичном ключе (PRIMARY KEY) верно?</p>",
+      "answer_options": [
+        "Может содержать NULL",
+        "Может быть неуникальным",
+        "Всегда уникален и не может быть NULL",
+        "Может использоваться только для строковых данных"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1744,
+      "question_html": "<p>Что такое схема (schema) в PostgreSQL?</p>",
+      "answer_options": [
+        "База данных",
+        "Пространство имен для группировки таблиц",
+        "Таблица",
+        "Тип данных"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1807,
+      "question_html": "<p>Что делает <code>wg.Wait()</code>?</p>",
+      "answer_options": [
+        "Запускает горутины",
+        "Блокирует выполнение, пока все горутины не завершатся",
+        "Останавливает горутины",
+        "Удаляет горутины"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1847,
+      "question_html": "<p>Как посмотреть логи только приложения в compose?</p>",
+      "answer_options": [
+        "docker compose logs -f app",
+        "docker compose logs",
+        "docker compose ps",
+        "docker compose up"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1800,
+      "question_html": "<p>Когда два потока увеличивают счётчик, но итог меньше ожидаемого — это…</p>",
+      "answer_options": [
+        "Lost update",
+        "Data race",
+        "Deadlock",
+        "Livelock"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1735,
+      "question_html": "<p>Что такое строка (row) в таблице?</p>",
+      "answer_options": [
+        "Столбец таблицы",
+        "Одна запись в таблице",
+        "Название таблицы",
+        "Тип данных"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1739,
+      "question_html": "<p>Что такое внешний ключ (FOREIGN KEY)?</p>",
+      "answer_options": [
+        "Столбец, который уникально идентифицирует строку в таблице",
+        "Столбец, который ссылается на первичный ключ в другой таблице",
+        "Индекс для ускорения поиска",
+        "Ограничение на уникальность значения"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1679,
+      "question_html": "<pre><code class=\"language-go\">switch { case ... } </code></pre>\n\n<p>в Go — это…</p>",
+      "answer_options": [
+        "Обычный switch",
+        "Switch без выражения, как цепочка `if/else if`",
+        "Ошибка",
+        "Бесконечный цикл"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1854,
+      "question_html": "<p>Почему ORM (например GORM) удобен новичку?</p>",
+      "answer_options": [
+        "Позволяет быстро получить CRUD без тонны SQL",
+        "Автоматически создает API",
+        "Ускоряет работу приложения",
+        "Уменьшает размер кода"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1768,
+      "question_html": "<p>Чем <code>HAVING</code> отличается от <code>WHERE</code>?</p>",
+      "answer_options": [
+        "Нет разницы",
+        "`WHERE` фильтрует строки до группировки, `HAVING` — после",
+        "`HAVING` фильтрует строки до группировки, `WHERE` — после",
+        "`WHERE` используется только с `JOIN`"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1663,
+      "question_html": "<p>Какое утверждение про <code>const</code> верное?</p>",
+      "answer_options": [
+        "Константы можно менять после объявления",
+        "Константы вычисляются на этапе компиляции",
+        "Константы могут быть только строками",
+        "Константы не используются в Go"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1810,
+      "question_html": "<p>REST API — это…</p>",
+      "answer_options": [
+        "Протокол передачи данных",
+        "Архитектурный стиль для создания API",
+        "Язык программирования",
+        "База данных"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1878,
+      "question_html": "<p>Что должен делать handler (HTTP-слой) по хорошей архитектуре?</p>",
+      "answer_options": [
+        "Содержать бизнес-логику",
+        "Принимать HTTP-запрос, вызывать сервис и возвращать ответ",
+        "Работать с базой данных",
+        "Управлять транзакциями"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1707,
+      "question_html": "<p>Почему <code>u := User{1, \"test@mail.com\"}</code> считается менее надёжным вариантом?</p>",
+      "answer_options": [
+        "Это медленнее",
+        "Зависит от порядка полей, легко ошибиться при изменении структуры",
+        "Нельзя использовать для структур",
+        "Это устаревший синтаксис"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1692,
+      "question_html": "<p>Какой паттерн чаще всего используется в Go?</p>",
+      "answer_options": [
+        "Результат + ошибка",
+        "Исключения",
+        "Только результат",
+        "Только ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1893,
+      "question_html": "<p>Какой статус-код обычно возвращают при успешном <code>GET</code>?</p>",
+      "answer_options": [
+        "200 OK",
+        "201 Created",
+        "204 No Content",
+        "400 Bad Request"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1710,
+      "question_html": "<p>Что показывает <code>len(nums)</code> для среза <code>nums</code>?</p>",
+      "answer_options": [
+        "Емкость среза",
+        "Текущую длину среза",
+        "Адрес среза",
+        "Тип среза"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1843,
+      "question_html": "<p>docker-compose — это…</p>",
+      "answer_options": [
+        "Инструмент для управления несколькими контейнерами",
+        "Инструмент для сборки образов",
+        "Инструмент для управления одним контейнером",
+        "Инструмент для работы с сетью"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1786,
+      "question_html": "<p>Почему goroutines считаются более “дешёвыми”, чем потоки ОС?</p>",
+      "answer_options": [
+        "Они быстрее создаются и потребляют меньше памяти",
+        "Они работают на GPU",
+        "Они не требуют синхронизации",
+        "Они автоматически распределяются по ядрам"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1827,
+      "question_html": "<p>Что верно про секреты (пароли/токены) в репозитории?</p>",
+      "answer_options": [
+        "Их можно хранить в открытом виде",
+        "Их нельзя коммитить в репозиторий",
+        "Их можно хранить в `go.mod`",
+        "Их можно хранить в `Dockerfile`"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1897,
+      "question_html": "<p>Почему в уроке разделяют Model и DTO?</p>",
+      "answer_options": [
+        "Чтобы не светить внутренние поля и свободно менять API",
+        "Чтобы ускорить работу",
+        "Чтобы уменьшить размер кода",
+        "Это требование Go"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1712,
+      "question_html": "<p>Зачем используют <code>value, ok := m[key]</code> при чтении из map?</p>",
+      "answer_options": [
+        "Чтобы проверить, существует ли ключ",
+        "Чтобы получить значение по ключу",
+        "Чтобы удалить ключ",
+        "Чтобы добавить ключ"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1649,
+      "question_html": "<p>Команда <code>go test</code> используется для…</p>",
+      "answer_options": [
+        "Сборки проекта",
+        "Запуска тестов",
+        "Запуска программы",
+        "Установки зависимостей"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1870,
+      "question_html": "<p>Как обычно выглядит поле связи в <code>User</code>?</p>",
+      "answer_options": [
+        "`TaskID uint`",
+        "`Tasks []Task`",
+        "`Task Task`",
+        "`TaskIDs []uint`"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1833,
+      "question_html": "<p>Какая функция стандартной библиотеки удобно возвращает <code>(value, ok)</code> для env?</p>",
+      "answer_options": [
+        "os.Getenv()",
+        "os.LookupEnv()",
+        "os.ReadEnv()",
+        "os.Env()"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1908,
+      "question_html": "<p>Почему важно добавить пагинацию?</p>",
+      "answer_options": [
+        "Чтобы API не сломался при большом количестве данных",
+        "Чтобы ускорить работу приложения",
+        "Чтобы уменьшить размер кода",
+        "Это требование REST"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1873,
+      "question_html": "<p>Почему <code>AutoMigrate</code> подходит на старте курса?</p>",
+      "answer_options": [
+        "Быстро увидеть результат: модель → таблица",
+        "Это самый надежный способ миграции",
+        "Он работает в проде",
+        "Он быстрее ручных миграций"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1771,
+      "question_html": "<p>Чем <code>LEFT JOIN</code> отличается от <code>INNER JOIN</code>?</p>",
+      "answer_options": [
+        "Нет разницы",
+        "`LEFT JOIN` возвращает все строки из левой таблицы, даже если нет совпадений",
+        "`LEFT JOIN` возвращает все строки из правой таблицы",
+        "`INNER JOIN` возвращает все строки из левой таблицы"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1770,
+      "question_html": "<p>Что делает такой запрос?</p>\n\n<pre><code class=\"language-sql\">SELECT user_id, SUM(amount) AS total_amount\nFROM orders\nGROUP BY user_id\nHAVING SUM(amount) &gt; 1000;\n</code></pre>",
+      "answer_options": [
+        "Выбирает всех пользователей, у которых есть заказы",
+        "Считает сумму всех заказов для каждого пользователя и оставляет только тех, у кого сумма > 1000",
+        "Выбирает все заказы с суммой > 1000",
+        "Считает среднюю сумму заказов для каждого пользователя"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1676,
+      "question_html": "<p>Оператор <code>!</code> в Go…</p>",
+      "answer_options": [
+        "Логическое НЕ",
+        "Логическое И",
+        "Логическое ИЛИ",
+        "Сравнение"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1694,
+      "question_html": "<p>Что обычно возвращают в <code>error</code>, если ошибки нет?</p>",
+      "answer_options": [
+        "Пустую строку",
+        "0",
+        "nil",
+        "false"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1722,
+      "question_html": "<p>Value receiver <code>(u User)</code> означает, что метод…</p>",
+      "answer_options": [
+        "Работает с копией структуры",
+        "Работает с оригиналом структуры",
+        "Изменяет структуру",
+        "Не может быть вызван"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1720,
+      "question_html": "<p>Метод в Go — это…</p>",
+      "answer_options": [
+        "Функция, привязанная к типу",
+        "Обычная функция",
+        "Переменная",
+        "Константа"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1747,
+      "question_html": "<p>  Что описывает следующая структура?</p>\n\n<pre><code class=\"language-sql\">PostgreSQL сервер\n└── database: app_db\n    └── schema: public\n        ├── table: users\n        └── table: orders\n</code></pre>",
+      "answer_options": [
+        "Структуру таблиц",
+        "Иерархию объектов в PostgreSQL",
+        "Схему связей между таблицами",
+        "Структуру проекта"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1904,
+      "question_html": "<p>Почему удобнее использовать <code>PATCH /tasks/:id</code> в CRUD?</p>",
+      "answer_options": [
+        "Позволяет частично обновлять ресурс",
+        "Позволяет полностью заменить ресурс",
+        "Это быстрее",
+        "Это требование REST"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1830,
+      "question_html": "<p>Файл <code>.env</code> — это…</p>",
+      "answer_options": [
+        "Файл с переменными окружения",
+        "Файл с зависимостями",
+        "Файл с конфигурацией Docker",
+        "Файл с кодом"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1813,
+      "question_html": "<p>Почему часто делают <code>GET /health</code>?</p>",
+      "answer_options": [
+        "Чтобы проверить, что сервер жив",
+        "Чтобы получить данные",
+        "Чтобы создать ресурс",
+        "Чтобы удалить ресурс"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1866,
+      "question_html": "<p>Что чаще всего относится к модели БД?</p>",
+      "answer_options": [
+        "Структура с GORM-тегами",
+        "Структура с JSON-тегами",
+        "Интерфейс",
+        "Функция"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1654,
+      "question_html": "<p>Какое утверждение верное?</p>",
+      "answer_options": [
+        "GOPATH устарел, но его полезно знать",
+        "GOPATH обязателен для всех проектов",
+        "GOPATH не используется",
+        "GOPATH — это то же самое, что GOROOT"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1664,
+      "question_html": "<p>Что делает <code>iota</code> в таком блоке?</p>",
+      "answer_options": [
+        "Генерирует последовательные значения (0, 1, 2, ...)",
+        "Умножает значения",
+        "Создает случайные числа",
+        "Ничего не делает"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1842,
+      "question_html": "<p>Docker container — это…</p>",
+      "answer_options": [
+        "Запущенный экземпляр образа",
+        "Шаблон для создания образов",
+        "Файл с настройками",
+        "Сетевой интерфейс"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1706,
+      "question_html": "<p>Какой способ инициализации структуры считается предпочтительным?</p>",
+      "answer_options": [
+        "С именованными полями",
+        "По порядку полей",
+        "Через `new()`",
+        "Через `make()`"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1857,
+      "question_html": "<p>Почему пул соединений полезен?</p>",
+      "answer_options": [
+        "Ускоряет работу за счет переиспользования соединений",
+        "Уменьшает размер кода",
+        "Увеличивает безопасность",
+        "Упрощает логирование"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1863,
+      "question_html": "<p>Что должен содержать “хороший” лог при ошибке подключения к БД?</p>",
+      "answer_options": [
+        "Понятное сообщение и системную ошибку",
+        "Только системную ошибку",
+        "Только понятное сообщение",
+        "Пароль от БД"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1905,
+      "question_html": "<p>Query params — это…</p>",
+      "answer_options": [
+        "Параметры в URL после `?`",
+        "Параметры в теле запроса",
+        "Параметры в заголовках",
+        "Параметры в пути"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1727,
+      "question_html": "<p>Что происходит при встраивании <code>BaseService</code> в <code>TaskService</code>?</p>",
+      "answer_options": [
+        "TaskService получает поля и методы BaseService",
+        "TaskService наследуется от BaseService",
+        "BaseService получает поля TaskService",
+        "Ничего не происходит"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1848,
+      "question_html": "<p>Почему приложение в контейнере подключается к Postgres через <code>db:5432</code>?</p>",
+      "answer_options": [
+        "Потому что `db` — это имя сервиса Postgres в compose-сети",
+        "Потому что `db` — это localhost",
+        "Потому что `db` — это IP-адрес",
+        "Потому что `db` — это порт"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1879,
+      "question_html": "<p>Основная задача service-слоя — это…</p>",
+      "answer_options": [
+        "Бизнес-логика и проверки",
+        "Работа с HTTP",
+        "Работа с БД",
+        "Логирование"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1856,
+      "question_html": "<p>Пул соединений — это…</p>",
+      "answer_options": [
+        "Набор готовых к использованию соединений с БД",
+        "Очередь запросов к БД",
+        "Кэш данных",
+        "Тип базы данных"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1801,
+      "question_html": "<p><code>sync.Mutex</code> — это…</p>",
+      "answer_options": [
+        "Примитив синхронизации для защиты критической секции",
+        "Тип данных",
+        "Функция",
+        "Канал"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1888,
+      "question_html": "<p>Какой порядок взаимодействия слоёв правильный?</p>",
+      "answer_options": [
+        "Handler → Service → Repository",
+        "Repository → Service → Handler",
+        "Service → Handler → Repository",
+        "Handler → Repository → Service"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1839,
+      "question_html": "<p>Docker — это…</p>",
+      "answer_options": [
+        "Инструмент для запуска приложений в контейнерах",
+        "Язык программирования",
+        "База данных",
+        "Веб-фреймворк"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1865,
+      "question_html": "<p>Главное отличие Model от DTO в backend-проекте?</p>",
+      "answer_options": [
+        "Model отражает структуру БД, DTO — структуру API",
+        "Model используется для API, DTO — для БД",
+        "Нет разницы",
+        "Model — это интерфейс, DTO — структура"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1880,
+      "question_html": "<p>Repository-слой отвечает за…</p>",
+      "answer_options": [
+        "Доступ к данным",
+        "Бизнес-логику",
+        "HTTP-запросы",
+        "Логирование"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1799,
+      "question_html": "<p>Почему <code>counter++</code> может давать неправильный результат при работе нескольких goroutine?</p>",
+      "answer_options": [
+        "Операция не атомарна",
+        "Операция слишком медленная",
+        "Операция использует слишком много памяти",
+        "Операция не поддерживается"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1742,
+      "question_html": "<p>Какая из пар чаще всего реализуется как связь «многие ко многим» (M:N)?</p>",
+      "answer_options": [
+        "Пользователи и заказы",
+        "Студенты и курсы",
+        "Пользователи и паспорта",
+        "Товары и категории"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1661,
+      "question_html": "<p>Какое значение получит переменная <code>var ok bool</code>, если ей ничего не присваивать?</p>",
+      "answer_options": [
+        "true",
+        "false",
+        "nil",
+        "0"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1811,
+      "question_html": "<p>Эндпоинт — это…</p>",
+      "answer_options": [
+        "URL + HTTP-метод, который обрабатывается сервером",
+        "Формат данных",
+        "База данных",
+        "Клиентское приложение"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1798,
+      "question_html": "<p>Почему data race считается серьёзной проблемой?</p>",
+      "answer_options": [
+        "Приводит к недетерминированному поведению и трудно отлаживается",
+        "Замедляет работу",
+        "Увеличивает потребление памяти",
+        "Усложняет код"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1844,
+      "question_html": "<p>В каком файле обычно описывают сервисы docker-compose?</p>",
+      "answer_options": [
+        "docker-compose.yml",
+        "Dockerfile",
+        "docker.yml",
+        "compose.yaml"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1886,
+      "question_html": "<p>Какой endpoint сделали в этом уроке, чтобы проверить handler→service?</p>",
+      "answer_options": [
+        "GET /api/version",
+        "GET /api/health",
+        "GET /api/ping",
+        "GET /api/tasks"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1723,
+      "question_html": "<p>В каком случае чаще нужен pointer receiver <code>(u *User)</code>?</p>",
+      "answer_options": [
+        "Когда метод должен изменять структуру",
+        "Когда метод не изменяет структуру",
+        "Когда структура маленькая",
+        "Когда структура большая"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1783,
+      "question_html": "<p>Параллелизм — это когда задачи…</p>",
+      "answer_options": [
+        "Выполняются одновременно на нескольких ядрах",
+        "Выполняются по очереди",
+        "Переключаются между собой",
+        "Используют асинхронность"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1861,
+      "question_html": "<p>Что делает вызов <code>gorm.Open(postgres.Open(dsn), &amp;gorm.Config{})</code>?</p>",
+      "answer_options": [
+        "Открывает подключение к БД",
+        "Создает таблицы",
+        "Выполняет запрос",
+        "Закрывает подключение"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1675,
+      "question_html": "<p>Какой оператор в Go означает логическое “И”?</p>",
+      "answer_options": [
+        "&&",
+        "||",
+        "!",
+        "&"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1659,
+      "question_html": "<p>Когда обычно используют <code>var</code>?</p>",
+      "answer_options": [
+        "Когда нужно объявить переменную без значения или на уровне пакета",
+        "Только внутри функций",
+        "Только для констант",
+        "Только для строк"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1903,
+      "question_html": "<p>В чём главное отличие <code>PUT</code> от <code>PATCH</code>?</p>",
+      "answer_options": [
+        "PUT заменяет ресурс целиком, PATCH — частично",
+        "PATCH заменяет ресурс целиком, PUT — частично",
+        "Нет разницы",
+        "PUT используется для создания, PATCH — для обновления"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1858,
+      "question_html": "<p>Почему при ошибке подключения к БД лучше завершить запуск приложения?</p>",
+      "answer_options": [
+        "БД — критическая зависимость для API",
+        "Это ускоряет работу",
+        "Это уменьшает размер кода",
+        "Это требование безопасности"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1910,
+      "question_html": "<p>Почему <code>Title *string</code> и <code>Done *bool</code>, а не просто <code>string</code> и <code>bool</code>?</p>",
+      "answer_options": [
+        "Чтобы отличать “поле не прислали” от “прислали пустое/false”",
+        "Это быстрее",
+        "Это безопаснее",
+        "Это требование Go"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1745,
+      "question_html": "<p>Как называется схема, которая по умолчанию используется во многих установках PostgreSQL?</p>",
+      "answer_options": [
+        "main",
+        "default",
+        "public",
+        "dbo"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1734,
+      "question_html": "<p>Что является основной формой хранения данных в реляционной базе данных?</p>",
+      "answer_options": [
+        "Списки",
+        "Словари",
+        "Таблицы",
+        "Файлы"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1750,
+      "question_html": "<p>Какая команда SQL используется для выборки данных из таблицы?</p>",
+      "answer_options": [
+        "GET",
+        "SELECT",
+        "SHOW",
+        "FETCH"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": false
+    },
+    {
+      "step_id": 1815,
+      "question_html": "<p>Почему Gin удобен новичкам?</p>",
+      "answer_options": [
+        "Простая маршрутизация и удобный контекст",
+        "Он самый быстрый",
+        "У него самая большая экосистема",
+        "Он самый старый"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1884,
+      "question_html": "<p>Что значит “TaskService зависит от абстракции”?</p>",
+      "answer_options": [
+        "TaskService зависит от интерфейса `TaskRepository`",
+        "TaskService зависит от конкретного `TaskGormRepository`",
+        "TaskService зависит от `gorm.DB`",
+        "TaskService не зависит ни от чего"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1805,
+      "question_html": "<p><code>WaitGroup</code> чаще всего используют, чтобы…</p>",
+      "answer_options": [
+        "Дождаться завершения всех горутин",
+        "Запустить горутины",
+        "Остановить горутины",
+        "Синхронизировать доступ к памяти"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1651,
+      "question_html": "<p><code>go.mod</code> — это…</p>",
+      "answer_options": [
+        "Файл с описанием модуля и зависимостей проекта",
+        "Исполняемый файл",
+        "Файл с кодом",
+        "Файл с настройками"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1693,
+      "question_html": "<p>Тип <code>error</code> в Go — это…</p>",
+      "answer_options": [
+        "Интерфейс",
+        "Структура",
+        "Строка",
+        "Число"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1887,
+      "question_html": "<p>Где логичнее вернуть версию <code>\"0.1.0\"</code> в текущем каркасе?</p>",
+      "answer_options": [
+        "В сервисном слое",
+        "В handler-слое",
+        "В repository-слое",
+        "В main-файле"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1711,
+      "question_html": "<p>Что делает функция <code>append(nums, x)</code>?</p>",
+      "answer_options": [
+        "Добавляет элемент `x` в конец среза `nums`",
+        "Удаляет элемент `x` из среза",
+        "Вставляет элемент `x` в начало",
+        "Заменяет элемент"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1752,
+      "question_html": "<p>Какой запрос выберет <strong>только столбцы</strong> <code>name</code> и <code>email</code> из таблицы <code>users</code>?</p>",
+      "answer_options": [
+        "SELECT name, email FROM users;",
+        "SELECT ALL FROM users;",
+        "SELECT * FROM users;",
+        "GET name, email FROM users;"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1832,
+      "question_html": "<p>Для чего добавляют <code>.env.example</code>?</p>",
+      "answer_options": [
+        "Как шаблон для `.env` без секретов",
+        "Для хранения секретов",
+        "Для запуска приложения",
+        "Для тестов"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1891,
+      "question_html": "<p>Какой endpoint соответствует созданию задачи в REST?</p>",
+      "answer_options": [
+        "POST /tasks",
+        "GET /tasks",
+        "PUT /tasks",
+        "DELETE /tasks"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1914,
+      "question_html": "<p>Что обычно возвращают при успешном <code>DELETE /tasks/:id</code>?</p>",
+      "answer_options": [
+        "200 OK",
+        "201 Created",
+        "204 No Content",
+        "404 Not Found"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": false
+    },
+    {
+      "step_id": 1653,
+      "question_html": "<p><code>GOROOT</code> — это…</p>",
+      "answer_options": [
+        "Папка, где установлен Go",
+        "Папка с проектами",
+        "Переменная окружения",
+        "Инструмент"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1846,
+      "question_html": "<p>Что означает флаг <code>-d</code> в <code>docker compose up -d</code>?</p>",
+      "answer_options": [
+        "Запуск в фоновом режиме",
+        "Отладка",
+        "Удаление",
+        "Сборка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1895,
+      "question_html": "<p>В каком случае правильно вернуть <code>400 Bad Request</code>?</p>",
+      "answer_options": [
+        "При невалидном вводе",
+        "При отсутствии ресурса",
+        "При ошибке сервера",
+        "При успешном выполнении"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1788,
+      "question_html": "<p>Как отправить число <code>10</code> в канал <code>ch</code>?</p>",
+      "answer_options": [
+        "ch <- 10",
+        "ch = 10",
+        "ch(10)",
+        "send(ch, 10)"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1726,
+      "question_html": "<p>Полиморфизм в Go через интерфейсы — это когда…</p>",
+      "answer_options": [
+        "Один и тот же код работает с разными типами, если они удовлетворяют интерфейсу",
+        "Тип наследуется от другого типа",
+        "Функция может принимать только один тип",
+        "Нет полиморфизма"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1821,
+      "question_html": "<p>Чем можно проверить <code>GET /health</code>, кроме Postman?</p>",
+      "answer_options": [
+        "Браузером или curl",
+        "Только Postman",
+        "Только браузером",
+        "Ничем"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1709,
+      "question_html": "<p>Какое утверждение про <code>slice</code> верное?</p>",
+      "answer_options": [
+        "Срез имеет динамическую длину",
+        "Срез имеет фиксированную длину",
+        "Срез не используется в Go",
+        "Срез может содержать только числа"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1896,
+      "question_html": "<p>Что происходит при <code>c.ShouldBindJSON(&amp;req)</code>?</p>",
+      "answer_options": [
+        "JSON из тела запроса парсится в структуру `req`",
+        "Структура `req` сериализуется в JSON",
+        "Отправляется JSON-ответ",
+        "Ничего не происходит"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1875,
+      "question_html": "<p>После <code>AutoMigrate(&amp;User{}, &amp;Task{})</code> какие таблицы должны появиться?</p>",
+      "answer_options": [
+        "users и tasks",
+        "user и task",
+        "Users и Tasks",
+        "Таблицы не создадутся"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1862,
+      "question_html": "<p>Где правильнее инициализировать БД в учебном API?</p>",
+      "answer_options": [
+        "В main-файле при старте приложения",
+        "В handler-слое",
+        "В service-слое",
+        "В repository-слое"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1817,
+      "question_html": "<p>Где обычно лежит <code>main.go</code> в более “боевой” структуре проекта?</p>",
+      "answer_options": [
+        "cmd/server/main.go",
+        "main.go в корне",
+        "internal/main.go",
+        "pkg/main.go"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1850,
+      "question_html": "<p>Почему обычно делают volume <code>pgdata:/var/lib/postgresql/data</code>?</p>",
+      "answer_options": [
+        "Чтобы сохранить данные Postgres между перезапусками",
+        "Чтобы ускорить работу",
+        "Чтобы уменьшить размер образа",
+        "Это требование Postgres"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 1769,
+      "question_html": "<p>Какой запрос вернёт <strong>имя пользователя и сумму его заказов</strong>, объединяя таблицы <code>users</code> и <code>orders</code> по полю <code>user_id</code>?</p>",
+      "answer_options": [
+        "SELECT users.name, SUM(orders.amount) FROM users JOIN orders ON users.id = orders.user_id GROUP BY users.name;",
+        "SELECT users.name, SUM(orders.amount) FROM users, orders WHERE users.id = orders.user_id;",
+        "SELECT users.name, SUM(orders.amount) FROM users LEFT JOIN orders ON users.id = orders.user_id;",
+        "SELECT users.name, SUM(orders.amount) FROM users INNER JOIN orders ON users.id = orders.user_id;"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    }
+  ]
+}

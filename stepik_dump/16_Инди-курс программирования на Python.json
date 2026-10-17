@@ -1,0 +1,1484 @@
+{
+  "course_id": 16,
+  "course_title": "Инди-курс программирования на Python",
+  "status": "review_template",
+  "source_note": "Generated from edu_platform_kurses.sql. The database contains the questions but no choices or correct-answer keys.",
+  "choice_questions": [
+    {
+      "step_id": 2505,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">s = \"---Python---\"\nprint(s.strip(\"-\"))</code></pre>",
+      "answer_options": [
+        "Python",
+        "---Python",
+        "Python---",
+        "---Python---"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2491,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">s = \"Hello\\\nWorld\"\nprint(s)</code></pre>",
+      "answer_options": [
+        "Hello\nWorld",
+        "HelloWorld",
+        "Hello\\nWorld",
+        "Ошибка синтаксиса"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2411,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">print('четыреста')\nprint(#'пятнадцатая')\nprint('база')\n# print('ответьте')</code></pre>",
+      "answer_options": [
+        "Ошибка SyntaxError",
+        "четыреста\nпятнадцатая\nбаза",
+        "четыреста\nбаза",
+        "четыреста\nбаза\nответьте"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2419,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода</p>\n\n<pre><code class=\"language-python\">s = 'Free Nginx'\nprint(s[50])\n</code></pre>",
+      "answer_options": [
+        "Ошибка IndexError: string index out of range",
+        "None",
+        "n",
+        "Пустая строка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2317,
+      "question_html": "<p>Что увидим на экране после запуска следующей программы?</p>\n\n<pre><code>print('Вы', 'когда-нибудь', 'мечтали',  sep='!')\nprint('стать лучшей', 'версией', 'себя', end=?)</code></pre>",
+      "answer_options": [
+        "Ошибка SyntaxError",
+        "Вы!когда-нибудь!мечтали\nстать лучшей версией себя",
+        "Вы когда-нибудь мечтали\nстать лучшей версией себя",
+        "Вы!когда-нибудь!мечтали стать лучшей версией себя"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2466,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">s = \"Привет, мир!\"\nprint(s.startswith(\"мир\"))\nprint(s.startswith(\"Привет\"))\n</code></pre>",
+      "answer_options": [
+        "False\nTrue",
+        "True\nTrue",
+        "False\nFalse",
+        "True\nFalse"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2456,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">s = \"Программисты не боятся ошибок. Они просто говорят: 'Это фича!'\"\nprint(s.swapcase().find('р'))</code></pre>",
+      "answer_options": [
+        "-1",
+        "0",
+        "1",
+        "2"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2486,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">text = 'SUPERMAN'\nprint(text.isalpha() and text.isupper())\n</code></pre>",
+      "answer_options": [
+        "True",
+        "False",
+        "None",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2462,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">text = \"Python is a great programming language.\"\nprint(text.count(\" \")) # знак пробела</code></pre>",
+      "answer_options": [
+        "5",
+        "4",
+        "6",
+        "0"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2285,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода</p>\n\n<pre><code>a = int(input())\nb = int(input())\nc = int(input())\nprint(a + b + c)</code></pre>\n\n<p>если пользователь введет значения</p>\n\n<pre><code>3 4 5</code></pre>\n\n<p>?</p>",
+      "answer_options": [
+        "Ошибка ValueError",
+        "12",
+        "345",
+        "3 4 5"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2398,
+      "question_html": "<p>Какие символы будут подсчитываться при использовании функции <code>len()</code> ?</p>",
+      "answer_options": [
+        "Все символы, включая пробелы и знаки пунктуации",
+        "Только буквы",
+        "Только буквы и цифры",
+        "Только непробельные символы"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2252,
+      "question_html": "<p>В python используется </p>",
+      "answer_options": [
+        "динамическая типизация",
+        "статическая типизация",
+        "строгая типизация без приведения",
+        "типизация отсутствует"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2407,
+      "question_html": "<p>Что увидим на экране после запуска следующей программы?</p>\n\n<pre><code>print('Гараж' in not 'Гараж')</code></pre>",
+      "answer_options": [
+        "Ошибка SyntaxError",
+        "True",
+        "False",
+        "None"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2458,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">s = \"Программисты не боятся ошибок. Они просто говорят: 'Это фича!'\"\nprint(s.index('р').swapcase())</code></pre>",
+      "answer_options": [
+        "Ошибка AttributeError",
+        "0",
+        "1",
+        "True"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2270,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода</p>\n\n<pre><code>a = int(input())\nb = float(input())\nprint(a + b)</code></pre>\n\n<p>если пользователь введет значения</p>\n\n<pre><code>3\n5</code></pre>\n\n<p>?</p>",
+      "answer_options": [
+        "8.0",
+        "8",
+        "35.0",
+        "Ошибка TypeError"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2427,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">s = 'qwerty123'\nprint(s[2:])</code></pre>",
+      "answer_options": [
+        "erty123",
+        "qw",
+        "qwerty123",
+        "rty123"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2254,
+      "question_html": "<p>Переменная с именем \"Home\" и переменная \"home\" это одна и та же переменная в Python ?</p>",
+      "answer_options": [
+        "Нет, регистр имеет значение",
+        "Да, это одна и та же переменная",
+        "Да, Python игнорирует регистр",
+        "Зависит от версии Python"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2267,
+      "question_html": "<p>Если мы хотим заставить пользователя ввести целое число и при этом чтобы оно сохранилось в переменную <strong><code>b</code></strong>, какой из предложенных команд нам нужно воспользоваться?</p>",
+      "answer_options": [
+        "b = int(input())",
+        "b = input()",
+        "b = float(input())",
+        "b = str(input())"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2493,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">s = \"Hello\\\nPython\"\nprint(len(s))</code></pre>",
+      "answer_options": [
+        "12",
+        "11",
+        "13",
+        "6"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2250,
+      "question_html": "<p>Как называется текст программы на любом языке программирования</p>",
+      "answer_options": [
+        "исходный код",
+        "компилятор",
+        "интерпретатор",
+        "байт-код"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2455,
+      "question_html": "<p>Что увидим на экране после выполнения данной программы?</p>\n\n<pre><code>s = 'hEllO WoRlD'\nprint(s.swapcase().capitalize().swapcase().lower())</code></pre>",
+      "answer_options": [
+        "hello world",
+        "Hello world",
+        "HELLO WORLD",
+        "hEllO WoRlD"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2497,
+      "question_html": "<p>Какие инструкции корректно выводят путь <code>C:\\\\Program Files\\\\Python\\\tasks</code>?</p>",
+      "answer_options": [
+        "print(r\"C:\\Program Files\\Python\\tasks\")",
+        "print(\"C:\\Program Files\\Python\\tasks\")",
+        "print('C:\\Program Files\\Python\\tasks')",
+        "print(\"C:/Program Files/Python/tasks\")"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2418,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">s = 'Заратустра'\nprint(s[-3])\n</code></pre>",
+      "answer_options": [
+        "с",
+        "т",
+        "р",
+        "а"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2477,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">text = 'солнце светит в левый глаз'\nprint(text.islower())</code></pre>",
+      "answer_options": [
+        "True",
+        "False",
+        "None",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2374,
+      "question_html": "<p>Как называется функция, выполняющая округление вверх?</p>",
+      "answer_options": [
+        "math.ceil()",
+        "math.floor()",
+        "math.trunc()",
+        "round()"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2256,
+      "question_html": "<p>Что произойдет, если попытаться выполнить следующую команду?</p>\n\n<pre><code class=\"language-python\">False = 666</code></pre>",
+      "answer_options": [
+        "Ошибка SyntaxError, так как False — ключевое слово",
+        "Переменная False получит значение 666",
+        "Ошибка NameError",
+        "Ничего не произойдет"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2479,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">text = 34567\nprint(text.isdigit())</code></pre>",
+      "answer_options": [
+        "Ошибка AttributeError",
+        "True",
+        "False",
+        "None"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2274,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода</p>\n\n<pre><code>a = int(input())\nb = int(input())\nprint(a * b)</code></pre>\n\n<p>если пользователь введет значения</p>\n\n<pre><code>15\n2</code></pre>\n\n<p>?</p>",
+      "answer_options": [
+        "30",
+        "152",
+        "17",
+        "15 2"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2467,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">s = \"Солнечный день\"\nprint(s.endswith(\"день\"))\nprint(s.endswith(\"Солнечный\"))</code></pre>",
+      "answer_options": [
+        "True\nFalse",
+        "False\nTrue",
+        "True\nTrue",
+        "False\nFalse"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2339,
+      "question_html": "<p>Какому выражению аналогична команда ниже <em>c точки зрения интерпретатора</em>?</p>\n\n<pre><code>b += 5</code></pre>",
+      "answer_options": [
+        "b = b + 5",
+        "b = 5 + b",
+        "b = 5",
+        "b = b - 5"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2413,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">'''Районы, кварталы, жилые массивы\nЯ ухожу, ухожу красиво'''\n\nprint('''Районы, кварталы, жилые массивы\nЯ ухожу, ухожу красиво''')</code></pre>",
+      "answer_options": [
+        "Районы, кварталы, жилые массивы\nЯ ухожу, ухожу красиво",
+        "Пустая строка",
+        "Ошибка SyntaxError",
+        "Районы, кварталы, жилые массивы Я ухожу, ухожу красиво"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2236,
+      "question_html": "<p>Каким знаком обозначается операция взятия остатка от деления ?</p>",
+      "answer_options": [
+        "%",
+        "//",
+        "/",
+        "**"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2428,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">s = 'qwerty123'\nprint(s[:5])</code></pre>",
+      "answer_options": [
+        "qwert",
+        "werty",
+        "qwerty",
+        "123"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2476,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">text = ''\nprint(text.islower())</code></pre>",
+      "answer_options": [
+        "False",
+        "True",
+        "None",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2314,
+      "question_html": "<p>Как называется параметр в функции <code>print</code>, который отвечает за значение, которое будет выведено в конце?</p>",
+      "answer_options": [
+        "end",
+        "sep",
+        "finish",
+        "last"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2251,
+      "question_html": "<p>Переменная в Python создается </p>",
+      "answer_options": [
+        "в момент первого присваивания значения",
+        "при объявлении с ключевым словом var",
+        "при вызове функции create()",
+        "автоматически при запуске программы"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2224,
+      "question_html": "<p>У Вас получилось установить python?</p>",
+      "answer_options": [
+        "Да",
+        "Нет",
+        "Устанавливаю",
+        "Были проблемы"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 2391,
+      "question_html": "<p>Отметьте все инструкции, позволяющие вывести текст «python» на экран </p>",
+      "answer_options": [
+        "print('python')",
+        "print(\"python\")",
+        "print(python)",
+        "print('''python''')"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 2390,
+      "question_html": "<p>Отметьте все корректные способы создать строку, из символов «Привет»</p>",
+      "answer_options": [
+        "'Привет'",
+        "\"Привет\"",
+        "'''Привет'''",
+        "Привет"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 2304,
+      "question_html": "<p>Что будет выведено на экран, если в <code>print</code>ничего не передать?</p>",
+      "answer_options": [
+        "Пустая строка",
+        "None",
+        "Ошибка",
+        "0"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2404,
+      "question_html": "<p>Что увидим на экране после запуска следующей программы?</p>\n\n<pre><code>print('Гара' in 'Гараж')</code></pre>",
+      "answer_options": [
+        "True",
+        "False",
+        "None",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2294,
+      "question_html": "<p>Пользовались ли до этого момента сервисом <code><a href=\"https://pythontutor.com/\" rel=\"noopener noreferrer nofollow\">pythontutor.com</a></code> или его аналогами?</p>",
+      "answer_options": [
+        "Нет, впервые узнал о нем",
+        "Да, пользовался",
+        "Слышал, но не пользовался",
+        "Затрудняюсь ответить"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 2496,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">s = r\"Hello\\\nWorld\"\nprint(s)</code></pre>",
+      "answer_options": [
+        "Hello\\nWorld",
+        "Hello\nWorld",
+        "HelloWorld",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2273,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода</p>\n\n<pre><code>a = input()\nb = int(input())\nprint(a * b)</code></pre>\n\n<p>если пользователь введет значения</p>\n\n<pre><code>17\n2</code></pre>\n\n<p>?</p>",
+      "answer_options": [
+        "1717",
+        "34",
+        "17 17",
+        "Ошибка TypeError"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2350,
+      "question_html": "<p>Какому выражению аналогична команда ниже?</p>\n\n<pre><code>b **= a</code></pre>",
+      "answer_options": [
+        "b = b ** a",
+        "b = a ** b",
+        "b = b * a",
+        "b = b + a"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2287,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода</p>\n\n<pre><code>a, b, c = map(int, input().split())\nprint(a + b + c)</code></pre>\n\n<p>если пользователь введет значения</p>\n\n<pre><code>3 5</code></pre>\n\n<p>?</p>",
+      "answer_options": [
+        "Ошибка ValueError: not enough values to unpack",
+        "8",
+        "35",
+        "3 5"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2253,
+      "question_html": "<p>Выберите правильное название переменной</p>",
+      "answer_options": [
+        "user_name",
+        "2name",
+        "user-name",
+        "user name"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2473,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">s = \"Cloud\"\nprint(s.ljust(10, '_'))</code></pre>",
+      "answer_options": [
+        "Cloud_____",
+        "_____Cloud",
+        "Cloud",
+        "Cloud_"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2262,
+      "question_html": "<p>   Какой тип у переменной <code>w</code> ?</p>\n\n<pre><code class=\"language-python\">w = 'Hello world'\nprint(type(w))</code></pre>",
+      "answer_options": [
+        "<class 'str'>",
+        "<class 'int'>",
+        "<class 'list'>",
+        "<class 'float'>"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2423,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">s = 'qwerty123'\ns[2] = 'a'\nprint(s)\n</code></pre>",
+      "answer_options": [
+        "Ошибка TypeError: 'str' object does not support item assignment",
+        "qwarty123",
+        "qaerty123",
+        "qwerty123"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2481,
+      "question_html": "<p>  Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">text = '34.567'\nprint(not text.isdigit())</code></pre>",
+      "answer_options": [
+        "True",
+        "False",
+        "None",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2485,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">text = 'SUPER-MAN'\nprint(text.isalpha() and text.isupper())\n</code></pre>",
+      "answer_options": [
+        "False",
+        "True",
+        "None",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2263,
+      "question_html": "<p>Что увидим на экране после запуска следующей программы?</p>\n\n<pre><code>print(age = 17)</code></pre>",
+      "answer_options": [
+        "Ошибка TypeError",
+        "17",
+        "age = 17",
+        "None"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2324,
+      "question_html": "<p>Что увидим на экране после запуска следующей программы?</p>\n\n<pre><code>num = 92385\nprint(num % 10)</code></pre>",
+      "answer_options": [
+        "5",
+        "9",
+        "0",
+        "8"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2323,
+      "question_html": "<p>Что увидим на экране после запуска следующей программы?</p>\n\n<pre><code>print(14 % 28)</code></pre>",
+      "answer_options": [
+        "14",
+        "0",
+        "28",
+        "2"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2495,
+      "question_html": "<p>Какие из представленных ниже инструкций правильно выведут строку:</p>\n\n<pre><code>I love \"Python\"</code></pre>\n\n<p>или </p>\n\n<pre><code>I love 'Python'</code></pre>\n\n<p>?</p>",
+      "answer_options": [
+        "print('I love \"Python\"')",
+        "print(\"I love 'Python'\")",
+        "print(\"I love \"Python\"\")",
+        "print('I love 'Python'')"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 2342,
+      "question_html": "<p>Что увидим на экране после запуска следующей программы?</p>\n\n<pre><code>total = 100\nprint(total *= 2)</code></pre>",
+      "answer_options": [
+        "Ошибка SyntaxError",
+        "200",
+        "100",
+        "None"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2286,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода</p>\n\n<pre><code>a, b, c = map(int, input().split())\nprint(a + b + c)</code></pre>\n\n<p>если пользователь введет значения</p>\n\n<pre><code>3 4 5</code></pre>\n\n<p>?</p>",
+      "answer_options": [
+        "12",
+        "345",
+        "3 4 5",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2492,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">s = \"Hello\\\nWorld\"\nprint(repr(s))</code></pre>",
+      "answer_options": [
+        "'Hello\\nWorld'",
+        "Hello\nWorld",
+        "HelloWorld",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2400,
+      "question_html": "<p>В примере ниже при помощи операции конкатенации мы получаем значения в переменных <code>s1</code> и <code>s2</code></p>\n\n<pre><code>h = 'hello'\nw = 'world'\ns1 = h + w\ns2 = w + h</code></pre>\n\n<p>Вопрос: «В переменных  хранятся <code>s1</code> и <code>s2</code> хранятся одинаковые значения?»</p>",
+      "answer_options": [
+        "Нет, s1 = 'helloworld', s2 = 'worldhello'",
+        "Да, обе равны 'helloworld'",
+        "Да, обе равны 'worldhello'",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2406,
+      "question_html": "<p>Что увидим на экране после запуска следующей программы?</p>\n\n<pre><code>print('ж' not in 'Гараж')</code></pre>",
+      "answer_options": [
+        "True",
+        "False",
+        "None",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2451,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">text = 'каска'\nprint(text.find('а', 2, 4))</code></pre>",
+      "answer_options": [
+        "-1",
+        "1",
+        "3",
+        "0"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2218,
+      "question_html": "<h2 style=\"text-align: center;\">Практические задания</h2>\n\n<p>Теперь давайте поговорим о практических задачах данного курса. Все задания курса можно разделить на следующие типы:</p>\n\n<p>      ✔️    тест с одним правильным вариантом ответа;</p>\n\n<p>      ✔️    тест с несколькими правильными вариантами ответа;</p>\n\n<p>      ✔️    численная задача;</p>\n\n<p>      ✔️    задача на программирование;</p>\n\n<p>За каждое правильно выполненное задание будут начисляться баллы, они будут суммироваться. Когда вы наберете определенное количество баллов, вам выдадут сертификат за прохождение данного курса. Мелочь, но приятно же?)</p>\n\n<p style=\"text-align: center;\"><img alt=\"\" height=\"250\" name=\"giphy.gif\" src=\"https://ucarecdn.stepik.net/ad235563-b033-432c-9c21-d0602873c5db/\" width=\"444\"></p>\n\n<blockquote>\n<p>Если вы выполнили правильно задание, но баллы не начислились, не переживайте, просто обновите страницу</p>\n</blockquote>\n\n<p>Давайте познакомимся с каждым из этих типов заданий</p>\n\n<h3 style=\"text-align: center;\">Тест с одним правильным вариантом ответа</h3>\n\n<p>В этом задании нужно выбрать один из представленных вариантов ответа и нажать кнопку <code>Отправить</code>. Если угадаете правильный вариант, получите баллы. Давайте попробуем!</p>\n\n<p>Вы сталкивались с программированием ранее?</p>",
+      "answer_options": [
+        "Нет, никогда",
+        "Да, немного",
+        "Да, уверенно программирую",
+        "Затрудняюсь ответить"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 2243,
+      "question_html": "<p>Как обозначается функция нахождения модуля числа?</p>",
+      "answer_options": [
+        "abs()",
+        "mod()",
+        "fabs()",
+        "ceil()"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2422,
+      "question_html": "<p>Строка - это </p>",
+      "answer_options": [
+        "неизменяемая упорядоченная последовательность символов",
+        "изменяемая последовательность символов",
+        "неупорядоченная коллекция",
+        "числовой тип данных"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2484,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">text = 'super-man'\nprint(text.isupper() and text.islower())</code></pre>",
+      "answer_options": [
+        "False",
+        "True",
+        "None",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2326,
+      "question_html": "<p>Что увидим на экране после запуска следующей программы?</p>\n\n<pre><code>num = 92385\nprint(num % 100 // 10)</code></pre>",
+      "answer_options": [
+        "8",
+        "5",
+        "9",
+        "3"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2449,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">text = 'каска'\nprint(text.find('СКА'.lower()))</code></pre>",
+      "answer_options": [
+        "2",
+        "-1",
+        "0",
+        "1"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2403,
+      "question_html": "<p>Что увидим на экране после запуска следующей программы?</p>\n\n<pre><code>print('Гора' in 'Гараж')</code></pre>",
+      "answer_options": [
+        "False",
+        "True",
+        "None",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2482,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">text = 'SUPER-MAN'\nprint(text.isupper())</code></pre>",
+      "answer_options": [
+        "True",
+        "False",
+        "None",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2483,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">text = 'Ночь, Что За Странная Свобода: От Заката До Восхода'\nprint(text.istitle())</code></pre>",
+      "answer_options": [
+        "True",
+        "False",
+        "None",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2445,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">text = 'каска'\nprint(text.find('а'))</code></pre>",
+      "answer_options": [
+        "1",
+        "0",
+        "3",
+        "2"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2340,
+      "question_html": "<p>Какому выражению аналогична команда ниже?</p>\n\n<pre><code>b -= 5</code></pre>",
+      "answer_options": [
+        "b = b - 5",
+        "b = 5 - b",
+        "b = b + 5",
+        "b = -5"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2268,
+      "question_html": "<p>Если мы хотим заставить пользователя ввести текст и сохранить его в переменную <strong><code>text</code></strong>, какой из предложенных команд нам нужно воспользоваться?</p>",
+      "answer_options": [
+        "text = input()",
+        "text = int(input())",
+        "text = float(input())",
+        "text = str(input())"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2416,
+      "question_html": "<p>У нас есть переменная <strong><code>name</code></strong>, в которой хранится строка «Messi».</p>\n\n<pre><code>name = 'Messi'</code></pre>\n\n<p>Как правильно получить символ «e»?</p>",
+      "answer_options": [
+        "name[1]",
+        "name[2]",
+        "name[0]",
+        "name['e']"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2468,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">s = \"abcdefg\"\nprint(s.startswith(\"cde\", 2))\nprint(s.endswith(\"fg\", 0, 6))</code></pre>",
+      "answer_options": [
+        "True\nFalse",
+        "False\nTrue",
+        "True\nTrue",
+        "False\nFalse"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2447,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">text = 'каска'\nprint(text.find('ска'))</code></pre>",
+      "answer_options": [
+        "2",
+        "1",
+        "0",
+        "-1"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2271,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода</p>\n\n<pre><code>a = int(input())\nb = int(input())\nprint(a + b)</code></pre>\n\n<p>если пользователь введет значения</p>\n\n<pre><code>3.0\n5.0</code></pre>\n\n<p>?</p>",
+      "answer_options": [
+        "Ошибка ValueError",
+        "8",
+        "8.0",
+        "3.0 5.0"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2425,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">s = 'qwerty123'\nprint(s[5:2])</code></pre>",
+      "answer_options": [
+        "Пустая строка",
+        "ty1",
+        "y12",
+        "rty"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2478,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">text = 'сколько раз говоришь? 256!!! ого!'\nprint(text.islower())</code></pre>",
+      "answer_options": [
+        "True",
+        "False",
+        "None",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2309,
+      "question_html": "<p>Что увидим на экране после запуска следующей программы?</p>\n\n<pre><code>print('Вы когда-нибудь', 'мечтали', 'стать лучшей', 'версией себя', sep='?')\n</code></pre>",
+      "answer_options": [
+        "Вы когда-нибудь?мечтали?стать лучшей?версией себя",
+        "Вы когда-нибудь мечтали стать лучшей версией себя",
+        "Вы?когда-нибудь?мечтали?стать?лучшей?версией?себя",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2457,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">s = \"Программисты не боятся ошибок. Они просто говорят: 'Это фича!'\"\nprint(s.swapcase().swapcase().index('р'))\n</code></pre>",
+      "answer_options": [
+        "0",
+        "-1",
+        "1",
+        "Ошибка ValueError"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2305,
+      "question_html": "<p>Что увидим на экране после запуска следующей программы?</p>\n\n<pre><code>print('Жизнь как коробка шоколадных конфет')\nprint()\nprint('никогда не знаешь, что тебе попадётся.')</code></pre>",
+      "answer_options": [
+        "Жизнь как коробка шоколадных конфет\n\nникогда не знаешь, что тебе попадётся.",
+        "Жизнь как коробка шоколадных конфет\nникогда не знаешь, что тебе попадётся.",
+        "Жизнь как коробка шоколадных конфет никогда не знаешь, что тебе попадётся.",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2450,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">text = 'каска'\nprint(text.find('а', 2))\n</code></pre>",
+      "answer_options": [
+        "3",
+        "1",
+        "-1",
+        "2"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2461,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">s = \"ssssss\"\nprint(s.count(\"ss\"))</code></pre>",
+      "answer_options": [
+        "3",
+        "6",
+        "5",
+        "2"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2463,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">s = \"ssssss\"\nprint(s.count(\"sss\", 1, 3))</code></pre>",
+      "answer_options": [
+        "0",
+        "1",
+        "2",
+        "3"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2341,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code>total = 100\ntotal *= 2\nprint(total)</code></pre>",
+      "answer_options": [
+        "200",
+        "100",
+        "102",
+        "None"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2302,
+      "question_html": "<p>Все, что находится в круглых скобках у команды print(), называется:</p>",
+      "answer_options": [
+        "аргументами",
+        "параметрами",
+        "переменными",
+        "операндами"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2321,
+      "question_html": "<p>Что увидим на экране после запуска следующей программы?</p>\n\n<pre><code>print(46 // 9)</code></pre>",
+      "answer_options": [
+        "5",
+        "4",
+        "6",
+        "5.1"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2507,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">s = \"ritritAlgorithmtirtir\"\nprint(s.strip(\"tir\"))</code></pre>",
+      "answer_options": [
+        "Algorithm",
+        "ritritAlgorithmtirtir",
+        "Algorithmtirtir",
+        "ritritAlgorithm"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2219,
+      "question_html": "<h2 style=\"text-align: center;\">Тест с несколькими правильным вариантами ответа</h2>\n\n<p>Похожая задача, только здесь правильных ответов может быть несколько. Давайте потренируемся!</p>\n\n<p>Какая цель изучения этого курса?</p>",
+      "answer_options": [
+        "Изучить Python с нуля",
+        "Подготовиться к собеседованию",
+        "Освоить backend-разработку",
+        "Сдать ЕГЭ по информатике"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 2303,
+      "question_html": "<p>Выберите верные строки кода.</p>",
+      "answer_options": [
+        "print(1, 2, 3)",
+        "print 1, 2, 3",
+        "print(1 2 3)",
+        "print[1, 2, 3]"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 2504,
+      "question_html": "<p>Какое значение будет храниться в переменной <em><code>result</code></em> после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">s = \"   Data Science   \"\nresult = s.strip()</code></pre>",
+      "answer_options": [
+        "Data Science",
+        "   Data Science   ",
+        "Data Science   ",
+        "   Data Science"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2289,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода</p>\n\n<pre><code>a, b, c = map(float, input().split())\nprint(a + b + c)</code></pre>\n\n<p>если пользователь введет значения</p>\n\n<pre><code>1 2.5 1.5</code></pre>\n\n<p>?</p>",
+      "answer_options": [
+        "5.0",
+        "5",
+        "4.5",
+        "1 2.5 1.5"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2266,
+      "question_html": "<p>Какой тип данных будет храниться в переменной <strong><code>value</code></strong></p>\n\n<pre><code>value = input()</code></pre>\n\n<p>если пользователь введет значение</p>\n\n<pre><code>567</code></pre>\n\n<p>?</p>",
+      "answer_options": [
+        "str",
+        "int",
+        "float",
+        "bool"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2448,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">​text = 'каска'\nprint(text.find('СКА'))\n</code></pre>",
+      "answer_options": [
+        "-1",
+        "2",
+        "0",
+        "1"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2272,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода</p>\n\n<pre><code>a = int(input())\nb = input()\nprint(b)\nprint(a)</code></pre>\n\n<p>если пользователь введет значения</p>\n\n<pre><code>8\nqwerty</code></pre>\n\n<p>?</p>",
+      "answer_options": [
+        "qwerty\n8",
+        "8\nqwerty",
+        "qwerty 8",
+        "Ошибка ValueError"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2322,
+      "question_html": "<p>Что увидим на экране после запуска следующей программы?</p>\n\n<pre><code>print(74 % 7)</code></pre>",
+      "answer_options": [
+        "4",
+        "0",
+        "10",
+        "7"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2318,
+      "question_html": "<p>Что увидим на экране после запуска следующей программы?</p>\n\n<pre><code>print('Вы', 'когда-нибудь', 'мечтали',  sep='!')\nprint('стать лучшей', 'версией', 'себя', end='?')</code></pre>",
+      "answer_options": [
+        "Вы!когда-нибудь!мечтали\nстать лучшей версией себя?",
+        "Вы!когда-нибудь!мечтали\nстать лучшей версией себя",
+        "Вы когда-нибудь мечтали\nстать лучшей версией себя?",
+        "Вы!когда-нибудь!мечтали стать лучшей версией себя?"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2424,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">s = 'qwerty123'\nprint(s[2:5])</code></pre>",
+      "answer_options": [
+        "ert",
+        "rty",
+        "qwe",
+        "ty1"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2444,
+      "question_html": "<p>Отметьте из представленных ниже названий те методы, которое помогут найти первое слева вхождение символа в строке и вывести индекс этого символа?</p>",
+      "answer_options": [
+        "find()",
+        "index()",
+        "rfind()",
+        "count()"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 2373,
+      "question_html": "<p>Как называется функция, выполняющая округление вниз?</p>",
+      "answer_options": [
+        "math.floor()",
+        "math.ceil()",
+        "math.trunc()",
+        "round()"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2325,
+      "question_html": "<p>Что увидим на экране после запуска следующей программы?</p>\n\n<pre><code>num = 92385\nprint(num // 1000 % 10)</code></pre>",
+      "answer_options": [
+        "2",
+        "9",
+        "3",
+        "8"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2417,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">s = 'qwerty123'\nprint(s[3])\n</code></pre>",
+      "answer_options": [
+        "r",
+        "t",
+        "e",
+        "y"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2452,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">text = 'каска'\nprint(text.rfind('а'))</code></pre>",
+      "answer_options": [
+        "3",
+        "1",
+        "4",
+        "0"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2405,
+      "question_html": "<p>Что увидим на экране после запуска следующей программы?</p>\n\n<pre><code>print('Аж' not in 'Гараж')</code></pre>",
+      "answer_options": [
+        "True",
+        "False",
+        "None",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2508,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">s = \"===Data===\" \nprint(s.strip(\"=\").rstrip(\"a\"))</code></pre>",
+      "answer_options": [
+        "Data",
+        "===Data===",
+        "Data===",
+        "===Data"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2453,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">text = 'каска'\nprint(text.index('а'))</code></pre>",
+      "answer_options": [
+        "1",
+        "0",
+        "3",
+        "2"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2412,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">print('четыреста')\nprint('#пятнадцатая')\nprint('база')\n# print('ответьте')</code></pre>",
+      "answer_options": [
+        "четыреста\n#пятнадцатая\nбаза",
+        "четыреста\nпятнадцатая\nбаза",
+        "четыреста\nбаза",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2352,
+      "question_html": "<p>Что увидим на экране после запуска следующей программы?</p>\n\n<pre><code>price = 2000\ndiscount = 10\n\nprice -= price * (discount / 100)\nprint(price)</code></pre>",
+      "answer_options": [
+        "1800.0",
+        "2000.0",
+        "1900.0",
+        "200.0"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2255,
+      "question_html": "<p>Что произойдет, если обратиться к переменой <code>good</code> до того момента, когда она будет объявлена?</p>",
+      "answer_options": [
+        "Возникнет ошибка NameError",
+        "Переменная создастся автоматически",
+        "Вернется None",
+        "Ничего не произойдет"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2288,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода</p>\n\n<pre><code>a, b, c = map(int, input().split())\nprint(a + b + c)</code></pre>\n\n<p>если пользователь введет значения</p>\n\n<pre><code>1 2.5 1.5</code></pre>\n\n<p>?</p>",
+      "answer_options": [
+        "Ошибка ValueError",
+        "5.0",
+        "5",
+        "1 2.5 1.5"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2506,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">s = \"@@@Machine Learning@@@\"\nresult = s.lstrip(\"@\")\nprint(result)</code></pre>",
+      "answer_options": [
+        "Machine Learning@@@",
+        "@@@Machine Learning",
+        "Machine Learning",
+        "@@@Machine Learning@@@"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2480,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">text = '34567'\nprint(text.isdigit())</code></pre>",
+      "answer_options": [
+        "True",
+        "False",
+        "None",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2410,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">print('четыреста')\n# print('пятнадцатая')\nprint('база')\n# print('ответьте')</code></pre>",
+      "answer_options": [
+        "четыреста\nбаза",
+        "четыреста\nпятнадцатая\nбаза",
+        "четыреста\nбаза\nответьте",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2269,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода</p>\n\n<pre><code>value = int(input())\nprint(value)</code></pre>\n\n<p>если пользователь введет значение</p>\n\n<pre><code>qwerty</code></pre>\n\n<p>?</p>",
+      "answer_options": [
+        "Ошибка ValueError",
+        "qwerty",
+        "None",
+        "0"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2306,
+      "question_html": "<p>Что увидим на экране после запуска следующей программы?</p>\n\n<pre><code>print('Жизнь как коробка шоколадных конфет')\nprint\nprint('никогда не знаешь, что тебе попадётся.')</code></pre>",
+      "answer_options": [
+        "Жизнь как коробка шоколадных конфет\nникогда не знаешь, что тебе попадётся.",
+        "Жизнь как коробка шоколадных конфет\n\nникогда не знаешь, что тебе попадётся.",
+        "Ошибка SyntaxError",
+        "Ошибка NameError"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2308,
+      "question_html": "<p>Как называется параметр в функции <code>print</code>, который отвечает за разделяющие символы?</p>",
+      "answer_options": [
+        "sep",
+        "end",
+        "delim",
+        "split"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2426,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">s = 'qwerty123'\nprint(s[6:54])</code></pre>",
+      "answer_options": [
+        "123",
+        "qwerty",
+        "y123",
+        "Пустая строка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2261,
+      "question_html": "<p>    Какой тип у переменной d ?</p>\n\n<pre><code class=\"language-python\">d = 8/4\nprint(type(d))</code></pre>",
+      "answer_options": [
+        "<class 'float'>",
+        "<class 'int'>",
+        "<class 'str'>",
+        "<class 'bool'>"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2494,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">s = \"C:\\\\\\\\Users\\\\\\\\Admin\"\nprint(s)</code></pre>",
+      "answer_options": [
+        "C:\\Users\\Admin",
+        "C:\\\\Users\\\\Admin",
+        "C:/Users/Admin",
+        "C:UsersAdmin"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2446,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">text = 'каска'\nprint(text.find('А'))</code></pre>",
+      "answer_options": [
+        "-1",
+        "1",
+        "0",
+        "3"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    },
+    {
+      "step_id": 2460,
+      "question_html": "<p>Что увидим на экране после запуска следующего кода?</p>\n\n<pre><code class=\"language-python\">s = \"apple banana apple\"\nprint(s.count(\"apple\", 6))</code></pre>",
+      "answer_options": [
+        "1",
+        "2",
+        "0",
+        "3"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": false
+    }
+  ]
+}

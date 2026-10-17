@@ -1,0 +1,2732 @@
+{
+  "course_id": 3,
+  "course_title": "Тесты и задачи по HTML, CSS и JavaScript",
+  "status": "review_template",
+  "source_note": "Generated from edu_platform_kurses.sql. The database contains the questions but no choices or correct-answer keys.",
+  "choice_questions": [
+    {
+      "step_id": 468,
+      "question_html": "<p><strong>Какое свойство является сокращением для свойств flex-direction и flex-wrap?</strong></p>\n\n<ul>\n\t<li>Самый понятный и подробный урок по CSS Flexbox для начинающих, все нюансы, примеры, практика (<a href=\"https://youtu.be/Hf__JLlFxpk?si=I2Gfop82h_1ppw-J\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/66b20b1cf79bc66a7f4370f4\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "flex-flow",
+        "flex",
+        "flex-wrap",
+        "flex-direction"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 454,
+      "question_html": "<p><strong>Можно ли с точки зрения семантики размещать несколько header-ов на странице?</strong></p>",
+      "answer_options": [
+        "Да, если каждый header относится к своему sectioning-контейнеру",
+        "Нет, на странице допустим только один header",
+        "Только внутри footer",
+        "Только при использовании CSS Grid"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 601,
+      "question_html": "<p><strong>Как получить массив с ключами объекта obj?</strong></p>\n\n<ul>\n\t<li><a href=\"https://learn.javascript.ru/keys-values-entries\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n\t<li>Видео (<a href=\"https://youtu.be/MxRT9oiEScU?si=yox-I3elYbqLDB5E\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/66b340d12c27606a59abae6b\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "Object.keys(obj)",
+        "Object.values(obj)",
+        "Object.entries(obj)",
+        "obj.keys()"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 613,
+      "question_html": "<p><strong>Можно ли сделать геттеры и сеттеры приватными?</strong></p>\n\n<ul>\n\t<li><a href=\"https://learn.javascript.ru/property-accessors\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "Да, используя приватные поля с # и соответствующие аксессоры",
+        "Нет, геттеры и сеттеры всегда публичны",
+        "Только в объектах без классов",
+        "Только через JSON"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 450,
+      "question_html": "<p><strong>Тег &lt;area&gt; ...</strong></p>",
+      "answer_options": [
+        "Определяет активную область в image map",
+        "Создаёт текстовую область формы",
+        "Вставляет аудиофайл",
+        "Задаёт область CSS Grid"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 600,
+      "question_html": "<p><strong>Как очистить session storage?</strong></p>\n\n<ul>\n\t<li>Видео (<a href=\"https://youtu.be/9m7o30iS8ck?si=pCHE46j9F9oPFeSP\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/645742210921d964ba129ff2\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "sessionStorage.clear()",
+        "sessionStorage.remove()",
+        "sessionStorage.deleteAll()",
+        "localStorage.clear()"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 642,
+      "question_html": "<p><strong>Выберите метод позволяющий округлить число до ближайшего большего целого:</strong></p>",
+      "answer_options": [
+        "Math.ceil()",
+        "Math.floor()",
+        "Math.round()",
+        "Math.trunc()"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 463,
+      "question_html": "<p><strong>Возможно ли установить больше одной картинки на фон элемента с помощью CSS?</strong></p>\n\n<ul>\n\t<li><a href=\"https://html5book.ru/css-background/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "Да, перечислив изображения через запятую в background-image",
+        "Нет, CSS поддерживает только одно фоновое изображение",
+        "Только через тег img",
+        "Только в SVG"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 448,
+      "question_html": "<p><strong>Какой из вариантов содержит ошибку?</strong></p>",
+      "answer_options": [
+        "Закрывающий тег записан без символа /",
+        "Атрибут указан в открывающем теге",
+        "HTML-элементы могут быть вложенными",
+        "У элемента указан class"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 423,
+      "question_html": "<p><strong>Какой тег создает пронумерованный список?</strong></p>\n\n<ul>\n\t<li><a href=\"https://html5book.ru/html-lists/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n\t<li>Видео (<a href=\"https://youtu.be/vgJXhim8sLM?si=iDH-7JGDh8Im26HY\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/6385b3f7b5ae252343db97e3\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "<ol>",
+        "<ul>",
+        "<li>",
+        "<dl>"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 414,
+      "question_html": "<p><strong>Каким является следующий адрес ссылки: pages/page2.html</strong></p>\n\n<ul>\n\t<li><a href=\"https://htmlbook.ru/samhtml/ssylki/absolyutnye-i-otnositelnye-ssylki\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n\t<li>Видео (<a href=\"https://youtube.com/shorts/BJ6-6n8Sosg?si=AAxUpn-4rFwLrD7r\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/66ceff63630253008592339b\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "Относительным",
+        "Абсолютным",
+        "Якорным",
+        "Протокольным"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 449,
+      "question_html": "<p><strong>Как правильно задать ссылку на адрес электронной почты?</strong></p>\n\n<p><em>Пробуйте запускать код в редакторе, если задание это позволяет. Эмпирическим путём так же можно получить знания, которые лучше запомнятся. Я надеюсь и хочу верить, что все ссылки в этом курсе вы не проходите мимо, а тщательно изучаете данную в них информацию, чтобы расширить свой багаж знаний!</em></p>",
+      "answer_options": [
+        "<a href=\"mailto:name@example.com\">Написать</a>",
+        "<a href=\"email:name@example.com\">Написать</a>",
+        "<a href=\"https://name@example.com\">Написать</a>",
+        "<mail>name@example.com</mail>"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 629,
+      "question_html": "<p><strong>Функция Math.random() возвращает число на промежутке:</strong></p>",
+      "answer_options": [
+        "От 0 включительно до 1 не включительно",
+        "От 1 до 100",
+        "От -1 до 1",
+        "От 0 до 100 включительно"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 561,
+      "question_html": "<p><strong>Какое свойство применяется для изменения алгоритма расчета ширины и высоты элемента?</strong></p>\n\n<ul>\n\t<li>Видео (<a href=\"https://youtu.be/9prTwMLJQC8?si=xyddtL-RpsPz3JZg\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/625c0ad3657eb53fc36f0f93\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "box-sizing",
+        "display",
+        "position",
+        "overflow"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 485,
+      "question_html": "<p><strong>Какое значение свойства overflow-wrap указывает, что при необходимости можно делать переносы на следующую строку внутри слов?</strong></p>\n\n<ul>\n\t<li><a href=\"https://www.code.mu/ru/markup/manual/css/property/overflow-wrap/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "break-word",
+        "nowrap",
+        "ellipsis",
+        "hidden"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 664,
+      "question_html": "<p><code>let arr = [];<br>\narr == !arr;</code></p>\n\n<p>Запустите код и попробуйте понять почему происходит именно так. <strong>Что получится в результате?</strong></p>",
+      "answer_options": [
+        "true",
+        "false",
+        "undefined",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 502,
+      "question_html": "<p><strong>Какое свойство используется для обтекания изображения текстом?</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/css/float/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "float",
+        "clear",
+        "display",
+        "position"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 593,
+      "question_html": "<p><strong>Как создать класс, который наследуется от другого класса?</strong></p>\n\n<ul>\n\t<li>Видео (<a href=\"https://youtu.be/0oHYhzb-dNQ?si=nw6YkeKxkb_EjKse\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/66b341a4ad590e355f1c4adf\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "class Child extends Parent {}",
+        "class Child inherits Parent {}",
+        "class Child : Parent {}",
+        "class Child implements Parent {}"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 560,
+      "question_html": "<p><strong>Какой псевдокласс сработает при установке курсора в текстовое поле?</strong></p>",
+      "answer_options": [
+        ":focus",
+        ":hover",
+        ":active",
+        ":checked"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 651,
+      "question_html": "<p><strong>Какой метод округляет число до n знаков после запятой?</strong></p>",
+      "answer_options": [
+        "toFixed(n)",
+        "Math.round(n)",
+        "parseInt(n)",
+        "Number(n)"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 428,
+      "question_html": "<p><strong>Какой тег используется внутри тега map?</strong></p>\n\n<ul>\n\t<li>Видео (<a href=\"https://youtu.be/vYR-XyR7rfg?si=4d5v-xnV3YExG0b5\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/67062a039b265d7246b823f9\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "<area>",
+        "<img>",
+        "<canvas>",
+        "<figure>"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 540,
+      "question_html": "<p><strong>Какой из селекторов покрасит второй элемент li?</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/css/child/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n\t<li>Видео (<a href=\"https://youtu.be/G37gg6Gjzn4?si=WbJ1nCLnZBd1f5S-\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/63d5048daf6b2866ce817845\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "li:nth-child(2)",
+        "li:nth-child(1)",
+        "li::second",
+        "li + li + li"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 608,
+      "question_html": "<p><strong>padStart() является методом ...</strong></p>\n\n<ul>\n\t<li><a href=\"https://www.code.mu/ru/javascript/manual/string/padStart/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "строки",
+        "массива",
+        "числа",
+        "объекта Date"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 453,
+      "question_html": "<p><strong>Используются ли float-ы в современной вёрстке веб-страниц?</strong></p>\n\n<p><em>Самостоятельно поищите информацию о том, как менялась вёрстка страниц. Можно использовать например такой запрос: \"эволюция верстки\" в любом поисковике. Изучите несколько первых страниц из выдачи. Напишите в комментариях, что нового и интересного вы узнали. И знали ли вы про существование всех типов верстки?</em></p>",
+      "answer_options": [
+        "Да, но главным образом для обтекания контента, а не построения макета",
+        "Нет, свойство float удалено из CSS",
+        "Только в JavaScript",
+        "Только внутри SVG"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 422,
+      "question_html": "<p><strong>Какой из тегов не является тегом для работы с текстом?</strong></p>\n\n<ul>\n\t<li><a href=\"https://htmlacademy.ru/blog/html-tags/canvas#:~:text=%D0%A2%D0%B5%D0%B3%20%3Ccanvas%3E%20%E2%80%94%20%D1%8D%D1%82%D0%BE%20%D1%8D%D0%BB%D0%B5%D0%BC%D0%B5%D0%BD%D1%82,%D1%84%D0%B8%D0%B3%D1%83%D1%80%2C%20%D0%BB%D0%B8%D0%BD%D0%B8%D0%B9%2C%20%D1%82%D0%B5%D0%BA%D1%81%D1%82%D0%B0%20%D0%B8%20%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B9\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n\t<li>Видео (<a href=\"https://youtu.be/t4skZ4y13Sc?si=lnWXdaeA6ssLhWvy\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/670628698254d669e854af6f\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>\n\n<p><em>По желанию: в комментариях прикрепите ссылку на полезную информацию о других тегах. Это могут быть так же статьи или видео.</em></p>",
+      "answer_options": [
+        "<canvas>",
+        "<p>",
+        "<strong>",
+        "<em>"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 471,
+      "question_html": "<p><strong>Возможно ли указать font-weight, font-style и font-size, используя только одно CSS свойство?</strong></p>\n\n<ul>\n\t<li><a href=\"https://hcdev.ru/css/font/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "Да, с помощью сокращённого свойства font",
+        "Нет, каждое свойство задаётся только отдельно",
+        "Только font-size и font-style",
+        "Только через JavaScript"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 563,
+      "question_html": "<p><strong>Каким образом с помощью CSS можно центрировать inline контент блочного элемента (например, &lt;div&gt;) по горизонтали?</strong></p>",
+      "answer_options": [
+        "margin: 0 auto",
+        "display: flex",
+        "text-align: center",
+        "float: center"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 515,
+      "question_html": "<p><strong>Какое CSS свойство не может быть установлено с помощью сокращенного свойства background?</strong></p>",
+      "answer_options": [
+        "background-image",
+        "background-size",
+        "background-blend-mode",
+        "background-color"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 609,
+      "question_html": "<p><strong>Что будет, если передать аргументом в метод Node.appendChild() узел, который уже находится на странице?</strong></p>\n\n<ul>\n\t<li><a href=\"https://developer.mozilla.org/ru/docs/Web/API/Node/appendChild\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "Будет создана копия узла",
+        "Узел будет перемещён в конец нового родителя",
+        "Будет ошибка",
+        "Узел удалится со страницы"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 545,
+      "question_html": "<p><strong>Можно ли использовать свойство border-radius без свойства border?</strong></p>",
+      "answer_options": [
+        "Нет, нужен хотя бы border: 1px",
+        "Да, скругление работает и без видимой границы",
+        "Только для изображений",
+        "Только с position: relative"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 617,
+      "question_html": "<p><strong>Если переменная объявлена внутри функции с помощью ключевого слова var, может ли она быть доступна снаружи этой функции?</strong></p>\n\n<ul>\n\t<li><a href=\"https://learn.javascript.ru/closure\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "Да, var всегда глобальная",
+        "Только при вызове функции второй раз",
+        "Нет, она имеет функциональную область видимости",
+        "Только через document.var"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 658,
+      "question_html": "<p><strong>Какого типа данных нет в JS?</strong></p>",
+      "answer_options": [
+        "boolean",
+        "char",
+        "symbol",
+        "bigint"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 425,
+      "question_html": "<p><strong>Выберите тег перевода строки:</strong></p>\n\n<ul>\n\t<li><a href=\"https://developer.mozilla.org/ru/docs/Web/HTML/Element/br\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>\n\n<p><em>Напишите в комментариях ниже: почему использование этого тега является плохой практикой? А так же можете поделиться полезными источниками о других тегах из доступных вариантов ответов.</em></p>",
+      "answer_options": [
+        "<p>",
+        "<br>",
+        "<hr>",
+        "<line>"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 411,
+      "question_html": "<p><strong>С помощью какого тега в HTML создаются ссылки?</strong></p>\n\n<p><em>Перейдя по ссылкам ниже обязательно изучите всю информацию, а не только ту, которая нужна для правильного ответа. Так вы узнаете больше чем требуется для решения задания, а значит курс будет намного полезней и эффективней. Придерживайтесь этого принципа и дальше. Не спешите решить как можно больше заданий. <strong>Лучше </strong>решить 3-5 тестовых задания и посмотреть несколько видео уроков, прочитать статью, попробовать что-то в редакторе кода. А просто дать ответ на 15 или даже 30 заданий за раз - <strong>очень не эффективно</strong>. </em></p>\n\n<p><strong>Напоминаю: суть курса не получить максимум баллов и сертификат, а приобрести много новых знаний и закрепить уже имеющиеся!</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/html/a/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n\t<li>Видео (<a href=\"https://youtu.be/vgJXhim8sLM?si=iDH-7JGDh8Im26HY\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/6385b3f7b5ae252343db97e3\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "<link>",
+        "<a>",
+        "<href>",
+        "<url>"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 406,
+      "question_html": "<h2>Критерии прохождения курса</h2>\n\n<p>Рядом с каждым тестом и задачей указано количество баллов, которое вы получите за правильное решение. <strong>Ваш общий прогресс также отображается в оглавлении курса на панели управления (слева).</strong></p>\n\n<p>Внимание: <strong>дедлайнов по этому курсу нет</strong>, то есть вы можете просматривать материалы и решать задачи в удобном для вас режиме. Но если вы действительно хотите пройти этот курс, советую вам заниматься регулярно, и проходить хотя бы по несколько тестов в день, читать приложенные материалы и решать задачи. Мотивировать себя на это вам поможет следующий шаг.</p>\n\n<p>Удачи!</p>\n\n<p>И пожалуйста, отметьте ниже <strong>ВСЕ</strong> верные утверждения.</p>",
+      "answer_options": [
+        "В курсе есть строгий дедлайн",
+        "Прогресс отображается на панели управления, дедлайнов нет",
+        "Баллы начисляются за каждую попытку",
+        "Материалы доступны только по расписанию"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 655,
+      "question_html": "<p><strong>Как преобразовать существующий объект Date в timestamp?</strong></p>\n\n<ul>\n\t<li>Видео (<a href=\"https://youtu.be/LBebvQI6raI\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/66b34161090aa0002bb4fbc0\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "date.toTimestamp()",
+        "Date.timestamp(date)",
+        "date.getTime()",
+        "timestamp(date)"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 500,
+      "question_html": "<p><strong>Какое значение у свойства display у элемента input по умолчанию?</strong></p>",
+      "answer_options": [
+        "block",
+        "inline",
+        "inline-block",
+        "flex"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 624,
+      "question_html": "<p><strong>Может ли использоваться деструктуризация в объявлении функции в блоке перечисления аргументов (то есть, в круглых скобках, перед телом функции)?</strong></p>",
+      "answer_options": [
+        "Нет, только после объявления функции",
+        "Да, деструктуризация допустима в параметрах функции",
+        "Только в стрелочных функциях",
+        "Только в async-функциях"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 559,
+      "question_html": "<p><strong>Укажите селектор дочерних элементов:</strong></p>",
+      "answer_options": [
+        "A B",
+        "A > B",
+        "A + B",
+        "A ~ B"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 544,
+      "question_html": "<p><strong>Какой из CSS-селекторов является селектором по атрибуту id HTML-элемента?</strong></p>",
+      "answer_options": [
+        ".element",
+        "#element",
+        "[id=\"element\"]",
+        "element#"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 519,
+      "question_html": "<p><strong>Какое свойство влияет на размер фонового изображения?</strong></p>",
+      "answer_options": [
+        "background-size",
+        "background-repeat",
+        "background-position",
+        "background-color"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 595,
+      "question_html": "<p><strong>С помощью какой функции можно отбросить дробную часть и оставить только целую часть числа?</strong></p>\n\n<p><em>Ответ на этот вопрос вы можете найти в видео уроке, ссылка на который была дана на предыдущем шаге.</em></p>",
+      "answer_options": [
+        "Math.ceil()",
+        "Math.round()",
+        "parseFloat()",
+        "Math.trunc()"
+      ],
+      "suggested_correct_option_index": 3,
+      "needs_review": true
+    },
+    {
+      "step_id": 616,
+      "question_html": "<p><strong>Может ли метод JSON.parse() вернуть чистый массив (не псевдомассив или итерируемый объект, а именно массив)?</strong></p>",
+      "answer_options": [
+        "Нет, возвращается только объект",
+        "Да, если JSON содержит массив",
+        "Только после JSON.stringify()",
+        "Только в Node.js"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 433,
+      "question_html": "<p><strong>Обязательно ли указывать значение атрибута muted?</strong></p>\n\n<ul>\n\t<li><a href=\"https://htmlbook.ru/html/audio/muted\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "Да, всегда нужен muted=\"true\"",
+        "Нет, это булев атрибут: достаточно самого muted",
+        "Только для video, но не audio",
+        "Только при autoplay"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 470,
+      "question_html": "<p><strong>Какое CSS свойство не может быть установлено с помощью сокращенного свойства background?</strong></p>\n\n<ul>\n\t<li><a href=\"https://htmlbook.ru/css/background\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n\t<li>Видео (<a href=\"https://youtu.be/f72V5rxHLds?si=z0lJXX1BY_utH_7x\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/62417058b0a6093b2a2e9cc8\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "background-image",
+        "background-blend-mode",
+        "background-position",
+        "background-repeat"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 451,
+      "question_html": "<p><strong>Какой тег из перечисленных используется для создания выпадающего списка (dropdown)?</strong></p>",
+      "answer_options": [
+        "<input>",
+        "<datalist>",
+        "<select>",
+        "<option>"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 566,
+      "question_html": "<p><strong>Как указать, чтобы анимация двигалась с начала до конца и обратно?</strong></p>",
+      "answer_options": [
+        "animation-direction: normal",
+        "animation-direction: alternate",
+        "animation-iteration-count: infinite",
+        "animation-fill-mode: both"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 602,
+      "question_html": "<p><strong>Какого типа данных нет в JS? </strong></p>\n\n<ul>\n\t<li>Короткое видео про типы данных на JS (<a href=\"https://youtube.com/shorts/76GK48IMuq8?feature=share\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/66cefefc33c5f324853bc06c\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "symbol",
+        "char",
+        "bigint",
+        "undefined"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 556,
+      "question_html": "<p><strong>Какую из операций не поддерживает функция calc()?</strong></p>",
+      "answer_options": [
+        "сложение",
+        "умножение",
+        "возведение в степень",
+        "деление"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 634,
+      "question_html": "<p><strong>Что делает оператор == ?</strong></p>\n\n<ul>\n\t<li><a href=\"https://web-dev.guru/javascript/js-operatory-sravnenija/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "Сравнивает без приведения типов",
+        "Сравнивает значения с приведением типов при необходимости",
+        "Присваивает значение",
+        "Сравнивает только ссылки на объекты"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 506,
+      "question_html": "<p><strong>Как с помощью CSS задать отступ шириной в 5px внутри элемента?</strong></p>\n\n<p><em>Возможно вы заметили, что в этом уроке многие вопросы повторялись или были похожи на те что попадались ранее. Так же было меньше ссылок на сопутствующий материал для дополнительного изучения. Напишите в комментариях, как вам такой формат для закрепления изученного и разгрузки после длительного изучения новых материалов.</em></p>",
+      "answer_options": [
+        "margin: 5px",
+        "padding: 5px",
+        "gap: 5px",
+        "border: 5px"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 474,
+      "question_html": "<p><strong>Какое наименьшее возможное значение специфичности селектора?</strong></p>\n\n<ul>\n\t<li><a href=\"https://habr.com/ru/articles/436610/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>\n\n<p><em>Напишите в комментариях, что нового вы узнали пока решали тесты из этого урока.</em></p>",
+      "answer_options": [
+        "0,0,0",
+        "1,0,0",
+        "0,1,0",
+        "0,0,1"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 554,
+      "question_html": "<p><strong>Можно ли указать селектор по атрибуту div[title=bar][data-test]?</strong></p>",
+      "answer_options": [
+        "Нет, можно указать только один атрибут",
+        "Да, это допустимое сочетание селекторов по атрибутам",
+        "Только если использовать запятые",
+        "Только для input"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 638,
+      "question_html": "<p><strong>Что выведет alert?</strong></p>\n\n<p><code>alert(str); </code></p>\n\n<p><code>var str = \"Hello\"</code></p>",
+      "answer_options": [
+        "Hello",
+        "undefined",
+        "ReferenceError",
+        "null"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 462,
+      "question_html": "<p><strong>Изменение какого свойства возможно сделать плавным с помощью transition?</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/css/transition/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n\t<li>Видео (<a href=\"https://youtu.be/vagLoF1MZac?si=InQ4ARRCWwNp83A3\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/629720f8c640dc5f07811e94\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "display",
+        "width",
+        "font-family",
+        "position: static"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 413,
+      "question_html": "<p><strong>С помощью какого атрибута объединяются ячейки таблицы по горизонтали?</strong></p>\n\n<ul>\n\t<li><a href=\"https://developer.mozilla.org/ru/docs/Learn/HTML/Tables/Basics#%D1%81%D0%BB%D0%B8%D1%8F%D0%BD%D0%B8%D0%B5_%D0%BD%D0%B5%D1%81%D0%BA%D0%BE%D0%BB%D1%8C%D0%BA%D0%B8%D1%85_%D1%81%D1%82%D1%80%D0%BE%D0%BA_%D0%B8%D0%BB%D0%B8_%D1%81%D1%82%D0%BE%D0%BB%D0%B1%D1%86%D0%BE%D0%B2\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n\t<li>Видео (<a href=\"https://youtu.be/PcTSdseYrgM?si=lPjJux9S9miZ7q5q\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/6706266114f6dd0d164c7bc8\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "rowspan",
+        "colspan",
+        "cellspan",
+        "merge"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 509,
+      "question_html": "<p><strong>Как получить значение переменной?</strong></p>",
+      "answer_options": [
+        "Написать имя переменной в выражении",
+        "Использовать только typeof",
+        "Вызвать get() без аргументов",
+        "Передать имя в alert как строку"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 465,
+      "question_html": "<p><strong>Выберете некорректное значение свойства transform:</strong></p>\n\n<ul>\n\t<li><a href=\"https://html5book.ru/css3-transform/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "translateX(10px)",
+        "rotate(45deg)",
+        "scale(1.2)",
+        "move(10px)"
+      ],
+      "suggested_correct_option_index": 3,
+      "needs_review": true
+    },
+    {
+      "step_id": 495,
+      "question_html": "<p><strong>Какой селектор написан с ошибкой?</strong></p>",
+      "answer_options": [
+        "div.item",
+        "#menu .item",
+        "div..item",
+        "input[type=\"text\"]"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 623,
+      "question_html": "<p><strong> Проигнорирует ли метод JSON.stringify свойство, содержащее undefined?</strong></p>",
+      "answer_options": [
+        "Нет, undefined будет строкой",
+        "Да, свойство объекта со значением undefined будет пропущено",
+        "Да, но undefined станет числом 0",
+        "Только если это массив"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 439,
+      "question_html": "<p><strong>Какой атрибут позволяет указать регулярное выражение, которому должно соответствовать значение элемента input?</strong></p>\n\n<ul>\n\t<li><a href=\"https://htmlbook.ru/html/input/pattern\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "required",
+        "pattern",
+        "placeholder",
+        "regex"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 553,
+      "question_html": "<p><strong>Может ли грид-элемент быть грид-контейнером?</strong></p>",
+      "answer_options": [
+        "Нет, grid бывает только на верхнем уровне",
+        "Да, элемент может одновременно быть grid item и grid container",
+        "Только если задано position: absolute",
+        "Только в Firefox"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 569,
+      "question_html": "<p><strong>Какой из указанных форматов файлов нельзя вставить в фоновое изображение?</strong></p>",
+      "answer_options": [
+        "PNG",
+        "SVG",
+        "MP4",
+        "WebP"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 541,
+      "question_html": "<p><strong>Какой из указанных CSS-селекторов называется универсальным селектором и выбирает любые элементы?</strong></p>",
+      "answer_options": [
+        "#",
+        "*",
+        ".",
+        "&"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 434,
+      "question_html": "<p><strong>Какой тег из перечисленных используется для создания выпадающего списка(dropdown)?</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/html/select/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "<option>",
+        "<select>",
+        "<input>",
+        "<datalist>"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 530,
+      "question_html": "<p><strong>Что определяет параметр line-height?</strong></p>\n\n<ul>\n\t<li><a href=\"https://htmlbook.ru/css/line-height\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "Толщину шрифта",
+        "Межстрочный интервал",
+        "Расстояние между буквами",
+        "Отступ абзаца"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 535,
+      "question_html": "<p><strong>Какой из следующих селекторов выбирает прямых потомков?</strong></p>",
+      "answer_options": [
+        "A B",
+        "A > B",
+        "A + B",
+        "A ~ B"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 483,
+      "question_html": "<p><strong>Какое значение свойства object-fit по умолчанию?</strong></p>\n\n<ul>\n\t<li><a href=\"https://html5book.ru/svoystva-object-fit-i-object-position/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "contain",
+        "cover",
+        "fill",
+        "none"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 478,
+      "question_html": "<p><strong>Какое значение свойства content не валидно?</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/css/content/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "normal",
+        "none",
+        "\"Текст\"",
+        "auto"
+      ],
+      "suggested_correct_option_index": 3,
+      "needs_review": true
+    },
+    {
+      "step_id": 518,
+      "question_html": "<p><strong>Какое правило позволяет подключать сторонние шрифты?</strong></p>",
+      "answer_options": [
+        "@import",
+        "@font-face",
+        "@charset",
+        "@media"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 625,
+      "question_html": "<p><strong>Какой из перечисленных методов мутирует исходный массив, а не возвращает новый?</strong></p>",
+      "answer_options": [
+        "map()",
+        "filter()",
+        "sort()",
+        "slice()"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 538,
+      "question_html": "<p><strong>Можно ли задавать margin процентами (например, margin-right: 10%)?</strong></p>\n\n<p><em>Напишите в комментариях что нового вы узнали, пока решали эти тесты? Переходили ли вы на статьи и видео уроки для их изучения? </em></p>\n\n<p><em>Этот модуль будет обновляться и дополняться в будущем новыми тестами и заданиями, а так же полезной информацией для изучения и расширения своего кругозора и прокачки навыков. Про обновления курса вы узнаете из новостной рассылки.</em></p>\n\n<p><em>Обновления будут бесплатными!</em></p>",
+      "answer_options": [
+        "Нет, только px",
+        "Да, проценты допустимы",
+        "Только для margin-top",
+        "Только при display: flex"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 505,
+      "question_html": "<p><strong>Возможно ли установить больше одной картинки на фон элемента с помощью CSS?</strong></p>",
+      "answer_options": [
+        "Нет, только одно изображение",
+        "Да, несколько изображений перечисляются через запятую",
+        "Только через несколько div",
+        "Только для body"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 441,
+      "question_html": "<p><strong>Допустимо ли одинаковое значение у атрибутов name и id определенного элемента?</strong></p>\n\n<p><em>Напишите в комментариях что нового вы узнали, пока решали эти тесты? Переходили ли вы на статьи и видео уроки для их изучения?</em></p>",
+      "answer_options": [
+        "Нет, name и id должны быть разными",
+        "Да, одинаковые значения допустимы; id должен оставаться уникальным в документе",
+        "Только у input",
+        "Только если name пустой"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 531,
+      "question_html": "<p><strong>Как браузер \"читает\" css?</strong></p>",
+      "answer_options": [
+        "Снизу вверх",
+        "Сверху вниз",
+        "Справа налево",
+        "В случайном порядке"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 654,
+      "question_html": "<p><strong>Какое ключевое слово НЕ используют для того, чтобы объявлять переменную?</strong></p>\n\n<ul>\n\t<li><a href=\"https://learn.javascript.ru/variables\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n\t<li>Видео (<a href=\"https://youtu.be/ao9tsr-ocL4\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/66b34085b8dc273b1a6cba98\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "let",
+        "const",
+        "var",
+        "variable"
+      ],
+      "suggested_correct_option_index": 3,
+      "needs_review": true
+    },
+    {
+      "step_id": 668,
+      "question_html": "<p><code>console.log( 9n &gt; 2 );</code></p>\n\n<p>Запустите код и попробуйте понять почему происходит именно так</p>",
+      "answer_options": [
+        "false",
+        "true",
+        "TypeError",
+        "undefined"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 612,
+      "question_html": "<p><strong>Что из перечисленного НЕ является зарезервированным словом в ES6?</strong></p>\n\n<ul>\n\t<li><a href=\"https://artzolin.ru/javascript-theory/javascript-reserved-keywords/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "class",
+        "return",
+        "includes",
+        "const"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 461,
+      "question_html": "<p><strong>Какое правило позволяет подключать сторонние шрифты?</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/css/font-face/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n\t<li>Видео (<a href=\"https://youtu.be/-XucMEtcXkw\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/6239cf0dea51071b4ae50c84\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "@media",
+        "@font-face",
+        "@keyframes",
+        "@import-url"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 525,
+      "question_html": "<p><strong>Какое свойство задаёт продолжительность перехода?</strong></p>",
+      "answer_options": [
+        "transition-delay",
+        "transition-duration",
+        "transition-timing-function",
+        "transition-property"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 558,
+      "question_html": "<p><strong>Какие из значений margin ниже является некорректным?</strong></p>",
+      "answer_options": [
+        "margin: 10px",
+        "margin: 10px auto",
+        "margin: 1px 2px 3px 4px 5px",
+        "margin: 0"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 440,
+      "question_html": "<p><strong>Может ли один input быть связан с несколькими label?</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/html/label/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "Нет, только один label",
+        "Да, несколько label могут ссылаться на один input через for",
+        "Только если input checkbox",
+        "Только через name"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 619,
+      "question_html": "<p><strong>Как расшифровывается IIFE? </strong></p>\n\n<ul>\n\t<li><a href=\"https://learn.javascript.ru/var\" rel=\"noopener noreferrer nofollow\">Прочитать подробнее про IIFE</a></li>\n</ul>",
+      "answer_options": [
+        "Internal Invoked Function Expression",
+        "Immediately Invoked Function Expression",
+        "Inline Iterated Function Execution",
+        "Initial Instance Function Expression"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 412,
+      "question_html": "<p><strong>С помощью какого свойства таблицы определяются ее границы?</strong></p>\n\n<p><em>Обращайте внимание на названия сайтов и каналов, когда переходите по ссылкам. Так вы сможете найти то, что понравится вам больше и добавить себе в закладки или избранное, чтобы не потерять. Я специально буду давать ссылки на разные источники, чтобы вы смогли выбрать наиболее актуальные для вас. А также не ограничивайтесь одним источником.</em><strong> </strong></p>\n\n<p><strong>Берите информацию ото всюду! </strong></p>\n\n<ul>\n\t<li><a href=\"https://developer.mozilla.org/ru/docs/Learn/HTML/Tables/Basics\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n\t<li>Видео (<a href=\"https://youtu.be/MveZRm7L_50?si=ciH2_jRCuhkEvIsM\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/638b5023e64b98431a512caf\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "outline",
+        "border",
+        "table-border",
+        "frame"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 499,
+      "question_html": "<p><strong>Может ли последнее значение в rgba цвете, отвечающее за непрозрачность, быть задано в формате N%, т.е. в процентах?</strong></p>",
+      "answer_options": [
+        "Нет, только числом 0–1",
+        "Да, процент допустим для alpha-канала",
+        "Только в rgb(), но не rgba()",
+        "Только в HEX"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 424,
+      "question_html": "<p><strong>Как правильно задать ссылку на адрес электронной почты?</strong></p>\n\n<ul>\n\t<li>Видео (<a href=\"https://youtu.be/-De3aga_BiI?si=FniRX1pnY90zxFMg\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/623b1b95365ea03c1ba795e7\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "<a href=\"email:user@example.com\">",
+        "<a href=\"mailto:user@example.com\">",
+        "<a href=\"https://user@example.com\">",
+        "<email>user@example.com</email>"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 490,
+      "question_html": "<p><strong>Как изменить цвет фона для всех элементов h1 на странице?</strong></p>\n\n<p><em>Напишите в комментариях, что нового вы узнали пока решали тесты из этого урока.</em></p>",
+      "answer_options": [
+        "h1 { color: red; }",
+        "h1 { background-color: red; }",
+        ".h1 { background: red; }",
+        "all(h1) { background-color: red; }"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 419,
+      "question_html": "<p><strong>Какой тег не существует в HTML?</strong></p>\n\n<ul>\n\t<li><a href=\"https://html5beginner.github.io/tags/element_reference.html\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "<article>",
+        "<section>",
+        "<linker>",
+        "<canvas>"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 542,
+      "question_html": "<p><strong>Как называется функциональная нотация (функция) на CSS, позволяющая выполнять математические выражения?</strong></p>\n\n<ul>\n\t<li>Видео (<a href=\"https://youtu.be/9Z_zTgDdKn0\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/626526e013f8c8618c46ee0d\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "var()",
+        "calc()",
+        "minmax()",
+        "math()"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 498,
+      "question_html": "<p><strong>Ивану нужно, чтобы при наведении курсора мыши на ссылку, она меняла цвет. </strong></p>\n\n<p><strong>Какой псевдокласс нужно использовать?</strong></p>",
+      "answer_options": [
+        ":active",
+        ":focus",
+        ":hover",
+        ":visited"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 610,
+      "question_html": "<p><strong>Какой метод навсегда предотвращает добавление новых свойств к объекту, удаление старых свойств из объекта и изменение существующих свойств?</strong></p>\n\n<ul>\n\t<li><a href=\"https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "Object.seal()",
+        "Object.freeze()",
+        "Object.preventExtensions()",
+        "Object.lock()"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 597,
+      "question_html": "<p><strong>Что вернёт 'foo' + + 'bar'?</strong></p>\n\n<ul>\n\t<li><a href=\"https://learn.javascript.ru/operators\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "foo0",
+        "fooNaN",
+        "NaN",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 484,
+      "question_html": "<p><strong>Какое свойство позволяет ограничить область элемента, в которой будет отображено его содержимое?</strong></p>\n\n<ul>\n\t<li><a href=\"https://htmlbook.ru/css/clip\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "overflow",
+        "clip",
+        "visibility",
+        "object-fit"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 469,
+      "question_html": "<p><strong>Какое количество значений принимает и корректно обрабатывает свойство border-style?</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/css/border-style/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n\t<li>Видео (<a href=\"https://youtu.be/bfAs8Kdt0T8?si=FhesP-0bI5XVO5QB\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/63c25a2640a57d70e7ece618\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "Только 1",
+        "От 1 до 4",
+        "Только 2",
+        "Любое число"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 543,
+      "question_html": "<p><strong>Являются ли одинаковыми селекторы .some и .SOME в HTML и CSS</strong></p>",
+      "answer_options": [
+        "Да, всегда одинаковы",
+        "Нет, имена классов в HTML/CSS чувствительны к регистру",
+        "Только в JavaScript",
+        "Только в CSS Grid"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 460,
+      "question_html": "<p><strong>Как с помощью CSS задать отступ шириной в 5px внутри элемента?</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/css/padding/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n\t<li>Видео (<a href=\"https://youtu.be/jQlTx3Jl2tg?si=MgyV8usbeoon36GB\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/62652500a3226a7e6d72550d\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "margin: 5px",
+        "padding: 5px",
+        "border: 5px",
+        "gap: 5px"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 606,
+      "question_html": "<p><strong>Какие кавычки недопустимы в синтаксисе (не внутри строк) JS?</strong></p>\n\n<ul>\n\t<li>Видео (<a href=\"https://youtu.be/WLpvuqsf6cI?si=qY2UKxkG29GFNTfu\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/66b34085b8dc273b1a6cba98\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "Одинарные",
+        "Двойные",
+        "Обратные",
+        "Русские «ёлочки»"
+      ],
+      "suggested_correct_option_index": 3,
+      "needs_review": true
+    },
+    {
+      "step_id": 516,
+      "question_html": "<p><strong>Как перечисляются функции в свойстве transform?</strong></p>",
+      "answer_options": [
+        "Через запятую",
+        "Через пробел",
+        "Через точку с запятой",
+        "Через оператор +"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 568,
+      "question_html": "<p><strong>Какие единицы измерения в CSS описывают разрешение экрана в точках на дюйм?</strong></p>\n\n<ul>\n\t<li><a href=\"https://ru.wikipedia.org/wiki/Dots_per_inch\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "px",
+        "dpi",
+        "em",
+        "vh"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 404,
+      "question_html": "<h2>Задачи</h2>\n\n<p>Основной целью курса является закрепление изученного материала через решение задач. На шагах с задачами рядом с полем ответа приводится число баллов, которое вы получите за её решение, а также набранный вами балл.</p>\n\n<p>Все задачи можно решать любое количество раз. <strong>За неверные попытки баллы не снижаются, не бойтесь ошибаться!</strong> Также, все ваши прошлые решения остаются доступны по ссылке под полем задачи.</p>\n\n<p>В других моих курсах обучение построено следующим образом: теория, видео, практика, примеры, готовые материалы, иногда присутствует немного юмора. Подробнее о интересующем вас курсе можно узнать на его странице с трейлером и описанием. </p>\n\n<p><a href=\"https://stepik.org/users/387773773/teach\" rel=\"noopener noreferrer nofollow\">Все мои курсы на платформе Stepik</a></p>\n\n<p><strong>Вопрос: как называется этот курс?</strong> Чтобы ответить, выберите правильный ответ нажмите на зелёную кнопку ниже.</p>",
+      "answer_options": [
+        "Тесты и задачи по HTML, CSS и JavaScript",
+        "Анализ данных в R",
+        "Добрый, добрый Python",
+        "Основы SQL"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 494,
+      "question_html": "<p><strong>Какое свойство используется для задания полей у блока?</strong></p>\n\n<ul>\n\t<li><a href=\"https://htmlbook.ru/css/padding?sa=X&amp;ved=2ahUKEwiR5ajx4ZboAhUNapIKHV7MDzQQ9QF6BAgCEAI\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "margin",
+        "padding",
+        "border",
+        "gap"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 663,
+      "question_html": "<p><strong>Является ли значение null литералом?</strong></p>",
+      "answer_options": [
+        "Нет, это ключевое слово",
+        "Да, null — литеральное значение",
+        "Только в JSON",
+        "Только при строгом сравнении"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 427,
+      "question_html": "<p><strong>Можно ли с точки зрения семантики размещать несколько header-ов на странице?</strong></p>\n\n<ul>\n\t<li><a href=\"https://developer.mozilla.org/ru/docs/Web/HTML/Element/header\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "Нет, header допустим только один",
+        "Да, например в document и в section/article",
+        "Только внутри footer",
+        "Только в SVG"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 444,
+      "question_html": "<p><strong>Какая ошибка в следующем коде: </strong></p>\n\n<p><code>&lt;a href=\"page.html\"&gt;&lt;b&gt;&lt;i&gt;Страница 1&lt;/i&gt;&lt;/a&gt;</code></p>\n\n<ul>\n\t<li><a href=\"https://habr.com/ru/articles/252283/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "Неверный href",
+        "Не закрыт тег b",
+        "Тег i запрещён внутри b",
+        "Нельзя вкладывать теги в ссылку"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 522,
+      "question_html": "<p><strong>Есть ли у тегов предопределённые стили?</strong></p>",
+      "answer_options": [
+        "Нет, браузер не задаёт стили",
+        "Да, браузерные стили по умолчанию существуют",
+        "Только у div",
+        "Только после подключения CSS"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 565,
+      "question_html": "<p><strong>Что означает ключевое слово inherit (свойство: inherit;)?</strong></p>",
+      "answer_options": [
+        "Сбросить к initial",
+        "Унаследовать вычисленное значение от родителя",
+        "Удалить свойство",
+        "Сделать значение важным"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 446,
+      "question_html": "<p><strong>Ивану захотелось добавить несколько подряд идущих пробелов в тексте (не рекомендуем так делать, но для понимания некоторых тегов это задание может быть полезным!). Он добавил их внутри тега &lt;p&gt;. Однако, они вырезались. Какой тег надо использовать Ивану, чтобы пробелы не вырезались?</strong></p>\n\n<ul>\n\t<li><a href=\"https://htmlbook.ru/html/pre\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "<span>",
+        "<pre>",
+        "<br>",
+        "<code>"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 591,
+      "question_html": "<p><strong>Встроенное свойство _proto_ - это...</strong></p>\n\n<ul>\n\t<li><a href=\"https://learn.javascript.ru/prototype\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "Ссылка на прототип объекта",
+        "Конструктор объекта",
+        "Метод копирования",
+        "Список свойств"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 640,
+      "question_html": "<p><strong>Какой метод ищет ближайшего предка, который соответствует указанному CSS-селектору?</strong></p>\n\n<ul>\n\t<li>Видео (<a href=\"https://youtu.be/kUyEby5Anzg?si=hSIp3eml_LET3VyF\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/6407081c684ea523006da25f\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "querySelector()",
+        "closest()",
+        "parentElement()",
+        "matches()"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 430,
+      "question_html": "<p><strong>С каким из перечисленных элементов работает элемент &lt;source&gt;?</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/html/source/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "<table>",
+        "<audio>, <video> и <picture>",
+        "<form>",
+        "<canvas>"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 598,
+      "question_html": "<p><strong>Может ли использоваться деструктуризация в объявлении функции в блоке перечисления аргументов (то есть, в круглых скобках, перед телом функции)?</strong></p>\n\n<ul>\n\t<li><a href=\"https://learn.javascript.ru/destructuring\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n\t<li>Видео (<a href=\"https://youtu.be/-hzVbRz0IaI?si=XUDbCVZOcQ04ceXY\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/66b341e970fee61838579eb4\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "Нет, только в теле функции",
+        "Да, это допустимый синтаксис параметров",
+        "Только в классе",
+        "Только с var"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 429,
+      "question_html": "<p><strong>Парный ли тег canvas?</strong></p>\n\n<ul>\n\t<li><a href=\"https://htmlbook.ru/html/canvas\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "Нет, это одиночный тег",
+        "Да, тег canvas парный",
+        "Только в SVG",
+        "Только с JavaScript"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 615,
+      "question_html": "<p><strong>Какое значение может быть возвращено методом Math.abs?</strong></p>\n\n<ul>\n\t<li><a href=\"https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Math/abs\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "Отрицательное число",
+        "Неотрицательное абсолютное значение",
+        "Всегда целое число",
+        "Строку"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 648,
+      "question_html": "<p><strong>Что будет выведено в консоль?</strong></p>\n\n<p><code>let r = [1, 2, 3, 4];<br>\ndelete r[0];<br>\nconsole.log( r.length );</code></p>",
+      "answer_options": [
+        "0",
+        "3",
+        "4",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 486,
+      "question_html": "<p><strong>Свойство, которое устанавливает, как отображать границы вокруг ячеек таблицы, называется:</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/css/border-collapse/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n\t<li>Видео (<a href=\"https://youtu.be/3GDqDbSNVvY?si=tFmtkpcDsSL0LmDs\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/625262329d1dfc34d6d8c2df\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "border-style",
+        "border-collapse",
+        "border-spacing",
+        "table-layout"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 562,
+      "question_html": "<p><strong>К какому селектору нужно применить свойство margin, чтобы изменить отступы на всей странице?</strong></p>",
+      "answer_options": [
+        "body",
+        "html",
+        "*",
+        "main"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 514,
+      "question_html": "<p><strong> Какое свойство используется для обтекания изображения текстом?</strong></p>",
+      "answer_options": [
+        "clear",
+        "float",
+        "display",
+        "position"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 503,
+      "question_html": "<p><strong>Какое свойство является сокращением для свойств flex-direction и flex-wrap?</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/css/flexbox-guide/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "flex-flow",
+        "flex",
+        "flex-wrap",
+        "flex-direction"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 627,
+      "question_html": "<p><strong>С помощью какой функции можно отбросить дробную часть и оставить только целую часть числа?</strong></p>",
+      "answer_options": [
+        "Math.round()",
+        "Math.trunc()",
+        "Math.ceil()",
+        "Math.abs()"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 431,
+      "question_html": "<p><strong>Какого значения атрибута type у инпутов не существует?</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/html/input/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "text",
+        "email",
+        "string",
+        "number"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 635,
+      "question_html": "<p><strong>Чему равно i на последней итерации цикла?</strong></p>\n\n<p><code>for(var i=0; i&lt;10; i++) {   console.log(i);  }  // i = ?</code></p>",
+      "answer_options": [
+        "9",
+        "10",
+        "11",
+        "0"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 513,
+      "question_html": "<p><strong>Какого значения свойства display не существует?</strong></p>",
+      "answer_options": [
+        "block",
+        "inline",
+        "middle",
+        "grid"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 497,
+      "question_html": "<p><strong>Иван задал шрифт следующим образом: font-family: Arial, Times New Roman, Helvetica, sans-serif;</strong></p>\n\n<p><strong>Что он сделал не так?</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/css/font-family/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "Нужно убрать fallback sans-serif",
+        "Название Times New Roman нужно заключить в кавычки",
+        "Нельзя использовать Arial",
+        "Семейства шрифтов нельзя перечислять"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 592,
+      "question_html": "<p><strong>Цикл for of может работать:</strong></p>\n\n<ul>\n\t<li><a href=\"https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Statements/for...of\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n\t<li>Плейлист по JavaScript (<a href=\"https://www.youtube.com/playlist?list=PLuY6eeDuleINoCQtGZsMoVVCSgEH7gKQ5\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/suite/d4f334d9-738c-4a36-bcdb-bfd619e23ee8\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "Только с обычными объектами",
+        "С итерируемыми объектами: массивами, строками, Set и Map",
+        "Только с числами",
+        "Только с DOM-элементами"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 570,
+      "question_html": "<p><strong>Как выбрать элемент с class = \"block\"?</strong></p>",
+      "answer_options": [
+        "#block",
+        ".block",
+        "block",
+        "[block]"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 632,
+      "question_html": "<p><strong>Цикл for...of может работать:</strong></p>",
+      "answer_options": [
+        "Только с ключами объекта",
+        "С итерируемыми объектами",
+        "Только с JSON-строкой",
+        "Только с boolean"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 492,
+      "question_html": "<p><strong>Какой вариант задания цвета НЕ сработает?</strong></p>",
+      "answer_options": [
+        "#ff0000",
+        "rgb(255, 0, 0)",
+        "red",
+        "#12345"
+      ],
+      "suggested_correct_option_index": 3,
+      "needs_review": true
+    },
+    {
+      "step_id": 650,
+      "question_html": "<p><strong>Что будет в результате?</strong></p>\n\n<p><code>[9] &lt; [10]</code></p>",
+      "answer_options": [
+        "true",
+        "false",
+        "NaN",
+        "TypeError"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 476,
+      "question_html": "<p><strong>Как в стилях получить значение атрибута title?</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/css/attr/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n\t<li>Видео (<a href=\"https://youtu.be/KEW0xPmWoKs?si=Wbc0pwOWx1BRnA-c\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/625c1285203ae605fc1c089f\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "value(title)",
+        "attr(title)",
+        "title()",
+        "get(title)"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 417,
+      "question_html": "<p><strong>Что не так в коде ниже?</strong><br>\n<code>&lt;img href=\"/img/test.png\" alt=\"\"&gt;</code></p>\n\n<ul>\n\t<li><a href=\"https://html5book.ru/images-in-html/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n\t<li>Видео (<a href=\"https://youtu.be/goMNbCP0szk?si=aC4cWzhYjqKu5w8p\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/637c82f465cbbd650a86216a\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "Тег img должен быть парным",
+        "Нужно использовать src вместо href",
+        "У img нельзя использовать alt",
+        "Путь должен начинаться с http"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 443,
+      "question_html": "<p><strong>Какой тег существует?</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/html/code/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "<text>",
+        "<code>",
+        "<scripture>",
+        "<fontcolor>"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 435,
+      "question_html": "<p><strong>Тег &lt;area&gt; ...</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/html/area/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "Создаёт HTML-таблицу",
+        "Задаёт активную область карты изображения",
+        "Вставляет аудио",
+        "Рисует SVG-фигуру"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 533,
+      "question_html": "<p><strong>Что такое инлайновые стили?</strong></p>",
+      "answer_options": [
+        "Стили в отдельном CSS-файле",
+        "Стили в атрибуте style элемента",
+        "Стили в теге link",
+        "Стили, применяемые через JavaScript"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 472,
+      "question_html": "<p><strong>Какое свойство используется для обтекания изображения текстом?</strong></p>",
+      "answer_options": [
+        "display",
+        "float",
+        "clear",
+        "overflow"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 521,
+      "question_html": "<p><strong>Какой из селекторов выберет все HTML-элементы div с атрибутом title содержащим внутри значения подслово «bar»?</strong></p>",
+      "answer_options": [
+        "div[title=\"bar\"]",
+        "div[title^=\"bar\"]",
+        "div[title*=\"bar\"]",
+        "div[title~=\"bar\"]"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 659,
+      "question_html": "<p><code>let my-value = null;<br>\nconsole.log(my-value);</code></p>\n\n<ul>\n\t<li><a href=\"https://learn.javascript.ru/variables#variable-naming\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "Выведет null",
+        "Выведет undefined",
+        "Будет SyntaxError из-за дефиса в имени переменной",
+        "Выведет значение value"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 528,
+      "question_html": "<p><strong>Какое свойство CSS устанавливает величину отступа первой строки блока текста?</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/css/text-indent/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "line-height",
+        "text-indent",
+        "letter-spacing",
+        "word-spacing"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 480,
+      "question_html": "<p><strong>Как получить значение переменной на CSS?</strong></p>\n\n<ul>\n\t<li><a href=\"https://habr.com/ru/companies/ruvds/articles/523370/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n\t<li>Видео (<a href=\"https://youtu.be/ncB_qYsscIE?si=n1uJkqZdp-ZaQAP3\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/626520234ba37a027b612142\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "get(--name)",
+        "var(--name)",
+        "value(--name)",
+        "css(--name)"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 510,
+      "question_html": "<p><strong>Какое значение свойства content не валидно?</strong></p>",
+      "answer_options": [
+        "normal",
+        "none",
+        "\"текст\"",
+        "auto"
+      ],
+      "suggested_correct_option_index": 3,
+      "needs_review": true
+    },
+    {
+      "step_id": 482,
+      "question_html": "<p><strong>Что из перечисленного относительная единица измерения?</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/css/numeric-types/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n\t<li>Видео (<a href=\"https://youtu.be/30PiWyhFVos?si=53vP6NmaLMeJ8OKy\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/624078f64350ba1f0118fa29\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "px",
+        "rem",
+        "cm",
+        "pt"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 590,
+      "question_html": "<p><strong>Как представить число 568 в двоичной системе счисления? </strong></p>\n\n<ul>\n\t<li><a href=\"https://learn.javascript.ru/number\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "1000111000",
+        "1010001000",
+        "1001110000",
+        "1000110000"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 630,
+      "question_html": "<p><strong> Как создать класс, который наследуется от другого класса?</strong></p>",
+      "answer_options": [
+        "class Child inherits Parent {}",
+        "class Child extends Parent {}",
+        "class Child : Parent {}",
+        "class Child implements Parent {}"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 517,
+      "question_html": "<p><strong>Изменение какого свойства возможно сделать плавным с помощью transition?</strong></p>",
+      "answer_options": [
+        "display",
+        "width",
+        "position: static",
+        "font-family"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 512,
+      "question_html": "<p><strong>Возможно ли указать font-weight, font-style и font-size, используя только одно CSS свойство?</strong></p>",
+      "answer_options": [
+        "Нет, нужны три отдельных свойства",
+        "Да, через сокращённое свойство font",
+        "Только font-size и font-style",
+        "Только с JavaScript"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 418,
+      "question_html": "<p><strong>Все input теги стоит записывать в теге...</strong></p>\n\n<ul>\n\t<li><a href=\"https://proglib.io/p/study_html_forms\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n\t<li>Видео (<a href=\"https://youtu.be/K-m6WwQ35zo?si=UR6UrLRF3wCq_bYs\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/6394689d23eed805cc3dffa9\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "<input>",
+        "<form>",
+        "<fieldset>",
+        "<label>"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 415,
+      "question_html": "<p><strong>Какой тег при создании страницы не является обязательным?</strong></p>\n\n<ul>\n\t<li><a href=\"https://habr.com/ru/companies/macloud/articles/555082/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "<html>",
+        "<head>",
+        "<meta>",
+        "<body>"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 467,
+      "question_html": "<p><strong>Если свойство z-index не определено, какой элемент будет находиться визуально наверху?</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/css/cascade/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "Первый элемент в HTML",
+        "Последний элемент в порядке документа",
+        "Элемент с большим размером",
+        "Всегда body"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 548,
+      "question_html": "<p><strong>Какое свойство является обязательным для работы ::after?</strong></p>",
+      "answer_options": [
+        "display",
+        "content",
+        "position",
+        "z-index"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 666,
+      "question_html": "<p><strong>Можно ли хранить в массивах функции?</strong></p>",
+      "answer_options": [
+        "Нет, массив хранит только числа",
+        "Да, функции — значения и могут быть элементами массива",
+        "Только в TypeScript",
+        "Только стрелочные функции"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 452,
+      "question_html": "<p><strong>Какого значения атрибута type у инпутов не существует?</strong></p>",
+      "answer_options": [
+        "date",
+        "email",
+        "string",
+        "file"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 437,
+      "question_html": "<p><strong>С помощью какого атрибута можно указать, что возможен выбор нескольких опций в элементе select?</strong></p>",
+      "answer_options": [
+        "multiple",
+        "selected",
+        "many",
+        "multiselect"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 622,
+      "question_html": "<p>Иван написал код:</p>\n\n<p><code>&lt;script type=\"text/javascript\"&gt;   </code></p>\n\n<p><code>var a = 1;   </code></p>\n\n<p><code>var b = a++ + 1;   </code></p>\n\n<p><code>alert(b); </code></p>\n\n<p><code>&lt;/script&gt;</code></p>\n\n<p><strong>Что будет написано в появившемся окне?</strong></p>\n\n<p><em>Выполните этот код самостоятельно чтобы понять логику данных операций. Самый простой способ это сделать - открыть пустую страницу в браузере и выполнить код в консоле. Посмотрите короткое видео как это сделать, если еще не пробовали этот метод.</em></p>\n\n<ul>\n\t<li>Видео (<a href=\"https://youtube.com/shorts/2bthBZOwBoc?si=m0SDYbpGVxZKz7FL\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/66b9ef157b378b5a3ab8a298\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "1",
+        "2",
+        "3",
+        "undefined"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 665,
+      "question_html": "<p><code>console.log( !{} )</code></p>\n\n<p>Запустите код и попробуйте понять почему происходит именно так</p>",
+      "answer_options": [
+        "true",
+        "false",
+        "undefined",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 487,
+      "question_html": "<p><strong>Какое свойство определяет режим смешивания цветов выбранного элемента с низлежащими слоями?</strong></p>\n\n<ul>\n\t<li><a href=\"https://html5book.ru/obedinenie-i-smeshivanije-sloev/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "background-blend-mode",
+        "mix-blend-mode",
+        "filter",
+        "opacity"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 644,
+      "question_html": "<p><strong>Какой оператор возвращает первый аргумент, если он не равен null или undefined, и второй аргумент в других случаях?</strong></p>",
+      "answer_options": [
+        "||",
+        "&&",
+        "??",
+        "?:"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 564,
+      "question_html": "<p><strong>Какое правило задаёт медиа-запрос?</strong></p>",
+      "answer_options": [
+        "@supports",
+        "@media",
+        "@font-face",
+        "@keyframes"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 626,
+      "question_html": "<p><strong>Что вернёт 'foo' + + 'bar'?</strong></p>",
+      "answer_options": [
+        "foo0",
+        "fooNaN",
+        "NaN",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 646,
+      "question_html": "<p><strong>Какой объект находится на вершине иерархии?</strong></p>",
+      "answer_options": [
+        "Array",
+        "Object",
+        "Function",
+        "String"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 656,
+      "question_html": "<p><code>console.log( typeof [] );</code></p>\n\n<ul>\n\t<li><a href=\"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "array",
+        "object",
+        "list",
+        "undefined"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 567,
+      "question_html": "<p><strong>Какое свойство объединяет в себе flex-direction и flex-wrap?</strong></p>",
+      "answer_options": [
+        "flex",
+        "flex-flow",
+        "flex-wrap",
+        "flex-direction"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 557,
+      "question_html": "<p><strong>Какая функция поворачивает элемент?</strong></p>",
+      "answer_options": [
+        "scale()",
+        "rotate()",
+        "translate()",
+        "skew()"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 643,
+      "question_html": "<p><strong>Как можно определить, является ли объект obj массивом?</strong></p>",
+      "answer_options": [
+        "obj instanceof Array",
+        "Array.isArray(obj)",
+        "typeof obj === \"array\"",
+        "obj.type === \"array\""
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 527,
+      "question_html": "<p><strong>К какому селектору нужно применить свойство margin, чтобы изменить отступы на всей странице?</strong></p>",
+      "answer_options": [
+        "html",
+        "body",
+        "*",
+        "main"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 641,
+      "question_html": "<p><strong>Что будет выведено в консоль?</strong></p>\n\n<p><code>const bar = false;<br>\nconsole.log( bar ?? 'Error' );</code></p>",
+      "answer_options": [
+        "Error",
+        "false",
+        "null",
+        "undefined"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 614,
+      "question_html": "<p><strong>Что делает метод JSON.parse()</strong></p>\n\n<ul>\n\t<li>Видео (<a href=\"https://youtu.be/3xaN1tDdkF4?si=ko8I1_y5igJ_IyrH\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/627a270bbcf9435902a3d1fb\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "Преобразует объект в JSON-строку",
+        "Разбирает JSON-строку в значение JavaScript",
+        "Сохраняет JSON в файл",
+        "Проверяет JSON только на синтаксис"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 532,
+      "question_html": "<p><strong>Есть ли у тегов предопределённые стили?</strong></p>",
+      "answer_options": [
+        "Нет, только если подключен CSS",
+        "Да, браузер задаёт стили по умолчанию",
+        "Только у форм",
+        "Только у таблиц"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 551,
+      "question_html": "<p><strong>Как много стилей можно добавить к одному объекту?</strong></p>",
+      "answer_options": [
+        "Только одно",
+        "Неограниченно много деклараций в наборе правил",
+        "Только три",
+        "Только 255"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 550,
+      "question_html": "<p><strong>Можно ли задавать margin процентами (например, margin-right: 7%)?</strong></p>",
+      "answer_options": [
+        "Нет, только px",
+        "Да, процентные margin допустимы",
+        "Только у margin-left",
+        "Только в grid"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 445,
+      "question_html": "<p><strong>Размер окна браузера 1000 пикселей. На страницу добавили блок с шириной 60%. Затем в этот блок добавили таблицу с шириной 50%. Какова будет ширина таблицы в пикселях?</strong></p>\n\n<ul>\n\t<li><a href=\"https://lifehacker.ru/kak-poschitat-procenty-ot-summy/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "600",
+        "500",
+        "300",
+        "100"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 479,
+      "question_html": "<p><strong>Может ли последнее значение в rgba цвете, отвечающее за непрозрачность, быть задано в формате N%, т.е. в процентах?</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/css/color/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n\t<li>Видео (<a href=\"https://youtu.be/8kSM4zEyXCU?si=tcwxHIUCiTzsYkZM\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/639d8a05fc0105545ab60ca4\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n\t<li>Видео (<a href=\"https://youtu.be/HZr7xrJIbi8?si=E13t-KwgiIHNjn-p\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/67064f2c9f99bb0f3fbe56b9\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "Нет, только 0–1",
+        "Да, можно указать процент",
+        "Только в hsla",
+        "Только при opacity: 1"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 488,
+      "question_html": "<p><strong>Какой селектор написан с ошибкой?</strong></p>\n\n<ul>\n\t<li><a href=\"https://developer.mozilla.org/ru/docs/Learn/CSS/Building_blocks/Selectors\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n\t<li>Видео (<a href=\"https://youtu.be/OIXHn2n2Feo?si=hWUNLHNFxryLKHEV\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/63a1c4ed39ca1e141c247310\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "div.item",
+        "#menu .item",
+        "div..item",
+        "input[type=\"text\"]"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 618,
+      "question_html": "<p><strong>Что вернет метод prompt, если пользователь отменит ввод нажатием на Esc?</strong></p>\n\n<ul>\n\t<li>Видео (<a href=\"https://youtu.be/C0rqUyNI5zA?si=FlJBDy1fKbtu0F1D\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/66b340e0db8ce8454eef043a\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "Пустую строку",
+        "null",
+        "undefined",
+        "false"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 652,
+      "question_html": "<p><strong>Как разбить строку на массив по заданному разделителю?</strong></p>\n\n<p><em>Напишите в комментариях что нового вы узнали, пока решали эти тесты? Переходили ли вы на статьи и видео уроки для их изучения?</em></p>",
+      "answer_options": [
+        "str.toArray()",
+        "str.split(разделитель)",
+        "Array.from(str, разделитель)",
+        "str.parse()"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 628,
+      "question_html": "<p><strong>Упорядочите три фазы распространения браузерных событий:</strong></p>\n\n<ul>\n\t<li>Видео (<a href=\"https://youtu.be/prmY04RJb4A?si=nsPgJDzehZ6U3fdb\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/6475a4a7ffa8bf12a647e500\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "Всплытие → цель → погружение",
+        "Погружение → цель → всплытие",
+        "Цель → всплытие → погружение",
+        "Цель → погружение → всплытие"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 633,
+      "question_html": "<p><strong>Что выведет этот код?</strong><br>\n<code>let y = 1;<br>\nlet x = y = 2;<br>\nalert(x);</code></p>",
+      "answer_options": [
+        "1",
+        "2",
+        "undefined",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 420,
+      "question_html": "<p><strong>Какого поля input не существует?</strong></p>",
+      "answer_options": [
+        "email",
+        "number",
+        "string",
+        "date"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 631,
+      "question_html": "<p><strong>Что вернёт null == undefined?</strong></p>",
+      "answer_options": [
+        "false",
+        "true",
+        "null",
+        "undefined"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 552,
+      "question_html": "<p><strong>Какое свойство используется для отображения рисунка в виде рамки вокруг элемента?</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/css/border-image/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "outline-image",
+        "border-image",
+        "background-image",
+        "box-shadow"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 607,
+      "question_html": "<p><strong>Имеется элемент с определенным атрибутом. Если к этому элементу применить метод Element.setAttribute() с этим же атрибутом, то ...</strong></p>\n\n<ul>\n\t<li>Видео (<a href=\"https://youtu.be/1rhccaFpz8A?si=tKHqYKLY3H0WI7WH\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/640c5d158c6f9346cf2c02f0\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "Будет создан дубликат атрибута",
+        "Значение существующего атрибута будет заменено",
+        "Метод вернёт ошибку",
+        "Атрибут будет удалён"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 604,
+      "question_html": "<p><strong>Разрешены ли дефисы в именах переменных?</strong></p>\n\n<ul>\n\t<li><a href=\"https://learn.javascript.ru/variables\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>\n\n<p><em>Напишите в комментариях что нового вы узнали, пока решали эти тесты? Переходили ли вы на статьи и видео уроки для их изучения?</em></p>",
+      "answer_options": [
+        "Да, это обычный символ имени",
+        "Нет, дефис интерпретируется как оператор вычитания",
+        "Только после первой буквы",
+        "Только в const"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 416,
+      "question_html": "<p><strong>Что делает код ниже?</strong><br>\n<code>&lt;a href=\"/\" title=\"Посмотреть\"&gt;Немного текста&lt;/a&gt;</code></p>",
+      "answer_options": [
+        "Выводит обычный текст",
+        "Создаёт ссылку на / с подсказкой title",
+        "Создаёт кнопку",
+        "Открывает изображение"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 466,
+      "question_html": "<p><strong>Как размыть изображение?</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/css/filter-functions/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "opacity(0.5)",
+        "filter: blur(5px)",
+        "transform: blur(5px)",
+        "background: blur"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 526,
+      "question_html": "<p><strong>CSS-свойство background-image может содержать несколько изображений?</strong></p>",
+      "answer_options": [
+        "Нет, только одно",
+        "Да, несколько изображений через запятую",
+        "Только в SVG",
+        "Только с JavaScript"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 481,
+      "question_html": "<p><strong>Какого значения свойства clear не существует?</strong></p>\n\n<ul>\n\t<li><a href=\"https://htmlbook.ru/css/clear\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n\t<li>Видео (<a href=\"https://youtu.be/Q1F8_13iweQ?si=LtTjCqEkdnfh67tN\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/6706508960479e7c51501f74\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "left",
+        "right",
+        "both",
+        "top"
+      ],
+      "suggested_correct_option_index": 3,
+      "needs_review": true
+    },
+    {
+      "step_id": 596,
+      "question_html": "<p><strong>Как назначить функцию fn обработчиком нажатия на элемент element?</strong></p>\n\n<ul>\n\t<li>Видео (<a href=\"https://youtu.be/E3a38FZ2kN4?si=IewpmiKdmtewapH1\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/645f5a9e523722662bf41d84\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "element.onclick = fn()",
+        "element.addEventListener(\"click\", fn)",
+        "element.click(fn)",
+        "fn.addEventListener(element)"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 501,
+      "question_html": "<p><strong>Какого значения свойства display не существует?</strong></p>",
+      "answer_options": [
+        "block",
+        "inline",
+        "middle",
+        "flex"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 662,
+      "question_html": "<p><strong>Что делает код: break me;</strong></p>\n\n<ul>\n\t<li><a href=\"https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Statements/break\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "Вызывает функцию me",
+        "Прерывает выполнение помеченного оператора с меткой me",
+        "Удаляет переменную me",
+        "Создаёт исключение Error"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 524,
+      "question_html": "<p><strong>Размер окна браузера 1000 пикселей. На страницу добавили блок с шириной 40%. Затем в этот блок добавили таблицу с шириной 50%. Какова будет ширина таблица в пикселях?</strong></p>",
+      "answer_options": [
+        "500",
+        "400",
+        "200",
+        "100"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 457,
+      "question_html": "<p><strong>Какого тега не существует?</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/html/address/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "<address>",
+        "<article>",
+        "<location>",
+        "<aside>"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 464,
+      "question_html": "<p><strong>Каково изначальное значение CSS свойства background-origin?</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/css/background-origin/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "border-box",
+        "padding-box",
+        "content-box",
+        "margin-box"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 511,
+      "question_html": "<p><strong> Какое наименьшее возможное значение специфичности селектора?</strong></p>",
+      "answer_options": [
+        "1,0,0",
+        "0,1,0",
+        "0,0,1",
+        "0,0,0"
+      ],
+      "suggested_correct_option_index": 3,
+      "needs_review": true
+    },
+    {
+      "step_id": 489,
+      "question_html": "<p><strong>Какой псевдокласс нужно использовать, чтобы при наведении курсора мыши на ссылку, она меняла цвет?</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/css/hover/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n\t<li>Видео (<a href=\"https://youtu.be/iZjdou-2XjM?si=csGGm1bsIr5B-MKa\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/62526fb53efd0d3d3a7a0d40\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        ":active",
+        ":focus",
+        ":hover",
+        ":visited"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 456,
+      "question_html": "<p><strong>Какой тег нужно добавить для переноса строки?</strong></p>",
+      "answer_options": [
+        "<p>",
+        "<br>",
+        "<hr>",
+        "<newline>"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 438,
+      "question_html": "<p><strong>Какой атрибут позволяет начать загружать видео из тега video сразу при открытии страницы?</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/html/video/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "autoplay",
+        "preload",
+        "controls",
+        "poster"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 636,
+      "question_html": "<p><strong>Что выведет этот код?</strong></p>\n\n<p><code>alert( \"1\"[0] );</code></p>",
+      "answer_options": [
+        "\"1\"",
+        "1",
+        "undefined",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 496,
+      "question_html": "<p><strong>Как правильно вставляются комментарии в CSS-код?</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/css/comments/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "// комментарий",
+        "/* комментарий */",
+        "<!-- комментарий -->",
+        "# комментарий"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 657,
+      "question_html": "<p><code>console.log(\"\" == false);</code></p>",
+      "answer_options": [
+        "true",
+        "false",
+        "undefined",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 639,
+      "question_html": "<p><strong>Какое событие возникает при изменении значения элемента формы, вроде текстового поля или списка?</strong></p>\n\n<ul>\n\t<li>Видео (<a href=\"https://youtu.be/CAqlpaeBa7c?si=UlZrHZQKT1qqn777\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/64c8cafbd49dc96f0cc14736\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "click",
+        "change",
+        "submit",
+        "load"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 473,
+      "question_html": "<p><strong>Какого значения свойства display не существует?</strong></p>\n\n<ul>\n\t<li><a href=\"https://hcdev.ru/css/display/#_1\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "block",
+        "inline",
+        "middle",
+        "flex"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 620,
+      "question_html": "<p><strong>Что вернет NaN == NaN?</strong></p>\n\n<ul>\n\t<li><a href=\"https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/NaN\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>\n\n<p><em>Напишите в комментариях что нового вы узнали, пока решали эти тесты? Переходили ли вы на статьи и видео уроки для их изучения?</em></p>",
+      "answer_options": [
+        "true",
+        "false",
+        "NaN",
+        "undefined"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 549,
+      "question_html": "<p><strong>Можно ли задавать padding отрицательными значениями (например, padding-right: -10px)?</strong></p>",
+      "answer_options": [
+        "Да, в flex-контейнере",
+        "Нет, отрицательный padding недопустим",
+        "Только для padding-right",
+        "Только в процентах"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 493,
+      "question_html": "<p><strong>Иван обнаружил, что цвет ссылок меняется, когда они являются посещёнными. Какой CSS-код необходимо задать, чтобы цвет посещённых и не посещённых ссылок был одним и тем же?</strong></p>",
+      "answer_options": [
+        "a { color: blue; }",
+        "a:visited { color: blue; }",
+        "a, a:visited { color: blue; }",
+        "a:hover { color: blue; }"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 447,
+      "question_html": "<p><strong>Ивану хочется, чтобы при наведении мыши на изображение, появлялась всплывающая подсказка с текстом \"Подсказка\".</strong></p>\n\n<p><strong>Какой код для этого используется?</strong></p>\n\n<ul>\n\t<li><a href=\"https://htmlbook.ru/html/attr/title\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "<img src=\"pic.jpg\" hint=\"Подсказка\">",
+        "<img src=\"pic.jpg\" title=\"Подсказка\">",
+        "<img src=\"pic.jpg\" alt=\"Подсказка\">",
+        "<img src=\"pic.jpg\" tooltip=\"Подсказка\">"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 547,
+      "question_html": "<p><strong>Что в CSS определяет свойство \"font-style\"?</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/css/font-style/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "Размер шрифта",
+        "Начертание шрифта",
+        "Семейство шрифта",
+        "Цвет шрифта"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 432,
+      "question_html": "<p><strong>Как расшифровывается URL?</strong></p>\n\n<ul>\n\t<li><a href=\"https://ru.wikipedia.org/wiki/URL\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "Universal Resource Locator",
+        "Uniform Resource Locator",
+        "United Reference Link",
+        "Universal Routing Link"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 546,
+      "question_html": "<p><strong>Укажите CSS свойство позволяющее устанавливать размер шрифта:</strong></p>",
+      "answer_options": [
+        "font-weight",
+        "font-size",
+        "font-style",
+        "line-height"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 477,
+      "question_html": "<p><strong>Какое значение у свойства display у элемента input по умолчанию?</strong></p>\n\n<ul>\n\t<li><a href=\"https://htmlbook.ru/css/display\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "block",
+        "inline",
+        "inline-block",
+        "flex"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 594,
+      "question_html": "<p><strong>Math.random() возвращает число в диапазоне:</strong></p>\n\n<ul>\n\t<li>Видео (<a href=\"https://youtu.be/OPeujASczVM?si=v7qT6Nhj_zAIsKnP\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/66b3409f7325906813120a7e\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "От 1 до 100",
+        "От 0 включительно до 1 не включительно",
+        "От -1 до 1",
+        "От 0 до 100 включительно"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 661,
+      "question_html": "<p><strong>Стрелочные функции не имеют...</strong></p>\n\n<ul>\n\t<li><a href=\"https://learn.javascript.ru/arrow-functions-basics\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n\t<li>Видео (<a href=\"https://youtu.be/FXs1zT-ATHA?si=l49qwUZbFST1DBo8\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/66b34120839c8d7a5460073f\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "Аргументов",
+        "Собственного this",
+        "Тела функции",
+        "Возвращаемого значения"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 529,
+      "question_html": "<p><strong>Если значение position задано как static, сработает ли z-index?</strong></p>",
+      "answer_options": [
+        "Да, всегда",
+        "Нет, z-index не применяется к static-элементу",
+        "Только при opacity",
+        "Только у flex"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 603,
+      "question_html": "<p><strong>Как удалить элемент из localStorage?</strong></p>",
+      "answer_options": [
+        "localStorage.delete(key)",
+        "localStorage.removeItem(key)",
+        "localStorage.clear(key)",
+        "localStorage.remove(key)"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 599,
+      "question_html": "<p><strong>У какого оператора приоритет выше?</strong></p>\n\n<ul>\n\t<li><a href=\"https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Operators/Operator_precedence\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "Сложение +",
+        "Умножение *",
+        "Возведение в степень **",
+        "Сравнение =="
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 508,
+      "question_html": "<p><strong>Как правильно подключать файл стилей?</strong></p>\n\n<ul>\n\t<li><a href=\"https://htmlbook.ru/samcss/sposoby-dobavleniya-stiley-na-stranitsu\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n\t<li>Видео (<a href=\"https://youtu.be/--XMXjGCmi8?si=NE2wZ1VphQ4Kqu_L\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/670655e39381814f2a6504df\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "<style src=\"style.css\">",
+        "<link rel=\"stylesheet\" href=\"style.css\">",
+        "<css href=\"style.css\">",
+        "<script src=\"style.css\">"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 504,
+      "question_html": "<p><strong>Как размыть изображение?</strong></p>",
+      "answer_options": [
+        "opacity: 0.5",
+        "filter: blur(5px)",
+        "transform: blur(5px)",
+        "background: blur"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 534,
+      "question_html": "<p><strong>Вы используете flexbox, и требуется изменить порядок следования элементов, каким свойством нужно воспользоваться?</strong></p>\n\n<ul>\n\t<li>Видео (<a href=\"https://youtu.be/Hf__JLlFxpk?si=m9CFy1zgUMUJ9DtE\" rel=\"noopener noreferrer nofollow\">YouTube</a> | <a href=\"https://dzen.ru/video/watch/66b20b1cf79bc66a7f4370f4\" rel=\"noopener noreferrer nofollow\">Дзен</a>)</li>\n</ul>",
+      "answer_options": [
+        "flex-direction",
+        "order",
+        "justify-content",
+        "flex-wrap"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 667,
+      "question_html": "<p><code>let hello;<br>\nconsole.log(hello + 'world')</code></p>\n\n<p>Запустите код и попробуйте понять почему происходит именно так</p>",
+      "answer_options": [
+        "helloworld",
+        "undefinedworld",
+        "nullworld",
+        "Ошибка"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 436,
+      "question_html": "<p><strong>Какой из HTML элементов является строчным (inline)?</strong></p>\n\n<ul>\n\t<li><a href=\"https://ru.w3docs.com/uchebnik-html/html-elementy.html#:~:text=%D0%A1%D1%82%D1%80%D0%BE%D1%87%D0%BD%D1%8B%D0%BC%D0%B8%20%D1%8D%D0%BB%D0%B5%D0%BC%D0%B5%D0%BD%D1%82%D0%B0%D0%BC%D0%B8%20%D1%80%D0%B0%D0%B7%D0%BC%D0%B5%D1%87%D0%B0%D1%8E%D1%82%20%D1%87%D0%B0%D1%81%D1%82%D0%B8%20%D1%81%D0%BE%D0%B4%D0%B5%D1%80%D0%B6%D0%B8%D0%BC%D0%BE%D0%B3%D0%BE,time%3E%2C%20%3C%20tt%3E%20%D0%B8%3C%20var%3E\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "<div>",
+        "<p>",
+        "<span>",
+        "<section>"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 536,
+      "question_html": "<p><strong>Какая из CSS-величин является относительной?</strong></p>\n\n<ul>\n\t<li><a href=\"https://htmlbook.ru/content/edinitsy-izmereniya\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "px",
+        "cm",
+        "em",
+        "pt"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 660,
+      "question_html": "<p><strong>Расшифруйте аббревиатуру DOM</strong></p>",
+      "answer_options": [
+        "Document Object Model",
+        "Data Object Model",
+        "Document Oriented Markup",
+        "Dynamic Object Method"
+      ],
+      "suggested_correct_option_index": 0,
+      "needs_review": true
+    },
+    {
+      "step_id": 611,
+      "question_html": "<p><strong>Как получить массив значений перечисляемых свойств объекта?</strong></p>\n\n<ul>\n\t<li><a href=\"https://learn.javascript.ru/keys-values-entries\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "Object.keys(obj)",
+        "Object.values(obj)",
+        "Object.entries(obj)",
+        "obj.values()"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 520,
+      "question_html": "<p><strong>Если HTML-элемент нужно сделать полупрозрачным (фон и содержимое), то для него указывается свойство opacity со значением...</strong></p>\n\n<ul>\n\t<li><a href=\"https://doka.guide/css/opacity/\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "2",
+        "1.5",
+        "0.5",
+        "-1"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 455,
+      "question_html": "<p><strong>Какой тег создаёт нумерованный список?</strong></p>\n\n<ul>\n\t<li><a href=\"https://www.wm-school.ru/html/html_lists.html\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>",
+      "answer_options": [
+        "<ul>",
+        "<ol>",
+        "<li>",
+        "<dl>"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 647,
+      "question_html": "<p><strong>Что будет выведено в консоль?</strong></p>\n\n<p><code>console.log( 0 ? 0 : 1 );</code></p>",
+      "answer_options": [
+        "0",
+        "1",
+        "true",
+        "undefined"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 421,
+      "question_html": "<p><strong>Какой тег делает текст курсивом?</strong></p>\n\n<ul>\n\t<li><a href=\"https://developer.mozilla.org/ru/docs/Web/HTML/Element/em\" rel=\"noopener noreferrer nofollow\">Статья</a></li>\n</ul>\n\n<p><em>А в комментариях ниже напишите, почему не стоит использовать этот тег для того, чтобы сделать текст курсивом и какой тег лучше применять для этого?</em></p>",
+      "answer_options": [
+        "<em>",
+        "<i>",
+        "<italic>",
+        "<strong>"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    },
+    {
+      "step_id": 649,
+      "question_html": "<p><strong>С какого из указанных знаков не может начинаться название переменной?</strong></p>",
+      "answer_options": [
+        "_",
+        " $",
+        "Буквы",
+        "Цифры"
+      ],
+      "suggested_correct_option_index": 3,
+      "needs_review": true
+    },
+    {
+      "step_id": 537,
+      "question_html": "<p><strong>Какое максимальное одновременное количество значений может быть у свойства border-radius?</strong></p>",
+      "answer_options": [
+        "1",
+        "4",
+        "8",
+        "16"
+      ],
+      "suggested_correct_option_index": 2,
+      "needs_review": true
+    },
+    {
+      "step_id": 645,
+      "question_html": "<p><strong>Метод JSON.stringify() преобразует...</strong></p>",
+      "answer_options": [
+        "JSON-строку в объект",
+        "Объект JavaScript в JSON-строку",
+        "Массив в Set",
+        "Строку в число"
+      ],
+      "suggested_correct_option_index": 1,
+      "needs_review": true
+    }
+  ]
+}
