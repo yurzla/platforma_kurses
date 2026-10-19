@@ -51,6 +51,19 @@ async def test_course_page_has_export_controls(store: FakeStore) -> None:
     assert page.text.index('id="chat-log"') < page.text.index('id="chat-actions"')
 
 
+async def test_assistant_has_confirm_modal(store: FakeStore) -> None:
+    seed_student_and_course(store)
+    web, api = build_stack(store)
+    async with web, api:
+        await web.post("/login", data={"email": "s@example.com", "password": "pw"})
+        page = await web.get("/courses")
+    assert page.status_code == 200
+    assert 'role="dialog"' in page.text
+    assert 'id="confirm-modal"' in page.text
+    assert 'id="confirm-cancel"' in page.text
+    assert 'id="confirm-ok"' in page.text
+
+
 async def test_proxy_deletes_session(store: FakeStore) -> None:
     seed_student_and_course(store)
     _seed_dialogue(store)

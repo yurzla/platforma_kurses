@@ -279,6 +279,22 @@ main { padding: 24px; max-width: 1040px; margin: 0 auto; }
 .history-item .history-session { flex: 1 1 0; min-width: 0; width: auto; }
 .history-toolbar { display: flex; justify-content: flex-end; margin: 0 0 8px; }
 .history-clear { font-size: 13px; padding: 5px 12px; }
+.confirm-modal {
+  position: fixed; inset: 0; z-index: 80; display: flex; align-items: center;
+  justify-content: center; padding: 20px;
+}
+.confirm-backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, .55); }
+.confirm-card {
+  position: relative; width: min(420px, 100%); background: var(--panel);
+  border: 1px solid var(--border); border-radius: 14px; padding: 20px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, .45);
+}
+.confirm-card h3 { margin: 0 0 8px; font-size: 18px; }
+.confirm-text { margin: 0 0 18px; color: var(--muted); font-size: 14px; line-height: 1.5; }
+.confirm-actions { display: flex; justify-content: flex-end; gap: 10px; }
+.btn.danger { background: #c0392b; border-color: #c0392b; color: #fff; }
+.btn.danger:hover { filter: brightness(1.08); }
+body.modal-open { overflow: hidden; }
 .history-delete {
   flex: none; width: 40px; display: flex; align-items: center; justify-content: center;
   background: var(--panel); border: 1px solid var(--border); border-radius: 10px;

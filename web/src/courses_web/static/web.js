@@ -79,7 +79,54 @@
     var actions = document.getElementById("chat-actions");
     var exportMd = document.getElementById("export-md");
     var exportPdf = document.getElementById("export-pdf");
+    var confirmModal = document.getElementById("confirm-modal");
+    var confirmText = document.getElementById("confirm-text");
+    var confirmOk = document.getElementById("confirm-ok");
+    var confirmCancel = document.getElementById("confirm-cancel");
+    var confirmResolve = null;
     var ERROR_TEXT = "Произошла ошибка, попробуйте чуть позже.";
+
+    function closeConfirm(result) {
+      if (!confirmModal) return;
+      confirmModal.classList.add("hidden");
+      document.body.classList.remove("modal-open");
+      if (confirmResolve) {
+        var resolve = confirmResolve;
+        confirmResolve = null;
+        resolve(result);
+      }
+    }
+
+    function askConfirm(message, okLabel) {
+      if (!confirmModal) return Promise.resolve(window.confirm(message));
+      if (confirmText) confirmText.textContent = message;
+      if (confirmOk) confirmOk.textContent = okLabel || "Удалить";
+      confirmModal.classList.remove("hidden");
+      document.body.classList.add("modal-open");
+      if (confirmCancel) confirmCancel.focus();
+      return new Promise(function (resolve) {
+        confirmResolve = resolve;
+      });
+    }
+
+    if (confirmOk) {
+      confirmOk.addEventListener("click", function () { closeConfirm(true); });
+    }
+    if (confirmCancel) {
+      confirmCancel.addEventListener("click", function () { closeConfirm(false); });
+    }
+    if (confirmModal) {
+      var confirmBackdrop = confirmModal.querySelector(".confirm-backdrop");
+      if (confirmBackdrop) {
+        confirmBackdrop.addEventListener("click", function () { closeConfirm(false); });
+      }
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && !confirmModal.classList.contains("hidden")) {
+          event.preventDefault();
+          closeConfirm(false);
+        }
+      });
+    }
 
     function openPanel() {
       drawer.classList.add("open");
@@ -201,7 +248,7 @@
         var clearBtn = event.target.closest("#history-clear");
         if (clearBtn) {
           var scope = courseId ? " по этому курсу" : "";
-          if (!window.confirm("Удалить всю историю диалогов" + scope + "?")) return;
+          if (!(await askConfirm("Удалить всю историю диалогов" + scope + "?", "Очистить"))) return;
           try {
             var clearUrl = "/api/v1/chat/sessions" + (courseId ? "?course_id=" + courseId : "");
             var clearResp = await fetch(clearUrl, {
@@ -223,7 +270,7 @@
         var deleteBtn = event.target.closest(".history-delete");
         if (deleteBtn) {
           var deleteId = parseInt(deleteBtn.dataset.sessionId, 10);
-          if (!window.confirm("Удалить этот диалог?")) return;
+          if (!(await askConfirm("Удалить этот диалог?", "Удалить"))) return;
           try {
             var delResp = await fetch("/api/v1/chat/sessions/" + deleteId, {
               method: "DELETE", headers: { Accept: "application/json" },
