@@ -328,7 +328,7 @@ def _step_neighbours(
     return previous_id, next_id
 
 
-def _step_markers(course: dict[str, Any]) -> list[dict[str, Any]]:
+def _step_markers(course: dict[str, Any], done: int) -> list[dict[str, Any]]:
     sections = course.get("sections", [])
     total = sum(
         1
@@ -360,6 +360,8 @@ def _step_markers(course: dict[str, Any]) -> list[dict[str, Any]]:
                         "percent": round(100.0 * cumulative / total, 2),
                         "kind": "module",
                         "title": module_title,
+                        "step": cumulative,
+                        "reached": cumulative <= done,
                     }
                 )
             else:
@@ -368,6 +370,8 @@ def _step_markers(course: dict[str, Any]) -> list[dict[str, Any]]:
                         "percent": round(100.0 * cumulative / total, 2),
                         "kind": "lesson",
                         "title": lesson.get("title") or f"Этап {index}",
+                        "step": cumulative,
+                        "reached": cumulative <= done,
                     }
                 )
     return markers
@@ -422,7 +426,7 @@ async def step(request: Request, course_id: int, step_id: int) -> Response:
             "prev_step_id": previous_step_id,
             "next_step_id": next_step_id,
             "progress": progress,
-            "checkpoints": _step_markers(course_data),
+            "checkpoints": _step_markers(course_data, progress["done"]),
             "step_context": _step_context(course_data, step_id),
             "step_progress": {"done": progress["done"], "total": progress["total"]},
             **assistant,

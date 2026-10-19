@@ -28,6 +28,13 @@
     if (bar) bar.setAttribute("aria-valuenow", String(percent));
     if (value) value.textContent = percent + "%";
     if (note) note.textContent = "Пройдено " + progress.done + " из " + progress.total + " шагов";
+    Array.prototype.forEach.call(
+      document.querySelectorAll(".step-progress-dot"),
+      function (dot) {
+        var at = parseInt(dot.dataset.step, 10);
+        dot.classList.toggle("reached", !isNaN(at) && at <= progress.done);
+      }
+    );
   }
 
   function buildAnswer(form) {

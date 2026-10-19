@@ -73,6 +73,27 @@ def _seed_two_sections(store: FakeStore) -> int:
     return user.id
 
 
+def _seed_choice_course(store: FakeStore) -> int:
+    user = store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    lesson = LessonSummary(
+        id=11,
+        title="Урок 1",
+        position=1,
+        steps=[StepSummary(id=101, position=1, step_type="choice")],
+    )
+    section = SectionSummary(id=1, title="Модуль 1", position=1, lessons=[lesson])
+    store.add_course(CourseDetail(id=10, title="Python", sections=[section]))
+    store.answer_keys[101] = {
+        "name": "choice",
+        "options": {"is_multiple_choice": False},
+        "choices": [
+            {"id": 1, "text": "A", "is_correct": True},
+            {"id": 2, "text": "B", "is_correct": False},
+        ],
+    }
+    return user.id
+
+
 async def _open_step(store: FakeStore, step_id: int) -> str:
     web, api = build_stack(store)
     async with web, api:
@@ -142,7 +163,7 @@ async def test_progress_bar_marks_lesson_boundaries(store: FakeStore) -> None:
     user_id = _seed_two_sections(store)
     store.progress[(user_id, 101)] = "passed"
     text = await _open_step(store, 102)
-    assert text.count('class="step-progress-dot lesson-dot"') == 1
+    assert text.count('class="step-progress-dot lesson-dot reached"') == 1
     assert 'style="left: 33.33%"' in text
     assert 'title="Урок 1"' in text
 
@@ -155,6 +176,34 @@ async def test_breadcrumbs_show_course_hierarchy_and_step_number(store: FakeStor
     assert "Урок 2" in text
     assert "Шаг 2" in text
     assert "шаг 2" not in text
+
+
+async def test_step_type_badge_shows_label(store: FakeStore) -> None:
+    _seed_course(store)
+    text = await _open_step(store, 101)
+    assert '<span class="step-type-badge">Текст</span>' in text
+
+
+async def test_choice_step_shows_options_and_test_badge(store: FakeStore) -> None:
+    _seed_choice_course(store)
+    text = await _open_step(store, 101)
+    assert '<span class="step-type-badge">Тест</span>' in text
+    assert 'class="choice-option"' in text
+    assert 'type="radio"' in text
+    assert 'name="answer"' not in text
+
+
+async def test_reached_markers_get_accent_outline(store: FakeStore) -> None:
+    user_id = _seed_two_sections(store)
+    store.progress[(user_id, 101)] = "passed"
+    text = await _open_step(store, 102)
+    assert 'class="step-progress-dot lesson-dot reached"' in text
+    assert 'class="step-progress-dot module-dot reached"' not in text
+
+    store.progress[(user_id, 102)] = "passed"
+    text = await _open_step(store, 102)
+    assert 'class="step-progress-dot lesson-dot reached"' in text
+    assert 'class="step-progress-dot module-dot reached"' in text
 
 
 async def test_step_page_uses_refreshed_token_for_course_structure(store: FakeStore) -> None:

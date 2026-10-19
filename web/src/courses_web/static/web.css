@@ -162,6 +162,10 @@ main { padding: 24px; max-width: 1040px; margin: 0 auto; }
   width: 11px; height: 11px; background: var(--text);
   box-shadow: 0 0 0 2px var(--panel);
 }
+.step-progress-dot.lesson-dot.reached { box-shadow: 0 0 0 2px var(--accent); }
+.step-progress-dot.module-dot.reached {
+  box-shadow: 0 0 0 2px var(--panel), 0 0 0 4px var(--accent);
+}
 .step-body { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; line-height: 1.6; }
 .step-body img { max-width: 100%; }
 

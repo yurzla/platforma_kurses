@@ -4,6 +4,18 @@
 
 {% block body %}
 {% with active = "courses" %}{% include "_topbar.html" %}{% endwith %}
+{% set type_labels = {
+  "choice": "Тест",
+  "string": "Ввод",
+  "number": "Число",
+  "code": "Код",
+  "math": "Формула",
+  "free_answer": "Ответ",
+  "text": "Текст",
+  "video": "Видео",
+  "matching": "Сопоставление",
+  "sorting": "Сортировка"
+} %}
 <main>
   <p class="breadcrumbs">
     <a href="/courses">Курсы</a> /
@@ -13,7 +25,7 @@
     / Шаг {{ step_context.number or step.position }}
   </p>
   <h1 class="page-title">{{ step.title or ("Шаг " ~ step.position) }}</h1>
-  <span class="step-type-badge">{{ step.type }}</span>
+  <span class="step-type-badge">{{ type_labels.get(step.step_type, step.step_type) }}</span>
 
   <section class="step-progress" aria-label="Прогресс курса">
     <div class="step-progress-head">
@@ -24,7 +36,8 @@
          aria-valuemin="0" aria-valuemax="100" aria-label="Прогресс курса">
       <span class="step-progress-fill" style="width: {{ progress.percent }}%"></span>
       {% for marker in checkpoints %}
-      <span class="step-progress-dot {{ marker.kind }}-dot" style="left: {{ marker.percent }}%"
+      <span class="step-progress-dot {{ marker.kind }}-dot{% if marker.reached %} reached{% endif %}"
+            style="left: {{ marker.percent }}%" data-step="{{ marker.step }}"
             title="{{ marker.title }}"></span>
       {% endfor %}
     </div>
@@ -35,7 +48,7 @@
   {% endif %}
 
   <section class="answer-panel" id="answer-panel">
-    {% if step.grading == "auto" and step.type == "choice" and step.options and step.options.choices %}
+    {% if step.grading == "auto" and step.step_type == "choice" and step.options and step.options.choices %}
     <form id="answer-form" class="quiz-form">
       {% for choice in step.options.choices %}
       <label class="choice-option">
