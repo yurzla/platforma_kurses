@@ -65,6 +65,17 @@ class ChatRepository(ABC):
     async def get_history(self, session_id: int, limit: int = 10) -> list[ChatMessage]: ...
 
     @abstractmethod
+    async def delete_session(self, session_id: int) -> None: ...
+
+    @abstractmethod
+    async def list_session_ids(
+        self, user_id: int, course_id: int | None = None
+    ) -> list[int]: ...
+
+    @abstractmethod
+    async def delete_sessions(self, user_id: int, course_id: int | None = None) -> int: ...
+
+    @abstractmethod
     async def user_exists(self, user_id: int) -> bool: ...
 
     @abstractmethod
@@ -235,6 +246,14 @@ class JobRepository(ABC):
     @abstractmethod
     async def purge_terminal(self, older_than: datetime) -> int:
         """Удаляет завершённые (done/failed) job-ы старше указанного момента."""
+
+    @abstractmethod
+    async def delete_by_session(self, session_id: int) -> int:
+        """Удаляет все job-ы чат-сессии и возвращает их число."""
+
+    @abstractmethod
+    async def delete_by_sessions(self, session_ids: Sequence[int]) -> int:
+        """Удаляет job-ы нескольких чат-сессий и возвращает их число."""
 
 
 class UnitOfWork(ABC):

@@ -275,3 +275,18 @@ main { padding: 24px; max-width: 1040px; margin: 0 auto; }
 .history-preview {
   font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
+.history-item { display: flex; align-items: stretch; gap: 6px; }
+.history-item .history-session { flex: 1 1 0; min-width: 0; width: auto; }
+.history-toolbar { display: flex; justify-content: flex-end; margin: 0 0 8px; }
+.history-clear { font-size: 13px; padding: 5px 12px; }
+.history-delete {
+  flex: none; width: 40px; display: flex; align-items: center; justify-content: center;
+  background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+  color: var(--muted); cursor: pointer; font-size: 18px; line-height: 1;
+}
+.history-delete svg { width: 18px; height: 18px; fill: currentColor; display: block; }
+.history-delete:hover { border-color: #c0392b; color: #c0392b; }
+.chat-actions {
+  display: flex; gap: 8px; align-self: flex-start; margin: 0 0 4px 4px;
+}
+.chat-actions .btn { font-size: 13px; padding: 4px 10px; text-decoration: none; }

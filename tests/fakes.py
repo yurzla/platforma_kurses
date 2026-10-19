@@ -134,6 +134,26 @@ class InMemoryChatRepository(ChatRepository):
     async def get_history(self, session_id: int, limit: int = 10) -> list[ChatMessage]:
         return self._store.messages.get(session_id, [])[-limit:]
 
+    async def delete_session(self, session_id: int) -> None:
+        self._store.sessions.pop(session_id, None)
+        self._store.messages.pop(session_id, None)
+
+    async def list_session_ids(
+        self, user_id: int, course_id: int | None = None
+    ) -> list[int]:
+        return [
+            session_id
+            for session_id, session in self._store.sessions.items()
+            if session.user_id == user_id
+            and (course_id is None or session.course_id == course_id)
+        ]
+
+    async def delete_sessions(self, user_id: int, course_id: int | None = None) -> int:
+        session_ids = await self.list_session_ids(user_id, course_id)
+        for session_id in session_ids:
+            await self.delete_session(session_id)
+        return len(session_ids)
+
     async def user_exists(self, user_id: int) -> bool:
         return user_id in self._store.users
 
@@ -491,6 +511,27 @@ class InMemoryJobRepository(JobRepository):
             if job.status in (JobStatus.DONE, JobStatus.FAILED)
             and job.updated_at is not None
             and job.updated_at < older_than
+        ]
+        for job_id in to_delete:
+            del self._store.jobs[job_id]
+        return len(to_delete)
+
+    async def delete_by_session(self, session_id: int) -> int:
+        to_delete = [
+            job_id
+            for job_id, job in self._store.jobs.items()
+            if job.session_id == session_id
+        ]
+        for job_id in to_delete:
+            del self._store.jobs[job_id]
+        return len(to_delete)
+
+    async def delete_by_sessions(self, session_ids: Sequence[int]) -> int:
+        ids = set(session_ids)
+        to_delete = [
+            job_id
+            for job_id, job in self._store.jobs.items()
+            if job.session_id in ids
         ]
         for job_id in to_delete:
             del self._store.jobs[job_id]

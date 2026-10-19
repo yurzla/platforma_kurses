@@ -76,6 +76,10 @@
     var historyPanel = document.getElementById("assistant-history");
     var historyList = document.getElementById("assistant-history-list");
     var backBtn = document.getElementById("assistant-back");
+    var actions = document.getElementById("chat-actions");
+    var exportMd = document.getElementById("export-md");
+    var exportPdf = document.getElementById("export-pdf");
+    var ERROR_TEXT = "Произошла ошибка, попробуйте чуть позже.";
 
     function openPanel() {
       drawer.classList.add("open");
@@ -112,6 +116,7 @@
         div.textContent = text;
       }
       log.appendChild(div);
+      mountExportLinks();
       log.scrollTop = log.scrollHeight;
       return div;
     }
@@ -120,10 +125,33 @@
       log.innerHTML = "";
     }
 
+    function mountExportLinks() {
+      if (!actions) return;
+      if (!sessionId) {
+        actions.classList.add("hidden");
+        return;
+      }
+      if (exportMd) exportMd.href = "/api/v1/chat/sessions/" + sessionId + "/export?format=md";
+      if (exportPdf) exportPdf.href = "/api/v1/chat/sessions/" + sessionId + "/export?format=pdf";
+      actions.classList.remove("hidden");
+      log.appendChild(actions);
+    }
+
     function showChat() {
       if (historyPanel) historyPanel.classList.add("hidden");
       if (backBtn) backBtn.classList.remove("hidden");
+      mountExportLinks();
       log.classList.remove("hidden");
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function showHistory() {
+      sessionId = null;
+      clearLog();
+      log.classList.add("hidden");
+      if (backBtn) backBtn.classList.add("hidden");
+      if (actions) actions.classList.add("hidden");
+      if (historyPanel) historyPanel.classList.remove("hidden");
     }
 
     async function refreshHistory() {
@@ -169,7 +197,50 @@
     }
 
     if (historyList) {
-      historyList.addEventListener("click", function (event) {
+      historyList.addEventListener("click", async function (event) {
+        var clearBtn = event.target.closest("#history-clear");
+        if (clearBtn) {
+          var scope = courseId ? " по этому курсу" : "";
+          if (!window.confirm("Удалить всю историю диалогов" + scope + "?")) return;
+          try {
+            var clearUrl = "/api/v1/chat/sessions" + (courseId ? "?course_id=" + courseId : "");
+            var clearResp = await fetch(clearUrl, {
+              method: "DELETE", headers: { Accept: "application/json" },
+              credentials: "same-origin",
+            });
+            if (clearResp.status === 401) { window.location.href = "/login"; return; }
+            if (!clearResp.ok) {
+              window.alert(ERROR_TEXT);
+              return;
+            }
+            showHistory();
+            await refreshHistory();
+          } catch (err) {
+            window.alert(ERROR_TEXT);
+          }
+          return;
+        }
+        var deleteBtn = event.target.closest(".history-delete");
+        if (deleteBtn) {
+          var deleteId = parseInt(deleteBtn.dataset.sessionId, 10);
+          if (!window.confirm("Удалить этот диалог?")) return;
+          try {
+            var delResp = await fetch("/api/v1/chat/sessions/" + deleteId, {
+              method: "DELETE", headers: { Accept: "application/json" },
+              credentials: "same-origin",
+            });
+            if (delResp.status === 401) { window.location.href = "/login"; return; }
+            if (!delResp.ok) {
+              window.alert(ERROR_TEXT);
+              return;
+            }
+            if (sessionId === deleteId) showHistory();
+            await refreshHistory();
+          } catch (err) {
+            window.alert(ERROR_TEXT);
+          }
+          return;
+        }
         var btn = event.target.closest(".history-session");
         if (!btn) return;
         loadSession(parseInt(btn.dataset.sessionId, 10));
@@ -178,11 +249,7 @@
 
     if (backBtn) {
       backBtn.addEventListener("click", async function () {
-        sessionId = null;
-        clearLog();
-        log.classList.add("hidden");
-        backBtn.classList.add("hidden");
-        if (historyPanel) historyPanel.classList.remove("hidden");
+        showHistory();
         await refreshHistory();
       });
     }
@@ -195,24 +262,35 @@
       showChat();
       append("user", question);
       var placeholder = append("assistant", "…");
-      var sid = await ensureSession();
-      if (!sid) {
-        placeholder.textContent = "Не удалось создать сессию.";
-        return;
+      try {
+        var sid = await ensureSession();
+        if (!sid) {
+          placeholder.textContent = "Не удалось создать сессию.";
+          return;
+        }
+        mountExportLinks();
+        var resp = await fetch("/api/v1/chat/sessions/" + sid + "/ask", {
+          method: "POST", headers: jsonHeaders(), credentials: "same-origin",
+          body: JSON.stringify({ question: question }),
+        });
+        if (!resp.ok) { placeholder.textContent = "Ошибка постановки вопроса."; return; }
+        var job = await resp.json();
+        poll(job.job_id, placeholder);
+      } catch (err) {
+        placeholder.textContent = ERROR_TEXT;
       }
-      var resp = await fetch("/api/v1/chat/sessions/" + sid + "/ask", {
-        method: "POST", headers: jsonHeaders(), credentials: "same-origin",
-        body: JSON.stringify({ question: question }),
-      });
-      if (!resp.ok) { placeholder.textContent = "Ошибка постановки вопроса."; return; }
-      var job = await resp.json();
-      poll(job.job_id, placeholder);
     });
 
     async function poll(jobId, node) {
       for (var i = 0; i < 120; i++) {
         await new Promise(function (r) { setTimeout(r, 1000); });
-        var resp = await fetch("/api/v1/jobs/" + jobId, { headers: { Accept: "application/json" } });
+        var resp;
+        try {
+          resp = await fetch("/api/v1/jobs/" + jobId, { headers: { Accept: "application/json" } });
+        } catch (err) {
+          node.textContent = ERROR_TEXT;
+          return;
+        }
         if (!resp.ok) continue;
         var data = await resp.json();
         if (data.status === "done") {
@@ -222,7 +300,7 @@
           else node.textContent = answer;
           return;
         }
-        if (data.status === "failed") { node.textContent = "Ошибка: " + (data.error || "неизвестно"); return; }
+        if (data.status === "failed") { node.textContent = ERROR_TEXT; return; }
       }
       node.textContent = "Превышено время ожидания ответа.";
     }

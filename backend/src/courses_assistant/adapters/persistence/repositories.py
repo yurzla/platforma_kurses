@@ -159,6 +159,27 @@ class SqlChatRepository(ChatRepository):
         rows.reverse()
         return [_to_message(row) for row in rows]
 
+    async def delete_session(self, session_id: int) -> None:
+        await self._session.execute(
+            delete(ChatSessionORM).where(ChatSessionORM.id == session_id)
+        )
+
+    async def list_session_ids(
+        self, user_id: int, course_id: int | None = None
+    ) -> list[int]:
+        stmt = select(ChatSessionORM.id).where(ChatSessionORM.user_id == user_id)
+        if course_id is not None:
+            stmt = stmt.where(ChatSessionORM.course_id == course_id)
+        result = await self._session.execute(stmt)
+        return [int(session_id) for session_id in result.scalars()]
+
+    async def delete_sessions(self, user_id: int, course_id: int | None = None) -> int:
+        stmt = delete(ChatSessionORM).where(ChatSessionORM.user_id == user_id)
+        if course_id is not None:
+            stmt = stmt.where(ChatSessionORM.course_id == course_id)
+        result = cast("CursorResult[Any]", await self._session.execute(stmt))
+        return int(result.rowcount or 0)
+
     async def user_exists(self, user_id: int) -> bool:
         result = await self._session.execute(
             select(UserORM.id).where(UserORM.id == user_id)
@@ -832,6 +853,27 @@ class SqlJobRepository(JobRepository):
                     JobORM.status.in_([JobStatus.DONE.value, JobStatus.FAILED.value]),
                     JobORM.updated_at < older_than,
                 )
+            ),
+        )
+        return int(result.rowcount or 0)
+
+    async def delete_by_session(self, session_id: int) -> int:
+        result = cast(
+            "CursorResult[Any]",
+            await self._session.execute(
+                delete(JobORM).where(JobORM.session_id == session_id)
+            ),
+        )
+        return int(result.rowcount or 0)
+
+    async def delete_by_sessions(self, session_ids: Sequence[int]) -> int:
+        ids = list(session_ids)
+        if not ids:
+            return 0
+        result = cast(
+            "CursorResult[Any]",
+            await self._session.execute(
+                delete(JobORM).where(JobORM.session_id.in_(ids))
             ),
         )
         return int(result.rowcount or 0)

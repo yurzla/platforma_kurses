@@ -41,7 +41,12 @@
         </div>
       </div>
       <button type="button" id="assistant-back" class="btn ghost hidden">← К истории</button>
-      <div id="chat-log" class="chat-log hidden"></div>
+      <div id="chat-log" class="chat-log hidden">
+        <div id="chat-actions" class="chat-actions hidden">
+          <a id="export-md" class="btn ghost" href="#" download>Скачать .md</a>
+          <a id="export-pdf" class="btn ghost" href="#" download>Скачать .pdf</a>
+        </div>
+      </div>
       <form id="chat-form" class="chat-form">
         <input id="chat-input" type="text" placeholder="Задайте вопрос по материалу…" autocomplete="off">
         <button class="btn" type="submit">Спросить</button>
