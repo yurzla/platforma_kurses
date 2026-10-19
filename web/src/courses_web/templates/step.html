@@ -5,7 +5,13 @@
 {% block body %}
 {% with active = "courses" %}{% include "_topbar.html" %}{% endwith %}
 <main>
-  <p class="breadcrumbs"><a href="/courses">Курсы</a> / <a href="/courses/{{ course_id }}">Курс</a> / шаг {{ step.position }}</p>
+  <p class="breadcrumbs">
+    <a href="/courses">Курсы</a> /
+    <a href="/courses/{{ course_id }}">{{ step_context.course_title or "Курс" }}</a>
+    {% if step_context.section_title %} / {{ step_context.section_title }}{% endif %}
+    {% if step_context.lesson_title %} / {{ step_context.lesson_title }}{% endif %}
+    / Шаг {{ step_context.number or step.position }}
+  </p>
   <h1 class="page-title">{{ step.title or ("Шаг " ~ step.position) }}</h1>
   <span class="step-type-badge">{{ step.type }}</span>
 
@@ -17,9 +23,9 @@
     <div class="step-progress-bar" role="progressbar" aria-valuenow="{{ progress.percent }}"
          aria-valuemin="0" aria-valuemax="100" aria-label="Прогресс курса">
       <span class="step-progress-fill" style="width: {{ progress.percent }}%"></span>
-      {% for checkpoint in checkpoints %}
-      <span class="step-progress-mark" style="left: {{ checkpoint.percent }}%"
-            title="{{ checkpoint.title }}"></span>
+      {% for marker in checkpoints %}
+      <span class="step-progress-dot {{ marker.kind }}-dot" style="left: {{ marker.percent }}%"
+            title="{{ marker.title }}"></span>
       {% endfor %}
     </div>
   </section>

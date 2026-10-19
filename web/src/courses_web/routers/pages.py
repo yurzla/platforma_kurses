@@ -328,7 +328,7 @@ def _step_neighbours(
     return previous_id, next_id
 
 
-def _section_checkpoints(course: dict[str, Any]) -> list[dict[str, Any]]:
+def _step_markers(course: dict[str, Any]) -> list[dict[str, Any]]:
     sections = course.get("sections", [])
     total = sum(
         1
@@ -338,28 +338,59 @@ def _section_checkpoints(course: dict[str, Any]) -> list[dict[str, Any]]:
     )
     if total == 0:
         return []
-    checkpoints: list[dict[str, Any]] = []
+    markers: list[dict[str, Any]] = []
     cumulative = 0
     for index, section in enumerate(sections, start=1):
-        steps = [
-            step
-            for lesson in section.get("lessons", [])
-            for step in lesson.get("steps", [])
-        ]
-        if not steps:
+        lessons = section.get("lessons", [])
+        section_size = sum(len(lesson.get("steps", [])) for lesson in lessons)
+        if section_size == 0:
             continue
-        cumulative += len(steps)
-        if cumulative >= total:
-            continue
-        done = sum(1 for step in steps if step.get("completed"))
-        title = section.get("title") or f"Модуль {index}"
-        checkpoints.append(
-            {
-                "percent": round(100.0 * cumulative / total, 2),
-                "title": f"{title}: {done} из {len(steps)} шагов",
-            }
-        )
-    return checkpoints
+        section_end = cumulative + section_size
+        module_title = section.get("title") or f"Модуль {index}"
+        for lesson in lessons:
+            steps = lesson.get("steps", [])
+            if not steps:
+                continue
+            cumulative += len(steps)
+            if cumulative >= total:
+                continue
+            if cumulative == section_end:
+                markers.append(
+                    {
+                        "percent": round(100.0 * cumulative / total, 2),
+                        "kind": "module",
+                        "title": module_title,
+                    }
+                )
+            else:
+                markers.append(
+                    {
+                        "percent": round(100.0 * cumulative / total, 2),
+                        "kind": "lesson",
+                        "title": lesson.get("title") or f"Этап {index}",
+                    }
+                )
+    return markers
+
+
+def _step_context(course: dict[str, Any], step_id: int) -> dict[str, Any]:
+    context: dict[str, Any] = {
+        "course_title": course.get("title"),
+        "section_title": None,
+        "lesson_title": None,
+        "number": None,
+    }
+    number = 0
+    for section in course.get("sections", []):
+        for lesson in section.get("lessons", []):
+            for step in lesson.get("steps", []):
+                number += 1
+                if step.get("id") == step_id:
+                    context["section_title"] = section.get("title")
+                    context["lesson_title"] = lesson.get("title")
+                    context["number"] = number
+                    return context
+    return context
 
 
 @router.get("/courses/{course_id}/steps/{step_id}", response_class=HTMLResponse)
@@ -391,7 +422,8 @@ async def step(request: Request, course_id: int, step_id: int) -> Response:
             "prev_step_id": previous_step_id,
             "next_step_id": next_step_id,
             "progress": progress,
-            "checkpoints": _section_checkpoints(course_data),
+            "checkpoints": _step_markers(course_data),
+            "step_context": _step_context(course_data, step_id),
             "step_progress": {"done": progress["done"], "total": progress["total"]},
             **assistant,
         },

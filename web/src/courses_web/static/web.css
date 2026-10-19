@@ -136,25 +136,31 @@ main { padding: 24px; max-width: 1040px; margin: 0 auto; }
   background: var(--panel-2); color: var(--muted); margin-bottom: 12px;
 }
 .step-progress {
-  margin: 0 0 16px; padding: 14px 16px; background: var(--panel);
-  border: 1px solid var(--border); border-radius: 12px;
+  margin: 0 0 18px;
 }
 .step-progress-head {
   display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 10px;
 }
 .step-progress-note { color: var(--muted); font-size: 13px; }
-.step-progress-value { font-size: 20px; font-weight: 700; }
+.step-progress-value { font-size: 16px; font-weight: 700; }
 .step-progress-bar {
-  position: relative; height: 10px; border-radius: 999px;
-  background: var(--panel-2); overflow: hidden;
+  position: relative; height: 8px; border-radius: 999px;
+  background: var(--panel-2); overflow: visible;
 }
 .step-progress-fill {
   display: block; height: 100%; background: var(--accent);
   border-radius: 999px; transition: width .25s ease;
 }
-.step-progress-mark {
-  position: absolute; top: -1px; bottom: -1px; width: 2px;
-  background: var(--text); opacity: .55; transform: translateX(-1px);
+.step-progress-dot {
+  position: absolute; top: 50%; margin: 0; border-radius: 50%;
+  transform: translate(-50%, -50%); cursor: default;
+}
+.step-progress-dot.lesson-dot {
+  width: 6px; height: 6px; background: var(--muted); opacity: .8;
+}
+.step-progress-dot.module-dot {
+  width: 11px; height: 11px; background: var(--text);
+  box-shadow: 0 0 0 2px var(--panel);
 }
 .step-body { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; line-height: 1.6; }
 .step-body img { max-width: 100%; }

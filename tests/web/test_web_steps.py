@@ -46,11 +46,14 @@ def _seed_two_sections(store: FakeStore) -> int:
                 id=11,
                 title="Урок 1",
                 position=1,
-                steps=[
-                    StepSummary(id=101, position=1, step_type="text"),
-                    StepSummary(id=102, position=2, step_type="text"),
-                ],
-            )
+                steps=[StepSummary(id=101, position=1, step_type="text")],
+            ),
+            LessonSummary(
+                id=12,
+                title="Урок 2",
+                position=2,
+                steps=[StepSummary(id=102, position=1, step_type="text")],
+            ),
         ],
     )
     second = SectionSummary(
@@ -59,8 +62,8 @@ def _seed_two_sections(store: FakeStore) -> int:
         position=2,
         lessons=[
             LessonSummary(
-                id=12,
-                title="Урок 2",
+                id=21,
+                title="Урок 3",
                 position=1,
                 steps=[StepSummary(id=103, position=1, step_type="text")],
             )
@@ -130,9 +133,28 @@ async def test_progress_bar_marks_module_boundaries(store: FakeStore) -> None:
     user_id = _seed_two_sections(store)
     store.progress[(user_id, 101)] = "passed"
     text = await _open_step(store, 102)
-    assert text.count('class="step-progress-mark"') == 1
+    assert text.count('class="step-progress-dot module-dot"') == 1
     assert 'style="left: 66.67%"' in text
-    assert 'title="Модуль 1: 1 из 2 шагов"' in text
+    assert 'title="Модуль 1"' in text
+
+
+async def test_progress_bar_marks_lesson_boundaries(store: FakeStore) -> None:
+    user_id = _seed_two_sections(store)
+    store.progress[(user_id, 101)] = "passed"
+    text = await _open_step(store, 102)
+    assert text.count('class="step-progress-dot lesson-dot"') == 1
+    assert 'style="left: 33.33%"' in text
+    assert 'title="Урок 1"' in text
+
+
+async def test_breadcrumbs_show_course_hierarchy_and_step_number(store: FakeStore) -> None:
+    _seed_two_sections(store)
+    text = await _open_step(store, 102)
+    assert '<a href="/courses/10">Python</a>' in text
+    assert "Модуль 1" in text
+    assert "Урок 2" in text
+    assert "Шаг 2" in text
+    assert "шаг 2" not in text
 
 
 async def test_step_page_uses_refreshed_token_for_course_structure(store: FakeStore) -> None:
