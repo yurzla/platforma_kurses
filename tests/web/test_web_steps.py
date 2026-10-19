@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import re
+
 from courses_assistant.domain.catalog import (
     CourseDetail,
     LessonSummary,
@@ -204,6 +206,20 @@ async def test_reached_markers_get_accent_outline(store: FakeStore) -> None:
     text = await _open_step(store, 102)
     assert 'class="step-progress-dot lesson-dot reached"' in text
     assert 'class="step-progress-dot module-dot reached"' in text
+
+
+async def test_progress_dots_are_white_with_grey_and_accent_outlines(store: FakeStore) -> None:
+    web, api = build_stack(store)
+    async with web, api:
+        css = await web.get("/static/web.css")
+    assert css.status_code == 200
+    plain = re.search(r"\.step-progress-dot\.lesson-dot \{([^}]*)\}", css.text)
+    assert plain is not None
+    assert "background: #fff" in plain.group(1)
+    assert "0 0 0 2px var(--border)" in plain.group(1)
+    reached = re.search(r"\.step-progress-dot\.lesson-dot\.reached \{([^}]*)\}", css.text)
+    assert reached is not None
+    assert "0 0 0 2px var(--accent)" in reached.group(1)
 
 
 async def test_step_page_uses_refreshed_token_for_course_structure(store: FakeStore) -> None:

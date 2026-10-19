@@ -532,8 +532,9 @@ afterwards, including immediately after the user marks it completed.
 
 The step page SHALL show a course progress bar without a surrounding card, with the completed share
 and the number of completed steps out of the total, marking module boundaries with larger dots and
-lesson boundaries with smaller dots. Dots reached by the completed progress SHALL have an accent
-outline. When the user marks the step completed, the bar SHALL update without a page reload.
+lesson boundaries with smaller dots. Dots SHALL have a white fill and a grey outline that switches
+to the accent colour when the completed progress reaches them. When the user marks the step
+completed, the bar SHALL update without a page reload.
 
 #### Scenario: Progress reflects the whole course
 - **WHEN** the user opens a step of a course
@@ -550,10 +551,14 @@ outline. When the user marks the step completed, the bar SHALL update without a 
 - **THEN** the end of each lesson except the module end is shown as a smaller dot
 - **AND** a lesson ending exactly at the module boundary does not add a second dot
 
+#### Scenario: Plain dots are white with a grey outline
+- **WHEN** a checkpoint is beyond the completed progress
+- **THEN** the dot has a white fill and a grey outline
+
 #### Scenario: Reached markers are outlined
 - **WHEN** the completed progress is at or beyond a checkpoint
-- **THEN** that dot is outlined in the accent colour
-- **AND** dots beyond the current progress keep the plain style
+- **THEN** the dot keeps its white fill and gets an accent outline instead of the grey one
+- **AND** dots beyond the current progress keep the grey outline
 
 #### Scenario: Completed step is counted
 - **WHEN** the opened step is already completed
