@@ -35,11 +35,25 @@
     {% else %}
     <p class="muted">Это задание проверяется без автоматической оценки. Отметьте его как выполнённое.</p>
     <form id="complete-form" class="quiz-form">
-      <button class="btn" type="submit">Отметить выполненным</button>
+      <button class="btn{% if step.completed %} done{% endif %}" type="submit"
+              {% if step.completed %}disabled{% endif %}>{% if step.completed %}Выполнено{% else %}Отметить выполненным{% endif %}</button>
     </form>
     {% endif %}
     <div id="answer-result" class="answer-result hidden"></div>
   </section>
+
+  <nav class="step-nav" aria-label="Навигация по шагам">
+    {% if prev_step_id %}
+    <a class="btn ghost" href="/courses/{{ course_id }}/steps/{{ prev_step_id }}">← Назад</a>
+    {% else %}
+    <button class="btn ghost" type="button" disabled>← Назад</button>
+    {% endif %}
+    {% if next_step_id %}
+    <a class="btn" href="/courses/{{ course_id }}/steps/{{ next_step_id }}">Вперёд →</a>
+    {% else %}
+    <button class="btn" type="button" disabled>Вперёд →</button>
+    {% endif %}
+  </nav>
 </main>
 {% endblock %}
 

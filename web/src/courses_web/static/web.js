@@ -59,6 +59,16 @@
           body: JSON.stringify({ answer: null }) }
       );
       if (resp.status === 401) { window.location.href = "/login"; return; }
+      if (!resp.ok) {
+        showResult("Не удалось сохранить ответ, попробуйте позже.", false);
+        return;
+      }
+      var button = completeForm.querySelector("button");
+      if (button) {
+        button.textContent = "Выполнено";
+        button.classList.add("done");
+        button.disabled = true;
+      }
       showResult("Отмечено выполненным.", true);
     });
   }

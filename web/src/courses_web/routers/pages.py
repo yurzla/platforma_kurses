@@ -310,6 +310,24 @@ async def course(request: Request, course_id: int) -> Response:
     )
 
 
+def _step_neighbours(
+    course_data: dict[str, Any], step_id: int
+) -> tuple[int | None, int | None]:
+    step_ids = [
+        step.get("id")
+        for section in course_data.get("sections", [])
+        for lesson in section.get("lessons", [])
+        for step in lesson.get("steps", [])
+    ]
+    try:
+        index = step_ids.index(step_id)
+    except ValueError:
+        return None, None
+    previous_id = step_ids[index - 1] if index > 0 else None
+    next_id = step_ids[index + 1] if index + 1 < len(step_ids) else None
+    return previous_id, next_id
+
+
 @router.get("/courses/{course_id}/steps/{step_id}", response_class=HTMLResponse)
 async def step(request: Request, course_id: int, step_id: int) -> Response:
     resp = await call_api(request, "GET", f"/api/v1/courses/{course_id}/steps/{step_id}")
@@ -322,7 +340,9 @@ async def step(request: Request, course_id: int, step_id: int) -> Response:
     me = await _me(request)
     step_data = resp.json()
     course_resp = await call_api(request, "GET", f"/api/v1/courses/{course_id}")
-    course_title = course_resp.json().get("title") if course_resp.status_code == 200 else None
+    course_data = course_resp.json() if course_resp.status_code == 200 else {}
+    course_title = course_data.get("title")
+    previous_step_id, next_step_id = _step_neighbours(course_data, step_id)
     assistant = await _assistant_history_context(request, course_id=course_id)
     return _render(
         request,
@@ -333,6 +353,8 @@ async def step(request: Request, course_id: int, step_id: int) -> Response:
             "assistant_mode": "course",
             "assistant_course_title": course_title,
             "step": step_data,
+            "prev_step_id": previous_step_id,
+            "next_step_id": next_step_id,
             **assistant,
         },
     )
