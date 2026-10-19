@@ -35,6 +35,41 @@ def _seed_course(store: FakeStore) -> int:
     return user.id
 
 
+def _seed_two_sections(store: FakeStore) -> int:
+    user = store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    first = SectionSummary(
+        id=1,
+        title="Модуль 1",
+        position=1,
+        lessons=[
+            LessonSummary(
+                id=11,
+                title="Урок 1",
+                position=1,
+                steps=[
+                    StepSummary(id=101, position=1, step_type="text"),
+                    StepSummary(id=102, position=2, step_type="text"),
+                ],
+            )
+        ],
+    )
+    second = SectionSummary(
+        id=2,
+        title="Модуль 2",
+        position=2,
+        lessons=[
+            LessonSummary(
+                id=12,
+                title="Урок 2",
+                position=1,
+                steps=[StepSummary(id=103, position=1, step_type="text")],
+            )
+        ],
+    )
+    store.add_course(CourseDetail(id=10, title="Python", sections=[first, second]))
+    return user.id
+
+
 async def _open_step(store: FakeStore, step_id: int) -> str:
     web, api = build_stack(store)
     async with web, api:
@@ -79,3 +114,37 @@ async def test_completed_step_renders_done_button(store: FakeStore) -> None:
     assert 'class="btn done"' in text
     assert "Отметить выполненным" not in text
     assert 'disabled>Выполнено</button>' in text
+
+
+async def test_step_shows_course_progress(store: FakeStore) -> None:
+    user_id = _seed_two_sections(store)
+    store.progress[(user_id, 101)] = "passed"
+    text = await _open_step(store, 102)
+    assert "Пройдено 1 из 3 шагов" in text
+    assert "33.3%" in text
+    assert 'aria-valuenow="33.3"' in text
+    assert 'style="width: 33.3%"' in text
+
+
+async def test_progress_bar_marks_module_boundaries(store: FakeStore) -> None:
+    user_id = _seed_two_sections(store)
+    store.progress[(user_id, 101)] = "passed"
+    text = await _open_step(store, 102)
+    assert text.count('class="step-progress-mark"') == 1
+    assert 'style="left: 66.67%"' in text
+    assert 'title="Модуль 1: 1 из 2 шагов"' in text
+
+
+async def test_step_page_uses_refreshed_token_for_course_structure(store: FakeStore) -> None:
+    _seed_two_sections(store)
+    web, api = build_stack(store)
+    async with web, api:
+        await web.post("/login", data={"email": "s@example.com", "password": "pw"})
+        for cookie in web.cookies.jar:
+            if cookie.name == "access_token":
+                cookie.value = "broken-token"
+        page = await web.get("/courses/10/steps/102")
+    assert page.status_code == 200
+    assert "Пройдено 0 из 3 шагов" in page.text
+    assert 'href="/courses/10/steps/101"' in page.text
+    assert 'href="/courses/10/steps/103"' in page.text

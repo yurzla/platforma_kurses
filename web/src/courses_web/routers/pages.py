@@ -328,6 +328,40 @@ def _step_neighbours(
     return previous_id, next_id
 
 
+def _section_checkpoints(course: dict[str, Any]) -> list[dict[str, Any]]:
+    sections = course.get("sections", [])
+    total = sum(
+        1
+        for section in sections
+        for lesson in section.get("lessons", [])
+        for _step in lesson.get("steps", [])
+    )
+    if total == 0:
+        return []
+    checkpoints: list[dict[str, Any]] = []
+    cumulative = 0
+    for index, section in enumerate(sections, start=1):
+        steps = [
+            step
+            for lesson in section.get("lessons", [])
+            for step in lesson.get("steps", [])
+        ]
+        if not steps:
+            continue
+        cumulative += len(steps)
+        if cumulative >= total:
+            continue
+        done = sum(1 for step in steps if step.get("completed"))
+        title = section.get("title") or f"Модуль {index}"
+        checkpoints.append(
+            {
+                "percent": round(100.0 * cumulative / total, 2),
+                "title": f"{title}: {done} из {len(steps)} шагов",
+            }
+        )
+    return checkpoints
+
+
 @router.get("/courses/{course_id}/steps/{step_id}", response_class=HTMLResponse)
 async def step(request: Request, course_id: int, step_id: int) -> Response:
     resp = await call_api(request, "GET", f"/api/v1/courses/{course_id}/steps/{step_id}")
@@ -343,6 +377,7 @@ async def step(request: Request, course_id: int, step_id: int) -> Response:
     course_data = course_resp.json() if course_resp.status_code == 200 else {}
     course_title = course_data.get("title")
     previous_step_id, next_step_id = _step_neighbours(course_data, step_id)
+    progress = _course_progress(course_id, course_data)
     assistant = await _assistant_history_context(request, course_id=course_id)
     return _render(
         request,
@@ -355,6 +390,9 @@ async def step(request: Request, course_id: int, step_id: int) -> Response:
             "step": step_data,
             "prev_step_id": previous_step_id,
             "next_step_id": next_step_id,
+            "progress": progress,
+            "checkpoints": _section_checkpoints(course_data),
+            "step_progress": {"done": progress["done"], "total": progress["total"]},
             **assistant,
         },
     )

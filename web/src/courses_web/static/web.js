@@ -15,6 +15,21 @@
     el.classList.toggle("bad", !ok);
   }
 
+  function updateStepProgress() {
+    var progress = window.STEP_PROGRESS;
+    var fill = document.querySelector(".step-progress-fill");
+    if (!progress || !progress.total || !fill) return;
+    progress.done = Math.min(progress.done + 1, progress.total);
+    var percent = Math.round((1000 * progress.done) / progress.total) / 10;
+    var bar = document.querySelector(".step-progress-bar");
+    var value = document.querySelector(".step-progress-value");
+    var note = document.querySelector(".step-progress-note");
+    fill.style.width = percent + "%";
+    if (bar) bar.setAttribute("aria-valuenow", String(percent));
+    if (value) value.textContent = percent + "%";
+    if (note) note.textContent = "Пройдено " + progress.done + " из " + progress.total + " шагов";
+  }
+
   function buildAnswer(form) {
     if (form.dataset.input === "true") {
       return form.answer.value;
@@ -69,6 +84,7 @@
         button.classList.add("done");
         button.disabled = true;
       }
+      updateStepProgress();
       showResult("Отмечено выполненным.", true);
     });
   }

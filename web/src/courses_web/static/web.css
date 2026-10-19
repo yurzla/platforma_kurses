@@ -135,6 +135,27 @@ main { padding: 24px; max-width: 1040px; margin: 0 auto; }
   display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px;
   background: var(--panel-2); color: var(--muted); margin-bottom: 12px;
 }
+.step-progress {
+  margin: 0 0 16px; padding: 14px 16px; background: var(--panel);
+  border: 1px solid var(--border); border-radius: 12px;
+}
+.step-progress-head {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 10px;
+}
+.step-progress-note { color: var(--muted); font-size: 13px; }
+.step-progress-value { font-size: 20px; font-weight: 700; }
+.step-progress-bar {
+  position: relative; height: 10px; border-radius: 999px;
+  background: var(--panel-2); overflow: hidden;
+}
+.step-progress-fill {
+  display: block; height: 100%; background: var(--accent);
+  border-radius: 999px; transition: width .25s ease;
+}
+.step-progress-mark {
+  position: absolute; top: -1px; bottom: -1px; width: 2px;
+  background: var(--text); opacity: .55; transform: translateX(-1px);
+}
 .step-body { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; line-height: 1.6; }
 .step-body img { max-width: 100%; }
 

@@ -9,6 +9,21 @@
   <h1 class="page-title">{{ step.title or ("Шаг " ~ step.position) }}</h1>
   <span class="step-type-badge">{{ step.type }}</span>
 
+  <section class="step-progress" aria-label="Прогресс курса">
+    <div class="step-progress-head">
+      <span class="step-progress-note">Пройдено {{ progress.done }} из {{ progress.total }} шагов</span>
+      <span class="step-progress-value">{{ '%g'|format(progress.percent) }}%</span>
+    </div>
+    <div class="step-progress-bar" role="progressbar" aria-valuenow="{{ progress.percent }}"
+         aria-valuemin="0" aria-valuemax="100" aria-label="Прогресс курса">
+      <span class="step-progress-fill" style="width: {{ progress.percent }}%"></span>
+      {% for checkpoint in checkpoints %}
+      <span class="step-progress-mark" style="left: {{ checkpoint.percent }}%"
+            title="{{ checkpoint.title }}"></span>
+      {% endfor %}
+    </div>
+  </section>
+
   {% if step.body %}
   <div class="step-body">{{ step.body | safe }}</div>
   {% endif %}
@@ -60,5 +75,6 @@
 {% block scripts %}
 <script>window.STEP = {{ step | tojson }};</script>
 <script>window.COURSE_ID = {{ course_id }};</script>
+<script>window.STEP_PROGRESS = {{ step_progress | tojson }};</script>
 <script>window.ME = {{ me | tojson }};</script>
 {% endblock %}
