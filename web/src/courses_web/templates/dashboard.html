@@ -6,10 +6,9 @@
 <header class="topbar">
   <div class="brand"><a href="/courses" class="brand-link">Courses&nbsp;Assistant</a> <span>· админ панель</span></div>
   <nav class="tabs">
-    <button class="tab active" data-tab="jobs">Jobs</button>
-    <button class="tab" data-tab="dlq">DLQ</button>
-    <button class="tab" data-tab="streams">Streams</button>
+    <button class="tab active" data-tab="diagnostics">Техническая диагностика</button>
     <button class="tab" data-tab="users">Пользователи</button>
+    <button class="tab" data-tab="courses">Курсы</button>
   </nav>
   <div class="meta">обновлено: <span id="updated">—</span></div>
   <div class="actions">
@@ -22,6 +21,13 @@
 </header>
 
 <main>
+  <section id="panel-diagnostics">
+    <nav class="diagnostic-tabs" aria-label="Техническая диагностика">
+      <button class="diagnostic-tab active" data-diagnostic="jobs">Jobs</button>
+      <button class="diagnostic-tab" data-diagnostic="dlq">DLQ</button>
+      <button class="diagnostic-tab" data-diagnostic="streams">Streams</button>
+    </nav>
+    <p class="diagnostic-note">Раздел для контроля фоновой обработки вопросов ассистентом. Он нужен в основном техническому администратору или разработчику.</p>
   <section class="cards" id="status-cards">
     <div class="card" data-status="queued"><span class="card-value" id="cnt-queued">0</span><span class="card-label">queued</span></div>
     <div class="card" data-status="running"><span class="card-value" id="cnt-running">0</span><span class="card-label">running</span></div>
@@ -29,7 +35,9 @@
     <div class="card" data-status="failed"><span class="card-value" id="cnt-failed">0</span><span class="card-label">failed</span></div>
   </section>
 
-  <section class="panel" id="panel-jobs">
+  <section class="panel diagnostic-panel" id="diagnostic-jobs">
+    <h2>Jobs</h2>
+    <p class="muted">Фоновые задания ассистента: обработка вопроса студента, генерация ответа, число попыток и возможные ошибки.</p>
     <form class="filters" id="jobs-filters" onsubmit="return false;">
       <label>Статус
         <select id="f-status">
@@ -68,8 +76,9 @@
     </div>
   </section>
 
-  <section class="panel hidden" id="panel-dlq">
+  <section class="panel diagnostic-panel hidden" id="diagnostic-dlq">
     <h2>Dead Letter Queue</h2>
+    <p class="muted">«Очередь ошибок»: задания, которые не удалось обработать после попыток. Нужна разработчику, чтобы найти и повторно обработать проблему.</p>
     <div class="table-wrap">
       <table>
         <thead>
@@ -80,8 +89,9 @@
     </div>
   </section>
 
-  <section class="panel hidden" id="panel-streams">
+  <section class="panel diagnostic-panel hidden" id="diagnostic-streams">
     <h2>Redis Streams</h2>
+    <p class="muted">Технические очереди Redis, по которым сервисы передают задания друг другу. Показывают длину очереди, ожидающие сообщения и отставание обработчиков.</p>
     <div class="table-wrap">
       <table>
         <thead>
@@ -90,6 +100,8 @@
         <tbody id="streams-body"><tr><td colspan="6" class="muted">загрузка…</td></tr></tbody>
       </table>
     </div>
+  </section>
+
   </section>
 
   <section class="panel hidden" id="panel-users">
@@ -114,6 +126,29 @@
       <button id="users-prev" class="btn ghost">← Назад</button>
       <span id="users-page" class="muted">—</span>
       <button id="users-next" class="btn ghost">Вперёд →</button>
+    </div>
+  </section>
+
+  <section class="panel hidden" id="panel-courses">
+    <h2>Управление курсами</h2>
+    <form class="filters" id="courses-filters" onsubmit="return false;">
+      <label>Поиск по названию
+        <input id="c-search" type="text" placeholder="текст...">
+      </label>
+      <button id="c-apply" class="btn">Применить</button>
+      <button id="c-reset" class="btn ghost">Сброс</button>
+    </form>
+    <p class="muted">Можно назначить преподавателя, опубликовать или снять с публикации. Удаление курса удаляет всё его содержимое и учебные данные студентов.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ID</th><th>Курс</th><th>Автор</th><th>Содержание</th><th>Студенты</th><th>Статус</th><th></th><th></th></tr></thead>
+        <tbody id="courses-body"><tr><td colspan="8" class="muted">загрузка…</td></tr></tbody>
+      </table>
+    </div>
+    <div class="pager">
+      <button id="courses-prev" class="btn ghost">← Назад</button>
+      <span id="courses-page" class="muted">—</span>
+      <button id="courses-next" class="btn ghost">Вперёд →</button>
     </div>
   </section>
 

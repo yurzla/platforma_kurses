@@ -41,29 +41,12 @@
         </div>
       </div>
       <button type="button" id="assistant-back" class="btn ghost hidden">← К истории</button>
-      <div id="chat-log" class="chat-log hidden">
-        <div id="chat-actions" class="chat-actions hidden">
-          <a id="export-md" class="btn ghost" href="#" download>Скачать .md</a>
-          <a id="export-pdf" class="btn ghost" href="#" download>Скачать .pdf</a>
-        </div>
-      </div>
+      <div id="chat-log" class="chat-log hidden"></div>
       <form id="chat-form" class="chat-form">
         <input id="chat-input" type="text" placeholder="Задайте вопрос по материалу…" autocomplete="off">
         <button class="btn" type="submit">Спросить</button>
       </form>
     </aside>
-    <div id="confirm-modal" class="confirm-modal hidden" role="dialog" aria-modal="true"
-         aria-labelledby="confirm-title">
-      <div class="confirm-backdrop"></div>
-      <div class="confirm-card">
-        <h3 id="confirm-title">Подтвердите действие</h3>
-        <p id="confirm-text" class="confirm-text"></p>
-        <div class="confirm-actions">
-          <button type="button" id="confirm-cancel" class="btn ghost">Отмена</button>
-          <button type="button" id="confirm-ok" class="btn danger">Удалить</button>
-        </div>
-      </div>
-    </div>
   </div>
   {% endif %}
   {% block scripts %}{% endblock %}

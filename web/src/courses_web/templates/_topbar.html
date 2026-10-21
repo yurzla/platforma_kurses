@@ -5,6 +5,9 @@
     {% if me and me.role %}
     <a class="tab {% if active == 'my-courses' %}active{% endif %}" href="/my-courses">Мое обучение</a>
     {% endif %}
+    {% if me and me.role == 'teacher' %}
+    <a class="tab {% if active == 'teacher' %}active{% endif %}" href="/teacher">Преподавание</a>
+    {% endif %}
     {% if me and me.role == 'admin' %}
     <a class="tab {% if active == 'dashboard' %}active{% endif %}" href="/dashboard">Админ панель</a>
     {% endif %}

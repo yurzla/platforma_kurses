@@ -63,6 +63,15 @@ body {
 .tab:hover { color: var(--text); }
 .tab.active { color: var(--text); background: var(--panel-2); border-color: var(--border); }
 
+.diagnostic-tabs { display: flex; gap: 6px; margin-bottom: 16px; }
+.diagnostic-tab {
+  background: transparent; color: var(--muted); border: 1px solid var(--border);
+  padding: 7px 12px; border-radius: 8px; cursor: pointer; font-size: 13px;
+}
+.diagnostic-tab:hover, .diagnostic-tab.active { color: var(--text); border-color: var(--accent); }
+.diagnostic-tab.active { background: var(--panel-2); }
+.diagnostic-note { margin: 0 0 14px; color: var(--muted); line-height: 1.5; }
+
 .meta { margin-left: auto; color: var(--muted); font-size: 12px; }
 
 main { padding: 20px 22px 48px; }

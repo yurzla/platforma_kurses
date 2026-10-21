@@ -1,9 +1,12 @@
 const ROLES = ["student", "teacher", "admin"];
 
 const state = {
-  tab: "jobs",
+  tab: "diagnostics",
+  diagnostic: "jobs",
   jobs: { status: "", session_id: "", search: "", limit: 25, offset: 0, total: 0 },
   users: { search: "", limit: 25, offset: 0, total: 0 },
+  courses: { search: "", limit: 25, offset: 0, total: 0 },
+  teachers: [],
 };
 
 const $ = (id) => document.getElementById(id);
@@ -51,8 +54,19 @@ function statusBadge(status) {
 function switchTab(tab) {
   state.tab = tab;
   document.querySelectorAll(".tab").forEach((b) => b.classList.toggle("active", b.dataset.tab === tab));
-  ["jobs", "dlq", "streams", "users"].forEach((t) =>
+  ["diagnostics", "users", "courses"].forEach((t) =>
     $("panel-" + t).classList.toggle("hidden", t !== tab)
+  );
+  refresh();
+}
+
+function switchDiagnostic(diagnostic) {
+  state.diagnostic = diagnostic;
+  document.querySelectorAll(".diagnostic-tab").forEach((button) =>
+    button.classList.toggle("active", button.dataset.diagnostic === diagnostic)
+  );
+  ["jobs", "dlq", "streams"].forEach((item) =>
+    $("diagnostic-" + item).classList.toggle("hidden", item !== diagnostic)
   );
   refresh();
 }
@@ -239,16 +253,97 @@ async function saveRole(userId, role) {
   }
 }
 
+async function loadTeachers() {
+  try {
+    const data = await getJSON("/api/v1/admin/users?limit=200&offset=0");
+    state.teachers = (data.items || []).filter((user) => user.role === "teacher");
+  } catch (err) {
+    showError("Не удалось загрузить преподавателей: " + err.message);
+  }
+}
+
+function renderCourses(items) {
+  const body = $("courses-body");
+  if (!items.length) {
+    body.innerHTML = '<tr><td colspan="8" class="muted">пусто</td></tr>';
+    return;
+  }
+  body.innerHTML = items.map((course) => {
+    const owners = [`<option value="" ${course.owner_id === null ? "selected" : ""}>Платформа / не назначен</option>`]
+      .concat(state.teachers.map((teacher) => `<option value="${teacher.id}" ${teacher.id === course.owner_id ? "selected" : ""}>${escapeHtml(teacher.name)} · ${escapeHtml(teacher.email)}</option>`));
+    return `<tr data-course-id="${course.id}">
+      <td>${course.id}</td><td>${escapeHtml(course.title)}</td>
+      <td><select class="course-owner">${owners.join("")}</select></td>
+      <td>${course.lessons_count} уроков · ${course.steps_count} шагов</td><td>${course.students_count}</td>
+      <td><label class="toggle-label"><input class="course-published" type="checkbox" ${course.is_published ? "checked" : ""}> опубликован</label></td>
+      <td><button class="btn save-course" type="button">Сохранить</button></td>
+      <td><button class="btn danger delete-course" type="button">Удалить</button></td>
+    </tr>`;
+  }).join("");
+  body.querySelectorAll(".save-course").forEach((button) => button.addEventListener("click", () => {
+    const row = button.closest("tr");
+    saveCourse(Number(row.dataset.courseId), row.querySelector(".course-owner").value, row.querySelector(".course-published").checked);
+  }));
+  body.querySelectorAll(".delete-course").forEach((button) => button.addEventListener("click", () => {
+    const row = button.closest("tr");
+    const title = row.children[1].textContent;
+    deleteCourse(Number(row.dataset.courseId), title);
+  }));
+}
+
+async function loadCourses() {
+  const p = new URLSearchParams();
+  if (state.courses.search) p.set("search", state.courses.search);
+  p.set("limit", state.courses.limit); p.set("offset", state.courses.offset);
+  try {
+    if (!state.teachers.length) await loadTeachers();
+    const data = await getJSON("/api/v1/admin/courses?" + p.toString());
+    state.courses.total = data.total;
+    renderCourses(data.items);
+    const from = data.total === 0 ? 0 : data.offset + 1;
+    const to = Math.min(data.offset + data.limit, data.total);
+    $("courses-page").textContent = `${from}–${to} из ${data.total}`;
+    $("courses-prev").disabled = data.offset <= 0;
+    $("courses-next").disabled = data.offset + data.limit >= data.total;
+  } catch (err) { showError("Не удалось загрузить курсы: " + err.message); }
+}
+
+async function saveCourse(courseId, ownerId, isPublished) {
+  try {
+    const resp = await fetch("/api/v1/admin/courses/" + courseId, {
+      method: "PATCH", headers: { "Content-Type": "application/json", Accept: "application/json" }, credentials: "same-origin",
+      body: JSON.stringify({ owner_id: ownerId ? Number(ownerId) : null, is_published: isPublished }),
+    });
+    if (!resp.ok) { const data = await resp.json().catch(() => ({})); showError(data.detail || "Не удалось сохранить курс"); return; }
+    await loadCourses();
+  } catch (err) { showError("Не удалось сохранить курс: " + err.message); }
+}
+
+async function deleteCourse(courseId, title) {
+  if (!window.confirm(`Удалить курс «${title}» вместе с его содержимым, прогрессом студентов и чатами?`)) return;
+  try {
+    const resp = await fetch("/api/v1/admin/courses/" + courseId, { method: "DELETE", credentials: "same-origin" });
+    if (!resp.ok) { const data = await resp.json().catch(() => ({})); showError(data.detail || "Не удалось удалить курс"); return; }
+    await loadCourses();
+  } catch (err) { showError("Не удалось удалить курс: " + err.message); }
+}
+
 async function refresh() {
-  await loadOverview();
-  if (state.tab === "jobs") await loadJobs();
-  else if (state.tab === "dlq") await loadDlq();
+  if (state.tab === "diagnostics") {
+    await loadOverview();
+    if (state.diagnostic === "jobs") await loadJobs();
+    else if (state.diagnostic === "dlq") await loadDlq();
+  }
   else if (state.tab === "users") await loadUsers();
+  else if (state.tab === "courses") await loadCourses();
 }
 
 function init() {
   document.querySelectorAll(".tab").forEach((t) =>
     t.addEventListener("click", () => switchTab(t.dataset.tab))
+  );
+  document.querySelectorAll(".diagnostic-tab").forEach((t) =>
+    t.addEventListener("click", () => switchDiagnostic(t.dataset.diagnostic))
   );
   $("f-apply").addEventListener("click", () => {
     state.jobs.status = $("f-status").value;
@@ -294,9 +389,14 @@ function init() {
     state.users.offset += state.users.limit;
     loadUsers();
   });
+  $("c-apply").addEventListener("click", () => { state.courses.search = $("c-search").value; state.courses.offset = 0; loadCourses(); });
+  $("c-reset").addEventListener("click", () => { $("c-search").value = ""; state.courses.search = ""; state.courses.offset = 0; loadCourses(); });
+  $("courses-prev").addEventListener("click", () => { state.courses.offset = Math.max(0, state.courses.offset - state.courses.limit); loadCourses(); });
+  $("courses-next").addEventListener("click", () => { state.courses.offset += state.courses.limit; loadCourses(); });
   document.querySelectorAll(".card").forEach((c) =>
     c.addEventListener("click", () => {
-      switchTab("jobs");
+      switchTab("diagnostics");
+      switchDiagnostic("jobs");
       $("f-status").value = c.dataset.status;
       state.jobs.status = c.dataset.status;
       state.jobs.offset = 0;

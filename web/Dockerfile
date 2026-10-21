@@ -1,3 +1,4 @@
+
 FROM python:3.13-slim
 
 ENV PYTHONUNBUFFERED=1 \
@@ -12,11 +13,13 @@ WORKDIR /app
 COPY pyproject.toml uv.lock ./
 COPY backend/pyproject.toml ./backend/pyproject.toml
 COPY web/pyproject.toml ./web/pyproject.toml
-RUN --mount=type=cache,target=/root/.cache/uv \
+
+RUN --mount=type=cache,target=/root/.cache/uv,sharing=locked \
     uv sync --frozen --no-install-project --no-dev --package courses-web
 
 COPY web/src ./web/src
-RUN --mount=type=cache,target=/root/.cache/uv \
+
+RUN --mount=type=cache,target=/root/.cache/uv,sharing=locked \
     uv sync --frozen --no-dev --package courses-web
 
 EXPOSE 8000

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Преподавание · Courses Assistant{% endblock %}
+
+{% block body %}
+{% with active = "teacher" %}{% include "_topbar.html" %}{% endwith %}
+<main class="teacher-page">
+  <div class="teacher-heading"><div><h1 class="page-title">Мои курсы</h1><p class="muted">Создавайте материалы, собирайте курс и публикуйте его для студентов.</p></div></div>
+  {% if error %}<p class="form-error">{{ error }}</p>{% endif %}
+  <section class="teacher-panel">
+    <h2>Новый курс</h2>
+    <form method="post" action="/teacher/courses" class="teacher-form">
+      <label>Название <input required name="title" maxlength="300" placeholder="Например, Основы Python"></label>
+      <label>Уровень <input name="level" maxlength="50" placeholder="beginner"></label>
+      <label class="form-wide">Описание <textarea name="description" rows="3" placeholder="О чём этот курс и для кого он"></textarea></label>
+      <button class="btn" type="submit">Создать черновик</button>
+    </form>
+  </section>
+  <section class="teacher-courses">
+    {% if courses %}
+      {% for course in courses %}
+      <article class="teacher-course-card">
+        <a class="teacher-course-link" href="/teacher/courses/{{ course.id }}">
+        <div><h2>{{ course.title }}</h2><p>{{ course.description or 'Описание пока не добавлено.' }}</p></div>
+        <div class="teacher-card-meta"><span class="course-badge {% if not course.is_published %}draft{% endif %}">{{ 'Опубликован' if course.is_published else 'Черновик' }}</span><span>{{ course.lessons_count }} уроков · {{ course.steps_count }} шагов · {{ course.students_count }} студентов</span></div>
+        </a>
+        {% if not course.is_published %}<form method="post" action="/teacher/courses/{{ course.id }}/delete" onsubmit="return confirm('Удалить черновик курса вместе со всем его содержимым?');"><button class="btn danger" type="submit">Удалить черновик</button></form>{% endif %}
+      </article>
+      {% endfor %}
+    {% else %}<p class="muted">У вас пока нет курсов. Создайте первый черновик выше.</p>{% endif %}
+  </section>
+</main>
+{% endblock %}

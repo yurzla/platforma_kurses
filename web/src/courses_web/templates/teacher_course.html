@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}{{ course.title }} · Преподавание{% endblock %}
+
+{% block body %}
+{% with active = "teacher" %}{% include "_topbar.html" %}{% endwith %}
+<main class="teacher-page">
+  <p class="breadcrumbs"><a href="/teacher">Преподавание</a> / {{ course.title }}</p>
+  {% if request.query_params.get('error') == 'step' %}<p class="form-error">Не удалось добавить проверочное задание. Для теста заполните минимум два варианта и отметьте правильный.</p>{% elif request.query_params.get('error') %}<p class="form-error">Не удалось сохранить. Для публикации нужен хотя бы один шаг.</p>{% endif %}
+  <section class="teacher-panel">
+    <h1 class="page-title">Настройки курса</h1>
+    <form method="post" action="/teacher/courses/{{ course.id }}/settings" class="teacher-form">
+      <label>Название <input required name="title" value="{{ course.title }}"></label>
+      <label>Уровень <input name="level" value="{{ course.level or '' }}"></label>
+      <label class="form-wide">Описание <textarea name="description" rows="4">{{ course.description or '' }}</textarea></label>
+      <label class="publish-switch"><input type="checkbox" name="is_published" {% if course.is_published %}checked{% endif %}> Опубликовать курс для студентов</label>
+      <button class="btn" type="submit">Сохранить</button>
+    </form>
+  </section>
+
+  <section class="teacher-panel">
+    <h2>Содержание</h2>
+    <form method="post" action="/teacher/courses/{{ course.id }}/sections" class="inline-form"><input required name="title" placeholder="Название модуля"><button class="btn" type="submit">Добавить модуль</button></form>
+    {% for section in course.sections %}
+    <article class="teacher-section"><div class="teacher-item-heading"><h3>{{ section.position }}. {{ section.title }}</h3><form method="post" action="/teacher/sections/{{ section.id }}/delete" onsubmit="return confirm('Удалить модуль вместе со всеми уроками и шагами?');"><input type="hidden" name="course_id" value="{{ course.id }}"><button class="btn danger" type="submit">Удалить модуль</button></form></div>
+      <form method="post" action="/teacher/sections/{{ section.id }}/lessons" class="inline-form"><input type="hidden" name="course_id" value="{{ course.id }}"><input required name="title" placeholder="Название урока"><button class="btn ghost" type="submit">Добавить урок</button></form>
+      {% for lesson in section.lessons %}
+      <div class="teacher-lesson"><div class="teacher-item-heading"><h4>{{ lesson.position }}. {{ lesson.title }}</h4><form method="post" action="/teacher/lessons/{{ lesson.id }}/delete" onsubmit="return confirm('Удалить урок вместе со всеми шагами?');"><input type="hidden" name="course_id" value="{{ course.id }}"><button class="btn danger" type="submit">Удалить урок</button></form></div>
+        {% if lesson.steps %}<ol>{% for step in lesson.steps %}<li>Шаг {{ step.position }} · {{ step.step_type }}</li>{% endfor %}</ol>{% endif %}
+        <form method="post" action="/teacher/lessons/{{ lesson.id }}/steps" class="step-form"><input type="hidden" name="course_id" value="{{ course.id }}"><label>Тип шага<select name="step_type" data-step-type><option value="text">Материал</option><option value="choice">Тест с вариантами</option><option value="string">Короткий ответ с автопроверкой</option><option value="number">Числовой ответ с автопроверкой</option><option value="free_answer">Задание без автопроверки</option></select></label><label class="step-body-field">Материал или условие<textarea required name="body" rows="3" placeholder="Текст материала или вопрос"></textarea></label><div class="choice-fields hidden" data-choice-fields><label class="multiple-choice"><input type="checkbox" name="is_multiple_choice"> Несколько правильных вариантов</label>{% for index in range(1, 5) %}<label class="choice-editor"><input type="checkbox" name="correct_{{ index }}" aria-label="Правильный вариант"><input name="choice_{{ index }}" placeholder="Вариант {{ index }}"></label>{% endfor %}<p class="muted">Отметьте галочкой правильные варианты. Минимум два варианта.</p></div><label class="answer-key-field hidden" data-answer-field>Правильный ответ<input name="correct_answer" placeholder="Точное значение для проверки"></label><button class="btn ghost" type="submit">Добавить шаг</button></form>
+      </div>
+      {% endfor %}
+    </article>
+    {% endfor %}
+  </section>
+
+  <section class="teacher-panel"><h2>Студенты</h2>
+    {% if students %}<div class="table-wrap"><table><thead><tr><th>Студент</th><th>Email</th><th>Прогресс</th><th>Статус</th></tr></thead><tbody>{% for student in students %}<tr><td>{{ student.name }}</td><td>{{ student.email }}</td><td>{{ student.progress_percent }}%</td><td>{{ student.status }}</td></tr>{% endfor %}</tbody></table></div>{% else %}<p class="muted">Пока никто не начал этот курс.</p>{% endif %}
+  </section>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ static_url('teacher.js') }}" defer></script>
+{% endblock %}

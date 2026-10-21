@@ -102,11 +102,9 @@ async def call_api(
 ) -> httpx.Response:
     settings: Settings = request.app.state.settings
     client: httpx.AsyncClient = request.app.state.client
-    headers = forwarded_headers(request, include_content_type=content is not None)
-    merged_cookie = getattr(request.state, "merged_cookie", None)
-    if merged_cookie:
-        headers["cookie"] = merged_cookie
-    kwargs: dict[str, Any] = {"headers": headers}
+    kwargs: dict[str, Any] = {
+        "headers": forwarded_headers(request, include_content_type=content is not None)
+    }
     if content is not None:
         kwargs["content"] = content
     if json is not None:
