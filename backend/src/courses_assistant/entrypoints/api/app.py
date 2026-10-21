@@ -17,7 +17,7 @@ from courses_assistant.domain.errors import (
     SessionNotFound,
     UserNotFound,
 )
-from courses_assistant.entrypoints.api.routers import admin, auth, catalog, chat, health, jobs
+from courses_assistant.entrypoints.api.routers import admin, auth, catalog, chat, health, jobs, teacher
 from courses_assistant.entrypoints.middleware import RequestContextMiddleware
 
 logger = structlog.get_logger(__name__)
@@ -61,6 +61,7 @@ def create_app(settings: Settings | None = None, container: Container | None = N
     app.include_router(catalog.router)
     app.include_router(auth.router)
     app.include_router(admin.router)
+    app.include_router(teacher.router)
 
     async def not_found_handler(request: Request, exc: Exception) -> JSONResponse:
         return JSONResponse(status_code=404, content={"detail": str(exc)})

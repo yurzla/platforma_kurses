@@ -7,7 +7,7 @@ from fastapi import Depends, HTTPException, Request
 from courses_assistant.config import Settings
 from courses_assistant.container import Container
 from courses_assistant.domain.errors import InvalidToken
-from courses_assistant.domain.models import User, is_admin
+from courses_assistant.domain.models import User, UserRole, is_admin
 
 
 def get_container(request: Request) -> Container:
@@ -61,4 +61,16 @@ async def require_admin(
         raise HTTPException(status_code=401, detail="Требуется вход")
     if not is_admin(user.role):
         raise HTTPException(status_code=403, detail="Требуются права администратора")
+    return user
+
+
+async def require_teacher(
+    request: Request,
+    container: Container = Depends(get_container),
+) -> User:
+    user = await get_current_user(request, container)
+    if user is None:
+        raise HTTPException(status_code=401, detail="Требуется вход")
+    if user.role != UserRole.TEACHER:
+        raise HTTPException(status_code=403, detail="Требуются права преподавателя")
     return user

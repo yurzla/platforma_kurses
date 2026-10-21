@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class SessionCreate(BaseModel):
@@ -101,6 +101,29 @@ class UserRoleUpdate(BaseModel):
     role: str = Field(min_length=1, max_length=20)
 
 
+class AdminCourseListItem(BaseModel):
+    id: int
+    title: str
+    is_published: bool
+    owner_id: int | None = None
+    owner_name: str | None = None
+    lessons_count: int = 0
+    steps_count: int = 0
+    students_count: int = 0
+
+
+class AdminCourseListResponse(BaseModel):
+    items: list[AdminCourseListItem]
+    total: int
+    limit: int
+    offset: int
+
+
+class AdminCourseUpdate(BaseModel):
+    is_published: bool | None = None
+    owner_id: int | None = Field(default=None, gt=0)
+
+
 class CourseSummaryRead(BaseModel):
     id: int
     title: str
@@ -144,6 +167,73 @@ class CourseDetailRead(BaseModel):
     title: str
     description: str | None = None
     sections: list[SectionSummaryRead] = Field(default_factory=list)
+
+
+class TeacherCourseCreate(BaseModel):
+    title: str = Field(min_length=1, max_length=300)
+    description: str | None = Field(default=None, max_length=10_000)
+    level: str | None = Field(default=None, max_length=50)
+
+
+class TeacherCourseUpdate(BaseModel):
+    title: str | None = Field(default=None, min_length=1, max_length=300)
+    description: str | None = Field(default=None, max_length=10_000)
+    level: str | None = Field(default=None, max_length=50)
+    is_published: bool | None = None
+
+
+class TeacherSectionCreate(BaseModel):
+    title: str = Field(min_length=1, max_length=300)
+
+
+class TeacherLessonCreate(BaseModel):
+    title: str = Field(min_length=1, max_length=300)
+
+
+class TeacherChoiceOptionCreate(BaseModel):
+    text: str = Field(min_length=1, max_length=5_000)
+    is_correct: bool = False
+
+
+class TeacherStepCreate(BaseModel):
+    body: str = Field(min_length=1, max_length=100_000)
+    step_type: Literal["text", "free_answer", "choice", "string", "number"] = "text"
+    choices: list[TeacherChoiceOptionCreate] = Field(default_factory=list, max_length=20)
+    is_multiple_choice: bool = False
+    correct_answer: str | None = Field(default=None, max_length=5_000)
+
+    @model_validator(mode="after")
+    def validate_grading_data(self) -> "TeacherStepCreate":
+        if self.step_type == "choice":
+            if len(self.choices) < 2:
+                raise ValueError("Для теста нужно не менее двух вариантов")
+            correct_count = sum(option.is_correct for option in self.choices)
+            if not correct_count:
+                raise ValueError("Отметьте хотя бы один правильный вариант")
+            if not self.is_multiple_choice and correct_count != 1:
+                raise ValueError("В тесте с одним выбором должен быть один правильный вариант")
+        elif self.step_type in {"string", "number"} and not (self.correct_answer or "").strip():
+            raise ValueError("Укажите правильный ответ для автопроверки")
+        return self
+
+
+class TeacherCourseRead(BaseModel):
+    id: int
+    title: str
+    description: str | None = None
+    level: str | None = None
+    is_published: bool
+    lessons_count: int = 0
+    steps_count: int = 0
+    students_count: int = 0
+
+
+class TeacherStudentProgressRead(BaseModel):
+    user_id: int
+    name: str
+    email: str
+    progress_percent: float
+    status: str
 
 
 class StepRead(BaseModel):

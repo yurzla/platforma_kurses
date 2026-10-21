@@ -3,8 +3,15 @@
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy import delete, func, or_, select
 
 from courses_assistant.application.commands import ChangeUserRole
+from courses_assistant.adapters.persistence.orm import (
+    ChatMessageORM, ChatSessionORM, ChoiceQuestionMetadataORM, ChunkEmbeddingORM,
+    ContentChunkORM, CourseORM, EnrollmentORM, JobORM, LessonORM, SectionORM,
+    StepChoiceOptionORM, StepContentORM, StepORM, StepSourceORM, UserCourseWishlistORM,
+    UserORM, UserStepProgressORM,
+)
 from courses_assistant.application.queries import (
     dlq_entries,
     get_job,
@@ -21,6 +28,9 @@ from courses_assistant.entrypoints.api.dependencies import (
 )
 from courses_assistant.entrypoints.api.schemas import (
     DlqEntry,
+    AdminCourseListItem,
+    AdminCourseListResponse,
+    AdminCourseUpdate,
     JobListItem,
     JobListResponse,
     JobRead,
@@ -36,6 +46,52 @@ router = APIRouter(
     tags=["admin"],
     dependencies=[Depends(require_admin)],
 )
+
+
+async def _admin_course_item(session, course: CourseORM) -> AdminCourseListItem:
+    lessons = await session.scalar(select(func.count()).select_from(LessonORM).join(SectionORM).where(SectionORM.course_id == course.id))
+    steps = await session.scalar(select(func.count()).select_from(StepORM).join(LessonORM).join(SectionORM).where(SectionORM.course_id == course.id))
+    students = await session.scalar(select(func.count()).select_from(EnrollmentORM).where(EnrollmentORM.course_id == course.id))
+    owner = await session.get(UserORM, course.owner_id) if course.owner_id is not None else None
+    return AdminCourseListItem(
+        id=course.id, title=course.title, is_published=course.is_published,
+        owner_id=course.owner_id, owner_name=owner.name if owner else None,
+        lessons_count=int(lessons or 0), steps_count=int(steps or 0), students_count=int(students or 0),
+    )
+
+
+async def _delete_course_tree(session, course_id: int) -> None:
+    section_ids = list((await session.execute(select(SectionORM.id).where(SectionORM.course_id == course_id))).scalars())
+    lesson_ids = [] if not section_ids else list((await session.execute(select(LessonORM.id).where(LessonORM.section_id.in_(section_ids)))).scalars())
+    step_ids = [] if not lesson_ids else list((await session.execute(select(StepORM.id).where(StepORM.lesson_id.in_(lesson_ids)))).scalars())
+    chunk_filter = [ContentChunkORM.course_id == course_id]
+    if lesson_ids:
+        chunk_filter.append(ContentChunkORM.lesson_id.in_(lesson_ids))
+    if step_ids:
+        chunk_filter.append(ContentChunkORM.step_id.in_(step_ids))
+    chunk_ids = list((await session.execute(select(ContentChunkORM.id).where(or_(*chunk_filter)))).scalars())
+    if chunk_ids:
+        await session.execute(delete(ChunkEmbeddingORM).where(ChunkEmbeddingORM.chunk_id.in_(chunk_ids)))
+    await session.execute(delete(ContentChunkORM).where(or_(*chunk_filter)))
+    session_ids = list((await session.execute(select(ChatSessionORM.id).where(ChatSessionORM.course_id == course_id))).scalars())
+    if session_ids:
+        await session.execute(delete(JobORM).where(JobORM.session_id.in_(session_ids)))
+        await session.execute(delete(ChatMessageORM).where(ChatMessageORM.session_id.in_(session_ids)))
+        await session.execute(delete(ChatSessionORM).where(ChatSessionORM.id.in_(session_ids)))
+    await session.execute(delete(EnrollmentORM).where(EnrollmentORM.course_id == course_id))
+    await session.execute(delete(UserCourseWishlistORM).where(UserCourseWishlistORM.course_id == course_id))
+    if step_ids:
+        await session.execute(delete(UserStepProgressORM).where(UserStepProgressORM.step_id.in_(step_ids)))
+        await session.execute(delete(StepChoiceOptionORM).where(StepChoiceOptionORM.step_id.in_(step_ids)))
+        await session.execute(delete(ChoiceQuestionMetadataORM).where(ChoiceQuestionMetadataORM.step_id.in_(step_ids)))
+        await session.execute(delete(StepSourceORM).where(StepSourceORM.step_id.in_(step_ids)))
+        await session.execute(delete(StepContentORM).where(StepContentORM.step_id.in_(step_ids)))
+        await session.execute(delete(StepORM).where(StepORM.id.in_(step_ids)))
+    if lesson_ids:
+        await session.execute(delete(LessonORM).where(LessonORM.id.in_(lesson_ids)))
+    if section_ids:
+        await session.execute(delete(SectionORM).where(SectionORM.id.in_(section_ids)))
+    await session.execute(delete(CourseORM).where(CourseORM.id == course_id))
 
 
 def _stream_targets(container: Container) -> list[tuple[str, str]]:
@@ -180,3 +236,58 @@ async def change_user_role(
     except UserNotFound as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     return UserListItem(id=user.id, email=user.email, name=user.name, role=user.role)
+
+
+@router.get("/courses", response_model=AdminCourseListResponse)
+async def courses(
+    search: str | None = Query(default=None, max_length=200),
+    limit: int = Query(default=50, ge=1, le=200),
+    offset: int = Query(default=0, ge=0),
+    container: Container = Depends(get_container),
+) -> AdminCourseListResponse:
+    async with container.session_factory() as session:
+        conditions = []
+        if search:
+            conditions.append(CourseORM.title.ilike(f"%{search.strip()}%"))
+        statement = select(CourseORM).where(*conditions).order_by(CourseORM.id).limit(limit).offset(offset)
+        rows = (await session.execute(statement)).scalars().all()
+        total = await session.scalar(select(func.count()).select_from(CourseORM).where(*conditions))
+        return AdminCourseListResponse(
+            items=[await _admin_course_item(session, course) for course in rows],
+            total=int(total or 0), limit=limit, offset=offset,
+        )
+
+
+@router.patch("/courses/{course_id}", response_model=AdminCourseListItem)
+async def update_course(
+    course_id: int,
+    payload: AdminCourseUpdate,
+    container: Container = Depends(get_container),
+) -> AdminCourseListItem:
+    async with container.session_factory() as session:
+        course = await session.get(CourseORM, course_id)
+        if course is None:
+            raise HTTPException(status_code=404, detail="Курс не найден")
+        if "owner_id" in payload.model_fields_set:
+            if payload.owner_id is not None:
+                owner = await session.get(UserORM, payload.owner_id)
+                if owner is None or owner.role != "teacher":
+                    raise HTTPException(status_code=422, detail="Автором может быть только преподаватель")
+            course.owner_id = payload.owner_id
+        if "is_published" in payload.model_fields_set:
+            course.is_published = bool(payload.is_published)
+        result = await _admin_course_item(session, course)
+        await session.commit()
+        return result
+
+
+@router.delete("/courses/{course_id}", status_code=204)
+async def delete_course(
+    course_id: int,
+    container: Container = Depends(get_container),
+) -> None:
+    async with container.session_factory() as session:
+        if await session.get(CourseORM, course_id) is None:
+            raise HTTPException(status_code=404, detail="Курс не найден")
+        await _delete_course_tree(session, course_id)
+        await session.commit()

@@ -8,11 +8,13 @@ from pgvector.sqlalchemy import Vector
 from sqlalchemy import (
     BigInteger,
     Boolean,
+    CheckConstraint,
     DateTime,
     ForeignKey,
     Integer,
     Numeric,
     Text,
+    UniqueConstraint,
     func,
 )
 from sqlalchemy.dialects.postgresql import JSONB
@@ -88,6 +90,9 @@ class CourseORM(Base):
     description: Mapped[str | None] = mapped_column(Text)
     language: Mapped[str | None] = mapped_column(Text, server_default="ru")
     level: Mapped[str | None] = mapped_column(Text)
+    # NULL means that the course was imported by the platform rather than
+    # authored in the teacher workspace.
+    owner_id: Mapped[int | None] = mapped_column(BigInteger, ForeignKey("users.id"), index=True)
     is_published: Mapped[bool] = mapped_column(
         Boolean, nullable=False, server_default="false"
     )
@@ -152,6 +157,47 @@ class StepSourceORM(Base):
     )
     payload: Mapped[dict | None] = mapped_column(JSONB)
     fetched_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, server_default=func.now()
+    )
+
+
+class ChoiceQuestionMetadataORM(Base):
+    """Проверенный импорт вариантов ответа для шага типа ``choice``."""
+
+    __tablename__ = "choice_question_metadata"
+
+    step_id: Mapped[int] = mapped_column(
+        BigInteger, ForeignKey("steps.id", ondelete="CASCADE"), primary_key=True
+    )
+    source_question_html: Mapped[str] = mapped_column(Text, nullable=False)
+    source_file: Mapped[str] = mapped_column(Text, nullable=False)
+    needs_review: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default="false")
+    is_multiple_choice: Mapped[bool] = mapped_column(
+        Boolean, nullable=False, server_default="false"
+    )
+    imported_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, server_default=func.now()
+    )
+
+
+class StepChoiceOptionORM(Base):
+    __tablename__ = "step_choice_options"
+    __table_args__ = (
+        UniqueConstraint("step_id", "position", name="step_choice_options_step_position_uq"),
+        CheckConstraint("position >= 0", name="step_choice_options_position_check"),
+    )
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+    step_id: Mapped[int] = mapped_column(
+        BigInteger, ForeignKey("steps.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    position: Mapped[int] = mapped_column(Integer, nullable=False)
+    option_html: Mapped[str] = mapped_column(Text, nullable=False)
+    is_suggested_correct: Mapped[bool] = mapped_column(
+        Boolean, nullable=False, server_default="false"
+    )
+    is_correct: Mapped[bool | None] = mapped_column(Boolean)
+    created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )
 

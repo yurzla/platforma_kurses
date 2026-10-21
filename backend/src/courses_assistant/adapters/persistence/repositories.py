@@ -13,6 +13,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from courses_assistant.adapters.persistence.orm import (
     ChatMessageORM,
     ChatSessionORM,
+    ChoiceQuestionMetadataORM,
     ChunkEmbeddingORM,
     ContentChunkORM,
     CourseORM,
@@ -22,6 +23,7 @@ from courses_assistant.adapters.persistence.orm import (
     RefreshTokenORM,
     SectionORM,
     StepContentORM,
+    StepChoiceOptionORM,
     StepORM,
     StepSourceORM,
     UserORM,
@@ -160,6 +162,7 @@ class SqlChatRepository(ChatRepository):
         return [_to_message(row) for row in rows]
 
     async def delete_session(self, session_id: int) -> None:
+        """Удаляет сессию и её сообщения (FK в БД настроен с ON DELETE CASCADE)."""
         await self._session.execute(
             delete(ChatSessionORM).where(ChatSessionORM.id == session_id)
         )
@@ -167,17 +170,17 @@ class SqlChatRepository(ChatRepository):
     async def list_session_ids(
         self, user_id: int, course_id: int | None = None
     ) -> list[int]:
-        stmt = select(ChatSessionORM.id).where(ChatSessionORM.user_id == user_id)
+        statement = select(ChatSessionORM.id).where(ChatSessionORM.user_id == user_id)
         if course_id is not None:
-            stmt = stmt.where(ChatSessionORM.course_id == course_id)
-        result = await self._session.execute(stmt)
-        return [int(session_id) for session_id in result.scalars()]
+            statement = statement.where(ChatSessionORM.course_id == course_id)
+        result = await self._session.execute(statement)
+        return list(result.scalars().all())
 
     async def delete_sessions(self, user_id: int, course_id: int | None = None) -> int:
-        stmt = delete(ChatSessionORM).where(ChatSessionORM.user_id == user_id)
+        statement = delete(ChatSessionORM).where(ChatSessionORM.user_id == user_id)
         if course_id is not None:
-            stmt = stmt.where(ChatSessionORM.course_id == course_id)
-        result = cast("CursorResult[Any]", await self._session.execute(stmt))
+            statement = statement.where(ChatSessionORM.course_id == course_id)
+        result = await self._session.execute(statement)
         return int(result.rowcount or 0)
 
     async def user_exists(self, user_id: int) -> bool:
@@ -498,13 +501,7 @@ class SqlCatalogRepository(CatalogRepository):
                 .limit(1)
             )
         ).scalar_one_or_none()
-        source = (
-            await self._session.execute(
-                select(StepSourceORM).where(StepSourceORM.step_id == step_id)
-            )
-        ).scalar_one_or_none()
-        payload = source.payload if source is not None else None
-
+        payload = await self.get_answer_key(step_id)
         key = build_answer_key(step.step_type, payload)
         mode = "auto" if grading_mode(step.step_type) == "auto" and key is not None else "manual"
         options: dict[str, Any] | None = None
@@ -542,6 +539,30 @@ class SqlCatalogRepository(CatalogRepository):
         )
 
     async def get_answer_key(self, step_id: int) -> dict | None:
+        # JSON-import contains verified choices and must take priority over an
+        # incomplete Stepik payload that may have a step source but no key.
+        metadata = await self._session.get(ChoiceQuestionMetadataORM, step_id)
+        if metadata is not None:
+            options = (
+                await self._session.execute(
+                    select(StepChoiceOptionORM)
+                    .where(StepChoiceOptionORM.step_id == step_id)
+                    .order_by(StepChoiceOptionORM.position)
+                )
+            ).scalars().all()
+            if options and all(option.is_correct is not None for option in options):
+                return {
+                    "choices": [
+                        {
+                            "id": option.position,
+                            "text": option.option_html,
+                            "is_correct": option.is_correct,
+                        }
+                        for option in options
+                    ],
+                    "options": {"is_multiple_choice": metadata.is_multiple_choice},
+                }
+
         result = await self._session.execute(
             select(StepSourceORM.payload).where(StepSourceORM.step_id == step_id)
         )
@@ -860,20 +881,17 @@ class SqlJobRepository(JobRepository):
     async def delete_by_session(self, session_id: int) -> int:
         result = cast(
             "CursorResult[Any]",
-            await self._session.execute(
-                delete(JobORM).where(JobORM.session_id == session_id)
-            ),
+            await self._session.execute(delete(JobORM).where(JobORM.session_id == session_id)),
         )
         return int(result.rowcount or 0)
 
     async def delete_by_sessions(self, session_ids: Sequence[int]) -> int:
-        ids = list(session_ids)
-        if not ids:
+        if not session_ids:
             return 0
         result = cast(
             "CursorResult[Any]",
             await self._session.execute(
-                delete(JobORM).where(JobORM.session_id.in_(ids))
+                delete(JobORM).where(JobORM.session_id.in_(session_ids))
             ),
         )
         return int(result.rowcount or 0)
