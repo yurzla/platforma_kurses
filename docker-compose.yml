@@ -199,6 +199,11 @@ services:
     environment: *app-env
     command: ["python", "-m", "courses_assistant.entrypoints.cron"]
 
+# volumes:
+#   pgdata:
+#   ollama:
 volumes:
   pgdata:
+    external: true
+    name: platforma_kurses_pgdata_new
   ollama:
