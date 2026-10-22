@@ -106,6 +106,13 @@
 
   <section class="panel hidden" id="panel-users">
     <h2>Пользователи</h2>
+    <form class="filters user-create-form" id="user-create-form">
+      <label>Email<input id="new-user-email" type="email" required placeholder="student@example.com"></label>
+      <label>Имя<input id="new-user-name" required placeholder="Имя пользователя"></label>
+      <label>Роль<select id="new-user-role"><option value="student">Студент</option><option value="teacher">Преподаватель</option><option value="admin">Администратор</option></select></label>
+      <label>Временный пароль<input id="new-user-password" type="password" required minlength="6" placeholder="Минимум 6 символов"></label>
+      <button class="btn" type="submit">Создать пользователя</button>
+    </form>
     <form class="filters" id="users-filters" onsubmit="return false;">
       <label>Поиск по email или имени
         <input id="u-search" type="text" placeholder="текст...">
@@ -117,9 +124,9 @@
     <div class="table-wrap">
       <table>
         <thead>
-          <tr><th>ID</th><th>Email</th><th>Имя</th><th>Роль</th><th></th></tr>
+          <tr><th>ID</th><th>Email</th><th>Имя</th><th>Роль</th><th>Новый пароль</th><th></th><th></th></tr>
         </thead>
-        <tbody id="users-body"><tr><td colspan="5" class="muted">загрузка…</td></tr></tbody>
+        <tbody id="users-body"><tr><td colspan="7" class="muted">загрузка…</td></tr></tbody>
       </table>
     </div>
     <div class="pager">

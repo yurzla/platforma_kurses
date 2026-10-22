@@ -153,7 +153,7 @@ async function loadJobs() {
 function renderDlq(items) {
   const body = $("dlq-body");
   if (!items.length) {
-    body.innerHTML = '<tr><td colspan="6" class="muted">пусто</td></tr>';
+    body.innerHTML = '<tr><td colspan="7" class="muted">пусто</td></tr>';
     return;
   }
   body.innerHTML = items
@@ -183,7 +183,7 @@ async function loadDlq() {
 function renderUsers(items) {
   const body = $("users-body");
   if (!items.length) {
-    body.innerHTML = '<tr><td colspan="5" class="muted">пусто</td></tr>';
+    body.innerHTML = '<tr><td colspan="6" class="muted">пусто</td></tr>';
     return;
   }
   body.innerHTML = items
@@ -191,8 +191,8 @@ function renderUsers(items) {
       (u) => `
     <tr data-user-id="${u.id}">
       <td>${u.id}</td>
-      <td class="mono">${escapeHtml(u.email)}</td>
-      <td>${escapeHtml(u.name)}</td>
+      <td><input class="user-email mono" type="email" value="${escapeHtml(u.email)}" aria-label="Email"></td>
+      <td><input class="user-name" value="${escapeHtml(u.name)}" aria-label="Имя"></td>
       <td>
         <select class="role-select">
           ${ROLES.map(
@@ -200,14 +200,31 @@ function renderUsers(items) {
           ).join("")}
         </select>
       </td>
-      <td><button class="btn save-role" type="button">Сохранить</button></td>
+      <td><input class="user-password" type="password" minlength="6" placeholder="Не менять" aria-label="Новый пароль"></td>
+      <td><button class="btn save-user" type="button">Сохранить</button></td>
+      <td><button class="btn danger delete-user" type="button">Удалить</button></td>
     </tr>`
     )
     .join("");
-  body.querySelectorAll(".save-role").forEach((btn) => {
+  body.querySelectorAll(".save-user").forEach((btn) => {
     btn.addEventListener("click", () => {
       const row = btn.closest("tr");
-      saveRole(Number(row.dataset.userId), row.querySelector(".role-select").value);
+      const payload = {
+        email: row.querySelector(".user-email").value.trim(),
+        name: row.querySelector(".user-name").value.trim(),
+        role: row.querySelector(".role-select").value,
+      };
+      const password = row.querySelector(".user-password").value;
+      if (!payload.email || !payload.name) { showError("Email и имя обязательны"); return; }
+      if (password && password.length < 6) { showError("Новый пароль должен содержать минимум 6 символов"); return; }
+      if (password) payload.password = password;
+      saveUser(Number(row.dataset.userId), payload);
+    });
+  });
+  body.querySelectorAll(".delete-user").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const row = btn.closest("tr");
+      deleteUser(Number(row.dataset.userId), row.querySelector(".user-email").value);
     });
   });
 }
@@ -231,26 +248,55 @@ async function loadUsers() {
   }
 }
 
-async function saveRole(userId, role) {
+async function saveUser(userId, payload) {
   try {
     const resp = await fetch("/api/v1/admin/users/" + userId, {
       method: "PATCH",
       headers: { "Content-Type": "application/json", Accept: "application/json" },
       credentials: "same-origin",
-      body: JSON.stringify({ role: role }),
+      body: JSON.stringify(payload),
     });
-    if (resp.status === 403) {
-      showError("Нельзя менять собственную роль");
-      return;
-    }
     if (!resp.ok) {
-      showError("Не удалось изменить роль: HTTP " + resp.status);
+      const data = await resp.json().catch(() => ({}));
+      showError(data.detail || "Не удалось сохранить пользователя");
       return;
     }
+    state.teachers = [];
     await loadUsers();
   } catch (err) {
-    showError("Не удалось изменить роль: " + err.message);
+    showError("Не удалось сохранить пользователя: " + err.message);
   }
+}
+
+async function createUser(form) {
+  const payload = {
+    email: $("new-user-email").value.trim(),
+    name: $("new-user-name").value.trim(),
+    role: $("new-user-role").value,
+    password: $("new-user-password").value,
+  };
+  try {
+    const resp = await fetch("/api/v1/admin/users", {
+      method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" },
+      credentials: "same-origin", body: JSON.stringify(payload),
+    });
+    if (!resp.ok) { const data = await resp.json().catch(() => ({})); showError(data.detail || "Не удалось создать пользователя"); return; }
+    form.reset();
+    state.teachers = [];
+    state.users.offset = 0;
+    await loadUsers();
+  } catch (err) { showError("Не удалось создать пользователя: " + err.message); }
+}
+
+async function deleteUser(userId, email) {
+  if (!window.confirm(`Удалить пользователя ${email}? Будут удалены его прогресс, зачисления, чаты и сессии.`)) return;
+  try {
+    const resp = await fetch("/api/v1/admin/users/" + userId, { method: "DELETE", credentials: "same-origin" });
+    if (!resp.ok) { const data = await resp.json().catch(() => ({})); showError(data.detail || "Не удалось удалить пользователя"); return; }
+    state.teachers = [];
+    if (state.users.offset > 0 && state.users.offset >= state.users.total - 1) state.users.offset -= state.users.limit;
+    await loadUsers();
+  } catch (err) { showError("Не удалось удалить пользователя: " + err.message); }
 }
 
 async function loadTeachers() {
@@ -388,6 +434,10 @@ function init() {
   $("users-next").addEventListener("click", () => {
     state.users.offset += state.users.limit;
     loadUsers();
+  });
+  $("user-create-form").addEventListener("submit", (event) => {
+    event.preventDefault();
+    createUser(event.currentTarget);
   });
   $("c-apply").addEventListener("click", () => { state.courses.search = $("c-search").value; state.courses.offset = 0; loadCourses(); });
   $("c-reset").addEventListener("click", () => { $("c-search").value = ""; state.courses.search = ""; state.courses.offset = 0; loadCourses(); });

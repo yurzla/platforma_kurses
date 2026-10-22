@@ -463,6 +463,11 @@ class SqlCatalogRepository(CatalogRepository):
                 )
                 for lesson in lessons_by_section.get(section.id, [])
             ]
+            # В исходных дампах Stepik могут присутствовать заготовленные
+            # модули без единого урока. Они не являются содержанием курса и
+            # не должны попадать в каталог студента как «0 уроков».
+            if not lesson_models:
+                continue
             section_models.append(
                 SectionSummary(
                     id=section.id,

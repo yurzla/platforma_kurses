@@ -3,14 +3,14 @@
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import delete, func, or_, select
+from sqlalchemy import delete, func, or_, select, update
 
 from courses_assistant.application.commands import ChangeUserRole
 from courses_assistant.adapters.persistence.orm import (
     ChatMessageORM, ChatSessionORM, ChoiceQuestionMetadataORM, ChunkEmbeddingORM,
     ContentChunkORM, CourseORM, EnrollmentORM, JobORM, LessonORM, SectionORM,
-    StepChoiceOptionORM, StepContentORM, StepORM, StepSourceORM, UserCourseWishlistORM,
-    UserORM, UserStepProgressORM,
+    RefreshTokenORM, StepChoiceOptionORM, StepContentORM, StepORM, StepSourceORM,
+    UserCourseWishlistORM, UserLearningPreferencesORM, UserORM, UserStepProgressORM,
 )
 from courses_assistant.application.queries import (
     dlq_entries,
@@ -21,7 +21,8 @@ from courses_assistant.application.queries import (
 )
 from courses_assistant.container import Container
 from courses_assistant.domain.errors import CannotChangeOwnRole, InvalidRole, UserNotFound
-from courses_assistant.domain.models import JobStatus, User
+from courses_assistant.domain.models import USER_ROLES, JobStatus, User
+from courses_assistant.domain.security import hash_password
 from courses_assistant.entrypoints.api.dependencies import (
     get_container,
     require_admin,
@@ -36,9 +37,10 @@ from courses_assistant.entrypoints.api.schemas import (
     JobRead,
     OverviewResponse,
     StreamStat,
+    AdminUserCreate,
+    AdminUserUpdate,
     UserListItem,
     UserListResponse,
-    UserRoleUpdate,
 )
 
 router = APIRouter(
@@ -209,7 +211,7 @@ async def users(
         total = await uow.users.count(search=search)
     return UserListResponse(
         items=[
-            UserListItem(id=user.id, email=user.email, name=user.name, role=user.role)
+            _user_item(user)
             for user in items
         ],
         total=total,
@@ -218,24 +220,121 @@ async def users(
     )
 
 
+def _user_item(user: User | UserORM) -> UserListItem:
+    return UserListItem(
+        id=user.id,
+        email=user.email,
+        name=user.name,
+        role=user.role,
+        # Репозиторий списка пользователей возвращает доменную модель без даты,
+        # а SQLAlchemy-модель используется в административных изменениях.
+        created_at=getattr(user, "created_at", None),
+    )
+
+
+async def _ensure_unique_email(session, email: str, user_id: int | None = None) -> None:
+    statement = select(UserORM.id).where(UserORM.email == email)
+    if user_id is not None:
+        statement = statement.where(UserORM.id != user_id)
+    if await session.scalar(statement) is not None:
+        raise HTTPException(status_code=409, detail="Этот email уже зарегистрирован")
+
+
+@router.post("/users", response_model=UserListItem, status_code=201)
+async def create_user(
+    payload: AdminUserCreate,
+    container: Container = Depends(get_container),
+) -> UserListItem:
+    if payload.role not in USER_ROLES:
+        raise HTTPException(status_code=422, detail="Неизвестная роль пользователя")
+    async with container.session_factory() as session:
+        await _ensure_unique_email(session, payload.email)
+        user = UserORM(
+            email=payload.email,
+            name=payload.name,
+            password_hash=hash_password(payload.password),
+            role=payload.role,
+        )
+        session.add(user)
+        await session.flush()
+        result = _user_item(user)
+        await session.commit()
+        return result
+
+
 @router.patch("/users/{user_id}", response_model=UserListItem)
-async def change_user_role(
+async def update_user(
     user_id: int,
-    payload: UserRoleUpdate,
+    payload: AdminUserUpdate,
     actor: User = Depends(require_admin),
     container: Container = Depends(get_container),
 ) -> UserListItem:
-    try:
-        user = await container.handlers.change_user_role(
-            ChangeUserRole(actor_id=actor.id, user_id=user_id, role=payload.role)
-        )
-    except InvalidRole as exc:
-        raise HTTPException(status_code=422, detail=str(exc)) from exc
-    except CannotChangeOwnRole as exc:
-        raise HTTPException(status_code=403, detail=str(exc)) from exc
-    except UserNotFound as exc:
-        raise HTTPException(status_code=404, detail=str(exc)) from exc
-    return UserListItem(id=user.id, email=user.email, name=user.name, role=user.role)
+    # Сохраняем отдельный путь смены роли: он используется прикладным слоем и
+    # защищает от изменения собственной роли. Также это делает старый API
+    # совместимым с существующими клиентами.
+    if payload.model_fields_set == {"role"}:
+        if actor.id == user_id and payload.role == actor.role:
+            return _user_item(actor)
+        try:
+            user = await container.handlers.change_user_role(
+                ChangeUserRole(actor_id=actor.id, user_id=user_id, role=payload.role or "")
+            )
+        except InvalidRole as exc:
+            raise HTTPException(status_code=422, detail=str(exc)) from exc
+        except CannotChangeOwnRole as exc:
+            raise HTTPException(status_code=403, detail=str(exc)) from exc
+        except UserNotFound as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+        return _user_item(user)
+    async with container.session_factory() as session:
+        user = await session.get(UserORM, user_id)
+        if user is None:
+            raise HTTPException(status_code=404, detail="Пользователь не найден")
+        if payload.role is not None:
+            if payload.role not in USER_ROLES:
+                raise HTTPException(status_code=422, detail="Неизвестная роль пользователя")
+            if actor.id == user_id and payload.role != user.role:
+                raise HTTPException(status_code=403, detail="Нельзя менять собственную роль")
+            user.role = payload.role
+        if payload.email is not None:
+            await _ensure_unique_email(session, payload.email, user_id)
+            user.email = payload.email
+        if payload.name is not None:
+            user.name = payload.name
+        if payload.password is not None:
+            user.password_hash = hash_password(payload.password)
+        result = _user_item(user)
+        await session.commit()
+        return result
+
+
+@router.delete("/users/{user_id}", status_code=204)
+async def delete_user(
+    user_id: int,
+    actor: User = Depends(require_admin),
+    container: Container = Depends(get_container),
+) -> None:
+    if actor.id == user_id:
+        raise HTTPException(status_code=403, detail="Нельзя удалить собственную учётную запись")
+    async with container.session_factory() as session:
+        if await session.get(UserORM, user_id) is None:
+            raise HTTPException(status_code=404, detail="Пользователь не найден")
+        session_ids = list((await session.execute(
+            select(ChatSessionORM.id).where(ChatSessionORM.user_id == user_id)
+        )).scalars())
+        if session_ids:
+            await session.execute(delete(JobORM).where(JobORM.session_id.in_(session_ids)))
+            await session.execute(delete(ChatMessageORM).where(ChatMessageORM.session_id.in_(session_ids)))
+            await session.execute(delete(ChatSessionORM).where(ChatSessionORM.id.in_(session_ids)))
+        await session.execute(delete(RefreshTokenORM).where(RefreshTokenORM.user_id == user_id))
+        await session.execute(delete(UserLearningPreferencesORM).where(UserLearningPreferencesORM.user_id == user_id))
+        await session.execute(delete(UserCourseWishlistORM).where(UserCourseWishlistORM.user_id == user_id))
+        await session.execute(delete(UserStepProgressORM).where(UserStepProgressORM.user_id == user_id))
+        await session.execute(delete(EnrollmentORM).where(EnrollmentORM.user_id == user_id))
+        # Курсы преподавателя сохраняются, но становятся курсами платформы.
+        await session.execute(update(CourseORM).where(CourseORM.owner_id == user_id).values(owner_id=None))
+        await session.execute(delete(UserORM).where(UserORM.id == user_id))
+        await session.commit()
 
 
 @router.get("/courses", response_model=AdminCourseListResponse)

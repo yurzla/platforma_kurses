@@ -9,6 +9,7 @@ import json
 import re
 import time
 from pathlib import Path
+from urllib.parse import urljoin
 
 import httpx
 import typer
@@ -48,12 +49,27 @@ def _course_ids() -> list[int]:
 
 
 def _get(client: httpx.Client, path: str, token: str, **params) -> list[dict]:
-    url = f"{BASE}/{path}"
+    """Получает все страницы списка Stepik API.
+
+    Stepik сообщает о продолжении выдачи через ``meta.has_next``. В старой
+    версии использовалось только несуществующее для этого API поле
+    ``meta.next``, поэтому в дамп попадала лишь первая страница (обычно 20
+    записей) каждого списка.
+    """
+    initial_url = f"{BASE}/{path}"
+    url = initial_url
     results: list[dict] = []
+    request_params = dict(params)
+    page = int(request_params.pop("page", 1))
+    use_page_params = True
     while url:
         try:
             response = client.get(
-                url, headers={"Authorization": f"Bearer {token}"}, params=params
+                url,
+                headers={"Authorization": f"Bearer {token}"},
+                # Если API когда-нибудь вернёт готовую ссылку на следующую
+                # страницу, не дописываем к ней параметры повторно.
+                params={**request_params, "page": page} if use_page_params else None,
             )
         except httpx.HTTPError as exc:
             typer.echo(f"  ! {path}: сеть упала ({exc})")
@@ -64,8 +80,17 @@ def _get(client: httpx.Client, path: str, token: str, **params) -> list[dict]:
         data = response.json()
         key = path.split("/")[0]
         results.extend(data.get(key, []))
-        url = data.get("meta", {}).get("next")
-        params = {}
+        meta = data.get("meta", {})
+        next_url = meta.get("next")
+        if next_url:
+            url = urljoin(f"{BASE}/", str(next_url))
+            use_page_params = False
+        elif meta.get("has_next"):
+            page += 1
+            url = initial_url
+            use_page_params = True
+        else:
+            url = ""
         time.sleep(0.2)
     return results
 

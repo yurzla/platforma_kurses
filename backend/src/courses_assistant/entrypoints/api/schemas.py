@@ -97,8 +97,24 @@ class UserListResponse(BaseModel):
     offset: int
 
 
-class UserRoleUpdate(BaseModel):
-    role: str = Field(min_length=1, max_length=20)
+class AdminUserCreate(BaseModel):
+    email: str = Field(min_length=3, max_length=320)
+    name: str = Field(min_length=1, max_length=200)
+    password: str = Field(min_length=6, max_length=400)
+    role: str = Field(default="student", min_length=1, max_length=20)
+
+
+class AdminUserUpdate(BaseModel):
+    email: str | None = Field(default=None, min_length=3, max_length=320)
+    name: str | None = Field(default=None, min_length=1, max_length=200)
+    password: str | None = Field(default=None, min_length=6, max_length=400)
+    role: str | None = Field(default=None, min_length=1, max_length=20)
+
+    @model_validator(mode="after")
+    def has_changes(self) -> "AdminUserUpdate":
+        if not self.model_fields_set:
+            raise ValueError("Не указаны данные для изменения")
+        return self
 
 
 class AdminCourseListItem(BaseModel):
