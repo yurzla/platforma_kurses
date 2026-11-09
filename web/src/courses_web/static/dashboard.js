@@ -67,7 +67,7 @@ function switchDiagnostic(diagnostic) {
   document.querySelectorAll(".diagnostic-tab").forEach((button) =>
     button.classList.toggle("active", button.dataset.diagnostic === diagnostic)
   );
-  ["jobs", "dlq", "streams", "index", "health"].forEach((item) =>
+  ["jobs", "dlq", "streams", "index", "chunks", "health"].forEach((item) =>
     $("diagnostic-" + item).classList.toggle("hidden", item !== diagnostic)
   );
   refresh();
@@ -359,8 +359,11 @@ async function loadIndex() {
     renderIndex(data);
   } catch (err) {
     showError("Не удалось загрузить индекс: " + err.message);
-    return;
   }
+}
+
+async function loadChunksTab() {
+  await loadIndex();
   await loadChunks();
 }
 
@@ -676,6 +679,7 @@ async function refresh() {
     if (state.diagnostic === "jobs") await loadJobs();
     else if (state.diagnostic === "dlq") await loadDlq();
     else if (state.diagnostic === "index") await loadIndex();
+    else if (state.diagnostic === "chunks") await loadChunksTab();
     else if (state.diagnostic === "health") await loadHealth();
   }
   else if (state.tab === "users") await loadUsers();

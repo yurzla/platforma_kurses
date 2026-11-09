@@ -27,6 +27,7 @@
       <button class="diagnostic-tab" data-diagnostic="dlq">DLQ</button>
       <button class="diagnostic-tab" data-diagnostic="streams">Streams</button>
       <button class="diagnostic-tab" data-diagnostic="index">Индекс</button>
+      <button class="diagnostic-tab" data-diagnostic="chunks">Чанки</button>
       <button class="diagnostic-tab" data-diagnostic="health">Состояние</button>
     </nav>
     <p class="diagnostic-note">Раздел для контроля фоновой обработки вопросов ассистентом. Он нужен в основном техническому администратору или разработчику.</p>
@@ -136,8 +137,11 @@
         </div>
       </div>
     </div>
+  </section>
 
-    <h3>Чанки</h3>
+  <section class="panel diagnostic-panel hidden" id="diagnostic-chunks">
+    <h2>Чанки</h2>
+    <p class="muted">Фрагменты материалов, по которым ищет ассистент. Фильтры помогают найти нужный чанк по курсу, типу источника или тексту.</p>
     <form class="filters" id="chunks-filters" onsubmit="return false;">
       <label>Курс
         <select id="ch-course"><option value="">все</option></select>

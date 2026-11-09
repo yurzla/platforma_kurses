@@ -471,6 +471,13 @@ async def test_admin_panel_flow() -> None:
         assert 'class="index-stack"' in dashboard.text
         assert 'id="index-courses-without-embeddings"' in dashboard.text
         assert 'id="index-courses-without-chunks"' in dashboard.text
+        assert 'data-diagnostic="chunks"' in dashboard.text
+        assert 'id="diagnostic-chunks"' in dashboard.text
+        assert 'id="chunks-body"' in dashboard.text
+        index_panel = dashboard.text.split('id="diagnostic-index"', 1)[1].split(
+            'id="diagnostic-chunks"', 1
+        )[0]
+        assert 'id="chunks-body"' not in index_panel
         assert "/static/dashboard.js" in dashboard.text
         assert 'id="assistant-toggle"' not in dashboard.text
         lowered = dashboard.text.lower()
@@ -502,6 +509,7 @@ async def test_static_assets_served() -> None:
     assert js.status_code == 200
     assert "openJob(" in js.text
     assert "loadIndex(" in js.text
+    assert "loadChunksTab(" in js.text
     assert "loadHealth(" in js.text
     assert "course_recommendation" in js.text
     assert "Рекомендованные курсы" in js.text
