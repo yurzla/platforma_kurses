@@ -6,6 +6,8 @@ from pathlib import Path
 
 from fastapi.templating import Jinja2Templates
 
+from courses_web.markdown import render_step_body
+
 TEMPLATES_DIR = Path(__file__).resolve().parent / "templates"
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 
@@ -22,4 +24,5 @@ def static_url(path: str) -> str:
 
 
 templates.env.globals["static_url"] = static_url
+templates.env.filters["markdown"] = render_step_body
 

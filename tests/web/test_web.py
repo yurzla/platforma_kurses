@@ -676,6 +676,26 @@ def test_teacher_course_step_forms_render() -> None:
     assert 'value="https://youtu.be/abc123"' in html
     assert 'name="course_id" value="5"' in html
     assert "Подсказка по форматированию" in html
+    assert "Markdown" in html
     assert ">Вопрос</textarea>" in html
     assert 'value="A"' in html
     assert "Добавить шаг" in html
+
+
+async def test_step_page_renders_markdown_body() -> None:
+    store = FakeStore()
+    seed_student_and_course(store)
+    store.step_bodies[101] = "**Жирный** текст\nвторая строка"
+    web, api = build_stack(store)
+    async with web, api:
+        await web.post("/login", data={"email": "s@example.com", "password": "pw"})
+        page = await web.get("/courses/10/steps/101")
+        assert page.status_code == 200
+        assert "<strong>Жирный</strong>" in page.text
+        assert "<br" in page.text
+        assert "**Жирный**" not in page.text
+
+        store.step_bodies[101] = '<p>Старый</p><iframe src="https://youtu.be/x"></iframe>'
+        legacy = await web.get("/courses/10/steps/101")
+        assert "<p>Старый</p>" in legacy.text
+        assert '<iframe src="https://youtu.be/x"></iframe>' in legacy.text

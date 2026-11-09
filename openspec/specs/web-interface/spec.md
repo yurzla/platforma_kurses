@@ -654,7 +654,7 @@ The web service SHALL paginate the `/teacher` course list to at most 10 courses 
 
 ### Requirement: Step editing UI
 
-The teacher course page SHALL render each lesson step as a card with an inline editable form and a delete control. The step form SHALL place the step type, the material or task body, the optional video URL, the type-specific fields, and the submit control on separate full-width rows. The form SHALL include a formatting hint describing supported HTML and the video URL field. The student step page SHALL render the step video as a player.
+The teacher course page SHALL render each lesson step as a card with an inline editable form and a delete control. The step form SHALL place the step type, the material or task body, the optional video URL, the type-specific fields, and the submit control on separate full-width rows. The form SHALL include a formatting hint describing supported Markdown syntax and the video URL field. The student step page SHALL render the step video as a player.
 
 #### Scenario: Inline edit form
 
@@ -674,7 +674,12 @@ The teacher course page SHALL render each lesson step as a card with an inline e
 #### Scenario: Formatting hint
 
 - **WHEN** the teacher edits or creates a step
-- **THEN** a hint lists supported HTML tags and explains that video is added through the video URL field
+- **THEN** a hint describes Markdown syntax and explains that video is added through the video URL field
+
+#### Scenario: Markdown hint examples
+
+- **WHEN** the teacher opens the formatting hint
+- **THEN** it shows examples for emphasis, headings, lists, links, code, and line breaks
 
 #### Scenario: Delete step
 
