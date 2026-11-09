@@ -5,13 +5,28 @@ from __future__ import annotations
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import delete, func, or_, select, update
 
-from courses_assistant.application.commands import ChangeUserRole
 from courses_assistant.adapters.persistence.orm import (
-    ChatMessageORM, ChatSessionORM, ChoiceQuestionMetadataORM, ChunkEmbeddingORM,
-    ContentChunkORM, CourseORM, EnrollmentORM, JobORM, LessonORM, SectionORM,
-    RefreshTokenORM, StepChoiceOptionORM, StepContentORM, StepORM, StepSourceORM,
-    UserCourseWishlistORM, UserLearningPreferencesORM, UserORM, UserStepProgressORM,
+    ChatMessageORM,
+    ChatSessionORM,
+    ChoiceQuestionMetadataORM,
+    ChunkEmbeddingORM,
+    ContentChunkORM,
+    CourseORM,
+    EnrollmentORM,
+    JobORM,
+    LessonORM,
+    RefreshTokenORM,
+    SectionORM,
+    StepChoiceOptionORM,
+    StepContentORM,
+    StepORM,
+    StepSourceORM,
+    UserCourseWishlistORM,
+    UserLearningPreferencesORM,
+    UserORM,
+    UserStepProgressORM,
 )
+from courses_assistant.application.commands import ChangeUserRole
 from courses_assistant.application.queries import (
     dlq_entries,
     get_job,
@@ -28,17 +43,17 @@ from courses_assistant.entrypoints.api.dependencies import (
     require_admin,
 )
 from courses_assistant.entrypoints.api.schemas import (
-    DlqEntry,
     AdminCourseListItem,
     AdminCourseListResponse,
     AdminCourseUpdate,
+    AdminUserCreate,
+    AdminUserUpdate,
+    DlqEntry,
     JobListItem,
     JobListResponse,
     JobRead,
     OverviewResponse,
     StreamStat,
-    AdminUserCreate,
-    AdminUserUpdate,
     UserListItem,
     UserListResponse,
 )
@@ -51,41 +66,101 @@ router = APIRouter(
 
 
 async def _admin_course_item(session, course: CourseORM) -> AdminCourseListItem:
-    lessons = await session.scalar(select(func.count()).select_from(LessonORM).join(SectionORM).where(SectionORM.course_id == course.id))
-    steps = await session.scalar(select(func.count()).select_from(StepORM).join(LessonORM).join(SectionORM).where(SectionORM.course_id == course.id))
-    students = await session.scalar(select(func.count()).select_from(EnrollmentORM).where(EnrollmentORM.course_id == course.id))
+    lessons = await session.scalar(
+        select(func.count())
+        .select_from(LessonORM)
+        .join(SectionORM)
+        .where(SectionORM.course_id == course.id)
+    )
+    steps = await session.scalar(
+        select(func.count())
+        .select_from(StepORM)
+        .join(LessonORM)
+        .join(SectionORM)
+        .where(SectionORM.course_id == course.id)
+    )
+    students = await session.scalar(
+        select(func.count()).select_from(EnrollmentORM).where(EnrollmentORM.course_id == course.id)
+    )
     owner = await session.get(UserORM, course.owner_id) if course.owner_id is not None else None
     return AdminCourseListItem(
-        id=course.id, title=course.title, is_published=course.is_published,
-        owner_id=course.owner_id, owner_name=owner.name if owner else None,
-        lessons_count=int(lessons or 0), steps_count=int(steps or 0), students_count=int(students or 0),
+        id=course.id,
+        title=course.title,
+        is_published=course.is_published,
+        owner_id=course.owner_id,
+        owner_name=owner.name if owner else None,
+        lessons_count=int(lessons or 0),
+        steps_count=int(steps or 0),
+        students_count=int(students or 0),
     )
 
 
 async def _delete_course_tree(session, course_id: int) -> None:
-    section_ids = list((await session.execute(select(SectionORM.id).where(SectionORM.course_id == course_id))).scalars())
-    lesson_ids = [] if not section_ids else list((await session.execute(select(LessonORM.id).where(LessonORM.section_id.in_(section_ids)))).scalars())
-    step_ids = [] if not lesson_ids else list((await session.execute(select(StepORM.id).where(StepORM.lesson_id.in_(lesson_ids)))).scalars())
+    section_ids = list(
+        (
+            await session.execute(select(SectionORM.id).where(SectionORM.course_id == course_id))
+        ).scalars()
+    )
+    lesson_ids = (
+        []
+        if not section_ids
+        else list(
+            (
+                await session.execute(
+                    select(LessonORM.id).where(LessonORM.section_id.in_(section_ids))
+                )
+            ).scalars()
+        )
+    )
+    step_ids = (
+        []
+        if not lesson_ids
+        else list(
+            (
+                await session.execute(select(StepORM.id).where(StepORM.lesson_id.in_(lesson_ids)))
+            ).scalars()
+        )
+    )
     chunk_filter = [ContentChunkORM.course_id == course_id]
     if lesson_ids:
         chunk_filter.append(ContentChunkORM.lesson_id.in_(lesson_ids))
     if step_ids:
         chunk_filter.append(ContentChunkORM.step_id.in_(step_ids))
-    chunk_ids = list((await session.execute(select(ContentChunkORM.id).where(or_(*chunk_filter)))).scalars())
+    chunk_ids = list(
+        (await session.execute(select(ContentChunkORM.id).where(or_(*chunk_filter)))).scalars()
+    )
     if chunk_ids:
-        await session.execute(delete(ChunkEmbeddingORM).where(ChunkEmbeddingORM.chunk_id.in_(chunk_ids)))
+        await session.execute(
+            delete(ChunkEmbeddingORM).where(ChunkEmbeddingORM.chunk_id.in_(chunk_ids))
+        )
     await session.execute(delete(ContentChunkORM).where(or_(*chunk_filter)))
-    session_ids = list((await session.execute(select(ChatSessionORM.id).where(ChatSessionORM.course_id == course_id))).scalars())
+    session_ids = list(
+        (
+            await session.execute(
+                select(ChatSessionORM.id).where(ChatSessionORM.course_id == course_id)
+            )
+        ).scalars()
+    )
     if session_ids:
         await session.execute(delete(JobORM).where(JobORM.session_id.in_(session_ids)))
-        await session.execute(delete(ChatMessageORM).where(ChatMessageORM.session_id.in_(session_ids)))
+        await session.execute(
+            delete(ChatMessageORM).where(ChatMessageORM.session_id.in_(session_ids))
+        )
         await session.execute(delete(ChatSessionORM).where(ChatSessionORM.id.in_(session_ids)))
     await session.execute(delete(EnrollmentORM).where(EnrollmentORM.course_id == course_id))
-    await session.execute(delete(UserCourseWishlistORM).where(UserCourseWishlistORM.course_id == course_id))
+    await session.execute(
+        delete(UserCourseWishlistORM).where(UserCourseWishlistORM.course_id == course_id)
+    )
     if step_ids:
-        await session.execute(delete(UserStepProgressORM).where(UserStepProgressORM.step_id.in_(step_ids)))
-        await session.execute(delete(StepChoiceOptionORM).where(StepChoiceOptionORM.step_id.in_(step_ids)))
-        await session.execute(delete(ChoiceQuestionMetadataORM).where(ChoiceQuestionMetadataORM.step_id.in_(step_ids)))
+        await session.execute(
+            delete(UserStepProgressORM).where(UserStepProgressORM.step_id.in_(step_ids))
+        )
+        await session.execute(
+            delete(StepChoiceOptionORM).where(StepChoiceOptionORM.step_id.in_(step_ids))
+        )
+        await session.execute(
+            delete(ChoiceQuestionMetadataORM).where(ChoiceQuestionMetadataORM.step_id.in_(step_ids))
+        )
         await session.execute(delete(StepSourceORM).where(StepSourceORM.step_id.in_(step_ids)))
         await session.execute(delete(StepContentORM).where(StepContentORM.step_id.in_(step_ids)))
         await session.execute(delete(StepORM).where(StepORM.id.in_(step_ids)))
@@ -210,10 +285,7 @@ async def users(
         items = await uow.users.list(search=search, limit=limit, offset=offset)
         total = await uow.users.count(search=search)
     return UserListResponse(
-        items=[
-            _user_item(user)
-            for user in items
-        ],
+        items=[_user_item(user) for user in items],
         total=total,
         limit=limit,
         offset=offset,
@@ -287,23 +359,23 @@ async def update_user(
             raise HTTPException(status_code=404, detail=str(exc)) from exc
         return _user_item(user)
     async with container.session_factory() as session:
-        user = await session.get(UserORM, user_id)
-        if user is None:
+        orm_user = await session.get(UserORM, user_id)
+        if orm_user is None:
             raise HTTPException(status_code=404, detail="Пользователь не найден")
         if payload.role is not None:
             if payload.role not in USER_ROLES:
                 raise HTTPException(status_code=422, detail="Неизвестная роль пользователя")
-            if actor.id == user_id and payload.role != user.role:
+            if actor.id == user_id and payload.role != orm_user.role:
                 raise HTTPException(status_code=403, detail="Нельзя менять собственную роль")
-            user.role = payload.role
+            orm_user.role = payload.role
         if payload.email is not None:
             await _ensure_unique_email(session, payload.email, user_id)
-            user.email = payload.email
+            orm_user.email = payload.email
         if payload.name is not None:
-            user.name = payload.name
+            orm_user.name = payload.name
         if payload.password is not None:
-            user.password_hash = hash_password(payload.password)
-        result = _user_item(user)
+            orm_user.password_hash = hash_password(payload.password)
+        result = _user_item(orm_user)
         await session.commit()
         return result
 
@@ -319,20 +391,34 @@ async def delete_user(
     async with container.session_factory() as session:
         if await session.get(UserORM, user_id) is None:
             raise HTTPException(status_code=404, detail="Пользователь не найден")
-        session_ids = list((await session.execute(
-            select(ChatSessionORM.id).where(ChatSessionORM.user_id == user_id)
-        )).scalars())
+        session_ids = list(
+            (
+                await session.execute(
+                    select(ChatSessionORM.id).where(ChatSessionORM.user_id == user_id)
+                )
+            ).scalars()
+        )
         if session_ids:
             await session.execute(delete(JobORM).where(JobORM.session_id.in_(session_ids)))
-            await session.execute(delete(ChatMessageORM).where(ChatMessageORM.session_id.in_(session_ids)))
+            await session.execute(
+                delete(ChatMessageORM).where(ChatMessageORM.session_id.in_(session_ids))
+            )
             await session.execute(delete(ChatSessionORM).where(ChatSessionORM.id.in_(session_ids)))
         await session.execute(delete(RefreshTokenORM).where(RefreshTokenORM.user_id == user_id))
-        await session.execute(delete(UserLearningPreferencesORM).where(UserLearningPreferencesORM.user_id == user_id))
-        await session.execute(delete(UserCourseWishlistORM).where(UserCourseWishlistORM.user_id == user_id))
-        await session.execute(delete(UserStepProgressORM).where(UserStepProgressORM.user_id == user_id))
+        await session.execute(
+            delete(UserLearningPreferencesORM).where(UserLearningPreferencesORM.user_id == user_id)
+        )
+        await session.execute(
+            delete(UserCourseWishlistORM).where(UserCourseWishlistORM.user_id == user_id)
+        )
+        await session.execute(
+            delete(UserStepProgressORM).where(UserStepProgressORM.user_id == user_id)
+        )
         await session.execute(delete(EnrollmentORM).where(EnrollmentORM.user_id == user_id))
         # Курсы преподавателя сохраняются, но становятся курсами платформы.
-        await session.execute(update(CourseORM).where(CourseORM.owner_id == user_id).values(owner_id=None))
+        await session.execute(
+            update(CourseORM).where(CourseORM.owner_id == user_id).values(owner_id=None)
+        )
         await session.execute(delete(UserORM).where(UserORM.id == user_id))
         await session.commit()
 
@@ -348,12 +434,16 @@ async def courses(
         conditions = []
         if search:
             conditions.append(CourseORM.title.ilike(f"%{search.strip()}%"))
-        statement = select(CourseORM).where(*conditions).order_by(CourseORM.id).limit(limit).offset(offset)
+        statement = (
+            select(CourseORM).where(*conditions).order_by(CourseORM.id).limit(limit).offset(offset)
+        )
         rows = (await session.execute(statement)).scalars().all()
         total = await session.scalar(select(func.count()).select_from(CourseORM).where(*conditions))
         return AdminCourseListResponse(
             items=[await _admin_course_item(session, course) for course in rows],
-            total=int(total or 0), limit=limit, offset=offset,
+            total=int(total or 0),
+            limit=limit,
+            offset=offset,
         )
 
 
@@ -371,7 +461,9 @@ async def update_course(
             if payload.owner_id is not None:
                 owner = await session.get(UserORM, payload.owner_id)
                 if owner is None or owner.role != "teacher":
-                    raise HTTPException(status_code=422, detail="Автором может быть только преподаватель")
+                    raise HTTPException(
+                        status_code=422, detail="Автором может быть только преподаватель"
+                    )
             course.owner_id = payload.owner_id
         if "is_published" in payload.model_fields_set:
             course.is_published = bool(payload.is_published)

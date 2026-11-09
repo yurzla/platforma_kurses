@@ -111,7 +111,7 @@ class AdminUserUpdate(BaseModel):
     role: str | None = Field(default=None, min_length=1, max_length=20)
 
     @model_validator(mode="after")
-    def has_changes(self) -> "AdminUserUpdate":
+    def has_changes(self) -> AdminUserUpdate:
         if not self.model_fields_set:
             raise ValueError("Не указаны данные для изменения")
         return self
@@ -219,7 +219,7 @@ class TeacherStepCreate(BaseModel):
     correct_answer: str | None = Field(default=None, max_length=5_000)
 
     @model_validator(mode="after")
-    def validate_grading_data(self) -> "TeacherStepCreate":
+    def validate_grading_data(self) -> TeacherStepCreate:
         if self.step_type == "choice":
             if len(self.choices) < 2:
                 raise ValueError("Для теста нужно не менее двух вариантов")

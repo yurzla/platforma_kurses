@@ -70,9 +70,7 @@ async def health() -> dict[str, str]:
 
 @router.get("/login", response_class=HTMLResponse)
 async def login_page(request: Request, next: str = "") -> Response:
-    return templates.TemplateResponse(
-        request, "login.html", {"next": next, "me": {"role": None}}
-    )
+    return templates.TemplateResponse(request, "login.html", {"next": next, "me": {"role": None}})
 
 
 @router.post("/login", response_class=HTMLResponse)
@@ -287,16 +285,28 @@ async def teacher_create_course(request: Request) -> Response:
         return me
     form = await _form(request)
     response = await call_api(
-        request, "POST", "/api/v1/teacher/courses",
-        json={"title": form.get("title", ""), "description": form.get("description") or None, "level": form.get("level") or None},
+        request,
+        "POST",
+        "/api/v1/teacher/courses",
+        json={
+            "title": form.get("title", ""),
+            "description": form.get("description") or None,
+            "level": form.get("level") or None,
+        },
     )
     if response.status_code == 201:
         return RedirectResponse(f"/teacher/courses/{response.json()['id']}", status_code=303)
     courses_response = await call_api(request, "GET", "/api/v1/teacher/courses")
-    return _render(request, "teacher_dashboard.html", {
-        "me": me, "courses": courses_response.json() if courses_response.status_code == 200 else [],
-        "error": response.json().get("detail", "Не удалось создать курс"),
-    }, status_code=response.status_code)
+    return _render(
+        request,
+        "teacher_dashboard.html",
+        {
+            "me": me,
+            "courses": courses_response.json() if courses_response.status_code == 200 else [],
+            "error": response.json().get("detail", "Не удалось создать курс"),
+        },
+        status_code=response.status_code,
+    )
 
 
 @router.get("/teacher/courses/{course_id}", response_class=HTMLResponse)
@@ -306,13 +316,21 @@ async def teacher_course(request: Request, course_id: int) -> Response:
         return me
     course_response = await call_api(request, "GET", f"/api/v1/teacher/courses/{course_id}")
     if course_response.status_code != 200:
-        return HTMLResponse("<h1>Курс не найден или недоступен</h1>", status_code=course_response.status_code)
-    students_response = await call_api(request, "GET", f"/api/v1/teacher/courses/{course_id}/students")
-    return _render(request, "teacher_course.html", {
-        "me": me,
-        "course": course_response.json(),
-        "students": students_response.json() if students_response.status_code == 200 else [],
-    })
+        return HTMLResponse(
+            "<h1>Курс не найден или недоступен</h1>", status_code=course_response.status_code
+        )
+    students_response = await call_api(
+        request, "GET", f"/api/v1/teacher/courses/{course_id}/students"
+    )
+    return _render(
+        request,
+        "teacher_course.html",
+        {
+            "me": me,
+            "course": course_response.json(),
+            "students": students_response.json() if students_response.status_code == 200 else [],
+        },
+    )
 
 
 @router.post("/teacher/courses/{course_id}/settings")
@@ -324,7 +342,9 @@ async def teacher_update_course(request: Request, course_id: int) -> Response:
         "level": form.get("level") or None,
         "is_published": form.get("is_published") == "on",
     }
-    response = await call_api(request, "PATCH", f"/api/v1/teacher/courses/{course_id}", json=payload)
+    response = await call_api(
+        request, "PATCH", f"/api/v1/teacher/courses/{course_id}", json=payload
+    )
     if response.status_code == 200:
         return RedirectResponse("/teacher", status_code=303)
     return RedirectResponse(f"/teacher/courses/{course_id}?error=save", status_code=303)
@@ -333,7 +353,12 @@ async def teacher_update_course(request: Request, course_id: int) -> Response:
 @router.post("/teacher/courses/{course_id}/sections")
 async def teacher_create_section(request: Request, course_id: int) -> Response:
     form = await _form(request)
-    await call_api(request, "POST", f"/api/v1/teacher/courses/{course_id}/sections", json={"title": form.get("title", "")})
+    await call_api(
+        request,
+        "POST",
+        f"/api/v1/teacher/courses/{course_id}/sections",
+        json={"title": form.get("title", "")},
+    )
     return RedirectResponse(f"/teacher/courses/{course_id}", status_code=303)
 
 
@@ -341,7 +366,12 @@ async def teacher_create_section(request: Request, course_id: int) -> Response:
 async def teacher_create_lesson(request: Request, section_id: int) -> Response:
     form = await _form(request)
     course_id = form.get("course_id", "")
-    await call_api(request, "POST", f"/api/v1/teacher/sections/{section_id}/lessons", json={"title": form.get("title", "")})
+    await call_api(
+        request,
+        "POST",
+        f"/api/v1/teacher/sections/{section_id}/lessons",
+        json={"title": form.get("title", "")},
+    )
     return RedirectResponse(f"/teacher/courses/{course_id}", status_code=303)
 
 
@@ -367,15 +397,25 @@ async def teacher_create_step(request: Request, lesson_id: int) -> Response:
     course_id = form.get("course_id", "")
     step_type = form.get("step_type", "text")
     choices = [
-        {"text": form.get(f"choice_{index}", ""), "is_correct": form.get(f"correct_{index}") == "on"}
+        {
+            "text": form.get(f"choice_{index}", ""),
+            "is_correct": form.get(f"correct_{index}") == "on",
+        }
         for index in range(1, 5)
         if form.get(f"choice_{index}", "").strip()
     ]
-    response = await call_api(request, "POST", f"/api/v1/teacher/lessons/{lesson_id}/steps", json={
-        "body": form.get("body", ""), "step_type": step_type, "choices": choices,
-        "is_multiple_choice": form.get("is_multiple_choice") == "on",
-        "correct_answer": form.get("correct_answer") or None,
-    })
+    response = await call_api(
+        request,
+        "POST",
+        f"/api/v1/teacher/lessons/{lesson_id}/steps",
+        json={
+            "body": form.get("body", ""),
+            "step_type": step_type,
+            "choices": choices,
+            "is_multiple_choice": form.get("is_multiple_choice") == "on",
+            "correct_answer": form.get("correct_answer") or None,
+        },
+    )
     if response.status_code != 201:
         return RedirectResponse(f"/teacher/courses/{course_id}?error=step", status_code=303)
     return RedirectResponse(f"/teacher/courses/{course_id}", status_code=303)
@@ -409,9 +449,7 @@ def _course_progress(course_id: int, course: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _step_neighbours(
-    course_data: dict[str, Any], step_id: int
-) -> tuple[int | None, int | None]:
+def _step_neighbours(course_data: dict[str, Any], step_id: int) -> tuple[int | None, int | None]:
     step_ids = [
         step.get("id")
         for section in course_data.get("sections", [])

@@ -7,16 +7,16 @@ from sqlalchemy import delete, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from courses_assistant.adapters.persistence.orm import (
-    CourseORM,
+    ChatSessionORM,
     ChoiceQuestionMetadataORM,
     ChunkEmbeddingORM,
-    ChatSessionORM,
     ContentChunkORM,
+    CourseORM,
     EnrollmentORM,
     LessonORM,
     SectionORM,
-    StepContentORM,
     StepChoiceOptionORM,
+    StepContentORM,
     StepORM,
     StepSourceORM,
     UserORM,
@@ -53,10 +53,17 @@ async def _owned_course(session: AsyncSession, course_id: int, teacher_id: int) 
 
 async def _course_read(session: AsyncSession, course: CourseORM) -> TeacherCourseRead:
     lessons_count = await session.scalar(
-        select(func.count()).select_from(LessonORM).join(SectionORM).where(SectionORM.course_id == course.id)
+        select(func.count())
+        .select_from(LessonORM)
+        .join(SectionORM)
+        .where(SectionORM.course_id == course.id)
     )
     steps_count = await session.scalar(
-        select(func.count()).select_from(StepORM).join(LessonORM).join(SectionORM).where(SectionORM.course_id == course.id)
+        select(func.count())
+        .select_from(StepORM)
+        .join(LessonORM)
+        .join(SectionORM)
+        .where(SectionORM.course_id == course.id)
     )
     students_count = await session.scalar(
         select(func.count()).select_from(EnrollmentORM).where(EnrollmentORM.course_id == course.id)
@@ -77,15 +84,27 @@ async def _delete_steps(session: AsyncSession, step_ids: list[int]) -> None:
     """Удаляет шаги и все связанные с ними данные без висячих FK."""
     if not step_ids:
         return
-    chunk_ids = list((await session.execute(
-        select(ContentChunkORM.id).where(ContentChunkORM.step_id.in_(step_ids))
-    )).scalars())
+    chunk_ids = list(
+        (
+            await session.execute(
+                select(ContentChunkORM.id).where(ContentChunkORM.step_id.in_(step_ids))
+            )
+        ).scalars()
+    )
     if chunk_ids:
-        await session.execute(delete(ChunkEmbeddingORM).where(ChunkEmbeddingORM.chunk_id.in_(chunk_ids)))
+        await session.execute(
+            delete(ChunkEmbeddingORM).where(ChunkEmbeddingORM.chunk_id.in_(chunk_ids))
+        )
     await session.execute(delete(ContentChunkORM).where(ContentChunkORM.step_id.in_(step_ids)))
-    await session.execute(delete(UserStepProgressORM).where(UserStepProgressORM.step_id.in_(step_ids)))
-    await session.execute(delete(StepChoiceOptionORM).where(StepChoiceOptionORM.step_id.in_(step_ids)))
-    await session.execute(delete(ChoiceQuestionMetadataORM).where(ChoiceQuestionMetadataORM.step_id.in_(step_ids)))
+    await session.execute(
+        delete(UserStepProgressORM).where(UserStepProgressORM.step_id.in_(step_ids))
+    )
+    await session.execute(
+        delete(StepChoiceOptionORM).where(StepChoiceOptionORM.step_id.in_(step_ids))
+    )
+    await session.execute(
+        delete(ChoiceQuestionMetadataORM).where(ChoiceQuestionMetadataORM.step_id.in_(step_ids))
+    )
     await session.execute(delete(StepSourceORM).where(StepSourceORM.step_id.in_(step_ids)))
     await session.execute(delete(StepContentORM).where(StepContentORM.step_id.in_(step_ids)))
     await session.execute(delete(StepORM).where(StepORM.id.in_(step_ids)))
@@ -97,9 +116,17 @@ async def list_my_courses(
     container: Container = Depends(get_container),
 ) -> list[TeacherCourseRead]:
     async with container.session_factory() as session:
-        courses = (await session.execute(
-            select(CourseORM).where(CourseORM.owner_id == teacher.id).order_by(CourseORM.created_at.desc(), CourseORM.id.desc())
-        )).scalars().all()
+        courses = (
+            (
+                await session.execute(
+                    select(CourseORM)
+                    .where(CourseORM.owner_id == teacher.id)
+                    .order_by(CourseORM.created_at.desc(), CourseORM.id.desc())
+                )
+            )
+            .scalars()
+            .all()
+        )
         return [await _course_read(session, course) for course in courses]
 
 
@@ -111,8 +138,11 @@ async def create_course(
 ) -> TeacherCourseRead:
     async with container.session_factory() as session:
         course = CourseORM(
-            title=payload.title.strip(), description=payload.description, level=payload.level,
-            owner_id=teacher.id, is_published=False,
+            title=payload.title.strip(),
+            description=payload.description,
+            level=payload.level,
+            owner_id=teacher.id,
+            is_published=False,
         )
         session.add(course)
         await session.flush()
@@ -129,21 +159,74 @@ async def get_my_course(
 ) -> CourseDetailRead:
     async with container.session_factory() as session:
         course = await _owned_course(session, course_id, teacher.id)
-        sections = (await session.execute(select(SectionORM).where(SectionORM.course_id == course.id).order_by(SectionORM.position, SectionORM.id))).scalars().all()
+        sections = (
+            (
+                await session.execute(
+                    select(SectionORM)
+                    .where(SectionORM.course_id == course.id)
+                    .order_by(SectionORM.position, SectionORM.id)
+                )
+            )
+            .scalars()
+            .all()
+        )
         section_ids = [section.id for section in sections]
-        lessons = [] if not section_ids else (await session.execute(select(LessonORM).where(LessonORM.section_id.in_(section_ids)).order_by(LessonORM.position, LessonORM.id))).scalars().all()
+        lessons = (
+            []
+            if not section_ids
+            else (
+                await session.execute(
+                    select(LessonORM)
+                    .where(LessonORM.section_id.in_(section_ids))
+                    .order_by(LessonORM.position, LessonORM.id)
+                )
+            )
+            .scalars()
+            .all()
+        )
         lesson_ids = [lesson.id for lesson in lessons]
-        steps = [] if not lesson_ids else (await session.execute(select(StepORM).where(StepORM.lesson_id.in_(lesson_ids)).order_by(StepORM.position, StepORM.id))).scalars().all()
+        steps = (
+            []
+            if not lesson_ids
+            else (
+                await session.execute(
+                    select(StepORM)
+                    .where(StepORM.lesson_id.in_(lesson_ids))
+                    .order_by(StepORM.position, StepORM.id)
+                )
+            )
+            .scalars()
+            .all()
+        )
         steps_by_lesson: dict[int, list[StepSummaryRead]] = {}
         for step in steps:
-            steps_by_lesson.setdefault(step.lesson_id, []).append(StepSummaryRead(id=step.id, position=step.position, step_type=step.step_type))
+            steps_by_lesson.setdefault(step.lesson_id, []).append(
+                StepSummaryRead(id=step.id, position=step.position, step_type=step.step_type)
+            )
         lessons_by_section: dict[int, list[LessonSummaryRead]] = {}
         for lesson in lessons:
             if lesson.section_id is not None:
-                lessons_by_section.setdefault(lesson.section_id, []).append(LessonSummaryRead(id=lesson.id, title=lesson.title, position=lesson.position, steps=steps_by_lesson.get(lesson.id, [])))
+                lessons_by_section.setdefault(lesson.section_id, []).append(
+                    LessonSummaryRead(
+                        id=lesson.id,
+                        title=lesson.title,
+                        position=lesson.position,
+                        steps=steps_by_lesson.get(lesson.id, []),
+                    )
+                )
         return CourseDetailRead(
-            id=course.id, title=course.title, description=course.description,
-            sections=[SectionSummaryRead(id=section.id, title=section.title, position=section.position, lessons=lessons_by_section.get(section.id, [])) for section in sections],
+            id=course.id,
+            title=course.title,
+            description=course.description,
+            sections=[
+                SectionSummaryRead(
+                    id=section.id,
+                    title=section.title,
+                    position=section.position,
+                    lessons=lessons_by_section.get(section.id, []),
+                )
+                for section in sections
+            ],
         )
 
 
@@ -163,9 +246,17 @@ async def update_course(
         if "level" in payload.model_fields_set:
             course.level = payload.level
         if payload.is_published is True:
-            step_count = await session.scalar(select(func.count()).select_from(StepORM).join(LessonORM).join(SectionORM).where(SectionORM.course_id == course.id, StepORM.is_enabled.is_(True)))
+            step_count = await session.scalar(
+                select(func.count())
+                .select_from(StepORM)
+                .join(LessonORM)
+                .join(SectionORM)
+                .where(SectionORM.course_id == course.id, StepORM.is_enabled.is_(True))
+            )
             if not step_count:
-                raise HTTPException(status_code=422, detail="Нельзя опубликовать курс без хотя бы одного шага")
+                raise HTTPException(
+                    status_code=422, detail="Нельзя опубликовать курс без хотя бы одного шага"
+                )
         if "is_published" in payload.model_fields_set:
             course.is_published = bool(payload.is_published)
         result = await _course_read(session, course)
@@ -175,45 +266,84 @@ async def update_course(
 
 @router.post("/courses/{course_id}/sections", response_model=SectionSummaryRead, status_code=201)
 async def create_section(
-    course_id: int, payload: TeacherSectionCreate,
-    teacher: User = Depends(require_teacher), container: Container = Depends(get_container),
+    course_id: int,
+    payload: TeacherSectionCreate,
+    teacher: User = Depends(require_teacher),
+    container: Container = Depends(get_container),
 ) -> SectionSummaryRead:
     async with container.session_factory() as session:
         await _owned_course(session, course_id, teacher.id)
-        position = int(await session.scalar(select(func.coalesce(func.max(SectionORM.position), 0) + 1).where(SectionORM.course_id == course_id)) or 1)
+        position = int(
+            await session.scalar(
+                select(func.coalesce(func.max(SectionORM.position), 0) + 1).where(
+                    SectionORM.course_id == course_id
+                )
+            )
+            or 1
+        )
         section = SectionORM(course_id=course_id, title=payload.title.strip(), position=position)
-        session.add(section); await session.flush(); await session.commit()
+        session.add(section)
+        await session.flush()
+        await session.commit()
         return SectionSummaryRead(id=section.id, title=section.title, position=section.position)
 
 
 @router.post("/sections/{section_id}/lessons", response_model=LessonSummaryRead, status_code=201)
 async def create_lesson(
-    section_id: int, payload: TeacherLessonCreate,
-    teacher: User = Depends(require_teacher), container: Container = Depends(get_container),
+    section_id: int,
+    payload: TeacherLessonCreate,
+    teacher: User = Depends(require_teacher),
+    container: Container = Depends(get_container),
 ) -> LessonSummaryRead:
     async with container.session_factory() as session:
         section = await session.get(SectionORM, section_id)
         if section is None:
             raise HTTPException(status_code=404, detail="Модуль не найден")
         await _owned_course(session, section.course_id, teacher.id)
-        position = int(await session.scalar(select(func.coalesce(func.max(LessonORM.position), 0) + 1).where(LessonORM.section_id == section_id)) or 1)
+        position = int(
+            await session.scalar(
+                select(func.coalesce(func.max(LessonORM.position), 0) + 1).where(
+                    LessonORM.section_id == section_id
+                )
+            )
+            or 1
+        )
         lesson = LessonORM(section_id=section_id, title=payload.title.strip(), position=position)
-        session.add(lesson); await session.flush(); await session.commit()
+        session.add(lesson)
+        await session.flush()
+        await session.commit()
         return LessonSummaryRead(id=lesson.id, title=lesson.title, position=lesson.position)
 
 
 @router.delete("/sections/{section_id}", status_code=204)
 async def delete_section(
     section_id: int,
-    teacher: User = Depends(require_teacher), container: Container = Depends(get_container),
+    teacher: User = Depends(require_teacher),
+    container: Container = Depends(get_container),
 ) -> None:
     async with container.session_factory() as session:
         section = await session.get(SectionORM, section_id)
         if section is None:
             raise HTTPException(status_code=404, detail="Модуль не найден")
         await _owned_course(session, section.course_id, teacher.id)
-        lesson_ids = list((await session.execute(select(LessonORM.id).where(LessonORM.section_id == section_id))).scalars())
-        step_ids = [] if not lesson_ids else list((await session.execute(select(StepORM.id).where(StepORM.lesson_id.in_(lesson_ids)))).scalars())
+        lesson_ids = list(
+            (
+                await session.execute(
+                    select(LessonORM.id).where(LessonORM.section_id == section_id)
+                )
+            ).scalars()
+        )
+        step_ids = (
+            []
+            if not lesson_ids
+            else list(
+                (
+                    await session.execute(
+                        select(StepORM.id).where(StepORM.lesson_id.in_(lesson_ids))
+                    )
+                ).scalars()
+            )
+        )
         await _delete_steps(session, step_ids)
         if lesson_ids:
             await session.execute(delete(LessonORM).where(LessonORM.id.in_(lesson_ids)))
@@ -224,7 +354,8 @@ async def delete_section(
 @router.delete("/lessons/{lesson_id}", status_code=204)
 async def delete_lesson(
     lesson_id: int,
-    teacher: User = Depends(require_teacher), container: Container = Depends(get_container),
+    teacher: User = Depends(require_teacher),
+    container: Container = Depends(get_container),
 ) -> None:
     async with container.session_factory() as session:
         lesson = await session.get(LessonORM, lesson_id)
@@ -234,7 +365,11 @@ async def delete_lesson(
         if section is None:
             raise HTTPException(status_code=404, detail="Модуль не найден")
         await _owned_course(session, section.course_id, teacher.id)
-        step_ids = list((await session.execute(select(StepORM.id).where(StepORM.lesson_id == lesson_id))).scalars())
+        step_ids = list(
+            (
+                await session.execute(select(StepORM.id).where(StepORM.lesson_id == lesson_id))
+            ).scalars()
+        )
         await _delete_steps(session, step_ids)
         await session.execute(delete(LessonORM).where(LessonORM.id == lesson_id))
         await session.commit()
@@ -242,8 +377,10 @@ async def delete_lesson(
 
 @router.post("/lessons/{lesson_id}/steps", response_model=StepSummaryRead, status_code=201)
 async def create_step(
-    lesson_id: int, payload: TeacherStepCreate,
-    teacher: User = Depends(require_teacher), container: Container = Depends(get_container),
+    lesson_id: int,
+    payload: TeacherStepCreate,
+    teacher: User = Depends(require_teacher),
+    container: Container = Depends(get_container),
 ) -> StepSummaryRead:
     async with container.session_factory() as session:
         lesson = await session.get(LessonORM, lesson_id)
@@ -253,32 +390,46 @@ async def create_step(
         if section is None:
             raise HTTPException(status_code=404, detail="Модуль не найден")
         await _owned_course(session, section.course_id, teacher.id)
-        position = int(await session.scalar(select(func.coalesce(func.max(StepORM.position), 0) + 1).where(StepORM.lesson_id == lesson_id)) or 1)
+        position = int(
+            await session.scalar(
+                select(func.coalesce(func.max(StepORM.position), 0) + 1).where(
+                    StepORM.lesson_id == lesson_id
+                )
+            )
+            or 1
+        )
         step = StepORM(lesson_id=lesson_id, position=position, step_type=payload.step_type)
-        session.add(step); await session.flush()
+        session.add(step)
+        await session.flush()
         session.add(StepContentORM(step_id=step.id, content_type="html", body=payload.body))
         if payload.step_type == "choice":
-            session.add(ChoiceQuestionMetadataORM(
-                step_id=step.id,
-                source_question_html=payload.body,
-                source_file="teacher-workspace",
-                needs_review=False,
-                is_multiple_choice=payload.is_multiple_choice,
-            ))
-            for position, option in enumerate(payload.choices):
-                session.add(StepChoiceOptionORM(
+            session.add(
+                ChoiceQuestionMetadataORM(
                     step_id=step.id,
-                    position=position,
-                    option_html=option.text,
-                    is_suggested_correct=option.is_correct,
-                    is_correct=option.is_correct,
-                ))
+                    source_question_html=payload.body,
+                    source_file="teacher-workspace",
+                    needs_review=False,
+                    is_multiple_choice=payload.is_multiple_choice,
+                )
+            )
+            for position, option in enumerate(payload.choices):
+                session.add(
+                    StepChoiceOptionORM(
+                        step_id=step.id,
+                        position=position,
+                        option_html=option.text,
+                        is_suggested_correct=option.is_correct,
+                        is_correct=option.is_correct,
+                    )
+                )
         elif payload.step_type in {"string", "number"}:
-            session.add(StepSourceORM(
-                step_id=step.id,
-                source_type="teacher-workspace",
-                payload={"correct": payload.correct_answer},
-            ))
+            session.add(
+                StepSourceORM(
+                    step_id=step.id,
+                    source_type="teacher-workspace",
+                    payload={"correct": payload.correct_answer},
+                )
+            )
         await session.commit()
         return StepSummaryRead(id=step.id, position=step.position, step_type=step.step_type)
 
@@ -286,19 +437,58 @@ async def create_step(
 @router.delete("/courses/{course_id}", status_code=204)
 async def delete_draft_course(
     course_id: int,
-    teacher: User = Depends(require_teacher), container: Container = Depends(get_container),
+    teacher: User = Depends(require_teacher),
+    container: Container = Depends(get_container),
 ) -> None:
     async with container.session_factory() as session:
         course = await _owned_course(session, course_id, teacher.id)
         if course.is_published:
-            raise HTTPException(status_code=409, detail="Можно удалить только неопубликованный черновик")
-        enrollment_count = await session.scalar(select(func.count()).select_from(EnrollmentORM).where(EnrollmentORM.course_id == course_id))
-        chat_count = await session.scalar(select(func.count()).select_from(ChatSessionORM).where(ChatSessionORM.course_id == course_id))
+            raise HTTPException(
+                status_code=409, detail="Можно удалить только неопубликованный черновик"
+            )
+        enrollment_count = await session.scalar(
+            select(func.count())
+            .select_from(EnrollmentORM)
+            .where(EnrollmentORM.course_id == course_id)
+        )
+        chat_count = await session.scalar(
+            select(func.count())
+            .select_from(ChatSessionORM)
+            .where(ChatSessionORM.course_id == course_id)
+        )
         if enrollment_count or chat_count:
-            raise HTTPException(status_code=409, detail="Нельзя удалить черновик с активностью студентов")
-        section_ids = list((await session.execute(select(SectionORM.id).where(SectionORM.course_id == course_id))).scalars())
-        lesson_ids = [] if not section_ids else list((await session.execute(select(LessonORM.id).where(LessonORM.section_id.in_(section_ids)))).scalars())
-        step_ids = [] if not lesson_ids else list((await session.execute(select(StepORM.id).where(StepORM.lesson_id.in_(lesson_ids)))).scalars())
+            raise HTTPException(
+                status_code=409, detail="Нельзя удалить черновик с активностью студентов"
+            )
+        section_ids = list(
+            (
+                await session.execute(
+                    select(SectionORM.id).where(SectionORM.course_id == course_id)
+                )
+            ).scalars()
+        )
+        lesson_ids = (
+            []
+            if not section_ids
+            else list(
+                (
+                    await session.execute(
+                        select(LessonORM.id).where(LessonORM.section_id.in_(section_ids))
+                    )
+                ).scalars()
+            )
+        )
+        step_ids = (
+            []
+            if not lesson_ids
+            else list(
+                (
+                    await session.execute(
+                        select(StepORM.id).where(StepORM.lesson_id.in_(lesson_ids))
+                    )
+                ).scalars()
+            )
+        )
         await _delete_steps(session, step_ids)
         if lesson_ids:
             await session.execute(delete(LessonORM).where(LessonORM.id.in_(lesson_ids)))
@@ -316,10 +506,21 @@ async def course_students(
 ) -> list[TeacherStudentProgressRead]:
     async with container.session_factory() as session:
         await _owned_course(session, course_id, teacher.id)
-        rows = (await session.execute(
-            select(EnrollmentORM, UserORM)
-            .join(UserORM, UserORM.id == EnrollmentORM.user_id)
-            .where(EnrollmentORM.course_id == course_id)
-            .order_by(EnrollmentORM.progress_percent.desc(), UserORM.name)
-        )).all()
-        return [TeacherStudentProgressRead(user_id=user.id, name=user.name, email=user.email, progress_percent=float(enrollment.progress_percent), status=enrollment.status) for enrollment, user in rows]
+        rows = (
+            await session.execute(
+                select(EnrollmentORM, UserORM)
+                .join(UserORM, UserORM.id == EnrollmentORM.user_id)
+                .where(EnrollmentORM.course_id == course_id)
+                .order_by(EnrollmentORM.progress_percent.desc(), UserORM.name)
+            )
+        ).all()
+        return [
+            TeacherStudentProgressRead(
+                user_id=user.id,
+                name=user.name,
+                email=user.email,
+                progress_percent=float(enrollment.progress_percent),
+                status=enrollment.status,
+            )
+            for enrollment, user in rows
+        ]

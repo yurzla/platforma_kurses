@@ -17,7 +17,15 @@ from courses_assistant.domain.errors import (
     SessionNotFound,
     UserNotFound,
 )
-from courses_assistant.entrypoints.api.routers import admin, auth, catalog, chat, health, jobs, teacher
+from courses_assistant.entrypoints.api.routers import (
+    admin,
+    auth,
+    catalog,
+    chat,
+    health,
+    jobs,
+    teacher,
+)
 from courses_assistant.entrypoints.middleware import RequestContextMiddleware
 
 logger = structlog.get_logger(__name__)

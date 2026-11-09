@@ -22,8 +22,8 @@ from courses_assistant.adapters.persistence.orm import (
     LessonORM,
     RefreshTokenORM,
     SectionORM,
-    StepContentORM,
     StepChoiceOptionORM,
+    StepContentORM,
     StepORM,
     StepSourceORM,
     UserORM,
@@ -180,7 +180,7 @@ class SqlChatRepository(ChatRepository):
         statement = delete(ChatSessionORM).where(ChatSessionORM.user_id == user_id)
         if course_id is not None:
             statement = statement.where(ChatSessionORM.course_id == course_id)
-        result = await self._session.execute(statement)
+        result = cast("CursorResult[Any]", await self._session.execute(statement))
         return int(result.rowcount or 0)
 
     async def user_exists(self, user_id: int) -> bool:
