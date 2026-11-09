@@ -9,7 +9,7 @@ import os
 import uuid
 
 import pytest
-from sqlalchemy import delete
+from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from courses_assistant.adapters.persistence.orm import (
@@ -85,6 +85,24 @@ async def test_similar_courses_ranks_by_embedding() -> None:
     finally:
         async with session_factory() as session:
             if course_ids:
+                chunk_ids = list(
+                    (
+                        await session.execute(
+                            select(ContentChunkORM.id).where(
+                                ContentChunkORM.course_id.in_(course_ids)
+                            )
+                        )
+                    ).scalars()
+                )
+                if chunk_ids:
+                    await session.execute(
+                        delete(ChunkEmbeddingORM).where(
+                            ChunkEmbeddingORM.chunk_id.in_(chunk_ids)
+                        )
+                    )
+                await session.execute(
+                    delete(ContentChunkORM).where(ContentChunkORM.course_id.in_(course_ids))
+                )
                 await session.execute(delete(CourseORM).where(CourseORM.id.in_(course_ids)))
                 await session.commit()
         await engine.dispose()
