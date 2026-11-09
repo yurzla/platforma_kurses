@@ -4,10 +4,44 @@
 
 {% block body %}
 {% with active = "courses" %}{% include "_topbar.html" %}{% endwith %}
+{% set type_labels = {
+  "choice": "Тест",
+  "string": "Ввод",
+  "number": "Число",
+  "code": "Код",
+  "math": "Формула",
+  "free_answer": "Ответ",
+  "text": "Текст",
+  "video": "Видео",
+  "matching": "Сопоставление",
+  "sorting": "Сортировка"
+} %}
 <main>
-  <p class="breadcrumbs"><a href="/courses">Курсы</a> / <a href="/courses/{{ course_id }}">Курс</a> / шаг {{ step.position }}</p>
+  <p class="breadcrumbs">
+    <a href="/courses">Курсы</a> /
+    <a href="/courses/{{ course_id }}">{{ step_context.course_title or "Курс" }}</a>
+    {% if step_context.section_title %} / {{ step_context.section_title }}{% endif %}
+    {% if step_context.lesson_title %} / {{ step_context.lesson_title }}{% endif %}
+    / Шаг {{ step_context.number or step.position }}
+  </p>
   <h1 class="page-title">{{ step.title or ("Шаг " ~ step.position) }}</h1>
-  <span class="step-type-badge">{{ step.step_type }}</span>
+  <span class="step-type-badge">{{ type_labels.get(step.step_type, step.step_type) }}</span>
+
+  <section class="step-progress" aria-label="Прогресс курса">
+    <div class="step-progress-head">
+      <span class="step-progress-note">Пройдено {{ progress.done }} из {{ progress.total }} шагов</span>
+      <span class="step-progress-value">{{ '%g'|format(progress.percent) }}%</span>
+    </div>
+    <div class="step-progress-bar" role="progressbar" aria-valuenow="{{ progress.percent }}"
+         aria-valuemin="0" aria-valuemax="100" aria-label="Прогресс курса">
+      <span class="step-progress-fill" style="width: {{ progress.percent }}%"></span>
+      {% for marker in checkpoints %}
+      <span class="step-progress-dot {{ marker.kind }}-dot{% if marker.reached %} reached{% endif %}"
+            style="left: {{ marker.percent }}%" data-step="{{ marker.step }}"
+            title="{{ marker.title }}"></span>
+      {% endfor %}
+    </div>
+  </section>
 
   {% if step.body %}
   <div class="step-body">{{ step.body | safe }}</div>
@@ -35,19 +69,31 @@
     {% else %}
     <p class="muted">Это задание проверяется без автоматической оценки. Отметьте его как выполнённое.</p>
     <form id="complete-form" class="quiz-form">
-      <button class="btn" type="submit">Отметить выполненным</button>
+      <button class="btn{% if step.completed %} done{% endif %}" type="submit"
+              {% if step.completed %}disabled{% endif %}>{% if step.completed %}Выполнено{% else %}Отметить выполненным{% endif %}</button>
     </form>
     {% endif %}
     <div id="answer-result" class="answer-result hidden"></div>
-    {% if next_step_url %}
-    <a id="next-step" class="btn next-step hidden" href="{{ next_step_url }}">Далее →</a>
-    {% endif %}
   </section>
+
+  <nav class="step-nav" aria-label="Навигация по шагам">
+    {% if prev_step_id %}
+    <a class="btn ghost" href="/courses/{{ course_id }}/steps/{{ prev_step_id }}">← Назад</a>
+    {% else %}
+    <button class="btn ghost" type="button" disabled>← Назад</button>
+    {% endif %}
+    {% if next_step_id %}
+    <a class="btn" href="/courses/{{ course_id }}/steps/{{ next_step_id }}">Вперёд →</a>
+    {% else %}
+    <button class="btn" type="button" disabled>Вперёд →</button>
+    {% endif %}
+  </nav>
 </main>
 {% endblock %}
 
 {% block scripts %}
 <script>window.STEP = {{ step | tojson }};</script>
 <script>window.COURSE_ID = {{ course_id }};</script>
+<script>window.STEP_PROGRESS = {{ step_progress | tojson }};</script>
 <script>window.ME = {{ me | tojson }};</script>
 {% endblock %}

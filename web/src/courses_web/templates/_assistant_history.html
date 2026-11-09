@@ -1,3 +1,8 @@
+{% if assistant_history %}
+<div class="history-toolbar">
+  <button type="button" id="history-clear" class="btn ghost history-clear">Очистить историю</button>
+</div>
+{% endif %}
 {% for group in assistant_history %}
 <details class="history-group">
   <summary class="history-course">
@@ -6,10 +11,16 @@
   </summary>
   <ul class="history-sessions">
     {% for s in group.sessions %}
-    <li>
+    <li class="history-item">
       <button type="button" class="history-session" data-session-id="{{ s.id }}">
         <span class="history-date">{{ s.started_at }}</span>
         <span class="history-preview">{{ s.preview or 'Без сообщений' }}</span>
+      </button>
+      <button type="button" class="history-delete" data-session-id="{{ s.id }}"
+              aria-label="Удалить диалог" title="Удалить диалог">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+          <path d="M9 3h6l1 2h4v2H4V5h4l1-2Zm-3 6h12l-1 11a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L6 9Zm3 2v9h2v-9h-2Zm4 0v9h2v-9h-2Z"/>
+        </svg>
       </button>
     </li>
     {% endfor %}

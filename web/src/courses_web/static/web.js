@@ -15,9 +15,26 @@
     el.classList.toggle("bad", !ok);
   }
 
-  function showNextStep() {
-    var link = document.getElementById("next-step");
-    if (link) link.classList.remove("hidden");
+  function updateStepProgress() {
+    var progress = window.STEP_PROGRESS;
+    var fill = document.querySelector(".step-progress-fill");
+    if (!progress || !progress.total || !fill) return;
+    progress.done = Math.min(progress.done + 1, progress.total);
+    var percent = Math.round((1000 * progress.done) / progress.total) / 10;
+    var bar = document.querySelector(".step-progress-bar");
+    var value = document.querySelector(".step-progress-value");
+    var note = document.querySelector(".step-progress-note");
+    fill.style.width = percent + "%";
+    if (bar) bar.setAttribute("aria-valuenow", String(percent));
+    if (value) value.textContent = percent + "%";
+    if (note) note.textContent = "Пройдено " + progress.done + " из " + progress.total + " шагов";
+    Array.prototype.forEach.call(
+      document.querySelectorAll(".step-progress-dot"),
+      function (dot) {
+        var at = parseInt(dot.dataset.step, 10);
+        dot.classList.toggle("reached", !isNaN(at) && at <= progress.done);
+      }
+    );
   }
 
   function buildAnswer(form) {
@@ -48,10 +65,9 @@
         showResult("Неверно. Попробуйте ещё раз.", false);
       } else if (data.is_correct) {
         showResult("Верно!", true);
-        showNextStep();
+        updateStepProgress();
       } else {
         showResult("Ответ сохранён.", false);
-        showNextStep();
       }
     });
   }
@@ -66,9 +82,18 @@
           body: JSON.stringify({ answer: null }) }
       );
       if (resp.status === 401) { window.location.href = "/login"; return; }
-      var data = await resp.json();
+      if (!resp.ok) {
+        showResult("Не удалось сохранить ответ, попробуйте позже.", false);
+        return;
+      }
+      var button = completeForm.querySelector("button");
+      if (button) {
+        button.textContent = "Выполнено";
+        button.classList.add("done");
+        button.disabled = true;
+      }
+      updateStepProgress();
       showResult("Отмечено выполненным.", true);
-      if (data.completed) showNextStep();
     });
   }
 
@@ -85,6 +110,57 @@
     var historyPanel = document.getElementById("assistant-history");
     var historyList = document.getElementById("assistant-history-list");
     var backBtn = document.getElementById("assistant-back");
+    var actions = document.getElementById("chat-actions");
+    var exportMd = document.getElementById("export-md");
+    var exportPdf = document.getElementById("export-pdf");
+    var confirmModal = document.getElementById("confirm-modal");
+    var confirmText = document.getElementById("confirm-text");
+    var confirmOk = document.getElementById("confirm-ok");
+    var confirmCancel = document.getElementById("confirm-cancel");
+    var confirmResolve = null;
+    var ERROR_TEXT = "Произошла ошибка, попробуйте чуть позже.";
+
+    function closeConfirm(result) {
+      if (!confirmModal) return;
+      confirmModal.classList.add("hidden");
+      document.body.classList.remove("modal-open");
+      if (confirmResolve) {
+        var resolve = confirmResolve;
+        confirmResolve = null;
+        resolve(result);
+      }
+    }
+
+    function askConfirm(message, okLabel) {
+      if (!confirmModal) return Promise.resolve(window.confirm(message));
+      if (confirmText) confirmText.textContent = message;
+      if (confirmOk) confirmOk.textContent = okLabel || "Удалить";
+      confirmModal.classList.remove("hidden");
+      document.body.classList.add("modal-open");
+      if (confirmCancel) confirmCancel.focus();
+      return new Promise(function (resolve) {
+        confirmResolve = resolve;
+      });
+    }
+
+    if (confirmOk) {
+      confirmOk.addEventListener("click", function () { closeConfirm(true); });
+    }
+    if (confirmCancel) {
+      confirmCancel.addEventListener("click", function () { closeConfirm(false); });
+    }
+    if (confirmModal) {
+      var confirmBackdrop = confirmModal.querySelector(".confirm-backdrop");
+      if (confirmBackdrop) {
+        confirmBackdrop.addEventListener("click", function () { closeConfirm(false); });
+      }
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && !confirmModal.classList.contains("hidden")) {
+          event.preventDefault();
+          closeConfirm(false);
+        }
+      });
+    }
 
     function openPanel() {
       drawer.classList.add("open");
@@ -121,6 +197,7 @@
         div.textContent = text;
       }
       log.appendChild(div);
+      mountExportLinks();
       log.scrollTop = log.scrollHeight;
       return div;
     }
@@ -129,10 +206,33 @@
       log.innerHTML = "";
     }
 
+    function mountExportLinks() {
+      if (!actions) return;
+      if (!sessionId) {
+        actions.classList.add("hidden");
+        return;
+      }
+      if (exportMd) exportMd.href = "/api/v1/chat/sessions/" + sessionId + "/export?format=md";
+      if (exportPdf) exportPdf.href = "/api/v1/chat/sessions/" + sessionId + "/export?format=pdf";
+      actions.classList.remove("hidden");
+      log.appendChild(actions);
+    }
+
     function showChat() {
       if (historyPanel) historyPanel.classList.add("hidden");
       if (backBtn) backBtn.classList.remove("hidden");
+      mountExportLinks();
       log.classList.remove("hidden");
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function showHistory() {
+      sessionId = null;
+      clearLog();
+      log.classList.add("hidden");
+      if (backBtn) backBtn.classList.add("hidden");
+      if (actions) actions.classList.add("hidden");
+      if (historyPanel) historyPanel.classList.remove("hidden");
     }
 
     async function refreshHistory() {
@@ -178,7 +278,50 @@
     }
 
     if (historyList) {
-      historyList.addEventListener("click", function (event) {
+      historyList.addEventListener("click", async function (event) {
+        var clearBtn = event.target.closest("#history-clear");
+        if (clearBtn) {
+          var scope = courseId ? " по этому курсу" : "";
+          if (!(await askConfirm("Удалить всю историю диалогов" + scope + "?", "Очистить"))) return;
+          try {
+            var clearUrl = "/api/v1/chat/sessions" + (courseId ? "?course_id=" + courseId : "");
+            var clearResp = await fetch(clearUrl, {
+              method: "DELETE", headers: { Accept: "application/json" },
+              credentials: "same-origin",
+            });
+            if (clearResp.status === 401) { window.location.href = "/login"; return; }
+            if (!clearResp.ok) {
+              window.alert(ERROR_TEXT);
+              return;
+            }
+            showHistory();
+            await refreshHistory();
+          } catch (err) {
+            window.alert(ERROR_TEXT);
+          }
+          return;
+        }
+        var deleteBtn = event.target.closest(".history-delete");
+        if (deleteBtn) {
+          var deleteId = parseInt(deleteBtn.dataset.sessionId, 10);
+          if (!(await askConfirm("Удалить этот диалог?", "Удалить"))) return;
+          try {
+            var delResp = await fetch("/api/v1/chat/sessions/" + deleteId, {
+              method: "DELETE", headers: { Accept: "application/json" },
+              credentials: "same-origin",
+            });
+            if (delResp.status === 401) { window.location.href = "/login"; return; }
+            if (!delResp.ok) {
+              window.alert(ERROR_TEXT);
+              return;
+            }
+            if (sessionId === deleteId) showHistory();
+            await refreshHistory();
+          } catch (err) {
+            window.alert(ERROR_TEXT);
+          }
+          return;
+        }
         var btn = event.target.closest(".history-session");
         if (!btn) return;
         loadSession(parseInt(btn.dataset.sessionId, 10));
@@ -187,11 +330,7 @@
 
     if (backBtn) {
       backBtn.addEventListener("click", async function () {
-        sessionId = null;
-        clearLog();
-        log.classList.add("hidden");
-        backBtn.classList.add("hidden");
-        if (historyPanel) historyPanel.classList.remove("hidden");
+        showHistory();
         await refreshHistory();
       });
     }
@@ -204,18 +343,23 @@
       showChat();
       append("user", question);
       var placeholder = append("assistant", "…");
-      var sid = await ensureSession();
-      if (!sid) {
-        placeholder.textContent = "Не удалось создать сессию.";
-        return;
+      try {
+        var sid = await ensureSession();
+        if (!sid) {
+          placeholder.textContent = "Не удалось создать сессию.";
+          return;
+        }
+        mountExportLinks();
+        var resp = await fetch("/api/v1/chat/sessions/" + sid + "/ask", {
+          method: "POST", headers: jsonHeaders(), credentials: "same-origin",
+          body: JSON.stringify({ question: question }),
+        });
+        if (!resp.ok) { placeholder.textContent = "Ошибка постановки вопроса."; return; }
+        var job = await resp.json();
+        poll(job.job_id, placeholder);
+      } catch (err) {
+        placeholder.textContent = ERROR_TEXT;
       }
-      var resp = await fetch("/api/v1/chat/sessions/" + sid + "/ask", {
-        method: "POST", headers: jsonHeaders(), credentials: "same-origin",
-        body: JSON.stringify({ question: question }),
-      });
-      if (!resp.ok) { placeholder.textContent = "Ошибка постановки вопроса."; return; }
-      var job = await resp.json();
-      poll(job.job_id, placeholder);
     });
 
     async function poll(jobId, node) {
@@ -231,7 +375,7 @@
           else node.textContent = answer;
           return;
         }
-        if (data.status === "failed") { node.textContent = "Ошибка: " + (data.error || "неизвестно"); return; }
+        if (data.status === "failed") { node.textContent = ERROR_TEXT; return; }
       }
       node.textContent = "Превышено время ожидания ответа.";
     }

@@ -2,8 +2,15 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Response
 
+from courses_assistant.adapters.export.pdf import render_pdf
+from courses_assistant.application.chat_export import (
+    DialogMeta,
+    build_dialog,
+    dialog_filename,
+    render_markdown,
+)
 from courses_assistant.application.commands import CreateChatSession
 from courses_assistant.application.queries import get_history
 from courses_assistant.container import Container
@@ -18,6 +25,12 @@ from courses_assistant.entrypoints.api.schemas import (
 )
 
 router = APIRouter(prefix="/api/v1/chat", tags=["chat"])
+
+_EXPORT_LIMIT = 10_000
+_EXPORT_MEDIA_TYPES = {
+    "md": "text/markdown; charset=utf-8",
+    "pdf": "application/pdf",
+}
 
 
 @router.get("/sessions", response_model=list[SessionListItemRead])
@@ -71,3 +84,69 @@ async def list_messages(
         )
         for message in history
     ]
+
+
+@router.delete("/sessions", status_code=204)
+async def delete_all_sessions(
+    course_id: int | None = Query(default=None),
+    user: User = Depends(require_user),
+    container: Container = Depends(get_container),
+) -> Response:
+    async with container.uow_factory() as uow:
+        session_ids = await uow.chat.list_session_ids(user.id, course_id=course_id)
+        await uow.jobs.delete_by_sessions(session_ids)
+        await uow.chat.delete_sessions(user.id, course_id=course_id)
+        await uow.commit()
+    return Response(status_code=204)
+
+
+@router.delete("/sessions/{session_id}", status_code=204)
+async def delete_session(
+    session_id: int,
+    user: User = Depends(require_user),
+    container: Container = Depends(get_container),
+) -> Response:
+    await ensure_session_access(container, session_id, user)
+    async with container.uow_factory() as uow:
+        await uow.jobs.delete_by_session(session_id)
+        await uow.chat.delete_session(session_id)
+        await uow.commit()
+    return Response(status_code=204)
+
+
+@router.get("/sessions/{session_id}/export")
+async def export_session(
+    session_id: int,
+    format: str = Query(default=""),
+    user: User = Depends(require_user),
+    container: Container = Depends(get_container),
+) -> Response:
+    if format not in _EXPORT_MEDIA_TYPES:
+        raise HTTPException(
+            status_code=400,
+            detail="Поддерживаются форматы выгрузки: md, pdf",
+        )
+    session = await ensure_session_access(container, session_id, user)
+    async with container.uow_factory() as uow:
+        messages = await uow.chat.get_history(session_id, limit=_EXPORT_LIMIT)
+        course_title: str | None = None
+        if session.course_id is not None:
+            course = await uow.catalog.get_course(session.course_id, user.id)
+            course_title = course.title if course is not None else None
+    participant = f"{user.name} <{user.email}>" if user.name else user.email
+    meta = DialogMeta(
+        session_id=session_id,
+        course_title=course_title,
+        started_at=session.started_at,
+        participant=participant,
+    )
+    blocks = build_dialog(messages)
+    content: str | bytes = (
+        render_markdown(meta, blocks) if format == "md" else render_pdf(meta, blocks)
+    )
+    filename = dialog_filename(meta, format)
+    return Response(
+        content=content,
+        media_type=_EXPORT_MEDIA_TYPES[format],
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )

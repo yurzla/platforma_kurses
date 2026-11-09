@@ -409,18 +409,91 @@ def _course_progress(course_id: int, course: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _next_step_url(course_id: int, course: dict[str, Any], current_step_id: int) -> str | None:
-    """URL следующего шага в порядке модулей, уроков и шагов."""
-    steps = [
-        step
-        for section in course.get("sections", [])
+def _step_neighbours(
+    course_data: dict[str, Any], step_id: int
+) -> tuple[int | None, int | None]:
+    step_ids = [
+        step.get("id")
+        for section in course_data.get("sections", [])
         for lesson in section.get("lessons", [])
         for step in lesson.get("steps", [])
     ]
-    for index, item in enumerate(steps):
-        if item.get("id") == current_step_id and index + 1 < len(steps):
-            return f"/courses/{course_id}/steps/{steps[index + 1].get('id')}"
-    return None
+    try:
+        index = step_ids.index(step_id)
+    except ValueError:
+        return None, None
+    previous_id = step_ids[index - 1] if index > 0 else None
+    next_id = step_ids[index + 1] if index + 1 < len(step_ids) else None
+    return previous_id, next_id
+
+
+def _step_markers(course: dict[str, Any], done: int) -> list[dict[str, Any]]:
+    sections = course.get("sections", [])
+    total = sum(
+        1
+        for section in sections
+        for lesson in section.get("lessons", [])
+        for _step in lesson.get("steps", [])
+    )
+    if total == 0:
+        return []
+    markers: list[dict[str, Any]] = []
+    cumulative = 0
+    for index, section in enumerate(sections, start=1):
+        lessons = section.get("lessons", [])
+        section_size = sum(len(lesson.get("steps", [])) for lesson in lessons)
+        if section_size == 0:
+            continue
+        section_end = cumulative + section_size
+        module_title = section.get("title") or f"Модуль {index}"
+        for lesson in lessons:
+            steps = lesson.get("steps", [])
+            if not steps:
+                continue
+            cumulative += len(steps)
+            if cumulative >= total:
+                continue
+            if cumulative == section_end:
+                markers.append(
+                    {
+                        "percent": round(100.0 * cumulative / total, 2),
+                        "kind": "module",
+                        "title": module_title,
+                        "step": cumulative,
+                        "reached": cumulative <= done,
+                    }
+                )
+            else:
+                markers.append(
+                    {
+                        "percent": round(100.0 * cumulative / total, 2),
+                        "kind": "lesson",
+                        "title": lesson.get("title") or f"Этап {index}",
+                        "step": cumulative,
+                        "reached": cumulative <= done,
+                    }
+                )
+    return markers
+
+
+def _step_context(course: dict[str, Any], step_id: int) -> dict[str, Any]:
+    context: dict[str, Any] = {
+        "course_title": course.get("title"),
+        "section_title": None,
+        "lesson_title": None,
+        "number": None,
+    }
+    number = 0
+    for section in course.get("sections", []):
+        for lesson in section.get("lessons", []):
+            for step in lesson.get("steps", []):
+                number += 1
+                if step.get("id") == step_id:
+                    context["section_title"] = section.get("title")
+                    context["lesson_title"] = lesson.get("title")
+                    context["number"] = number
+                    return context
+    return context
 
 
 @router.get("/courses/{course_id}", response_class=HTMLResponse)
@@ -462,6 +535,8 @@ async def step(request: Request, course_id: int, step_id: int) -> Response:
     course_resp = await call_api(request, "GET", f"/api/v1/courses/{course_id}")
     course_data = course_resp.json() if course_resp.status_code == 200 else {}
     course_title = course_data.get("title")
+    previous_step_id, next_step_id = _step_neighbours(course_data, step_id)
+    progress = _course_progress(course_id, course_data)
     assistant = await _assistant_history_context(request, course_id=course_id)
     return _render(
         request,
@@ -472,7 +547,12 @@ async def step(request: Request, course_id: int, step_id: int) -> Response:
             "assistant_mode": "course",
             "assistant_course_title": course_title,
             "step": step_data,
-            "next_step_url": _next_step_url(course_id, course_data, step_id),
+            "prev_step_id": previous_step_id,
+            "next_step_id": next_step_id,
+            "progress": progress,
+            "checkpoints": _step_markers(course_data, progress["done"]),
+            "step_context": _step_context(course_data, step_id),
+            "step_progress": {"done": progress["done"], "total": progress["total"]},
             **assistant,
         },
     )

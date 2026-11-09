@@ -135,6 +135,34 @@ main { padding: 24px; max-width: 1040px; margin: 0 auto; }
   display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px;
   background: var(--panel-2); color: var(--muted); margin-bottom: 12px;
 }
+.step-progress {
+  margin: 0 0 18px;
+}
+.step-progress-head {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 10px;
+}
+.step-progress-note { color: var(--muted); font-size: 13px; }
+.step-progress-value { font-size: 16px; font-weight: 700; }
+.step-progress-bar {
+  position: relative; height: 8px; border-radius: 999px;
+  background: var(--panel-2); overflow: visible;
+}
+.step-progress-fill {
+  display: block; height: 100%; background: var(--accent);
+  border-radius: 999px; transition: width .25s ease;
+}
+.step-progress-dot {
+  position: absolute; top: 50%; margin: 0; border-radius: 50%;
+  transform: translate(-50%, -50%); cursor: default;
+}
+.step-progress-dot.lesson-dot {
+  width: 6px; height: 6px; background: #fff; box-shadow: 0 0 0 2px var(--border);
+}
+.step-progress-dot.module-dot {
+  width: 11px; height: 11px; background: #fff; box-shadow: 0 0 0 2px var(--border);
+}
+.step-progress-dot.lesson-dot.reached { box-shadow: 0 0 0 2px var(--accent); }
+.step-progress-dot.module-dot.reached { box-shadow: 0 0 0 2px var(--accent); }
 .step-body { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; line-height: 1.6; }
 .step-body img { max-width: 100%; }
 
@@ -149,7 +177,11 @@ main { padding: 24px; max-width: 1040px; margin: 0 auto; }
 .answer-result { margin-top: 12px; padding: 10px 12px; border-radius: 8px; }
 .answer-result.ok { background: rgba(63, 185, 80, .15); color: var(--ok); }
 .answer-result.bad { background: rgba(248, 81, 73, .15); color: var(--err); }
-.next-step { display: inline-block; margin-top: 12px; text-decoration: none; }
+
+.step-nav { display: flex; justify-content: space-between; gap: 12px; margin-top: 20px; }
+.step-nav .btn[disabled] { opacity: .45; cursor: default; filter: none; }
+.btn.done { background: var(--ok); border-color: var(--ok); color: #fff; cursor: default; }
+.btn.done[disabled] { opacity: 1; }
 
 .teacher-page { max-width: 1040px; }
 .teacher-heading { display: flex; justify-content: space-between; align-items: start; gap: 16px; }
@@ -300,3 +332,34 @@ main { padding: 24px; max-width: 1040px; margin: 0 auto; }
 .history-preview {
   font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
+.history-item { display: flex; align-items: stretch; gap: 6px; }
+.history-item .history-session { flex: 1 1 0; min-width: 0; width: auto; }
+.history-toolbar { display: flex; justify-content: flex-end; margin: 0 0 8px; }
+.history-clear { font-size: 13px; padding: 5px 12px; }
+.confirm-modal {
+  position: fixed; inset: 0; z-index: 80; display: flex; align-items: center;
+  justify-content: center; padding: 20px;
+}
+.confirm-backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, .55); }
+.confirm-card {
+  position: relative; width: min(420px, 100%); background: var(--panel);
+  border: 1px solid var(--border); border-radius: 14px; padding: 20px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, .45);
+}
+.confirm-card h3 { margin: 0 0 8px; font-size: 18px; }
+.confirm-text { margin: 0 0 18px; color: var(--muted); font-size: 14px; line-height: 1.5; }
+.confirm-actions { display: flex; justify-content: flex-end; gap: 10px; }
+.confirm-actions .btn.danger { background: #c0392b; border-color: #c0392b; color: #fff; }
+.confirm-actions .btn.danger:hover { filter: brightness(1.08); }
+body.modal-open { overflow: hidden; }
+.history-delete {
+  flex: none; width: 40px; display: flex; align-items: center; justify-content: center;
+  background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+  color: var(--muted); cursor: pointer; font-size: 18px; line-height: 1;
+}
+.history-delete svg { width: 18px; height: 18px; fill: currentColor; display: block; }
+.history-delete:hover { border-color: #c0392b; color: #c0392b; }
+.chat-actions {
+  display: flex; gap: 8px; align-self: flex-start; margin: 0 0 4px 4px;
+}
+.chat-actions .btn { font-size: 13px; padding: 4px 10px; text-decoration: none; }
