@@ -340,16 +340,27 @@ function renderIndex(data) {
     : '<tr><td colspan="7" class="muted">нет данных</td></tr>';
 
   const select = $("ch-course");
-  select.innerHTML =
-    '<option value="">все</option>' +
-    courses
-      .map((course) => `<option value="${course.id}">${escapeHtml(course.title)}</option>`)
-      .join("");
-  if (state.chunks.course_id && courses.some((course) => String(course.id) === state.chunks.course_id)) {
-    select.value = state.chunks.course_id;
-  } else {
+  const courseSignature = courses
+    .map((course) => `${course.id}:${course.title}`)
+    .join("|");
+  if (select.dataset.signature !== courseSignature) {
+    const previous = select.value;
+    select.innerHTML =
+      '<option value="">все</option>' +
+      courses
+        .map((course) => `<option value="${course.id}">${escapeHtml(course.title)}</option>`)
+        .join("");
+    select.dataset.signature = courseSignature;
+    const desired = previous || state.chunks.course_id;
+    select.value = courses.some((course) => String(course.id) === String(desired))
+      ? String(desired)
+      : "";
+  }
+  if (
+    state.chunks.course_id &&
+    !courses.some((course) => String(course.id) === String(state.chunks.course_id))
+  ) {
     state.chunks.course_id = "";
-    select.value = "";
   }
 }
 

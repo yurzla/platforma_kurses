@@ -517,6 +517,8 @@ async def test_static_assets_served() -> None:
     assert "openJob(" in js.text
     assert "loadIndex(" in js.text
     assert "loadChunksTab(" in js.text
+    assert "const courseSignature" in js.text
+    assert "dataset.signature" in js.text
     assert "loadHealth(" in js.text
     assert "course_recommendation" in js.text
     assert "Рекомендованные курсы" in js.text
