@@ -4,6 +4,8 @@ const state = {
   tab: "diagnostics",
   diagnostic: "jobs",
   jobs: { status: "", session_id: "", search: "", limit: 25, offset: 0, total: 0 },
+  chunks: { course_id: "", source_type: "", search: "", limit: 25, offset: 0, total: 0 },
+  indexCourses: [],
   users: { search: "", limit: 25, offset: 0, total: 0 },
   courses: { search: "", limit: 25, offset: 0, total: 0 },
   teachers: [],
@@ -65,7 +67,7 @@ function switchDiagnostic(diagnostic) {
   document.querySelectorAll(".diagnostic-tab").forEach((button) =>
     button.classList.toggle("active", button.dataset.diagnostic === diagnostic)
   );
-  ["jobs", "dlq", "streams"].forEach((item) =>
+  ["jobs", "dlq", "streams", "index", "health"].forEach((item) =>
     $("diagnostic-" + item).classList.toggle("hidden", item !== diagnostic)
   );
   refresh();
@@ -115,7 +117,7 @@ function renderJobs(items) {
   body.innerHTML = items
     .map(
       (j) => `
-    <tr>
+    <tr class="clickable" data-job-id="${escapeHtml(j.id)}" title="Открыть детали job">
       <td class="mono">${escapeHtml(j.id).slice(0, 8)}…</td>
       <td>${j.session_id}</td>
       <td>${statusBadge(j.status)}</td>
@@ -147,6 +149,244 @@ async function loadJobs() {
     $("jobs-next").disabled = data.offset + data.limit >= data.total;
   } catch (err) {
     showError("Не удалось загрузить jobs: " + err.message);
+  }
+}
+
+function showModal(id) {
+  $(id).classList.remove("hidden");
+}
+
+function closeModal(id) {
+  $(id).classList.add("hidden");
+}
+
+function distanceLabel(value) {
+  if (value === null || value === undefined || value === "") return "—";
+  const number = Number(value);
+  return isNaN(number) ? escapeHtml(value) : number.toFixed(4);
+}
+
+function renderJobDetail(job) {
+  const sources = Array.isArray(job.sources) ? job.sources : [];
+  const sourceRows = sources.length
+    ? sources
+        .map((source) => {
+          const chunkCell =
+            source.chunk_id === null || source.chunk_id === undefined
+              ? "—"
+              : `<button type="button" class="link-btn mono" data-chunk-id="${escapeHtml(source.chunk_id)}">${escapeHtml(source.chunk_id)}</button>`;
+          const courseName = source.course_title || source.course_id || "—";
+          const courseCell = source.course_url
+            ? `<a href="${escapeHtml(source.course_url)}">${escapeHtml(courseName)}</a>`
+            : escapeHtml(courseName);
+          return `<tr>
+            <td>${chunkCell}</td>
+            <td>${courseCell}</td>
+            <td>${escapeHtml(source.lesson || "—")}</td>
+            <td>${escapeHtml(source.source_type || "—")}</td>
+            <td>${distanceLabel(source.distance)}</td>
+          </tr>`;
+        })
+        .join("")
+    : '<tr><td colspan="5" class="muted">источники не сохранены</td></tr>';
+  return `
+    <dl class="detail-grid">
+      <dt>Job ID</dt><dd class="mono">${escapeHtml(job.id)}</dd>
+      <dt>Session</dt><dd>${escapeHtml(job.session_id)}</dd>
+      <dt>Статус</dt><dd>${statusBadge(job.status)}</dd>
+      <dt>Попытки</dt><dd>${job.attempts ?? 0}</dd>
+      <dt>Создан</dt><dd>${fmt(job.created_at)}</dd>
+      <dt>Обновлён</dt><dd>${fmt(job.updated_at)}</dd>
+    </dl>
+    <div class="detail-block"><h3>Вопрос</h3><pre class="detail-text">${escapeHtml(job.question || "—")}</pre></div>
+    ${job.rewritten_question ? `<div class="detail-block"><h3>Переписанный вопрос</h3><pre class="detail-text">${escapeHtml(job.rewritten_question)}</pre></div>` : ""}
+    <div class="detail-block"><h3>Ответ</h3><pre class="detail-text">${escapeHtml(job.answer || "—")}</pre></div>
+    ${job.error ? `<div class="detail-block"><h3>Ошибка</h3><pre class="detail-text error-text">${escapeHtml(job.error)}</pre></div>` : ""}
+    <div class="detail-block">
+      <h3>Источники</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Chunk</th><th>Курс</th><th>Урок</th><th>Тип</th><th>Distance</th></tr></thead>
+          <tbody>${sourceRows}</tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+async function openJob(jobId) {
+  $("job-detail").innerHTML = '<p class="muted">загрузка…</p>';
+  showModal("job-modal");
+  try {
+    const job = await getJSON("/api/v1/admin/jobs/" + encodeURIComponent(jobId));
+    const detail = $("job-detail");
+    detail.innerHTML = renderJobDetail(job);
+    detail.querySelectorAll("[data-chunk-id]").forEach((button) => {
+      button.addEventListener("click", () => openChunk(button.dataset.chunkId));
+    });
+  } catch (err) {
+    $("job-detail").innerHTML = `<p class="muted">Не удалось загрузить job: ${escapeHtml(err.message)}</p>`;
+  }
+}
+
+function renderChunkDetail(chunk) {
+  return `
+    <dl class="detail-grid">
+      <dt>ID</dt><dd>${escapeHtml(chunk.id)}</dd>
+      <dt>Курс</dt><dd>${escapeHtml(chunk.course_title || "—")} <span class="muted">(${chunk.course_id ?? "—"})</span></dd>
+      <dt>Урок</dt><dd>${escapeHtml(chunk.lesson_title || "—")} <span class="muted">(${chunk.lesson_id ?? "—"})</span></dd>
+      <dt>Шаг</dt><dd>${chunk.step_id ?? "—"}</dd>
+      <dt>Тип</dt><dd>${escapeHtml(chunk.source_type)}</dd>
+      <dt>Индекс</dt><dd>${chunk.chunk_index}</dd>
+      <dt>Эмбеддинг</dt><dd>${chunk.has_embedding ? escapeHtml(chunk.model_name || "есть") : "нет"}</dd>
+      <dt>Размерность</dt><dd>${chunk.embedding_dimension ?? "—"}</dd>
+      <dt>Создан</dt><dd>${fmt(chunk.created_at)}</dd>
+    </dl>
+    <div class="detail-block"><h3>Текст чанка</h3><pre class="detail-text">${escapeHtml(chunk.chunk_text)}</pre></div>`;
+}
+
+async function openChunk(chunkId) {
+  $("chunk-detail").innerHTML = '<p class="muted">загрузка…</p>';
+  showModal("chunk-modal");
+  try {
+    const chunk = await getJSON("/api/v1/admin/chunks/" + encodeURIComponent(chunkId));
+    $("chunk-detail").innerHTML = renderChunkDetail(chunk);
+  } catch (err) {
+    $("chunk-detail").innerHTML = `<p class="muted">Не удалось загрузить чанк: ${escapeHtml(err.message)}</p>`;
+  }
+}
+
+function renderIndex(data) {
+  $("index-total-chunks").textContent = data.total_chunks || 0;
+  $("index-total-embeddings").textContent = data.total_embeddings || 0;
+  $("index-without-embedding").textContent = data.chunks_without_embedding || 0;
+  $("index-meta").textContent = `Модель: ${data.model_name || "—"} · размерность: ${data.dimension ?? "—"} · последний эмбеддинг: ${fmt(data.last_embedding_at)}`;
+
+  const types = Object.entries(data.by_source_type || {});
+  $("index-types-body").innerHTML = types.length
+    ? types.map(([name, count]) => `<tr><td class="mono">${escapeHtml(name)}</td><td>${count}</td></tr>`).join("")
+    : '<tr><td colspan="2" class="muted">нет данных</td></tr>';
+
+  const courses = data.courses || [];
+  state.indexCourses = courses;
+  $("index-courses-body").innerHTML = courses.length
+    ? courses
+        .map(
+          (course) => `<tr>
+            <td>${escapeHtml(course.title)}</td>
+            <td>${course.chunks}</td>
+            <td>${course.description_chunks}</td>
+            <td>${course.step_chunks}</td>
+            <td>${course.embeddings}</td>
+            <td>${course.without_embedding}</td>
+          </tr>`
+        )
+        .join("")
+    : '<tr><td colspan="6" class="muted">нет данных</td></tr>';
+
+  const select = $("ch-course");
+  select.innerHTML =
+    '<option value="">все</option>' +
+    courses
+      .map((course) => `<option value="${course.id}">${escapeHtml(course.title)}</option>`)
+      .join("");
+  if (state.chunks.course_id && courses.some((course) => String(course.id) === state.chunks.course_id)) {
+    select.value = state.chunks.course_id;
+  } else {
+    state.chunks.course_id = "";
+    select.value = "";
+  }
+}
+
+async function loadIndex() {
+  try {
+    const data = await getJSON("/api/v1/admin/index");
+    renderIndex(data);
+  } catch (err) {
+    showError("Не удалось загрузить индекс: " + err.message);
+    return;
+  }
+  await loadChunks();
+}
+
+function renderChunks(items) {
+  const body = $("chunks-body");
+  if (!items.length) {
+    body.innerHTML = '<tr><td colspan="7" class="muted">пусто</td></tr>';
+    return;
+  }
+  body.innerHTML = items
+    .map(
+      (chunk) => `
+    <tr class="clickable" data-chunk-id="${escapeHtml(chunk.id)}" title="Открыть текст чанка">
+      <td class="mono">${escapeHtml(chunk.id)}</td>
+      <td>${escapeHtml(chunk.course_title || "—")}</td>
+      <td>${escapeHtml(chunk.lesson_title || "—")}</td>
+      <td class="mono">${escapeHtml(chunk.source_type)}</td>
+      <td class="truncate" title="${escapeHtml(chunk.preview)}">${escapeHtml(chunk.preview)}</td>
+      <td>${chunk.has_embedding ? `<span class="badge done">${escapeHtml(chunk.model_name || "есть")}</span>` : '<span class="badge failed">нет</span>'}</td>
+      <td class="muted">${fmt(chunk.created_at)}</td>
+    </tr>`
+    )
+    .join("");
+}
+
+async function loadChunks() {
+  const p = new URLSearchParams();
+  if (state.chunks.course_id) p.set("course_id", state.chunks.course_id);
+  if (state.chunks.source_type) p.set("source_type", state.chunks.source_type);
+  if (state.chunks.search) p.set("search", state.chunks.search);
+  p.set("limit", state.chunks.limit);
+  p.set("offset", state.chunks.offset);
+  try {
+    const data = await getJSON("/api/v1/admin/chunks?" + p.toString());
+    state.chunks.total = data.total;
+    renderChunks(data.items);
+    const from = data.total === 0 ? 0 : data.offset + 1;
+    const to = Math.min(data.offset + data.limit, data.total);
+    $("chunks-page").textContent = `${from}–${to} из ${data.total}`;
+    $("chunks-prev").disabled = data.offset <= 0;
+    $("chunks-next").disabled = data.offset + data.limit >= data.total;
+  } catch (err) {
+    showError("Не удалось загрузить чанки: " + err.message);
+  }
+}
+
+function renderHealth(data) {
+  ["postgres", "redis", "ollama"].forEach((name) => {
+    const card = $("dep-" + name);
+    const value = (data.dependencies || {})[name] || "неизвестно";
+    const ok = value === "ok";
+    card.classList.toggle("ok", ok);
+    card.classList.toggle("bad", !ok);
+    card.querySelector(".health-state").textContent = value;
+  });
+  $("health-ollama-model").textContent = data.ollama_model
+    ? `Модель ${data.ollama_model}: ${data.ollama_model_available ? "загружена" : "не найдена"}`
+    : "Модель эмбеддингов не настроена";
+
+  const jobs = data.jobs || {};
+  const rows = [
+    ["Последний done", jobs.last_done_at],
+    ["Последний failed", jobs.last_failed_at],
+    ["Самый старый queued", jobs.oldest_queued_at],
+  ];
+  $("health-jobs-body").innerHTML = rows
+    .map(([label, value]) => `<tr><td>${label}</td><td class="muted">${fmt(value)}</td></tr>`)
+    .join("");
+
+  const settings = data.settings || {};
+  $("health-settings").innerHTML = `
+    <dt>Модель</dt><dd class="mono">${escapeHtml(settings.embedding_model || "—")}</dd>
+    <dt>Размерность</dt><dd>${settings.embedding_dimension ?? "—"}</dd>
+    <dt>Top-K</dt><dd>${settings.retrieval_top_k ?? "—"}</dd>`;
+}
+
+async function loadHealth() {
+  try {
+    const data = await getJSON("/api/v1/admin/health");
+    renderHealth(data);
+  } catch (err) {
+    showError("Не удалось загрузить состояние: " + err.message);
   }
 }
 
@@ -379,6 +619,8 @@ async function refresh() {
     await loadOverview();
     if (state.diagnostic === "jobs") await loadJobs();
     else if (state.diagnostic === "dlq") await loadDlq();
+    else if (state.diagnostic === "index") await loadIndex();
+    else if (state.diagnostic === "health") await loadHealth();
   }
   else if (state.tab === "users") await loadUsers();
   else if (state.tab === "courses") await loadCourses();
@@ -443,7 +685,54 @@ function init() {
   $("c-reset").addEventListener("click", () => { $("c-search").value = ""; state.courses.search = ""; state.courses.offset = 0; loadCourses(); });
   $("courses-prev").addEventListener("click", () => { state.courses.offset = Math.max(0, state.courses.offset - state.courses.limit); loadCourses(); });
   $("courses-next").addEventListener("click", () => { state.courses.offset += state.courses.limit; loadCourses(); });
-  document.querySelectorAll(".card").forEach((c) =>
+  $("ch-apply").addEventListener("click", () => {
+    state.chunks.course_id = $("ch-course").value;
+    state.chunks.source_type = $("ch-source").value;
+    state.chunks.search = $("ch-search").value;
+    state.chunks.offset = 0;
+    loadChunks();
+  });
+  $("ch-reset").addEventListener("click", () => {
+    $("ch-course").value = "";
+    $("ch-source").value = "";
+    $("ch-search").value = "";
+    state.chunks.course_id = "";
+    state.chunks.source_type = "";
+    state.chunks.search = "";
+    state.chunks.offset = 0;
+    loadChunks();
+  });
+  $("chunks-prev").addEventListener("click", () => {
+    state.chunks.offset = Math.max(0, state.chunks.offset - state.chunks.limit);
+    loadChunks();
+  });
+  $("chunks-next").addEventListener("click", () => {
+    state.chunks.offset += state.chunks.limit;
+    loadChunks();
+  });
+  $("jobs-body").addEventListener("click", (event) => {
+    const row = event.target.closest("tr[data-job-id]");
+    if (row) openJob(row.dataset.jobId);
+  });
+  $("chunks-body").addEventListener("click", (event) => {
+    const row = event.target.closest("tr[data-chunk-id]");
+    if (row) openChunk(row.dataset.chunkId);
+  });
+  document.querySelectorAll("[data-close]").forEach((button) =>
+    button.addEventListener("click", () => closeModal(button.dataset.close))
+  );
+  document.querySelectorAll(".modal-backdrop").forEach((backdrop) =>
+    backdrop.addEventListener("click", (event) => {
+      if (event.target === backdrop) closeModal(backdrop.id);
+    })
+  );
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    ["chunk-modal", "job-modal"].forEach((id) => {
+      if (!$(id).classList.contains("hidden")) closeModal(id);
+    });
+  });
+  document.querySelectorAll("#status-cards .card").forEach((c) =>
     c.addEventListener("click", () => {
       switchTab("diagnostics");
       switchDiagnostic("jobs");

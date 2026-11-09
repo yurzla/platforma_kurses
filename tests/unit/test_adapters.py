@@ -6,7 +6,7 @@ import httpx
 import pytest
 import respx
 
-from courses_assistant.adapters.embeddings.ollama import OllamaEmbedder
+from courses_assistant.adapters.embeddings.ollama import OllamaEmbedder, check_ollama_model
 from courses_assistant.adapters.llm.gigachat import GigaChatLLM
 from courses_assistant.domain.errors import ExternalServiceError
 from courses_assistant.domain.models import LLMMessage, Role
@@ -69,3 +69,43 @@ async def test_gigachat_requires_credentials() -> None:
     )
     with pytest.raises(ExternalServiceError):
         await llm.generate([LLMMessage(role=Role.USER, content="привет")], 0.2)
+
+
+async def test_check_ollama_model_available() -> None:
+    with respx.mock:
+        respx.get("http://ollama.local/api/tags").mock(
+            return_value=httpx.Response(
+                200, json={"models": [{"name": "nomic-embed-text:latest"}]}
+            )
+        )
+        available, error = await check_ollama_model(
+            "http://ollama.local/api/embed", "nomic-embed-text"
+        )
+    assert available is True
+    assert error is None
+
+
+async def test_check_ollama_model_missing() -> None:
+    with respx.mock:
+        respx.get("http://ollama.local/api/tags").mock(
+            return_value=httpx.Response(200, json={"models": [{"name": "qwen2:7b"}]})
+        )
+        available, error = await check_ollama_model(
+            "http://ollama.local/api/embed", "nomic-embed-text"
+        )
+    assert available is False
+    assert error is not None
+    assert "не загружена" in error
+
+
+async def test_check_ollama_model_unreachable() -> None:
+    with respx.mock:
+        respx.get("http://ollama.local/api/tags").mock(
+            side_effect=httpx.ConnectError("no connection")
+        )
+        available, error = await check_ollama_model(
+            "http://ollama.local/api/embed", "nomic-embed-text"
+        )
+    assert available is False
+    assert error is not None
+    assert "недоступна" in error

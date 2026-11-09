@@ -26,6 +26,8 @@
       <button class="diagnostic-tab active" data-diagnostic="jobs">Jobs</button>
       <button class="diagnostic-tab" data-diagnostic="dlq">DLQ</button>
       <button class="diagnostic-tab" data-diagnostic="streams">Streams</button>
+      <button class="diagnostic-tab" data-diagnostic="index">Индекс</button>
+      <button class="diagnostic-tab" data-diagnostic="health">Состояние</button>
     </nav>
     <p class="diagnostic-note">Раздел для контроля фоновой обработки вопросов ассистентом. Он нужен в основном техническому администратору или разработчику.</p>
   <section class="cards" id="status-cards">
@@ -37,7 +39,7 @@
 
   <section class="panel diagnostic-panel" id="diagnostic-jobs">
     <h2>Jobs</h2>
-    <p class="muted">Фоновые задания ассистента: обработка вопроса студента, генерация ответа, число попыток и возможные ошибки.</p>
+    <p class="muted">Фоновые задания ассистента: обработка вопроса студента, генерация ответа, число попыток и возможные ошибки. Нажмите на строку, чтобы открыть детали job и источники ответа.</p>
     <form class="filters" id="jobs-filters" onsubmit="return false;">
       <label>Статус
         <select id="f-status">
@@ -102,6 +104,102 @@
     </div>
   </section>
 
+  <section class="panel diagnostic-panel hidden" id="diagnostic-index">
+    <h2>RAG-индекс</h2>
+    <p class="muted">Чанки материалов и их эмбеддинги. Показывает, что реально попадает в поиск, где не хватает эмбеддинга и как индекс распределён по курсам и типам источников.</p>
+    <section class="cards">
+      <div class="card"><span class="card-value" id="index-total-chunks">0</span><span class="card-label">чанков</span></div>
+      <div class="card"><span class="card-value" id="index-total-embeddings">0</span><span class="card-label">эмбеддингов</span></div>
+      <div class="card"><span class="card-value" id="index-without-embedding">0</span><span class="card-label">без эмбеддинга</span></div>
+    </section>
+    <p class="muted" id="index-meta">—</p>
+
+    <div class="index-columns">
+      <div>
+        <h3>По типам источников</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Тип</th><th>Чанков</th></tr></thead>
+            <tbody id="index-types-body"><tr><td colspan="2" class="muted">загрузка…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <h3>По курсам</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Курс</th><th>Чанков</th><th>Описание</th><th>Шаги</th><th>Эмбеддингов</th><th>Без</th></tr></thead>
+            <tbody id="index-courses-body"><tr><td colspan="6" class="muted">загрузка…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <h3>Чанки</h3>
+    <form class="filters" id="chunks-filters" onsubmit="return false;">
+      <label>Курс
+        <select id="ch-course"><option value="">все</option></select>
+      </label>
+      <label>Тип источника
+        <select id="ch-source">
+          <option value="">все</option>
+          <option value="theory">theory</option>
+          <option value="task">task</option>
+          <option value="course_description">course_description</option>
+        </select>
+      </label>
+      <label>Поиск по тексту
+        <input id="ch-search" type="text" placeholder="текст...">
+      </label>
+      <button id="ch-apply" class="btn">Применить</button>
+      <button id="ch-reset" class="btn ghost">Сброс</button>
+    </form>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>ID</th><th>Курс</th><th>Урок</th><th>Тип</th><th>Фрагмент</th><th>Эмбеддинг</th><th>Создан</th></tr>
+        </thead>
+        <tbody id="chunks-body"><tr><td colspan="7" class="muted">загрузка…</td></tr></tbody>
+      </table>
+    </div>
+    <div class="pager">
+      <button id="chunks-prev" class="btn ghost">← Назад</button>
+      <span id="chunks-page" class="muted">—</span>
+      <button id="chunks-next" class="btn ghost">Вперёд →</button>
+    </div>
+  </section>
+
+  <section class="panel diagnostic-panel hidden" id="diagnostic-health">
+    <h2>Состояние системы</h2>
+    <p class="muted">Доступность зависимостей и последние отметки фоновой обработки. GigaChat намеренно не опрашивается, чтобы не расходовать лимиты.</p>
+    <div class="health-grid">
+      <div class="health-card" id="dep-postgres"><span class="health-name">PostgreSQL</span><span class="health-state">—</span></div>
+      <div class="health-card" id="dep-redis"><span class="health-name">Redis</span><span class="health-state">—</span></div>
+      <div class="health-card" id="dep-ollama"><span class="health-name">Ollama</span><span class="health-state">—</span></div>
+    </div>
+    <p class="muted" id="health-ollama-model">—</p>
+
+    <div class="index-columns">
+      <div>
+        <h3>Последние отметки job-ов</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Метка</th><th>Время</th></tr></thead>
+            <tbody id="health-jobs-body"><tr><td colspan="2" class="muted">загрузка…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <h3>Настройки retrieval</h3>
+        <dl class="detail-grid" id="health-settings">
+          <dt>Модель</dt><dd>—</dd>
+          <dt>Размерность</dt><dd>—</dd>
+          <dt>Top-K</dt><dd>—</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
   </section>
 
   <section class="panel hidden" id="panel-users">
@@ -158,6 +256,26 @@
       <button id="courses-next" class="btn ghost">Вперёд →</button>
     </div>
   </section>
+
+  <div class="modal-backdrop hidden" id="job-modal">
+    <div class="modal">
+      <div class="modal-head">
+        <h2>Детали job</h2>
+        <button type="button" class="btn ghost" data-close="job-modal">Закрыть</button>
+      </div>
+      <div class="modal-body" id="job-detail"><p class="muted">загрузка…</p></div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop hidden" id="chunk-modal">
+    <div class="modal">
+      <div class="modal-head">
+        <h2>Чанк</h2>
+        <button type="button" class="btn ghost" data-close="chunk-modal">Закрыть</button>
+      </div>
+      <div class="modal-body" id="chunk-detail"><p class="muted">загрузка…</p></div>
+    </div>
+  </div>
 
   <div id="error-banner" class="error hidden"></div>
 </main>

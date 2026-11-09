@@ -401,3 +401,73 @@ class StreamStat(BaseModel):
 class OverviewResponse(BaseModel):
     status_counts: dict[str, int]
     streams: list[StreamStat]
+
+
+class ChunkListItem(BaseModel):
+    id: int
+    course_id: int | None = None
+    course_title: str | None = None
+    lesson_id: int | None = None
+    lesson_title: str | None = None
+    step_id: int | None = None
+    chunk_index: int = 0
+    source_type: str
+    preview: str
+    has_embedding: bool = False
+    model_name: str | None = None
+    created_at: datetime | None = None
+
+
+class ChunkListResponse(BaseModel):
+    items: list[ChunkListItem]
+    total: int
+    limit: int
+    offset: int
+
+
+class ChunkDetail(ChunkListItem):
+    chunk_text: str
+    embedding_dimension: int | None = None
+    embedding_created_at: datetime | None = None
+
+
+class IndexCourseSummary(BaseModel):
+    id: int
+    title: str
+    chunks: int = 0
+    description_chunks: int = 0
+    step_chunks: int = 0
+    embeddings: int = 0
+    without_embedding: int = 0
+
+
+class IndexSummary(BaseModel):
+    total_chunks: int = 0
+    total_embeddings: int = 0
+    chunks_without_embedding: int = 0
+    by_source_type: dict[str, int] = Field(default_factory=dict)
+    model_name: str | None = None
+    dimension: int | None = None
+    last_embedding_at: datetime | None = None
+    courses: list[IndexCourseSummary] = Field(default_factory=list)
+
+
+class JobTimeline(BaseModel):
+    last_done_at: datetime | None = None
+    last_failed_at: datetime | None = None
+    oldest_queued_at: datetime | None = None
+
+
+class RetrievalSettings(BaseModel):
+    embedding_model: str
+    embedding_dimension: int
+    retrieval_top_k: int
+
+
+class AdminHealth(BaseModel):
+    status: str
+    dependencies: dict[str, str] = Field(default_factory=dict)
+    ollama_model: str
+    ollama_model_available: bool = False
+    jobs: JobTimeline = Field(default_factory=JobTimeline)
+    settings: RetrievalSettings

@@ -8,6 +8,7 @@ import httpx
 
 from courses_assistant.domain.models import JobStatus, QuestionJob
 from courses_assistant.entrypoints.api.app import create_app
+from courses_assistant.entrypoints.api.routers import admin as admin_router
 from tests.api.test_api import build_test_container
 from tests.fakes import FakeStore, encrypt_test_password
 
@@ -152,3 +153,55 @@ async def test_logout_clears_session() -> None:
         logout = await ac.post("/api/v1/auth/logout")
         assert logout.status_code == 200
         assert (await ac.get("/api/v1/admin/overview")).status_code == 401
+
+
+DIAGNOSTIC_ROUTES = [
+    "/api/v1/admin/chunks",
+    "/api/v1/admin/chunks/1",
+    "/api/v1/admin/index",
+    "/api/v1/admin/health",
+]
+
+
+async def test_diagnostics_anonymous_denied() -> None:
+    store = FakeStore()
+    ac, _ = make_app(store)
+    async with ac:
+        for route in DIAGNOSTIC_ROUTES:
+            assert (await ac.get(route)).status_code == 401
+
+
+async def test_diagnostics_non_admin_denied() -> None:
+    store = FakeStore()
+    store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
+    ac, _ = make_app(store)
+    async with ac:
+        await login(ac, "s@example.com", "pw")
+        for route in DIAGNOSTIC_ROUTES:
+            assert (await ac.get(route)).status_code == 403
+
+
+async def test_admin_health_reports_dependencies(monkeypatch) -> None:
+    store = FakeStore()
+    seed_admin(store)
+
+    async def fake_check(base_url: str, model: str, timeout: float = 3.0) -> tuple[bool, None]:
+        return True, None
+
+    monkeypatch.setattr(admin_router, "check_ollama_model", fake_check)
+    ac, _ = make_app(store)
+    async with ac:
+        await login(ac, "admin@example.com", "s3cret")
+        response = await ac.get("/api/v1/admin/health")
+    assert response.status_code == 200
+    body = response.json()
+    assert body["dependencies"]["redis"] == "ok"
+    assert body["dependencies"]["ollama"] == "ok"
+    assert body["dependencies"]["postgres"] == "unavailable"
+    assert body["status"] == "degraded"
+    assert body["ollama_model_available"] is True
+    assert body["jobs"] == {
+        "last_done_at": None,
+        "last_failed_at": None,
+        "oldest_queued_at": None,
+    }

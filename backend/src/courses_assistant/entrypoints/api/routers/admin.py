@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import delete, func, or_, select, update
+from sqlalchemy import delete, func, or_, select, text, update
 
+from courses_assistant.adapters.embeddings.ollama import check_ollama_model
 from courses_assistant.adapters.persistence.orm import (
     ChatMessageORM,
     ChatSessionORM,
@@ -46,13 +47,21 @@ from courses_assistant.entrypoints.api.schemas import (
     AdminCourseListItem,
     AdminCourseListResponse,
     AdminCourseUpdate,
+    AdminHealth,
     AdminUserCreate,
     AdminUserUpdate,
+    ChunkDetail,
+    ChunkListItem,
+    ChunkListResponse,
     DlqEntry,
+    IndexCourseSummary,
+    IndexSummary,
     JobListItem,
     JobListResponse,
     JobRead,
+    JobTimeline,
     OverviewResponse,
+    RetrievalSettings,
     StreamStat,
     UserListItem,
     UserListResponse,
@@ -182,6 +191,55 @@ def _stream_targets(container: Container) -> list[tuple[str, str]]:
     ]
 
 
+def _embedding_model_subquery():
+    return (
+        select(ChunkEmbeddingORM.model_name)
+        .where(ChunkEmbeddingORM.chunk_id == ContentChunkORM.id)
+        .order_by(ChunkEmbeddingORM.id.desc())
+        .limit(1)
+        .correlate(ContentChunkORM)
+        .scalar_subquery()
+        .label("model_name")
+    )
+
+
+def _chunk_conditions(
+    course_id: int | None,
+    source_type: str | None,
+    search: str | None,
+) -> list:
+    conditions = []
+    if course_id is not None:
+        conditions.append(ContentChunkORM.course_id == course_id)
+    if source_type:
+        conditions.append(ContentChunkORM.source_type == source_type.strip())
+    if search and search.strip():
+        conditions.append(ContentChunkORM.chunk_text.ilike(f"%{search.strip()}%"))
+    return conditions
+
+
+def _chunk_item(
+    chunk: ContentChunkORM,
+    course_title: str | None,
+    lesson_title: str | None,
+    model_name: str | None,
+) -> ChunkListItem:
+    return ChunkListItem(
+        id=chunk.id,
+        course_id=chunk.course_id,
+        course_title=course_title,
+        lesson_id=chunk.lesson_id,
+        lesson_title=lesson_title,
+        step_id=chunk.step_id,
+        chunk_index=chunk.chunk_index,
+        source_type=chunk.source_type,
+        preview=chunk.chunk_text[:240],
+        has_embedding=model_name is not None,
+        model_name=model_name,
+        created_at=chunk.created_at,
+    )
+
+
 @router.get("/overview", response_model=OverviewResponse)
 async def overview(container: Container = Depends(get_container)) -> OverviewResponse:
     counts = await job_status_counts(container.uow_factory)
@@ -272,6 +330,244 @@ async def dlq(
 async def streams(container: Container = Depends(get_container)) -> list[StreamStat]:
     stats = await stream_overview(container.broker, _stream_targets(container))
     return [StreamStat(**stat) for stat in stats]
+
+
+@router.get("/chunks", response_model=ChunkListResponse)
+async def chunks(
+    course_id: int | None = Query(default=None, ge=1),
+    source_type: str | None = Query(default=None, max_length=50),
+    search: str | None = Query(default=None, max_length=200),
+    limit: int = Query(default=50, ge=1, le=200),
+    offset: int = Query(default=0, ge=0),
+    container: Container = Depends(get_container),
+) -> ChunkListResponse:
+    conditions = _chunk_conditions(course_id, source_type, search)
+    model_name = _embedding_model_subquery()
+    async with container.session_factory() as session:
+        statement = (
+            select(
+                ContentChunkORM,
+                CourseORM.title.label("course_title"),
+                LessonORM.title.label("lesson_title"),
+                model_name,
+            )
+            .outerjoin(CourseORM, CourseORM.id == ContentChunkORM.course_id)
+            .outerjoin(LessonORM, LessonORM.id == ContentChunkORM.lesson_id)
+            .where(*conditions)
+            .order_by(ContentChunkORM.id)
+            .limit(limit)
+            .offset(offset)
+        )
+        rows = (await session.execute(statement)).all()
+        total = await session.scalar(
+            select(func.count()).select_from(ContentChunkORM).where(*conditions)
+        )
+    return ChunkListResponse(
+        items=[
+            _chunk_item(chunk, course_title, lesson_title, chunk_model)
+            for chunk, course_title, lesson_title, chunk_model in rows
+        ],
+        total=int(total or 0),
+        limit=limit,
+        offset=offset,
+    )
+
+
+@router.get("/chunks/{chunk_id}", response_model=ChunkDetail)
+async def chunk_detail(
+    chunk_id: int,
+    container: Container = Depends(get_container),
+) -> ChunkDetail:
+    async with container.session_factory() as session:
+        chunk = await session.get(ContentChunkORM, chunk_id)
+        if chunk is None:
+            raise HTTPException(status_code=404, detail="Чанк не найден")
+        course_title = None
+        if chunk.course_id is not None:
+            course_title = await session.scalar(
+                select(CourseORM.title).where(CourseORM.id == chunk.course_id)
+            )
+        lesson_title = None
+        if chunk.lesson_id is not None:
+            lesson_title = await session.scalar(
+                select(LessonORM.title).where(LessonORM.id == chunk.lesson_id)
+            )
+        embedding = (
+            await session.execute(
+                select(ChunkEmbeddingORM)
+                .where(ChunkEmbeddingORM.chunk_id == chunk.id)
+                .order_by(ChunkEmbeddingORM.id.desc())
+                .limit(1)
+            )
+        ).scalar_one_or_none()
+    item = _chunk_item(
+        chunk, course_title, lesson_title, embedding.model_name if embedding else None
+    )
+    return ChunkDetail(
+        **item.model_dump(),
+        chunk_text=chunk.chunk_text,
+        embedding_dimension=(
+            len(embedding.embedding) if embedding and embedding.embedding else None
+        ),
+        embedding_created_at=embedding.created_at if embedding else None,
+    )
+
+
+@router.get("/index", response_model=IndexSummary)
+async def index_summary(container: Container = Depends(get_container)) -> IndexSummary:
+    settings = container.settings
+    async with container.session_factory() as session:
+        total_chunks = await session.scalar(select(func.count()).select_from(ContentChunkORM))
+        total_embeddings = await session.scalar(select(func.count()).select_from(ChunkEmbeddingORM))
+        chunks_without_embedding = await session.scalar(
+            select(func.count())
+            .select_from(ContentChunkORM)
+            .where(
+                ~select(ChunkEmbeddingORM.id)
+                .where(ChunkEmbeddingORM.chunk_id == ContentChunkORM.id)
+                .exists()
+            )
+        )
+        type_rows = (
+            await session.execute(
+                select(ContentChunkORM.source_type, func.count()).group_by(
+                    ContentChunkORM.source_type
+                )
+            )
+        ).all()
+        last_embedding_at = await session.scalar(select(func.max(ChunkEmbeddingORM.created_at)))
+
+        chunk_rows = (
+            await session.execute(
+                select(
+                    ContentChunkORM.course_id.label("course_id"),
+                    func.count(ContentChunkORM.id).label("chunks"),
+                    func.count(ContentChunkORM.id)
+                    .filter(ContentChunkORM.source_type == "course_description")
+                    .label("description_chunks"),
+                    func.count(ContentChunkORM.id)
+                    .filter(ContentChunkORM.source_type != "course_description")
+                    .label("step_chunks"),
+                )
+                .where(ContentChunkORM.course_id.is_not(None))
+                .group_by(ContentChunkORM.course_id)
+            )
+        ).all()
+        embedding_rows = (
+            await session.execute(
+                select(ContentChunkORM.course_id, func.count(ChunkEmbeddingORM.id))
+                .join(ChunkEmbeddingORM, ChunkEmbeddingORM.chunk_id == ContentChunkORM.id)
+                .where(ContentChunkORM.course_id.is_not(None))
+                .group_by(ContentChunkORM.course_id)
+            )
+        ).all()
+        embedding_by_course: dict[int, int] = {}
+        for course_id, count in embedding_rows:
+            if course_id is not None:
+                embedding_by_course[int(course_id)] = int(count)
+        normalized_chunks: list[tuple[int, int, int, int]] = []
+        for row in chunk_rows:
+            if row.course_id is None:
+                continue
+            normalized_chunks.append(
+                (
+                    int(row.course_id),
+                    int(row.chunks),
+                    int(row.description_chunks),
+                    int(row.step_chunks),
+                )
+            )
+        course_ids = [item[0] for item in normalized_chunks]
+        titles: dict[int, str] = {}
+        if course_ids:
+            for course_id, title in (
+                await session.execute(
+                    select(CourseORM.id, CourseORM.title).where(CourseORM.id.in_(course_ids))
+                )
+            ).all():
+                titles[int(course_id)] = title
+
+    courses = [
+        IndexCourseSummary(
+            id=course_id,
+            title=titles.get(course_id, f"Курс {course_id}"),
+            chunks=chunk_count,
+            description_chunks=description_chunks,
+            step_chunks=step_chunks,
+            embeddings=embedding_by_course.get(course_id, 0),
+            without_embedding=max(
+                0, chunk_count - embedding_by_course.get(course_id, 0)
+            ),
+        )
+        for course_id, chunk_count, description_chunks, step_chunks in normalized_chunks
+    ]
+    courses.sort(key=lambda course: (-course.chunks, course.id))
+    return IndexSummary(
+        total_chunks=int(total_chunks or 0),
+        total_embeddings=int(total_embeddings or 0),
+        chunks_without_embedding=int(chunks_without_embedding or 0),
+        by_source_type={source_type: int(count) for source_type, count in type_rows},
+        model_name=settings.embedding_model,
+        dimension=settings.embedding_dimension,
+        last_embedding_at=last_embedding_at,
+        courses=courses,
+    )
+
+
+@router.get("/health", response_model=AdminHealth)
+async def admin_health(container: Container = Depends(get_container)) -> AdminHealth:
+    settings = container.settings
+    dependencies: dict[str, str] = {}
+
+    if container.engine is not None:
+        try:
+            async with container.engine.connect() as conn:
+                await conn.execute(text("SELECT 1"))
+            dependencies["postgres"] = "ok"
+        except Exception as exc:  # noqa: BLE001
+            dependencies["postgres"] = f"unavailable: {exc}"
+    else:
+        dependencies["postgres"] = "unavailable"
+
+    dependencies["redis"] = "ok" if await container.broker.ping() else "unavailable"
+
+    ollama_available, ollama_error = await check_ollama_model(
+        settings.ollama_url, settings.embedding_model
+    )
+    dependencies["ollama"] = (
+        "ok" if ollama_available else f"unavailable: {ollama_error or 'нет ответа'}"
+    )
+
+    timeline = JobTimeline()
+    if container.session_factory is not None:
+        async with container.session_factory() as session:
+            row = (
+                await session.execute(
+                    select(
+                        func.max(JobORM.updated_at).filter(JobORM.status == "done"),
+                        func.max(JobORM.updated_at).filter(JobORM.status == "failed"),
+                        func.min(JobORM.created_at).filter(JobORM.status == "queued"),
+                    )
+                )
+            ).one()
+            timeline = JobTimeline(
+                last_done_at=row[0],
+                last_failed_at=row[1],
+                oldest_queued_at=row[2],
+            )
+
+    return AdminHealth(
+        status="ok" if all(value == "ok" for value in dependencies.values()) else "degraded",
+        dependencies=dependencies,
+        ollama_model=settings.embedding_model,
+        ollama_model_available=ollama_available,
+        jobs=timeline,
+        settings=RetrievalSettings(
+            embedding_model=settings.embedding_model,
+            embedding_dimension=settings.embedding_dimension,
+            retrieval_top_k=settings.retrieval_top_k,
+        ),
+    )
 
 
 @router.get("/users", response_model=UserListResponse)

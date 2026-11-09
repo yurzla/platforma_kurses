@@ -464,8 +464,15 @@ async def test_admin_panel_flow() -> None:
         assert dashboard.status_code == 200
         assert "Админ панель" in dashboard.text
         assert "Пользователи" in dashboard.text
+        assert "Индекс" in dashboard.text
+        assert "Состояние" in dashboard.text
+        assert 'id="job-modal"' in dashboard.text
+        assert 'id="chunk-modal"' in dashboard.text
         assert "/static/dashboard.js" in dashboard.text
         assert 'id="assistant-toggle"' not in dashboard.text
+        lowered = dashboard.text.lower()
+        assert "retry" not in lowered
+        assert "replay" not in lowered
 
 
 async def test_static_assets_served() -> None:
@@ -477,6 +484,7 @@ async def test_static_assets_served() -> None:
         assert (await web.get("/static/web.js")).status_code == 200
         css = await web.get("/static/web.css")
         dashboard = await web.get("/static/dashboard.css")
+        js = await web.get("/static/dashboard.js")
         icons = await web.get("/static/vendor/bootstrap-icons/bootstrap-icons.min.css")
         font = await web.get("/static/vendor/bootstrap-icons/fonts/bootstrap-icons.woff2")
     assert css.status_code == 200
@@ -487,6 +495,13 @@ async def test_static_assets_served() -> None:
     assert "grid-template-columns: auto 1fr" in css.text
     assert dashboard.status_code == 200
     assert "text-decoration: none" in dashboard.text
+    assert ".modal-backdrop" in dashboard.text
+    assert js.status_code == 200
+    assert "openJob(" in js.text
+    assert "loadIndex(" in js.text
+    assert "loadHealth(" in js.text
+    assert "retry" not in js.text.lower()
+    assert "replay" not in js.text.lower()
     assert icons.status_code == 200
     assert "bootstrap-icons" in icons.text
     assert font.status_code == 200
