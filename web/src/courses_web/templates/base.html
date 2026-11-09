@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Courses Assistant{% endblock %}</title>
   <link rel="stylesheet" href="{{ static_url('dashboard.css') }}">
+  <link rel="stylesheet" href="{{ static_url('vendor/bootstrap-icons/bootstrap-icons.min.css') }}">
   <link rel="stylesheet" href="{{ static_url('web.css') }}">
   <script src="{{ static_url('theme.js') }}" defer></script>
   <script>
@@ -24,8 +25,8 @@
   {% block body %}{% endblock %}
   {% if me and me.role and assistant_mode %}
   <div class="assistant" data-mode="{{ assistant_mode }}" data-course-id="{{ course_id or '' }}">
-    <button type="button" id="assistant-toggle" class="assistant-fab" aria-expanded="false" aria-controls="assistant-drawer">
-      Ассистент
+    <button type="button" id="assistant-toggle" class="assistant-fab" aria-expanded="false" aria-controls="assistant-drawer" aria-label="Ассистент" title="Ассистент">
+      <i class="bi bi-robot" aria-hidden="true"></i>
     </button>
     <aside id="assistant-drawer" class="assistant-drawer" aria-hidden="true">
       <header class="assistant-head">

@@ -50,6 +50,7 @@ body {
 
 .brand { font-weight: 700; letter-spacing: .3px; }
 .brand span { color: var(--muted); font-weight: 400; }
+.brand .bi { color: var(--accent); font-size: 1.1em; margin-left: 2px; }
 
 .tabs { display: flex; gap: 6px; }
 
@@ -130,6 +131,7 @@ select option { background: var(--panel-2); color: var(--text); }
   padding: 8px 16px;
   cursor: pointer;
   font-size: 14px;
+  text-decoration: none;
 }
 .btn:hover { filter: brightness(1.1); }
 .btn.ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }

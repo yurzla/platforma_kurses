@@ -159,6 +159,11 @@ async def test_student_login_flow_and_courses() -> None:
         assert courses.status_code == 200
         assert "Python" in courses.text
         assert 'id="assistant-toggle"' in courses.text
+        assert 'aria-label="Ассистент"' in courses.text
+        assert "bi bi-robot" in courses.text
+        assert "bi bi-search" in courses.text
+        assert ">Найти<" not in courses.text
+        assert "· обучение" not in courses.text
         assert 'data-mode="history"' in courses.text
         assert 'id="assistant-history"' in courses.text
         assert 'id="assistant-course"' not in courses.text
@@ -470,10 +475,18 @@ async def test_static_assets_served() -> None:
         assert (await web.get("/static/dashboard.css")).status_code == 200
         assert (await web.get("/static/web.js")).status_code == 200
         css = await web.get("/static/web.css")
+        dashboard = await web.get("/static/dashboard.css")
+        icons = await web.get("/static/vendor/bootstrap-icons/bootstrap-icons.min.css")
+        font = await web.get("/static/vendor/bootstrap-icons/fonts/bootstrap-icons.woff2")
     assert css.status_code == 200
     assert "right: 20px; bottom: 20px" in css.text
     assert "repeat(2, minmax(0, 1fr))" in css.text
     assert ".pagination" in css.text
+    assert dashboard.status_code == 200
+    assert "text-decoration: none" in dashboard.text
+    assert icons.status_code == 200
+    assert "bootstrap-icons" in icons.text
+    assert font.status_code == 200
 
 
 async def test_proxy_auto_refreshes_expired_access_token() -> None:
