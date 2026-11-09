@@ -4,10 +4,9 @@ from __future__ import annotations
 
 import httpx
 
-from courses_assistant.domain.security import hash_password, verify_password
 from courses_assistant.entrypoints.api.app import create_app
 from tests.api.test_api import build_test_container
-from tests.fakes import FakeStore
+from tests.fakes import FakeStore, encrypt_test_password, verify_test_password
 
 
 def make_app(store: FakeStore):
@@ -19,9 +18,9 @@ def make_app(store: FakeStore):
 
 async def test_login_any_role_and_me() -> None:
     store = FakeStore()
-    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
-    store.add_user("t@example.com", "Учитель", hash_password("pw"), "teacher")
-    store.add_user("a@example.com", "Админ", hash_password("pw"), "admin")
+    store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
+    store.add_user("t@example.com", "Учитель", encrypt_test_password("pw"), "teacher")
+    store.add_user("a@example.com", "Админ", encrypt_test_password("pw"), "admin")
     ac = make_app(store)
     async with ac:
         for email, role in (
@@ -41,7 +40,7 @@ async def test_login_any_role_and_me() -> None:
 
 async def test_invalid_login() -> None:
     store = FakeStore()
-    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     ac = make_app(store)
     async with ac:
         bad = await ac.post(
@@ -106,7 +105,7 @@ async def test_register_admin_role_rejected() -> None:
 
 async def test_register_duplicate_email() -> None:
     store = FakeStore()
-    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     ac = make_app(store)
     async with ac:
         response = await ac.post(
@@ -121,11 +120,11 @@ async def test_register_duplicate_email() -> None:
     assert response.status_code == 409
 
 
-def test_password_hash_roundtrip() -> None:
-    encoded = hash_password("secret")
-    assert verify_password("secret", encoded) is True
-    assert verify_password("other", encoded) is False
-    assert verify_password("secret", "garbage") is False
+def test_password_encryption_roundtrip() -> None:
+    encoded = encrypt_test_password("secret")
+    assert verify_test_password("secret", encoded) is True
+    assert verify_test_password("other", encoded) is False
+    assert verify_test_password("secret", "garbage") is False
 
 
 async def _refresh_with(ac: httpx.AsyncClient, token: str) -> httpx.Response:
@@ -136,7 +135,7 @@ async def _refresh_with(ac: httpx.AsyncClient, token: str) -> httpx.Response:
 
 async def test_refresh_rotates_and_old_token_rejected() -> None:
     store = FakeStore()
-    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     ac = make_app(store)
     async with ac:
         login = await ac.post(
@@ -159,7 +158,7 @@ async def test_refresh_rotates_and_old_token_rejected() -> None:
 
 async def test_logout_revokes_refresh_token() -> None:
     store = FakeStore()
-    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     ac = make_app(store)
     async with ac:
         await ac.post(
@@ -176,7 +175,7 @@ async def test_logout_revokes_refresh_token() -> None:
 
 async def test_access_token_via_bearer() -> None:
     store = FakeStore()
-    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     container, _, _ = build_test_container(store)
     app = create_app(settings=container.settings, container=container)
     transport = httpx.ASGITransport(app=app)

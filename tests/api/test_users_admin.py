@@ -5,10 +5,9 @@ from __future__ import annotations
 import httpx
 import pytest
 
-from courses_assistant.domain.security import hash_password
 from courses_assistant.entrypoints.api.app import create_app
 from tests.api.test_api import build_test_container
-from tests.fakes import FakeStore
+from tests.fakes import FakeStore, encrypt_test_password
 
 
 def make_app(store: FakeStore):
@@ -19,9 +18,9 @@ def make_app(store: FakeStore):
 
 
 def seed_users(store: FakeStore) -> None:
-    store.add_user("admin@example.com", "Админ", hash_password("pw"), "admin")
-    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
-    store.add_user("t@example.com", "Учитель", hash_password("pw"), "teacher")
+    store.add_user("admin@example.com", "Админ", encrypt_test_password("pw"), "admin")
+    store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
+    store.add_user("t@example.com", "Учитель", encrypt_test_password("pw"), "teacher")
 
 
 def user_id(store: FakeStore, email: str) -> int:
@@ -104,7 +103,7 @@ async def test_unknown_user_returns_404(store: FakeStore) -> None:
 
 async def test_non_admin_forbidden() -> None:
     store = FakeStore()
-    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     ac = make_app(store)
     async with ac:
         await ac.post("/api/v1/auth/login", json={"email": "s@example.com", "password": "pw"})

@@ -10,13 +10,12 @@ from courses_assistant.domain.catalog import (
     SectionSummary,
     StepSummary,
 )
-from courses_assistant.domain.security import hash_password
-from tests.fakes import FakeStore
+from tests.fakes import FakeStore, encrypt_test_password
 from tests.web.test_web import build_stack
 
 
 def _seed_course(store: FakeStore) -> int:
-    user = store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    user = store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     lesson_one = LessonSummary(
         id=11,
         title="Урок 1",
@@ -38,7 +37,7 @@ def _seed_course(store: FakeStore) -> int:
 
 
 def _seed_two_sections(store: FakeStore) -> int:
-    user = store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    user = store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     first = SectionSummary(
         id=1,
         title="Модуль 1",
@@ -76,7 +75,7 @@ def _seed_two_sections(store: FakeStore) -> int:
 
 
 def _seed_choice_course(store: FakeStore) -> int:
-    user = store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    user = store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     lesson = LessonSummary(
         id=11,
         title="Урок 1",

@@ -1,7 +1,7 @@
 # user-auth Specification
 
 ## Purpose
-Единая аутентификация пользователей по таблице `users`: вход и выход по email и паролю для всех ролей, определение текущего пользователя, самостоятельная регистрация с ролью `student` или `teacher` и хранение паролей в виде стойких хешей.
+Единая аутентификация пользователей по таблице `users`: вход и выход по email и паролю для всех ролей, определение текущего пользователя, самостоятельная регистрация с ролью `student` или `teacher` и хранение паролей в виде обратимого шифрования секретным ключом.
 
 ## Requirements
 
@@ -58,13 +58,6 @@ The system SHALL report the current authenticated user's identity and role on re
 - **WHEN** a client requests the current-user endpoint with an expired or invalid access token
 - **THEN** the system responds with HTTP 401 so the client can refresh the token
 
-### Requirement: Password hashing
-The system SHALL store user passwords as salted scrypt hashes and SHALL verify them without revealing the stored hash.
-
-#### Scenario: Hash round-trip
-- **WHEN** a password is hashed and later verified with the same password
-- **THEN** verification succeeds; verification with a different password fails
-
 ### Requirement: Access and refresh tokens
 The system SHALL issue a short-lived access JWT carrying the user identifier and expiry, and a longer-lived refresh token; the user's role SHALL be resolved from the database on each authenticated request. Authenticated endpoints SHALL accept the access token from the httpOnly cookie or an `Authorization: Bearer` header.
 
@@ -98,3 +91,46 @@ The system SHALL allow exchanging a valid refresh token for a new token pair, SH
 #### Scenario: Reuse of rotated token
 - **WHEN** a client presents a refresh token that was already rotated
 - **THEN** the system revokes all of that user's refresh tokens and responds with HTTP 401
+
+### Requirement: Password encryption with a server key
+
+The system SHALL store user passwords reversibly encrypted with the server key `PASSWORD_KEY` from the environment and SHALL verify a supplied password by decrypting the stored value. The key and the generated password file SHALL NOT be committed to the repository or baked into container images.
+
+#### Scenario: Encryption round-trip
+
+- **WHEN** a password is encrypted and later verified with the same password
+- **THEN** verification succeeds; verification with a different password fails
+
+#### Scenario: Tampered value rejected
+
+- **WHEN** the stored encrypted value is modified or was encrypted with another key
+- **THEN** verification fails
+
+#### Scenario: Missing key
+
+- **WHEN** a password operation runs without `PASSWORD_KEY`
+- **THEN** the system fails with a clear configuration error instead of storing or accepting a password
+
+#### Scenario: Legacy hashes rejected
+
+- **WHEN** the stored value uses the old `scrypt` format
+- **THEN** verification fails and the user must receive a new password through the reset procedure
+
+### Requirement: Bulk password reset
+
+The system SHALL provide a script that generates new random passwords for all existing users, stores them encrypted with `PASSWORD_KEY`, revokes active refresh tokens, and writes the logins and plaintext passwords to a git-ignored file readable only by the owner.
+
+#### Scenario: Reset all users
+
+- **WHEN** an operator runs the reset script with `PASSWORD_KEY` set
+- **THEN** every user receives a new encrypted password and the script writes the login/password pairs to the configured file
+
+#### Scenario: Missing key on reset
+
+- **WHEN** the reset script runs without `PASSWORD_KEY`
+- **THEN** it exits with a configuration error and changes no passwords
+
+#### Scenario: Credentials file is not committed
+
+- **WHEN** the reset script writes the credentials file
+- **THEN** the file lives in a git-ignored directory with owner-only permissions

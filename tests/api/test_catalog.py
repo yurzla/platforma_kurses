@@ -10,10 +10,9 @@ from courses_assistant.domain.catalog import (
     SectionSummary,
     StepSummary,
 )
-from courses_assistant.domain.security import hash_password
 from courses_assistant.entrypoints.api.app import create_app
 from tests.api.test_api import build_test_container
-from tests.fakes import FakeStore
+from tests.fakes import FakeStore, encrypt_test_password
 
 CHOICE_KEY = {
     "name": "choice",
@@ -55,7 +54,7 @@ async def test_catalog_requires_login() -> None:
 
 async def test_course_and_step_flow() -> None:
     store = FakeStore()
-    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     store.add_course(build_course())
     store.answer_keys[101] = CHOICE_KEY
     ac = make_app(store)
@@ -95,7 +94,7 @@ async def test_course_and_step_flow() -> None:
 
 async def test_list_courses_enrolled_filter() -> None:
     store = FakeStore()
-    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     store.add_course(build_course())
     other_step = StepSummary(id=202, position=1, step_type="text")
     other_lesson = LessonSummary(id=12, title="Урок", position=1, steps=[other_step])
@@ -122,7 +121,7 @@ async def test_list_courses_enrolled_filter() -> None:
 
 async def test_list_courses_pagination() -> None:
     store = FakeStore()
-    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     for course_id in range(1, 26):
         step = StepSummary(id=course_id * 10, position=1, step_type="text")
         lesson = LessonSummary(id=course_id, title=f"Урок {course_id}", position=1, steps=[step])
@@ -153,7 +152,7 @@ async def test_list_courses_pagination() -> None:
 
 async def test_manual_step_completion() -> None:
     store = FakeStore()
-    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     step = StepSummary(id=202, position=1, step_type="code")
     lesson = LessonSummary(id=12, title="Урок", position=1, steps=[step])
     section = SectionSummary(id=2, title="Модуль", position=1, lessons=[lesson])
@@ -178,7 +177,7 @@ def _course_with_step(course_id: int, title: str, description: str | None, step_
 
 async def test_course_search_by_title_and_description() -> None:
     store = FakeStore()
-    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     store.add_course(_course_with_step(1, "Python Basics", "Для начинающих", 101))
     store.add_course(_course_with_step(2, "Django", "Веб на PYTHON", 201))
     store.add_course(_course_with_step(3, "Go", "Язык серверов", 301))
@@ -203,7 +202,7 @@ async def test_course_search_by_title_and_description() -> None:
 
 async def test_course_search_no_matches() -> None:
     store = FakeStore()
-    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     store.add_course(_course_with_step(1, "Python", None, 101))
     ac = make_app(store)
     async with ac:
@@ -216,7 +215,7 @@ async def test_course_search_no_matches() -> None:
 
 async def test_course_search_combines_with_enrollment_and_pagination() -> None:
     store = FakeStore()
-    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     user_id = next(iter(store.users))
     for course_id in range(1, 13):
         store.add_course(_course_with_step(course_id, f"Python {course_id}", None, course_id * 10))
@@ -249,7 +248,7 @@ async def test_course_search_combines_with_enrollment_and_pagination() -> None:
 
 async def test_course_search_treats_wildcards_literally() -> None:
     store = FakeStore()
-    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     store.add_course(_course_with_step(1, "100% Python", None, 101))
     store.add_course(_course_with_step(2, "Python", None, 201))
     store.add_course(_course_with_step(3, "under_score", None, 301))
@@ -266,7 +265,7 @@ async def test_course_search_treats_wildcards_literally() -> None:
 
 async def test_step_video_embed() -> None:
     store = FakeStore()
-    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     store.add_course(build_course())
     store.step_video_urls[101] = "https://youtu.be/abc123"
     ac = make_app(store)

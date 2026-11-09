@@ -26,7 +26,7 @@ PostgreSQL + pgvector. В текущей схеме --- **20 таблиц**: п�
   -----------------|--------------|-------|--------------
   `id`             |BIGSERIAL     | PK    |Внутренний ID пользователя
   `email`          | TEXT          |UQ, NN  |Логин / email
-  `password_hash`  | TEXT          | NN       | Хеш пароля
+  `password_hash`  | TEXT          | NN       | Зашифрованный пароль (Fernet)
   `name`           | TEXT          | NN       | Отображаемое имя
   `role`           | TEXT          | NN       | `student` / `teacher` / `admin`
   `created_at`     | TIMESTAMPTZ   | NN       |Дата регистрации

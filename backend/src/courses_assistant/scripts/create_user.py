@@ -18,13 +18,14 @@ from courses_assistant.adapters.persistence.database import (
 from courses_assistant.adapters.persistence.orm import UserORM
 from courses_assistant.config import get_settings
 from courses_assistant.domain.models import USER_ROLES
-from courses_assistant.domain.security import hash_password
+from courses_assistant.domain.security import encrypt_password
 
 app = typer.Typer(help="Создание пользователя.")
 
 
 async def _run(email: str, password: str, name: str, role: str) -> None:
     settings = get_settings()
+    password_key = settings.require_password_key()
     engine = create_engine(settings.database_url)
     session_factory = create_session_factory(engine)
     try:
@@ -35,14 +36,17 @@ async def _run(email: str, password: str, name: str, role: str) -> None:
                 )
             ).scalar_one_or_none()
             if existing is not None:
-                existing.password_hash = hash_password(password)
+                existing.password_hash = encrypt_password(password, password_key)
                 existing.name = name
                 existing.role = role
                 await session.commit()
                 typer.echo(f"Обновлён пользователь {email} (id={existing.id}).")
                 return
             user = UserORM(
-                email=email, name=name, password_hash=hash_password(password), role=role
+                email=email,
+                name=name,
+                password_hash=encrypt_password(password, password_key),
+                role=role,
             )
             session.add(user)
             await session.commit()

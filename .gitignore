@@ -15,6 +15,7 @@ db_kurses.sql
 old/
 tmp/
 .opencode
+.secrets/
 new_database.sql
 old_database_fixed.backup
 old_database.backup

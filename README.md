@@ -223,5 +223,17 @@ JWT: `JWT_SECRET` (ключ подписи access-токена; пусто — �
 Access и refresh передаются в httpOnly cookie; refresh-токены хранятся в БД
 (таблица `refresh_tokens`) и ротируются на `/api/v1/auth/refresh`.
 
+Пароли: обратимое шифрование Fernet ключом `PASSWORD_KEY` из `.env`
+(urlsafe-base64; пусто — операции с паролями завершаются ошибкой). Ключ и
+сгенерированные пароли не коммитятся. Сброс паролей всех пользователей:
+
+```bash
+uv run python -m courses_assistant.scripts.reset_passwords --file .secrets/passwords.txt
+```
+
+Скрипт выдаёт новые случайные пароли, шифрует их, отзывает refresh-токены и
+пишет логины с паролями в `.secrets/passwords.txt` (права `600`, каталог в
+`.gitignore`).
+
 Планировщик/ретенция: `STREAM_CRON`, `CRON_INTERVAL_SECONDS`, `JOB_RETENTION_DAYS`,
 `REDIS_STREAM_MAXLEN`, `REDIS_STREAM_EVENTS_MAXLEN`.

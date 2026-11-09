@@ -52,7 +52,7 @@ from courses_assistant.domain.recommender import (
     build_recommended_courses_section,
     looks_like_course_query,
 )
-from courses_assistant.domain.security import hash_password
+from courses_assistant.domain.security import encrypt_password
 
 NO_MATERIALS_ANSWER = "Не удалось найти подходящие материалы."
 
@@ -292,7 +292,10 @@ class Handlers:
             if existing is not None:
                 raise EmailAlreadyExists(f"Email {command.email} уже зарегистрирован.")
             user = await uow.users.create(
-                command.email, command.name, hash_password(command.password), command.role
+                command.email,
+                command.name,
+                encrypt_password(command.password, self._settings.require_password_key()),
+                command.role,
             )
             await uow.commit()
         return user

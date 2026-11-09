@@ -43,6 +43,19 @@ from courses_assistant.domain.models import (
 )
 from courses_assistant.domain.quiz import build_answer_key, grading_mode
 from courses_assistant.domain.recommender import CourseMatch
+from courses_assistant.domain.security import encrypt_password, verify_password
+
+TEST_PASSWORD_KEY = "MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA="
+
+
+def encrypt_test_password(password: str) -> str:
+    """Шифрует пароль тестовым ключом для фейковых пользователей."""
+    return encrypt_password(password, TEST_PASSWORD_KEY)
+
+
+def verify_test_password(password: str, encoded: str) -> bool:
+    """Проверяет пароль тестовым ключом."""
+    return verify_password(password, encoded, TEST_PASSWORD_KEY)
 
 
 @dataclass

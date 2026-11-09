@@ -10,10 +10,9 @@ from courses_assistant.domain.catalog import (
     SectionSummary,
     StepSummary,
 )
-from courses_assistant.domain.security import hash_password
 from courses_assistant.entrypoints.api.app import create_app
 from tests.api.test_api import build_test_container
-from tests.fakes import FakeStore
+from tests.fakes import FakeStore, encrypt_test_password
 
 
 def make_app(store: FakeStore):
@@ -36,8 +35,8 @@ async def _login(ac: httpx.AsyncClient, email: str, password: str = "pw") -> Non
 
 async def test_teacher_list_only_own_courses() -> None:
     store = FakeStore()
-    teacher = store.add_user("t@example.com", "Учитель", hash_password("pw"), "teacher")
-    other = store.add_user("o@example.com", "Другой", hash_password("pw"), "teacher")
+    teacher = store.add_user("t@example.com", "Учитель", encrypt_test_password("pw"), "teacher")
+    other = store.add_user("o@example.com", "Другой", encrypt_test_password("pw"), "teacher")
     store.add_course(course(1, "Мой курс"), owner_id=teacher.id)
     store.add_course(course(2, "Чужой курс"), owner_id=other.id)
     ac = make_app(store)
@@ -54,7 +53,7 @@ async def test_teacher_list_only_own_courses() -> None:
 
 async def test_teacher_list_search_and_pagination() -> None:
     store = FakeStore()
-    teacher = store.add_user("t@example.com", "Учитель", hash_password("pw"), "teacher")
+    teacher = store.add_user("t@example.com", "Учитель", encrypt_test_password("pw"), "teacher")
     for course_id in range(1, 13):
         store.add_course(
             course(course_id, f"Python {course_id}", "Описание"),
@@ -91,7 +90,7 @@ async def test_teacher_list_search_and_pagination() -> None:
 
 async def test_teacher_list_forbidden_for_student() -> None:
     store = FakeStore()
-    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     ac = make_app(store)
     async with ac:
         await _login(ac, "s@example.com")

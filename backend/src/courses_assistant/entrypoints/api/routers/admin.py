@@ -37,7 +37,7 @@ from courses_assistant.application.queries import (
 from courses_assistant.container import Container
 from courses_assistant.domain.errors import CannotChangeOwnRole, InvalidRole, UserNotFound
 from courses_assistant.domain.models import USER_ROLES, JobStatus, User
-from courses_assistant.domain.security import hash_password
+from courses_assistant.domain.security import encrypt_password
 from courses_assistant.entrypoints.api.dependencies import (
     get_container,
     require_admin,
@@ -324,7 +324,9 @@ async def create_user(
         user = UserORM(
             email=payload.email,
             name=payload.name,
-            password_hash=hash_password(payload.password),
+            password_hash=encrypt_password(
+                payload.password, container.settings.require_password_key()
+            ),
             role=payload.role,
         )
         session.add(user)
@@ -374,7 +376,9 @@ async def update_user(
         if payload.name is not None:
             orm_user.name = payload.name
         if payload.password is not None:
-            orm_user.password_hash = hash_password(payload.password)
+            orm_user.password_hash = encrypt_password(
+                payload.password, container.settings.require_password_key()
+            )
         result = _user_item(orm_user)
         await session.commit()
         return result

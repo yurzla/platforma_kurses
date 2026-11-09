@@ -75,7 +75,13 @@ async def login(
         password_hash = (
             await uow.users.get_password_hash(user.id) if user is not None else None
         )
-    if user is None or not password_hash or not verify_password(payload.password, password_hash):
+    if (
+        user is None
+        or not password_hash
+        or not verify_password(
+            payload.password, password_hash, container.settings.require_password_key()
+        )
+    ):
         raise HTTPException(status_code=401, detail="Неверный email или пароль")
     access, refresh = await _issue_tokens(container, user.id)
     set_auth_cookies(response, container.settings, access, refresh)

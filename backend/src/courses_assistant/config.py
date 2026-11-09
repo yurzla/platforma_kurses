@@ -77,6 +77,9 @@ class Settings(BaseSettings):
     access_cookie: str = "access_token"
     refresh_cookie: str = "refresh_token"
 
+    # Обратимое шифрование паролей (Fernet, ключ из .env)
+    password_key: str = ""
+
     # Embeddings (Ollama)
     ollama_url: str = "http://localhost:11434/api/embed"
     embedding_model: str = "nomic-embed-text"
@@ -109,6 +112,14 @@ class Settings(BaseSettings):
     def resolved_jwt_secret(self) -> str:
         """Ключ подписи JWT; при отсутствии — эфемерный на процесс."""
         return self.jwt_secret or _ephemeral_jwt_secret()
+
+    def require_password_key(self) -> str:
+        """Ключ шифрования паролей; без него операции с паролями запрещены."""
+        if not self.password_key:
+            raise ValueError(
+                "Не задан PASSWORD_KEY. Добавьте urlsafe-base64 ключ Fernet в .env."
+            )
+        return self.password_key
 
 
 @lru_cache

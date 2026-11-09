@@ -15,14 +15,13 @@ from courses_assistant.domain.catalog import (
     StepSummary,
 )
 from courses_assistant.domain.models import ChatMessage, ChatSession, Role
-from courses_assistant.domain.security import hash_password
 from courses_assistant.entrypoints.api.app import create_app as create_api_app
 from courses_web.app import create_app as create_web_app
 from courses_web.config import Settings as WebSettings
 from courses_web.routers import pages
 from courses_web.templating import templates
 from tests.api.test_api import build_test_container
-from tests.fakes import FakeStore
+from tests.fakes import FakeStore, encrypt_test_password
 
 
 def build_stack_full(store: FakeStore):
@@ -44,7 +43,7 @@ def build_stack(store: FakeStore):
 
 
 def seed_student_and_course(store: FakeStore) -> None:
-    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     step = StepSummary(id=101, position=1, step_type="choice")
     lesson = LessonSummary(id=11, title="Урок 1", position=1, steps=[step])
     section = SectionSummary(id=1, title="Модуль 1", position=1, lessons=[lesson])
@@ -52,7 +51,7 @@ def seed_student_and_course(store: FakeStore) -> None:
 
 
 def seed_admin(store: FakeStore) -> None:
-    store.add_user("admin@example.com", "Админ", hash_password("s3cret"), "admin")
+    store.add_user("admin@example.com", "Админ", encrypt_test_password("s3cret"), "admin")
 
 
 async def test_health() -> None:
@@ -230,7 +229,7 @@ async def test_course_page_progress_updates_after_step_passed() -> None:
 
 async def test_course_description_preserves_line_breaks() -> None:
     store = FakeStore()
-    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     store.add_course(
         CourseDetail(
             id=30,
@@ -248,7 +247,7 @@ async def test_course_description_preserves_line_breaks() -> None:
 
 async def test_course_card_truncates_description() -> None:
     store = FakeStore()
-    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     store.add_course(
         CourseDetail(id=20, title="Длинный", description="x" * 200 + "TAIL_MARKER")
     )
@@ -311,7 +310,7 @@ async def test_bad_login_shows_error() -> None:
 
 async def test_courses_pagination() -> None:
     store = FakeStore()
-    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     user_id = next(iter(store.users))
     for course_id in range(1, 13):
         step = StepSummary(id=course_id * 10, position=1, step_type="text")
@@ -349,7 +348,7 @@ async def test_courses_pagination() -> None:
 
 async def test_assistant_history_on_course_lists() -> None:
     store = FakeStore()
-    user = store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    user = store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     store.add_course(CourseDetail(id=10, title="Python", sections=[]))
     store.add_course(CourseDetail(id=11, title="Django", sections=[]))
     store.sessions[1] = ChatSession(
@@ -382,7 +381,7 @@ async def test_assistant_history_on_course_lists() -> None:
 
 async def test_assistant_history_partial() -> None:
     store = FakeStore()
-    user = store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    user = store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     store.add_course(CourseDetail(id=10, title="Python", sections=[]))
     store.add_course(CourseDetail(id=11, title="Django", sections=[]))
     store.sessions[1] = ChatSession(
@@ -518,7 +517,7 @@ def _search_course(course_id: int, title: str, description: str | None, step_id:
 
 async def test_courses_search_filters_and_reset() -> None:
     store = FakeStore()
-    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     store.add_course(_search_course(1, "Python", "Основы", 101))
     store.add_course(_search_course(2, "Django", "Веб на Python", 201))
     web, api = build_stack(store)
@@ -543,7 +542,7 @@ async def test_courses_search_filters_and_reset() -> None:
 
 async def test_my_courses_search_keeps_enrollment_filter() -> None:
     store = FakeStore()
-    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     user_id = next(iter(store.users))
     store.add_course(_search_course(1, "Python", None, 101))
     store.add_course(_search_course(2, "Python Advanced", None, 201))
@@ -560,7 +559,7 @@ async def test_my_courses_search_keeps_enrollment_filter() -> None:
 
 async def test_courses_pagination_preserves_search() -> None:
     store = FakeStore()
-    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     for course_id in range(1, 12):
         store.add_course(_search_course(course_id, f"Python {course_id}", None, course_id * 10))
     store.add_course(_search_course(99, "Django", None, 990))
@@ -584,7 +583,7 @@ async def test_courses_pagination_preserves_search() -> None:
 
 def _seed_teacher_courses(store: FakeStore, count: int):
     teacher = store.add_user(
-        "t@example.com", "Учитель", hash_password("pw"), "teacher"
+        "t@example.com", "Учитель", encrypt_test_password("pw"), "teacher"
     )
     for course_id in range(1, count + 1):
         store.add_course(

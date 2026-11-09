@@ -7,10 +7,9 @@ from datetime import UTC, datetime, timedelta
 import httpx
 
 from courses_assistant.domain.models import JobStatus, QuestionJob
-from courses_assistant.domain.security import hash_password
 from courses_assistant.entrypoints.api.app import create_app
 from tests.api.test_api import build_test_container
-from tests.fakes import FakeStore
+from tests.fakes import FakeStore, encrypt_test_password
 
 
 def _seed_jobs(store: FakeStore) -> None:
@@ -45,7 +44,7 @@ def make_app(store: FakeStore):
 
 
 def seed_admin(store: FakeStore, email: str = "admin@example.com", password: str = "s3cret"):
-    store.add_user(email, "Админ", hash_password(password), "admin")
+    store.add_user(email, "Админ", encrypt_test_password(password), "admin")
 
 
 async def login(ac: httpx.AsyncClient, email: str, password: str) -> httpx.Response:
@@ -119,7 +118,7 @@ async def test_anonymous_denied() -> None:
 
 async def test_non_admin_denied() -> None:
     store = FakeStore()
-    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     ac, _ = make_app(store)
     async with ac:
         ok = await login(ac, "s@example.com", "pw")

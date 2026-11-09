@@ -16,6 +16,7 @@ from courses_assistant.container import Container
 from courses_assistant.domain.models import ChatMessage, ChatSession, RetrievedChunk, Role
 from courses_assistant.entrypoints.api.app import create_app
 from tests.fakes import (
+    TEST_PASSWORD_KEY,
     FakeBroker,
     FakeEmbedder,
     FakeLLM,
@@ -25,7 +26,7 @@ from tests.fakes import (
 
 
 def build_test_container(store: FakeStore) -> tuple[Container, FakeStore, FakeBroker]:
-    settings = Settings(gigachat_credentials="test")
+    settings = Settings(gigachat_credentials="test", password_key=TEST_PASSWORD_KEY)
     uow_factory = lambda: InMemoryUnitOfWork(store)  # noqa: E731
     llm = FakeLLM(default="ответ")
     embedder = FakeEmbedder()

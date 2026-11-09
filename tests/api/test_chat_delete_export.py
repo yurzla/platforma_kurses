@@ -10,10 +10,9 @@ import pytest
 
 from courses_assistant.domain.catalog import CourseDetail
 from courses_assistant.domain.models import ChatMessage, ChatSession, QuestionJob, Role
-from courses_assistant.domain.security import hash_password
 from courses_assistant.entrypoints.api.app import create_app
 from tests.api.test_api import build_test_container
-from tests.fakes import FakeStore
+from tests.fakes import FakeStore, encrypt_test_password
 
 
 def _client(store: FakeStore) -> httpx.AsyncClient:
@@ -59,7 +58,7 @@ def _seed_session(store: FakeStore, user_id: int) -> None:
 
 @pytest.fixture
 async def student_client(store: FakeStore) -> AsyncIterator[httpx.AsyncClient]:
-    user = store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    user = store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     _seed_session(store, user.id)
     async with _client(store) as ac:
         login = await ac.post(
@@ -70,7 +69,7 @@ async def student_client(store: FakeStore) -> AsyncIterator[httpx.AsyncClient]:
 
 
 async def test_delete_own_session_removes_messages_and_jobs(store: FakeStore) -> None:
-    user = store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    user = store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     _seed_session(store, user.id)
     async with _client(store) as ac:
         await ac.post(
@@ -89,7 +88,7 @@ async def test_delete_own_session_removes_messages_and_jobs(store: FakeStore) ->
 
 async def test_delete_foreign_session_forbidden() -> None:
     store = FakeStore()
-    owner = store.add_user("owner@example.com", "Owner", hash_password("pw"), "student")
+    owner = store.add_user("owner@example.com", "Owner", encrypt_test_password("pw"), "student")
     _seed_session(store, owner.id)
     async with _client(store) as other:
         await other.post(
@@ -109,7 +108,7 @@ async def test_delete_foreign_session_forbidden() -> None:
 
 async def test_delete_unknown_session_returns_404() -> None:
     store = FakeStore()
-    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     async with _client(store) as ac:
         await ac.post(
             "/api/v1/auth/login", json={"email": "s@example.com", "password": "pw"}
@@ -127,8 +126,8 @@ async def test_delete_session_requires_auth() -> None:
 
 async def test_admin_can_delete_foreign_session() -> None:
     store = FakeStore()
-    owner = store.add_user("owner@example.com", "Owner", hash_password("pw"), "student")
-    store.add_user("admin@example.com", "Админ", hash_password("adminpw"), "admin")
+    owner = store.add_user("owner@example.com", "Owner", encrypt_test_password("pw"), "student")
+    store.add_user("admin@example.com", "Админ", encrypt_test_password("adminpw"), "admin")
     _seed_session(store, owner.id)
     async with _client(store) as admin:
         await admin.post(
@@ -142,8 +141,8 @@ async def test_admin_can_delete_foreign_session() -> None:
 
 
 async def test_delete_all_sessions_removes_own_sessions_and_jobs(store: FakeStore) -> None:
-    user = store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
-    other = store.add_user("o@example.com", "Другой", hash_password("pw"), "student")
+    user = store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
+    other = store.add_user("o@example.com", "Другой", encrypt_test_password("pw"), "student")
     _seed_session(store, user.id)
     started = datetime(2026, 10, 18, 9, 0, tzinfo=UTC)
     store.sessions[2] = ChatSession(id=2, user_id=user.id, course_id=None, started_at=started)
@@ -169,7 +168,7 @@ async def test_delete_all_sessions_removes_own_sessions_and_jobs(store: FakeStor
 
 
 async def test_delete_all_sessions_can_be_scoped_to_course(store: FakeStore) -> None:
-    user = store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    user = store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
     _seed_session(store, user.id)
     started = datetime(2026, 10, 18, 9, 0, tzinfo=UTC)
     store.sessions[2] = ChatSession(id=2, user_id=user.id, course_id=20, started_at=started)
@@ -234,7 +233,7 @@ async def test_export_missing_format_returns_400(student_client: httpx.AsyncClie
 
 async def test_export_foreign_session_forbidden() -> None:
     store = FakeStore()
-    owner = store.add_user("owner@example.com", "Owner", hash_password("pw"), "student")
+    owner = store.add_user("owner@example.com", "Owner", encrypt_test_password("pw"), "student")
     _seed_session(store, owner.id)
     async with _client(store) as other:
         await other.post(
