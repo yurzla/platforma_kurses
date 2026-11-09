@@ -31,16 +31,16 @@
       <button class="diagnostic-tab" data-diagnostic="health">Состояние</button>
     </nav>
     <p class="diagnostic-note">Раздел для контроля фоновой обработки вопросов ассистентом. Он нужен в основном техническому администратору или разработчику.</p>
-  <section class="cards" id="status-cards">
-    <div class="card" data-status="queued"><span class="card-value" id="cnt-queued">0</span><span class="card-label">queued</span></div>
-    <div class="card" data-status="running"><span class="card-value" id="cnt-running">0</span><span class="card-label">running</span></div>
-    <div class="card" data-status="done"><span class="card-value" id="cnt-done">0</span><span class="card-label">done</span></div>
-    <div class="card" data-status="failed"><span class="card-value" id="cnt-failed">0</span><span class="card-label">failed</span></div>
-  </section>
 
   <section class="panel diagnostic-panel" id="diagnostic-jobs">
     <h2>Jobs</h2>
     <p class="muted">Фоновые задания ассистента: обработка вопроса студента, генерация ответа, число попыток и возможные ошибки. Нажмите на строку, чтобы открыть детали job и источники ответа.</p>
+    <section class="cards" id="status-cards">
+      <div class="card" data-status="queued"><span class="card-value" id="cnt-queued">0</span><span class="card-label">queued</span></div>
+      <div class="card" data-status="running"><span class="card-value" id="cnt-running">0</span><span class="card-label">running</span></div>
+      <div class="card" data-status="done"><span class="card-value" id="cnt-done">0</span><span class="card-label">done</span></div>
+      <div class="card" data-status="failed"><span class="card-value" id="cnt-failed">0</span><span class="card-label">failed</span></div>
+    </section>
     <form class="filters" id="jobs-filters" onsubmit="return false;">
       <label class="f-status">Статус
         <select id="f-status">

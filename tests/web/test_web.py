@@ -480,6 +480,11 @@ async def test_admin_panel_flow() -> None:
         assert 'id="chunks-body"' not in index_panel
         assert 'class="f-course"' in dashboard.text
         assert 'class="f-status"' in dashboard.text
+        jobs_panel = dashboard.text.split('id="diagnostic-jobs"', 1)[1].split(
+            'id="diagnostic-dlq"', 1
+        )[0]
+        assert 'id="status-cards"' in jobs_panel
+        assert dashboard.text.count('id="status-cards"') == 1
         assert "/static/dashboard.js" in dashboard.text
         assert 'id="assistant-toggle"' not in dashboard.text
         lowered = dashboard.text.lower()
