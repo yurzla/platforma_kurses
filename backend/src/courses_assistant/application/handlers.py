@@ -49,6 +49,7 @@ from courses_assistant.domain.quiz import (
 )
 from courses_assistant.domain.recommendations import sanitize_course_recommendations
 from courses_assistant.domain.recommender import (
+    CourseMatch,
     build_recommended_courses_section,
     looks_like_course_query,
 )
@@ -68,6 +69,16 @@ def _chunk_to_source(chunk: RetrievedChunk) -> dict:
         "course_id": chunk.course_id,
         "course_title": chunk.course_title,
         "course_url": f"/courses/{chunk.course_id}" if chunk.course_id is not None else None,
+    }
+
+
+def _course_match_to_source(match: CourseMatch) -> dict:
+    return {
+        "source_type": "course_recommendation",
+        "course_id": match.course_id,
+        "course_title": match.title,
+        "course_url": f"/courses/{match.course_id}",
+        "score": match.score,
     }
 
 
@@ -168,6 +179,9 @@ class Handlers:
                     candidate_limit=max(self._settings.recommendation_top_k * 4, 20),
                 )
                 if matches:
+                    recommendation_sources = [
+                        _course_match_to_source(match) for match in matches
+                    ]
                     recommended_courses = build_recommended_courses_section(
                         matches,
                         description_limit=self._settings.recommendation_description_limit,
@@ -189,11 +203,13 @@ class Handlers:
                             session_id=command.session_id,
                             role=Role.ASSISTANT,
                             content=recommended,
-                            sources=None,
+                            sources=recommendation_sources,
                             used_chunk_ids=[],
                         )
                     )
-                    await uow.jobs.mark_done(command.job_id, recommended, [], rewritten)
+                    await uow.jobs.mark_done(
+                        command.job_id, recommended, recommendation_sources, rewritten
+                    )
                     return Answer(text=recommended, sources=[], rewritten_question=rewritten)
 
             sources: list[dict] = []

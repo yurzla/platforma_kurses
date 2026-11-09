@@ -500,6 +500,8 @@ async def test_static_assets_served() -> None:
     assert "openJob(" in js.text
     assert "loadIndex(" in js.text
     assert "loadHealth(" in js.text
+    assert "course_recommendation" in js.text
+    assert "Рекомендованные курсы" in js.text
     assert "retry" not in js.text.lower()
     assert "replay" not in js.text.lower()
     assert icons.status_code == 200

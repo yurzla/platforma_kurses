@@ -345,7 +345,19 @@ async def test_process_question_global_recommends_by_embeddings(store, broker, e
     job = store.jobs[job_id]
     assert job.status == JobStatus.DONE
     assert job.answer == "тестовый ответ"
-    assert job.sources == []
+    assert len(job.sources) == 2
+    assert {source["course_id"] for source in job.sources} == {3, 10}
+    assert all(
+        source["source_type"] == "course_recommendation" for source in job.sources
+    )
+    assert all(
+        source["course_url"] == f"/courses/{source['course_id']}"
+        for source in job.sources
+    )
+    assistant_messages = [
+        message for message in store.messages[session_id] if message.role == Role.ASSISTANT
+    ]
+    assert assistant_messages[-1].sources == job.sources
     assert len(llm.calls) == 2  # расширение запроса + ответ модели
 
     answer_prompt = llm.calls[-1][0].content

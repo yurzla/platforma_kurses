@@ -168,27 +168,70 @@ function distanceLabel(value) {
 
 function renderJobDetail(job) {
   const sources = Array.isArray(job.sources) ? job.sources : [];
-  const sourceRows = sources.length
-    ? sources
-        .map((source) => {
-          const chunkCell =
-            source.chunk_id === null || source.chunk_id === undefined
-              ? "—"
-              : `<button type="button" class="link-btn mono" data-chunk-id="${escapeHtml(source.chunk_id)}">${escapeHtml(source.chunk_id)}</button>`;
-          const courseName = source.course_title || source.course_id || "—";
-          const courseCell = source.course_url
-            ? `<a href="${escapeHtml(source.course_url)}">${escapeHtml(courseName)}</a>`
-            : escapeHtml(courseName);
-          return `<tr>
-            <td>${chunkCell}</td>
-            <td>${courseCell}</td>
-            <td>${escapeHtml(source.lesson || "—")}</td>
-            <td>${escapeHtml(source.source_type || "—")}</td>
-            <td>${distanceLabel(source.distance)}</td>
-          </tr>`;
-        })
-        .join("")
-    : '<tr><td colspan="5" class="muted">источники не сохранены</td></tr>';
+  const recommendationSources = sources.filter(
+    (source) => source.source_type === "course_recommendation"
+  );
+  const chunkSources = sources.filter(
+    (source) => source.source_type !== "course_recommendation"
+  );
+
+  const chunkRows = chunkSources
+    .map((source) => {
+      const chunkCell =
+        source.chunk_id === null || source.chunk_id === undefined
+          ? "—"
+          : `<button type="button" class="link-btn mono" data-chunk-id="${escapeHtml(source.chunk_id)}">${escapeHtml(source.chunk_id)}</button>`;
+      const courseName = source.course_title || source.course_id || "—";
+      const courseCell = source.course_url
+        ? `<a href="${escapeHtml(source.course_url)}">${escapeHtml(courseName)}</a>`
+        : escapeHtml(courseName);
+      return `<tr>
+        <td>${chunkCell}</td>
+        <td>${courseCell}</td>
+        <td>${escapeHtml(source.lesson || "—")}</td>
+        <td>${escapeHtml(source.source_type || "—")}</td>
+        <td>${distanceLabel(source.distance)}</td>
+      </tr>`;
+    })
+    .join("");
+
+  const recommendationRows = recommendationSources
+    .map((source) => {
+      const title = source.course_title || source.course_id || "—";
+      const courseCell = source.course_url
+        ? `<a href="${escapeHtml(source.course_url)}">${escapeHtml(title)}</a>`
+        : escapeHtml(title);
+      return `<tr>
+        <td>${courseCell}</td>
+        <td>${source.course_id ?? "—"}</td>
+        <td>${distanceLabel(source.score)}</td>
+      </tr>`;
+    })
+    .join("");
+
+  const recommendationBlock = recommendationSources.length
+    ? `<h3>Рекомендованные курсы</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Курс</th><th>ID</th><th>Score</th></tr></thead>
+          <tbody>${recommendationRows}</tbody>
+        </table>
+      </div>`
+    : "";
+  const chunkBlock = chunkSources.length
+    ? `<h3>Чанки</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Chunk</th><th>Курс</th><th>Урок</th><th>Тип</th><th>Distance</th></tr></thead>
+          <tbody>${chunkRows}</tbody>
+        </table>
+      </div>`
+    : "";
+  const sourcesBlock =
+    recommendationSources.length || chunkSources.length
+      ? `<div class="detail-block">${recommendationBlock}${chunkBlock}</div>`
+      : `<div class="detail-block"><h3>Источники</h3><p class="muted">источники не сохранены</p></div>`;
+
   return `
     <dl class="detail-grid">
       <dt>Job ID</dt><dd class="mono">${escapeHtml(job.id)}</dd>
@@ -202,15 +245,7 @@ function renderJobDetail(job) {
     ${job.rewritten_question ? `<div class="detail-block"><h3>Переписанный вопрос</h3><pre class="detail-text">${escapeHtml(job.rewritten_question)}</pre></div>` : ""}
     <div class="detail-block"><h3>Ответ</h3><pre class="detail-text">${escapeHtml(job.answer || "—")}</pre></div>
     ${job.error ? `<div class="detail-block"><h3>Ошибка</h3><pre class="detail-text error-text">${escapeHtml(job.error)}</pre></div>` : ""}
-    <div class="detail-block">
-      <h3>Источники</h3>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Chunk</th><th>Курс</th><th>Урок</th><th>Тип</th><th>Distance</th></tr></thead>
-          <tbody>${sourceRows}</tbody>
-        </table>
-      </div>
-    </div>`;
+    ${sourcesBlock}`;
 }
 
 async function openJob(jobId) {
