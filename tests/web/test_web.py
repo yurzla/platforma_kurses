@@ -674,6 +674,7 @@ def test_teacher_course_step_forms_render() -> None:
     assert 'action="/teacher/lessons/2/steps"' in html
     assert 'name="video_url"' in html
     assert 'value="https://youtu.be/abc123"' in html
+    assert 'name="course_id" value="5"' in html
     assert "Подсказка по форматированию" in html
     assert ">Вопрос</textarea>" in html
     assert 'value="A"' in html

@@ -2,7 +2,7 @@
 {% set current_type = step.step_type if is_edit else 'text' %}
 {% set current_choices = step.choices if is_edit else [] %}
 <form class="step-form" method="post" action="{{ action }}" data-step-form>
-  <input type="hidden" name="course_id" value="{{ course_id }}">
+  <input type="hidden" name="course_id" value="{{ course.id }}">
 
   <label class="step-row">Тип шага
     <select name="step_type" data-step-type>
