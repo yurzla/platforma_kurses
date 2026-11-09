@@ -45,6 +45,7 @@ from courses_assistant.domain.catalog import (
     SectionSummary,
     StepDetail,
     StepSummary,
+    TeacherCourseSummary,
 )
 from courses_assistant.domain.models import (
     ChatMessage,
@@ -59,6 +60,21 @@ from courses_assistant.domain.models import (
 )
 from courses_assistant.domain.quiz import build_answer_key, grading_mode
 from courses_assistant.domain.recommender import CourseMatch
+
+
+def _escape_like(term: str) -> str:
+    return term.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+
+
+def _course_search_clause(search: str | None) -> Any | None:
+    term = (search or "").strip()
+    if not term:
+        return None
+    pattern = f"%{_escape_like(term)}%"
+    return or_(
+        CourseORM.title.ilike(pattern, escape="\\"),
+        CourseORM.description.ilike(pattern, escape="\\"),
+    )
 
 
 def _to_session(orm: ChatSessionORM) -> ChatSession:
@@ -332,6 +348,7 @@ class SqlCatalogRepository(CatalogRepository):
         user_id: int | None,
         *,
         enrolled_only: bool = False,
+        search: str | None = None,
         limit: int = 50,
         offset: int = 0,
     ) -> list[CourseSummary]:
@@ -358,6 +375,9 @@ class SqlCatalogRepository(CatalogRepository):
         )
         if enrolled_only:
             stmt = stmt.where(EnrollmentORM.progress_percent.is_not(None))
+        search_clause = _course_search_clause(search)
+        if search_clause is not None:
+            stmt = stmt.where(search_clause)
         stmt = stmt.limit(limit).offset(offset)
         result = await self._session.execute(stmt)
         courses: list[CourseSummary] = []
@@ -376,7 +396,13 @@ class SqlCatalogRepository(CatalogRepository):
             )
         return courses
 
-    async def count_courses(self, user_id: int | None, *, enrolled_only: bool = False) -> int:
+    async def count_courses(
+        self,
+        user_id: int | None,
+        *,
+        enrolled_only: bool = False,
+        search: str | None = None,
+    ) -> int:
         stmt = (
             select(func.count())
             .select_from(CourseORM)
@@ -385,6 +411,75 @@ class SqlCatalogRepository(CatalogRepository):
         )
         if enrolled_only:
             stmt = stmt.where(EnrollmentORM.progress_percent.is_not(None))
+        search_clause = _course_search_clause(search)
+        if search_clause is not None:
+            stmt = stmt.where(search_clause)
+        return int(await self._session.scalar(stmt) or 0)
+
+    async def list_authored_courses(
+        self,
+        teacher_id: int,
+        *,
+        search: str | None = None,
+        limit: int = 50,
+        offset: int = 0,
+    ) -> list[TeacherCourseSummary]:
+        lessons_count = (
+            select(func.count())
+            .select_from(LessonORM)
+            .join(SectionORM, LessonORM.section_id == SectionORM.id)
+            .where(SectionORM.course_id == CourseORM.id)
+            .scalar_subquery()
+        )
+        steps_count = (
+            select(func.count())
+            .select_from(StepORM)
+            .join(LessonORM, StepORM.lesson_id == LessonORM.id)
+            .join(SectionORM, LessonORM.section_id == SectionORM.id)
+            .where(SectionORM.course_id == CourseORM.id)
+            .scalar_subquery()
+        )
+        students_count = (
+            select(func.count())
+            .select_from(EnrollmentORM)
+            .where(EnrollmentORM.course_id == CourseORM.id)
+            .scalar_subquery()
+        )
+        stmt = (
+            select(CourseORM, lessons_count, steps_count, students_count)
+            .where(CourseORM.owner_id == teacher_id)
+            .order_by(CourseORM.created_at.desc(), CourseORM.id.desc())
+        )
+        search_clause = _course_search_clause(search)
+        if search_clause is not None:
+            stmt = stmt.where(search_clause)
+        stmt = stmt.limit(limit).offset(offset)
+        result = await self._session.execute(stmt)
+        return [
+            TeacherCourseSummary(
+                id=course.id,
+                title=course.title,
+                description=course.description,
+                level=course.level,
+                is_published=course.is_published,
+                lessons_count=int(lessons_total or 0),
+                steps_count=int(steps_total or 0),
+                students_count=int(students_total or 0),
+            )
+            for course, lessons_total, steps_total, students_total in result.all()
+        ]
+
+    async def count_authored_courses(
+        self, teacher_id: int, *, search: str | None = None
+    ) -> int:
+        stmt = (
+            select(func.count())
+            .select_from(CourseORM)
+            .where(CourseORM.owner_id == teacher_id)
+        )
+        search_clause = _course_search_clause(search)
+        if search_clause is not None:
+            stmt = stmt.where(search_clause)
         return int(await self._session.scalar(stmt) or 0)
 
     async def get_course(self, course_id: int, user_id: int | None) -> CourseDetail | None:

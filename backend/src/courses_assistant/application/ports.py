@@ -11,6 +11,7 @@ from courses_assistant.domain.catalog import (
     CourseDetail,
     CourseSummary,
     StepDetail,
+    TeacherCourseSummary,
 )
 from courses_assistant.domain.models import (
     ChatMessage,
@@ -132,13 +133,33 @@ class CatalogRepository(ABC):
         user_id: int | None,
         *,
         enrolled_only: bool = False,
+        search: str | None = None,
         limit: int = 50,
         offset: int = 0,
     ) -> list[CourseSummary]: ...
 
     @abstractmethod
     async def count_courses(
-        self, user_id: int | None, *, enrolled_only: bool = False
+        self,
+        user_id: int | None,
+        *,
+        enrolled_only: bool = False,
+        search: str | None = None,
+    ) -> int: ...
+
+    @abstractmethod
+    async def list_authored_courses(
+        self,
+        teacher_id: int,
+        *,
+        search: str | None = None,
+        limit: int = 50,
+        offset: int = 0,
+    ) -> list[TeacherCourseSummary]: ...
+
+    @abstractmethod
+    async def count_authored_courses(
+        self, teacher_id: int, *, search: str | None = None
     ) -> int: ...
 
     @abstractmethod

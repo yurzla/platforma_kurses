@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException
+from dataclasses import asdict
+
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import delete, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -31,6 +33,7 @@ from courses_assistant.entrypoints.api.schemas import (
     SectionSummaryRead,
     StepSummaryRead,
     TeacherCourseCreate,
+    TeacherCourseListResponse,
     TeacherCourseRead,
     TeacherCourseUpdate,
     TeacherLessonCreate,
@@ -110,24 +113,25 @@ async def _delete_steps(session: AsyncSession, step_ids: list[int]) -> None:
     await session.execute(delete(StepORM).where(StepORM.id.in_(step_ids)))
 
 
-@router.get("/courses", response_model=list[TeacherCourseRead])
+@router.get("/courses", response_model=TeacherCourseListResponse)
 async def list_my_courses(
+    search: str | None = Query(default=None, max_length=200),
+    limit: int = Query(default=50, ge=1, le=200),
+    offset: int = Query(default=0, ge=0),
     teacher: User = Depends(require_teacher),
     container: Container = Depends(get_container),
-) -> list[TeacherCourseRead]:
-    async with container.session_factory() as session:
-        courses = (
-            (
-                await session.execute(
-                    select(CourseORM)
-                    .where(CourseORM.owner_id == teacher.id)
-                    .order_by(CourseORM.created_at.desc(), CourseORM.id.desc())
-                )
-            )
-            .scalars()
-            .all()
+) -> TeacherCourseListResponse:
+    async with container.uow_factory() as uow:
+        courses = await uow.catalog.list_authored_courses(
+            teacher.id, search=search, limit=limit, offset=offset
         )
-        return [await _course_read(session, course) for course in courses]
+        total = await uow.catalog.count_authored_courses(teacher.id, search=search)
+    return TeacherCourseListResponse(
+        items=[TeacherCourseRead(**asdict(course)) for course in courses],
+        total=total,
+        limit=limit,
+        offset=offset,
+    )
 
 
 @router.post("/courses", response_model=TeacherCourseRead, status_code=201)

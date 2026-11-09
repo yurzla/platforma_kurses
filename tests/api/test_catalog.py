@@ -167,3 +167,98 @@ async def test_manual_step_completion() -> None:
         result = await ac.post("/api/v1/courses/11/steps/202/answer", json={"answer": None})
         assert result.json()["is_correct"] is None
         assert result.json()["completed"] is True
+
+
+def _course_with_step(course_id: int, title: str, description: str | None, step_id: int):
+    step = StepSummary(id=step_id, position=1, step_type="text")
+    lesson = LessonSummary(id=course_id, title="Урок", position=1, steps=[step])
+    section = SectionSummary(id=course_id, title="Модуль", position=1, lessons=[lesson])
+    return CourseDetail(id=course_id, title=title, description=description, sections=[section])
+
+
+async def test_course_search_by_title_and_description() -> None:
+    store = FakeStore()
+    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_course(_course_with_step(1, "Python Basics", "Для начинающих", 101))
+    store.add_course(_course_with_step(2, "Django", "Веб на PYTHON", 201))
+    store.add_course(_course_with_step(3, "Go", "Язык серверов", 301))
+    ac = make_app(store)
+    async with ac:
+        await _login(ac)
+
+        by_title = await ac.get("/api/v1/courses", params={"search": "python"})
+        assert {c["id"] for c in by_title.json()["items"]} == {1, 2}
+        assert by_title.json()["total"] == 2
+
+        by_description = await ac.get("/api/v1/courses", params={"search": "серверов"})
+        assert [c["id"] for c in by_description.json()["items"]] == [3]
+        assert by_description.json()["total"] == 1
+
+        lowercase = await ac.get("/api/v1/courses", params={"search": "PYTHON"})
+        assert {c["id"] for c in lowercase.json()["items"]} == {1, 2}
+
+        blank = await ac.get("/api/v1/courses", params={"search": "   "})
+        assert blank.json()["total"] == 3
+
+
+async def test_course_search_no_matches() -> None:
+    store = FakeStore()
+    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_course(_course_with_step(1, "Python", None, 101))
+    ac = make_app(store)
+    async with ac:
+        await _login(ac)
+        response = await ac.get("/api/v1/courses", params={"search": "нет такого"})
+    assert response.status_code == 200
+    assert response.json()["items"] == []
+    assert response.json()["total"] == 0
+
+
+async def test_course_search_combines_with_enrollment_and_pagination() -> None:
+    store = FakeStore()
+    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    user_id = next(iter(store.users))
+    for course_id in range(1, 13):
+        store.add_course(_course_with_step(course_id, f"Python {course_id}", None, course_id * 10))
+    store.add_course(_course_with_step(99, "Django", None, 990))
+    for course_id in (1, 2, 3):
+        store.progress[(user_id, course_id * 10)] = "passed"
+    ac = make_app(store)
+    async with ac:
+        await _login(ac)
+
+        page = await ac.get(
+            "/api/v1/courses",
+            params={"search": "python", "limit": 5, "offset": 0},
+        )
+        assert page.json()["total"] == 12
+        assert len(page.json()["items"]) == 5
+
+        enrolled = await ac.get(
+            "/api/v1/courses", params={"search": "python", "enrolled": "true"}
+        )
+        assert {c["id"] for c in enrolled.json()["items"]} == {1, 2, 3}
+        assert enrolled.json()["total"] == 3
+
+        enrolled_other = await ac.get(
+            "/api/v1/courses", params={"search": "django", "enrolled": "true"}
+        )
+        assert enrolled_other.json()["items"] == []
+        assert enrolled_other.json()["total"] == 0
+
+
+async def test_course_search_treats_wildcards_literally() -> None:
+    store = FakeStore()
+    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_course(_course_with_step(1, "100% Python", None, 101))
+    store.add_course(_course_with_step(2, "Python", None, 201))
+    store.add_course(_course_with_step(3, "under_score", None, 301))
+    ac = make_app(store)
+    async with ac:
+        await _login(ac)
+
+        percent = await ac.get("/api/v1/courses", params={"search": "100%"})
+        assert [c["id"] for c in percent.json()["items"]] == [1]
+
+        underscore = await ac.get("/api/v1/courses", params={"search": "under_"})
+        assert [c["id"] for c in underscore.json()["items"]] == [3]

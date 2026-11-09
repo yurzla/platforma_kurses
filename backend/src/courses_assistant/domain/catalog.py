@@ -50,6 +50,18 @@ class CourseDetail:
 
 
 @dataclass(slots=True)
+class TeacherCourseSummary:
+    id: int
+    title: str
+    description: str | None = None
+    level: str | None = None
+    is_published: bool = False
+    lessons_count: int = 0
+    steps_count: int = 0
+    students_count: int = 0
+
+
+@dataclass(slots=True)
 class StepResult:
     is_correct: bool | None
     correct_answer: Any | None

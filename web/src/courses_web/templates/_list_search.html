@@ -1,0 +1,10 @@
+{% if show_search is not defined or show_search %}
+<form class="list-search" method="get" action="{{ base_path }}" role="search">
+  <input type="search" name="search" value="{{ search or '' }}" maxlength="200"
+         placeholder="Поиск по названию или описанию" aria-label="Поиск курсов">
+  <button class="btn" type="submit">Найти</button>
+  {% if search %}
+  <a class="btn secondary" href="{{ base_path }}">Сбросить</a>
+  {% endif %}
+</form>
+{% endif %}

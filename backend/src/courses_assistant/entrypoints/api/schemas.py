@@ -244,6 +244,13 @@ class TeacherCourseRead(BaseModel):
     students_count: int = 0
 
 
+class TeacherCourseListResponse(BaseModel):
+    items: list[TeacherCourseRead]
+    total: int
+    limit: int
+    offset: int
+
+
 class TeacherStudentProgressRead(BaseModel):
     user_id: int
     name: str

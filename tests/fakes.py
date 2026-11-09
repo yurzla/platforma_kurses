@@ -28,6 +28,7 @@ from courses_assistant.domain.catalog import (
     SectionSummary,
     StepDetail,
     StepSummary,
+    TeacherCourseSummary,
 )
 from courses_assistant.domain.models import (
     ChatMessage,
@@ -56,6 +57,9 @@ class FakeStore:
     chunks: list[RetrievedChunk] = field(default_factory=list)
     recommendations: list[CourseMatch] = field(default_factory=list)
     courses_detail: dict[int, CourseDetail] = field(default_factory=dict)
+    course_owners: dict[int, int] = field(default_factory=dict)
+    course_published: dict[int, bool] = field(default_factory=dict)
+    course_levels: dict[int, str | None] = field(default_factory=dict)
     answer_keys: dict[int, dict] = field(default_factory=dict)
     step_bodies: dict[int, str] = field(default_factory=dict)
     progress: dict[tuple[int, int], str] = field(default_factory=dict)
@@ -65,8 +69,19 @@ class FakeStore:
     user_seq: int = 0
     refresh_seq: int = 0
 
-    def add_course(self, course: CourseDetail) -> None:
+    def add_course(
+        self,
+        course: CourseDetail,
+        *,
+        owner_id: int | None = None,
+        is_published: bool = True,
+        level: str | None = None,
+    ) -> None:
         self.courses_detail[course.id] = course
+        if owner_id is not None:
+            self.course_owners[course.id] = owner_id
+        self.course_published[course.id] = is_published
+        self.course_levels[course.id] = level
 
     def next_user_id(self) -> int:
         self.user_seq += 1
@@ -244,6 +259,10 @@ class InMemoryUserRepository(UserRepository):
         return user
 
 
+def _course_matches(course: CourseDetail, needle: str) -> bool:
+    return needle in course.title.lower() or needle in (course.description or "").lower()
+
+
 class InMemoryCatalogRepository(CatalogRepository):
     def __init__(self, store: FakeStore) -> None:
         self._store = store
@@ -260,21 +279,92 @@ class InMemoryCatalogRepository(CatalogRepository):
         user_id: int | None,
         *,
         enrolled_only: bool = False,
+        search: str | None = None,
         limit: int = 50,
         offset: int = 0,
     ) -> list[CourseSummary]:
-        summaries = await self._course_summaries(user_id, enrolled_only=enrolled_only)
+        summaries = await self._course_summaries(
+            user_id, enrolled_only=enrolled_only, search=search
+        )
         return summaries[offset : offset + limit]
 
-    async def count_courses(self, user_id: int | None, *, enrolled_only: bool = False) -> int:
-        summaries = await self._course_summaries(user_id, enrolled_only=enrolled_only)
+    async def count_courses(
+        self,
+        user_id: int | None,
+        *,
+        enrolled_only: bool = False,
+        search: str | None = None,
+    ) -> int:
+        summaries = await self._course_summaries(
+            user_id, enrolled_only=enrolled_only, search=search
+        )
         return len(summaries)
 
+    async def list_authored_courses(
+        self,
+        teacher_id: int,
+        *,
+        search: str | None = None,
+        limit: int = 50,
+        offset: int = 0,
+    ) -> list[TeacherCourseSummary]:
+        courses = self._authored_courses(teacher_id, search=search)
+        return courses[offset : offset + limit]
+
+    async def count_authored_courses(self, teacher_id: int, *, search: str | None = None) -> int:
+        return len(self._authored_courses(teacher_id, search=search))
+
+    def _authored_courses(
+        self, teacher_id: int, *, search: str | None
+    ) -> list[TeacherCourseSummary]:
+        needle = (search or "").strip().lower()
+        courses: list[TeacherCourseSummary] = []
+        for course in self._store.courses_detail.values():
+            if self._store.course_owners.get(course.id) != teacher_id:
+                continue
+            if needle and not _course_matches(course, needle):
+                continue
+            lessons = sum(len(section.lessons) for section in course.sections)
+            steps = sum(
+                len(lesson.steps) for section in course.sections for lesson in section.lessons
+            )
+            step_ids = {
+                step.id
+                for section in course.sections
+                for lesson in section.lessons
+                for step in lesson.steps
+            }
+            students = len(
+                {
+                    user_id
+                    for (user_id, step_id) in self._store.progress
+                    if step_id in step_ids
+                }
+            )
+            courses.append(
+                TeacherCourseSummary(
+                    id=course.id,
+                    title=course.title,
+                    description=course.description,
+                    level=self._store.course_levels.get(course.id),
+                    is_published=self._store.course_published.get(course.id, True),
+                    lessons_count=lessons,
+                    steps_count=steps,
+                    students_count=students,
+                )
+            )
+        return courses
+
     async def _course_summaries(
-        self, user_id: int | None, *, enrolled_only: bool
+        self, user_id: int | None, *, enrolled_only: bool, search: str | None
     ) -> list[CourseSummary]:
+        needle = (search or "").strip().lower()
         summaries: list[CourseSummary] = []
         for course in self._store.courses_detail.values():
+            if not self._store.course_published.get(course.id, True):
+                continue
+            if needle and not _course_matches(course, needle):
+                continue
             lessons = sum(len(section.lessons) for section in course.sections)
             course_steps = [
                 step

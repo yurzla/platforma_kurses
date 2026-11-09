@@ -28,6 +28,7 @@ router = APIRouter(prefix="/api/v1/courses", tags=["catalog"])
 @router.get("", response_model=CourseListResponse)
 async def list_courses(
     enrolled: bool = False,
+    search: str | None = Query(default=None, max_length=200),
     limit: int = Query(default=50, ge=1, le=200),
     offset: int = Query(default=0, ge=0),
     user: User = Depends(require_user),
@@ -35,9 +36,15 @@ async def list_courses(
 ) -> CourseListResponse:
     async with container.uow_factory() as uow:
         courses = await uow.catalog.list_courses(
-            user.id, enrolled_only=enrolled, limit=limit, offset=offset
+            user.id,
+            enrolled_only=enrolled,
+            search=search,
+            limit=limit,
+            offset=offset,
         )
-        total = await uow.catalog.count_courses(user.id, enrolled_only=enrolled)
+        total = await uow.catalog.count_courses(
+            user.id, enrolled_only=enrolled, search=search
+        )
     return CourseListResponse(
         items=[CourseSummaryRead(**asdict(course)) for course in courses],
         total=total,

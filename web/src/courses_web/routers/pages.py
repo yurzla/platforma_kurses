@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from typing import Any
-from urllib.parse import parse_qsl
+from urllib.parse import parse_qsl, quote
 
 from fastapi import APIRouter, Request
 from starlette.responses import HTMLResponse, RedirectResponse, Response
@@ -165,19 +165,35 @@ async def dashboard(request: Request) -> Response:
 
 
 _COURSES_PAGE_SIZE = 10
+_TEACHER_PAGE_SIZE = 10
 
 
-def _course_list_params(enrolled: bool, page: int) -> list[tuple[str, str]]:
+def _clean_search(search: str | None) -> str:
+    return (search or "").strip()
+
+
+def _page_query(page: int, search: str) -> str:
+    query = f"page={page}"
+    if search:
+        query += f"&search={quote(search)}"
+    return query
+
+
+def _course_list_params(enrolled: bool, page: int, search: str) -> list[tuple[str, str]]:
     params = [
         ("limit", str(_COURSES_PAGE_SIZE)),
         ("offset", str((page - 1) * _COURSES_PAGE_SIZE)),
     ]
     if enrolled:
         params.append(("enrolled", "true"))
+    if search:
+        params.append(("search", search))
     return params
 
 
-def _course_list_context(data: dict[str, Any], *, page: int, path: str) -> dict[str, Any]:
+def _course_list_context(
+    data: dict[str, Any], *, page: int, path: str, search: str
+) -> dict[str, Any]:
     limit = int(data.get("limit", _COURSES_PAGE_SIZE)) or _COURSES_PAGE_SIZE
     total = int(data.get("total", 0))
     pages = (total + limit - 1) // limit if total else 0
@@ -187,22 +203,35 @@ def _course_list_context(data: dict[str, Any], *, page: int, path: str) -> dict[
         "pages": pages,
         "total": total,
         "base_path": path,
+        "search": search,
     }
 
 
 async def _courses_page(
-    request: Request, *, path: str, template: str, enrolled: bool, page: int
+    request: Request,
+    *,
+    path: str,
+    template: str,
+    enrolled: bool,
+    page: int,
+    search: str = "",
 ) -> Response:
     page = max(page, 1)
+    search = _clean_search(search)
     resp = await call_api(
-        request, "GET", "/api/v1/courses", params=_course_list_params(enrolled, page)
+        request,
+        "GET",
+        "/api/v1/courses",
+        params=_course_list_params(enrolled, page, search),
     )
     if resp.status_code == 401:
         return RedirectResponse(f"/login?next={path}", status_code=303)
     data = resp.json() if resp.status_code == 200 else {}
-    context = _course_list_context(data, page=page, path=path)
+    context = _course_list_context(data, page=page, path=path, search=search)
     if context["pages"] and page > context["pages"]:
-        return RedirectResponse(f"{path}?page={context['pages']}", status_code=303)
+        return RedirectResponse(
+            f"{path}?{_page_query(context['pages'], search)}", status_code=303
+        )
     me = await _me(request)
     assistant = await _assistant_history_context(request)
     return _render(
@@ -255,27 +284,79 @@ async def assistant_history(request: Request, course_id: int | None = None) -> R
 
 
 @router.get("/courses", response_class=HTMLResponse)
-async def courses(request: Request, page: int = 1) -> Response:
+async def courses(request: Request, page: int = 1, search: str = "") -> Response:
     return await _courses_page(
-        request, path="/courses", template="courses.html", enrolled=False, page=page
+        request,
+        path="/courses",
+        template="courses.html",
+        enrolled=False,
+        page=page,
+        search=search,
     )
 
 
 @router.get("/my-courses", response_class=HTMLResponse)
-async def my_courses(request: Request, page: int = 1) -> Response:
+async def my_courses(request: Request, page: int = 1, search: str = "") -> Response:
     return await _courses_page(
-        request, path="/my-courses", template="my_courses.html", enrolled=True, page=page
+        request,
+        path="/my-courses",
+        template="my_courses.html",
+        enrolled=True,
+        page=page,
+        search=search,
+    )
+
+
+def _teacher_list_context(
+    data: dict[str, Any], *, page: int, path: str, search: str
+) -> dict[str, Any]:
+    limit = int(data.get("limit", _TEACHER_PAGE_SIZE)) or _TEACHER_PAGE_SIZE
+    total = int(data.get("total", 0))
+    pages = (total + limit - 1) // limit if total else 0
+    return {
+        "courses": data.get("items", []),
+        "page": page,
+        "pages": pages,
+        "total": total,
+        "base_path": path,
+        "search": search,
+    }
+
+
+async def _teacher_page(
+    request: Request, *, page: int, search: str, error: str | None = None, status_code: int = 200
+) -> Response:
+    me = await _require_teacher_page(request)
+    if isinstance(me, RedirectResponse):
+        return me
+    page = max(page, 1)
+    search = _clean_search(search)
+    params = [
+        ("limit", str(_TEACHER_PAGE_SIZE)),
+        ("offset", str((page - 1) * _TEACHER_PAGE_SIZE)),
+    ]
+    if search:
+        params.append(("search", search))
+    response = await call_api(request, "GET", "/api/v1/teacher/courses", params=params)
+    data = response.json() if response.status_code == 200 else {}
+    context = _teacher_list_context(data, page=page, path="/teacher", search=search)
+    if context["pages"] and page > context["pages"]:
+        return RedirectResponse(
+            f"/teacher?{_page_query(context['pages'], search)}", status_code=303
+        )
+    if error is not None:
+        context["error"] = error
+    return _render(
+        request,
+        "teacher_dashboard.html",
+        {"me": me, **context},
+        status_code=status_code,
     )
 
 
 @router.get("/teacher", response_class=HTMLResponse)
-async def teacher_dashboard(request: Request) -> Response:
-    me = await _require_teacher_page(request)
-    if isinstance(me, RedirectResponse):
-        return me
-    response = await call_api(request, "GET", "/api/v1/teacher/courses")
-    courses = response.json() if response.status_code == 200 else []
-    return _render(request, "teacher_dashboard.html", {"me": me, "courses": courses})
+async def teacher_dashboard(request: Request, page: int = 1, search: str = "") -> Response:
+    return await _teacher_page(request, page=page, search=search)
 
 
 @router.post("/teacher/courses")
@@ -296,15 +377,11 @@ async def teacher_create_course(request: Request) -> Response:
     )
     if response.status_code == 201:
         return RedirectResponse(f"/teacher/courses/{response.json()['id']}", status_code=303)
-    courses_response = await call_api(request, "GET", "/api/v1/teacher/courses")
-    return _render(
+    return await _teacher_page(
         request,
-        "teacher_dashboard.html",
-        {
-            "me": me,
-            "courses": courses_response.json() if courses_response.status_code == 200 else [],
-            "error": response.json().get("detail", "Не удалось создать курс"),
-        },
+        page=1,
+        search="",
+        error=response.json().get("detail", "Не удалось создать курс"),
         status_code=response.status_code,
     )
 

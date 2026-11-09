@@ -17,6 +17,7 @@
     </form>
   </section>
   <section class="teacher-courses">
+    {% include "_list_search.html" %}
     {% if courses %}
       {% for course in courses %}
       <article class="teacher-course-card">
@@ -27,7 +28,14 @@
         {% if not course.is_published %}<form method="post" action="/teacher/courses/{{ course.id }}/delete" onsubmit="return confirm('Удалить черновик курса вместе со всем его содержимым?');"><button class="btn danger" type="submit">Удалить черновик</button></form>{% endif %}
       </article>
       {% endfor %}
-    {% else %}<p class="muted">У вас пока нет курсов. Создайте первый черновик выше.</p>{% endif %}
+    {% else %}
+      {% if search %}
+      <p class="muted">По запросу «{{ search }}» ничего не найдено. <a href="/teacher">Сбросить поиск</a>.</p>
+      {% else %}
+      <p class="muted">У вас пока нет курсов. Создайте первый черновик выше.</p>
+      {% endif %}
+    {% endif %}
+    {% include "_pagination.html" %}
   </section>
 </main>
 {% endblock %}

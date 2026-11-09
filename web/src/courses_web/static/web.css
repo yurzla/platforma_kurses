@@ -120,6 +120,21 @@ main { padding: 24px; max-width: 1040px; margin: 0 auto; }
 .page-link.disabled { color: var(--muted); opacity: .5; pointer-events: none; }
 .page-ellipsis { color: var(--muted); padding: 0 4px; }
 
+.list-search {
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0 0 16px;
+}
+.list-search input {
+  flex: 1 1 260px; min-width: 0; padding: 9px 10px; color: var(--text);
+  background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; font: inherit;
+}
+.btn.secondary {
+  background: transparent; border: 1px solid var(--border); color: var(--text);
+}
+.btn.secondary:hover { border-color: var(--accent); }
+.teacher-courses > .list-search,
+.teacher-courses > .pagination { grid-column: 1 / -1; }
+.teacher-courses > .list-search { margin-bottom: 0; }
+
 @media (max-width: 760px) {
   .course-layout { grid-template-columns: 1fr; }
   .course-sidebar { position: static; }

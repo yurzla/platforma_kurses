@@ -488,3 +488,118 @@ async def test_proxy_auto_refreshes_expired_access_token() -> None:
         assert response.status_code == 200
         assert response.json()
         assert all(cookie.value != "broken-token" for cookie in web.cookies.jar)
+
+
+def _search_course(course_id: int, title: str, description: str | None, step_id: int):
+    step = StepSummary(id=step_id, position=1, step_type="text")
+    lesson = LessonSummary(id=course_id, title="Урок", position=1, steps=[step])
+    section = SectionSummary(id=course_id, title="Модуль", position=1, lessons=[lesson])
+    return CourseDetail(id=course_id, title=title, description=description, sections=[section])
+
+
+async def test_courses_search_filters_and_reset() -> None:
+    store = FakeStore()
+    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_course(_search_course(1, "Python", "Основы", 101))
+    store.add_course(_search_course(2, "Django", "Веб на Python", 201))
+    web, api = build_stack(store)
+    async with web, api:
+        await web.post("/login", data={"email": "s@example.com", "password": "pw"})
+
+        found = await web.get("/courses?search=django")
+        assert found.status_code == 200
+        assert "Django" in found.text
+        assert "<h2>Python</h2>" not in found.text
+        assert 'name="search" value="django"' in found.text
+        assert 'href="/courses">Сбросить' in found.text
+
+        by_description = await web.get("/courses?search=python")
+        assert by_description.text.count('class="course-card"') == 2
+
+        empty = await web.get("/courses?search=%D0%BD%D0%B5%D1%82")
+        assert empty.status_code == 200
+        assert "ничего не найдено" in empty.text
+        assert "Доступных курсов нет" not in empty.text
+
+
+async def test_my_courses_search_keeps_enrollment_filter() -> None:
+    store = FakeStore()
+    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    user_id = next(iter(store.users))
+    store.add_course(_search_course(1, "Python", None, 101))
+    store.add_course(_search_course(2, "Python Advanced", None, 201))
+    store.progress[(user_id, 101)] = "passed"
+    web, api = build_stack(store)
+    async with web, api:
+        await web.post("/login", data={"email": "s@example.com", "password": "pw"})
+        page = await web.get("/my-courses?search=python")
+    assert page.status_code == 200
+    assert "<h2>Python</h2>" in page.text
+    assert "<h2>Python Advanced</h2>" not in page.text
+    assert 'name="search" value="python"' in page.text
+
+
+async def test_courses_pagination_preserves_search() -> None:
+    store = FakeStore()
+    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    for course_id in range(1, 12):
+        store.add_course(_search_course(course_id, f"Python {course_id}", None, course_id * 10))
+    store.add_course(_search_course(99, "Django", None, 990))
+    web, api = build_stack(store)
+    async with web, api:
+        await web.post("/login", data={"email": "s@example.com", "password": "pw"})
+
+        page1 = await web.get("/courses?search=python")
+        assert page1.status_code == 200
+        assert page1.text.count('class="course-card"') == 10
+        assert 'href="/courses?page=2&amp;search=python"' in page1.text
+
+        page2 = await web.get("/courses?page=2&search=python")
+        assert page2.text.count('class="course-card"') == 1
+        assert "Django" not in page2.text
+
+        over = await web.get("/courses?page=99&search=python", follow_redirects=False)
+        assert over.status_code == 303
+        assert over.headers["location"] == "/courses?page=2&search=python"
+
+
+def _seed_teacher_courses(store: FakeStore, count: int):
+    teacher = store.add_user(
+        "t@example.com", "Учитель", hash_password("pw"), "teacher"
+    )
+    for course_id in range(1, count + 1):
+        store.add_course(
+            _search_course(course_id, f"Курс {course_id}", None, course_id * 10),
+            owner_id=teacher.id,
+        )
+    return teacher
+
+
+async def test_teacher_page_pagination_and_search() -> None:
+    store = FakeStore()
+    _seed_teacher_courses(store, 12)
+    store.add_course(_search_course(99, "Django", None, 990), owner_id=1)
+    web, api = build_stack(store)
+    async with web, api:
+        await web.post("/login", data={"email": "t@example.com", "password": "pw"})
+
+        page1 = await web.get("/teacher")
+        assert page1.status_code == 200
+        assert page1.text.count('class="teacher-course-card"') == 10
+        assert 'href="/teacher?page=2"' in page1.text
+
+        page2 = await web.get("/teacher?page=2")
+        assert page2.text.count('class="teacher-course-card"') == 3
+
+        found = await web.get("/teacher?search=django")
+        assert found.text.count('class="teacher-course-card"') == 1
+        assert "Django" in found.text
+        assert 'name="search" value="django"' in found.text
+
+        empty = await web.get("/teacher?search=%D0%BD%D0%B5%D1%82")
+        assert "ничего не найдено" in empty.text
+        assert 'href="/teacher">Сбросить' in empty.text
+
+        over = await web.get("/teacher?page=99", follow_redirects=False)
+        assert over.status_code == 303
+        assert over.headers["location"] == "/teacher?page=2"
