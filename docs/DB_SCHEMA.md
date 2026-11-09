@@ -26,7 +26,7 @@ PostgreSQL + pgvector. В текущей схеме --- **20 таблиц**: п�
   -----------------|--------------|-------|--------------
   `id`             |BIGSERIAL     | PK    |Внутренний ID пользователя
   `email`          | TEXT          |UQ, NN  |Логин / email
-  `password_hash`  | TEXT          | NN       | Зашифрованный пароль (Fernet)
+  `password_hash`  | TEXT          | NN       | Зашифрованный пароль (Fernet, ключ `PASSWORD_KEY` вне БД)
   `name`           | TEXT          | NN       | Отображаемое имя
   `role`           | TEXT          | NN       | `student` / `teacher` / `admin`
   `created_at`     | TIMESTAMPTZ   | NN       |Дата регистрации
@@ -122,7 +122,8 @@ PostgreSQL + pgvector. В текущей схеме --- **20 таблиц**: п�
   `external_id`     |BIGINT             | UQ                | `step.id` из Stepik
   `lesson_id`       | BIGINT            | FK → lessons.id   | Урок
   `position`        | INT               | NN                | Порядок внутри урока
-  `step_type`       | TEXT              | NN                | `text` / `video`...
+  `step_type`       | TEXT              | NN                | `text`, `video`, `free_answer`, `choice`, `string`, `number`
+  `video_url`       | TEXT              |                   | Необязательная ссылка на видео (YouTube, VK Video, прямой mp4/webm/ogg)
   `is_enabled`      | BOOLEAN           | NN                | Активен ли шаг
 
 ------------------------------------------------------------------------
@@ -135,9 +136,14 @@ PostgreSQL + pgvector. В текущей схеме --- **20 таблиц**: п�
   ----------------- | ----------------- | ----------------- -------------------
   `id`              | BIGSERIAL         | PK                |
   `step_id`         | BIGINT            | FK → steps.id, NN |Шаг
-  `content_type`    | TEXT              |NN                 | Тип содержимого, например `html`
-  `body`            | TEXT              |                   | Основной текст `block.text`
+  `content_type`    | TEXT              |NN                 | Тип содержимого; по умолчанию `html` (историческое имя)
+  `body`            | TEXT              |                   | Основной текст `block.text`: Markdown или унаследованный HTML
   `options`         | JSONB             |                   | Дополнительные данные `block`: `video`, `samples`, `code_templates`, `limits`, `options` и др.
+
+`body` хранится как текст без изменения формата. Web-интерфейс рендерит
+Markdown (CommonMark) с сохранением одиночных переносов строк; если в теле есть
+блочный HTML (`<p>`, `<div>`, `<iframe>`, `<table>` и т.п.), он выводится как
+есть — так импортированные из Stepik шаги сохраняют прежний вид.
 
 Пример `options` для `code`-шага:
 
