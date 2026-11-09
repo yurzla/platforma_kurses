@@ -290,10 +290,30 @@ async function openChunk(chunkId) {
   }
 }
 
+function indexStatusLabel(status) {
+  return (
+    {
+      empty: "нет чанков",
+      missing_embeddings: "нет эмбеддингов",
+      partial: "частично",
+      ok: "ок",
+    }[status] || status || "—"
+  );
+}
+
+function indexStatusBadge(status) {
+  const css =
+    { empty: "empty", missing_embeddings: "failed", partial: "queued", ok: "done" }[status] ||
+    "empty";
+  return `<span class="badge ${css}">${escapeHtml(indexStatusLabel(status))}</span>`;
+}
+
 function renderIndex(data) {
   $("index-total-chunks").textContent = data.total_chunks || 0;
   $("index-total-embeddings").textContent = data.total_embeddings || 0;
   $("index-without-embedding").textContent = data.chunks_without_embedding || 0;
+  $("index-courses-without-embeddings").textContent = data.courses_without_embeddings || 0;
+  $("index-courses-without-chunks").textContent = data.courses_without_chunks || 0;
   $("index-meta").textContent = `Модель: ${data.model_name || "—"} · размерность: ${data.dimension ?? "—"} · последний эмбеддинг: ${fmt(data.last_embedding_at)}`;
 
   const types = Object.entries(data.by_source_type || {});
@@ -313,10 +333,11 @@ function renderIndex(data) {
             <td>${course.step_chunks}</td>
             <td>${course.embeddings}</td>
             <td>${course.without_embedding}</td>
+            <td>${indexStatusBadge(course.status)}</td>
           </tr>`
         )
         .join("")
-    : '<tr><td colspan="6" class="muted">нет данных</td></tr>';
+    : '<tr><td colspan="7" class="muted">нет данных</td></tr>';
 
   const select = $("ch-course");
   select.innerHTML =

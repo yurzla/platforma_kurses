@@ -110,11 +110,13 @@
     <section class="cards">
       <div class="card"><span class="card-value" id="index-total-chunks">0</span><span class="card-label">чанков</span></div>
       <div class="card"><span class="card-value" id="index-total-embeddings">0</span><span class="card-label">эмбеддингов</span></div>
-      <div class="card"><span class="card-value" id="index-without-embedding">0</span><span class="card-label">без эмбеддинга</span></div>
+      <div class="card"><span class="card-value" id="index-without-embedding">0</span><span class="card-label">чанков без эмбеддинга</span></div>
+      <div class="card"><span class="card-value" id="index-courses-without-embeddings">0</span><span class="card-label">курсов без эмбеддингов</span></div>
+      <div class="card"><span class="card-value" id="index-courses-without-chunks">0</span><span class="card-label">курсов без чанков</span></div>
     </section>
     <p class="muted" id="index-meta">—</p>
 
-    <div class="index-columns">
+    <div class="index-stack">
       <div>
         <h3>По типам источников</h3>
         <div class="table-wrap">
@@ -128,8 +130,8 @@
         <h3>По курсам</h3>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Курс</th><th>Чанков</th><th>Описание</th><th>Шаги</th><th>Эмбеддингов</th><th>Без</th></tr></thead>
-            <tbody id="index-courses-body"><tr><td colspan="6" class="muted">загрузка…</td></tr></tbody>
+            <thead><tr><th>Курс</th><th>Чанков</th><th>Описание</th><th>Шаги</th><th>Эмбеддингов</th><th>Без</th><th>Состояние</th></tr></thead>
+            <tbody id="index-courses-body"><tr><td colspan="7" class="muted">загрузка…</td></tr></tbody>
           </table>
         </div>
       </div>

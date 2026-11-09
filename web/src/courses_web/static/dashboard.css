@@ -157,6 +157,7 @@ tbody tr:hover { background: var(--panel-2); }
 .badge.running { background: color-mix(in srgb, var(--accent) 15%, transparent); color: var(--accent); }
 .badge.done { background: color-mix(in srgb, var(--ok) 15%, transparent); color: var(--ok); }
 .badge.failed { background: color-mix(in srgb, var(--err) 15%, transparent); color: var(--err); }
+.badge.empty { background: color-mix(in srgb, var(--muted) 15%, transparent); color: var(--muted); }
 
 .pager { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
 .hidden { display: none !important; }
@@ -237,7 +238,14 @@ tbody tr.clickable { cursor: pointer; }
   gap: 18px;
   margin-bottom: 14px;
 }
+.index-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: 14px;
+}
 .index-columns h3,
+.index-stack h3,
 #diagnostic-index h3 { margin: 18px 0 8px; font-size: 14px; }
 
 .health-grid { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }

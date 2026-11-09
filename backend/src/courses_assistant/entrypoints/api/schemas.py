@@ -439,12 +439,15 @@ class IndexCourseSummary(BaseModel):
     step_chunks: int = 0
     embeddings: int = 0
     without_embedding: int = 0
+    status: str = "ok"
 
 
 class IndexSummary(BaseModel):
     total_chunks: int = 0
     total_embeddings: int = 0
     chunks_without_embedding: int = 0
+    courses_without_embeddings: int = 0
+    courses_without_chunks: int = 0
     by_source_type: dict[str, int] = Field(default_factory=dict)
     model_name: str | None = None
     dimension: int | None = None

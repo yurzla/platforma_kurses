@@ -51,13 +51,16 @@ async def test_admin_debug_insights(monkeypatch) -> None:
 
     marker = uuid.uuid4().hex
     course_id: int | None = None
+    empty_course_id: int | None = None
     chunk_ids: list[int] = []
     try:
         async with session_factory() as session:
             course = CourseORM(title=f"Диагностика {marker}")
-            session.add(course)
+            empty_course = CourseORM(title=f"Пустой {marker}")
+            session.add_all([course, empty_course])
             await session.flush()
             course_id = course.id
+            empty_course_id = empty_course.id
             chunks = [
                 ContentChunkORM(
                     course_id=course.id,
@@ -167,6 +170,17 @@ async def test_admin_debug_insights(monkeypatch) -> None:
         assert course_summary.step_chunks == 2
         assert course_summary.embeddings == 1
         assert course_summary.without_embedding == 2
+        assert course_summary.status == "partial"
+
+        empty_summary = next(
+            item for item in summary.courses if item.id == empty_course_id
+        )
+        assert empty_summary.chunks == 0
+        assert empty_summary.embeddings == 0
+        assert empty_summary.without_embedding == 0
+        assert empty_summary.status == "empty"
+        assert summary.courses_without_embeddings >= 1
+        assert summary.courses_without_chunks >= 1
 
         health = await admin_router.admin_health(container)  # type: ignore[arg-type]
         assert health.dependencies["postgres"] == "ok"
@@ -188,5 +202,9 @@ async def test_admin_debug_insights(monkeypatch) -> None:
                 )
             if course_id is not None:
                 await session.execute(delete(CourseORM).where(CourseORM.id == course_id))
+            if empty_course_id is not None:
+                await session.execute(
+                    delete(CourseORM).where(CourseORM.id == empty_course_id)
+                )
             await session.commit()
         await engine.dispose()

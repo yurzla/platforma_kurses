@@ -468,6 +468,9 @@ async def test_admin_panel_flow() -> None:
         assert "Состояние" in dashboard.text
         assert 'id="job-modal"' in dashboard.text
         assert 'id="chunk-modal"' in dashboard.text
+        assert 'class="index-stack"' in dashboard.text
+        assert 'id="index-courses-without-embeddings"' in dashboard.text
+        assert 'id="index-courses-without-chunks"' in dashboard.text
         assert "/static/dashboard.js" in dashboard.text
         assert 'id="assistant-toggle"' not in dashboard.text
         lowered = dashboard.text.lower()
@@ -502,6 +505,8 @@ async def test_static_assets_served() -> None:
     assert "loadHealth(" in js.text
     assert "course_recommendation" in js.text
     assert "Рекомендованные курсы" in js.text
+    assert "нет чанков" in js.text
+    assert "нет эмбеддингов" in js.text
     assert "retry" not in js.text.lower()
     assert "replay" not in js.text.lower()
     assert icons.status_code == 200

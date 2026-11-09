@@ -453,6 +453,15 @@ async def index_summary(container: Container = Depends(get_container)) -> IndexS
                 .group_by(ContentChunkORM.course_id)
             )
         ).all()
+        chunk_by_course: dict[int, tuple[int, int, int]] = {}
+        for row in chunk_rows:
+            if row.course_id is None:
+                continue
+            chunk_by_course[int(row.course_id)] = (
+                int(row.chunks),
+                int(row.description_chunks),
+                int(row.step_chunks),
+            )
         embedding_rows = (
             await session.execute(
                 select(ContentChunkORM.course_id, func.count(ChunkEmbeddingORM.id))
@@ -465,47 +474,46 @@ async def index_summary(container: Container = Depends(get_container)) -> IndexS
         for course_id, count in embedding_rows:
             if course_id is not None:
                 embedding_by_course[int(course_id)] = int(count)
-        normalized_chunks: list[tuple[int, int, int, int]] = []
-        for row in chunk_rows:
-            if row.course_id is None:
-                continue
-            normalized_chunks.append(
-                (
-                    int(row.course_id),
-                    int(row.chunks),
-                    int(row.description_chunks),
-                    int(row.step_chunks),
-                )
-            )
-        course_ids = [item[0] for item in normalized_chunks]
-        titles: dict[int, str] = {}
-        if course_ids:
-            for course_id, title in (
-                await session.execute(
-                    select(CourseORM.id, CourseORM.title).where(CourseORM.id.in_(course_ids))
-                )
-            ).all():
-                titles[int(course_id)] = title
+        course_rows = (
+            await session.execute(select(CourseORM.id, CourseORM.title).order_by(CourseORM.id))
+        ).all()
 
-    courses = [
-        IndexCourseSummary(
-            id=course_id,
-            title=titles.get(course_id, f"Курс {course_id}"),
-            chunks=chunk_count,
-            description_chunks=description_chunks,
-            step_chunks=step_chunks,
-            embeddings=embedding_by_course.get(course_id, 0),
-            without_embedding=max(
-                0, chunk_count - embedding_by_course.get(course_id, 0)
-            ),
+    courses: list[IndexCourseSummary] = []
+    for raw_course_id, title in course_rows:
+        course_id = int(raw_course_id)
+        chunk_count, description_chunks, step_chunks = chunk_by_course.get(
+            course_id, (0, 0, 0)
         )
-        for course_id, chunk_count, description_chunks, step_chunks in normalized_chunks
-    ]
-    courses.sort(key=lambda course: (-course.chunks, course.id))
+        embeddings = embedding_by_course.get(course_id, 0)
+        without_embedding = max(0, chunk_count - embeddings)
+        if chunk_count == 0:
+            status = "empty"
+        elif embeddings == 0:
+            status = "missing_embeddings"
+        elif without_embedding > 0:
+            status = "partial"
+        else:
+            status = "ok"
+        courses.append(
+            IndexCourseSummary(
+                id=course_id,
+                title=title,
+                chunks=chunk_count,
+                description_chunks=description_chunks,
+                step_chunks=step_chunks,
+                embeddings=embeddings,
+                without_embedding=without_embedding,
+                status=status,
+            )
+        )
+    status_order = {"empty": 0, "missing_embeddings": 1, "partial": 2, "ok": 3}
+    courses.sort(key=lambda course: (status_order.get(course.status, 4), -course.chunks, course.id))
     return IndexSummary(
         total_chunks=int(total_chunks or 0),
         total_embeddings=int(total_embeddings or 0),
         chunks_without_embedding=int(chunks_without_embedding or 0),
+        courses_without_embeddings=sum(1 for course in courses if course.embeddings == 0),
+        courses_without_chunks=sum(1 for course in courses if course.chunks == 0),
         by_source_type={source_type: int(count) for source_type, count in type_rows},
         model_name=settings.embedding_model,
         dimension=settings.embedding_dimension,
