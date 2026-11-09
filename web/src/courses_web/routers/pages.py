@@ -468,7 +468,6 @@ async def teacher_delete_lesson(request: Request, lesson_id: int) -> Response:
     return RedirectResponse(f"/teacher/courses/{course_id}", status_code=303)
 
 
-@router.post("/teacher/lessons/{lesson_id}/steps")
 def _step_payload(form: dict[str, str]) -> dict[str, Any]:
     step_type = form.get("step_type", "text")
     choices = [

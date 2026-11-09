@@ -238,7 +238,10 @@ main { padding: 24px; max-width: 1040px; margin: 0 auto; }
 .format-hint-body { margin-top: 8px; line-height: 1.6; }
 .format-hint-body code { padding: 1px 4px; background: var(--panel-2); border-radius: 4px; }
 .teacher-item-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; }.btn.danger { background: transparent; border: 1px solid var(--err); color: var(--err); padding: 6px 9px; font-size: 12px; }.btn.danger:hover { background: color-mix(in srgb, var(--err) 14%, transparent); }
-.choice-fields { display: flex; flex-direction: column; gap: 7px; padding: 10px; border: 1px solid var(--border); border-radius: 8px; }.choice-editor { display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: center; }.choice-editor input[type="checkbox"] { width: auto; }.multiple-choice { color: var(--text); }
+.choice-fields { display: flex; flex-direction: column; gap: 7px; padding: 10px; border: 1px solid var(--border); border-radius: 8px; }
+.step-form .choice-editor { display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: center; }
+.step-form .multiple-choice { display: flex; flex-direction: row; align-items: center; gap: 8px; color: var(--text); }
+.step-form .choice-editor input[type="checkbox"], .step-form .multiple-choice input { width: auto; }
 .form-error { padding: 10px 12px; color: var(--err); background: color-mix(in srgb, var(--err) 12%, transparent); border: 1px solid color-mix(in srgb, var(--err) 40%, transparent); border-radius: 8px; }
 @media (max-width: 700px) { .teacher-form, .teacher-courses { grid-template-columns: 1fr; }.inline-form { flex-direction: column; align-items: stretch; } }
 

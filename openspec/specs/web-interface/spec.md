@@ -671,6 +671,11 @@ The teacher course page SHALL render each lesson step as a card with an inline e
 - **WHEN** the teacher changes the step type
 - **THEN** only the choice fields, the correct-answer field, or neither are shown as appropriate, while the video URL field stays available
 
+#### Scenario: Choice option row
+
+- **WHEN** the choice fields are rendered
+- **THEN** each correct-answer checkbox and its option text input appear on the same row, and the multiple-choice checkbox appears on the same row as its label
+
 #### Scenario: Formatting hint
 
 - **WHEN** the teacher edits or creates a step
@@ -699,6 +704,11 @@ After creating, saving, or deleting a step, the web service SHALL redirect the t
 
 - **WHEN** a teacher submits the step form
 - **THEN** the response redirects to `/teacher/courses/{course_id}` for the course being edited
+
+#### Scenario: Creating a step
+
+- **WHEN** a teacher submits the create-step form
+- **THEN** the request is handled by the step creation route and is not rejected as an invalid dictionary body
 
 #### Scenario: Deleting a step
 

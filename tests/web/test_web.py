@@ -6,6 +6,7 @@ from datetime import UTC, datetime
 from types import SimpleNamespace
 
 import httpx
+from fastapi.routing import APIRoute
 
 from courses_assistant.domain.catalog import (
     CourseDetail,
@@ -18,6 +19,7 @@ from courses_assistant.domain.security import hash_password
 from courses_assistant.entrypoints.api.app import create_app as create_api_app
 from courses_web.app import create_app as create_web_app
 from courses_web.config import Settings as WebSettings
+from courses_web.routers import pages
 from courses_web.templating import templates
 from tests.api.test_api import build_test_container
 from tests.fakes import FakeStore
@@ -482,6 +484,8 @@ async def test_static_assets_served() -> None:
     assert "right: 20px; bottom: 20px" in css.text
     assert "repeat(2, minmax(0, 1fr))" in css.text
     assert ".pagination" in css.text
+    assert ".step-form .choice-editor" in css.text
+    assert "grid-template-columns: auto 1fr" in css.text
     assert dashboard.status_code == 200
     assert "text-decoration: none" in dashboard.text
     assert icons.status_code == 200
@@ -692,7 +696,21 @@ def test_teacher_course_step_forms_render() -> None:
     assert "Markdown" in html
     assert ">Вопрос</textarea>" in html
     assert 'value="A"' in html
+    assert 'class="choice-editor"' in html
+    assert 'name="correct_1"' in html
+    assert 'name="choice_1"' in html
     assert "Добавить шаг" in html
+
+
+def test_step_create_form_route_has_single_handler() -> None:
+    handlers = [
+        route.endpoint.__name__
+        for route in pages.router.routes
+        if isinstance(route, APIRoute)
+        and route.path == "/teacher/lessons/{lesson_id}/steps"
+        and "POST" in route.methods
+    ]
+    assert handlers == ["teacher_create_step"]
 
 
 async def test_step_page_renders_markdown_body() -> None:
