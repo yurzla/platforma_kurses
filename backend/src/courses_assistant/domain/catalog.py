@@ -83,3 +83,4 @@ class StepDetail:
     completed: bool
     saved_answer: Any | None
     is_correct: bool | None
+    video_url: str | None = None

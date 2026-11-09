@@ -9,6 +9,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from courses_assistant.application.commands import SubmitStepAnswer
 from courses_assistant.container import Container
 from courses_assistant.domain.models import User
+from courses_assistant.domain.video import parse_video_url
 from courses_assistant.entrypoints.api.dependencies import get_container, require_user
 from courses_assistant.entrypoints.api.schemas import (
     AnswerRequest,
@@ -20,6 +21,7 @@ from courses_assistant.entrypoints.api.schemas import (
     SectionSummaryRead,
     StepRead,
     StepSummaryRead,
+    VideoEmbedRead,
 )
 
 router = APIRouter(prefix="/api/v1/courses", tags=["catalog"])
@@ -106,6 +108,7 @@ async def get_step(
         step = await uow.catalog.get_step(course_id, step_id, user.id)
     if step is None:
         raise HTTPException(status_code=404, detail="Шаг не найден")
+    embed = parse_video_url(step.video_url)
     return StepRead(
         id=step.id,
         course_id=step.course_id,
@@ -114,6 +117,8 @@ async def get_step(
         step_type=step.step_type,
         title=step.title,
         body=step.body,
+        video_url=step.video_url,
+        video=VideoEmbedRead(kind=embed.kind, src=embed.src) if embed else None,
         options=step.options,
         grading=step.grading,
         completed=step.completed,

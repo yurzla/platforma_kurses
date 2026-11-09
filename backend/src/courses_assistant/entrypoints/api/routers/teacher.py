@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import asdict
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import delete, func, select
+from sqlalchemy import delete, func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from courses_assistant.adapters.persistence.orm import (
@@ -28,17 +28,22 @@ from courses_assistant.container import Container
 from courses_assistant.domain.models import User
 from courses_assistant.entrypoints.api.dependencies import get_container, require_teacher
 from courses_assistant.entrypoints.api.schemas import (
-    CourseDetailRead,
     LessonSummaryRead,
     SectionSummaryRead,
     StepSummaryRead,
+    TeacherChoiceOptionCreate,
     TeacherCourseCreate,
+    TeacherCourseDetailRead,
     TeacherCourseListResponse,
     TeacherCourseRead,
     TeacherCourseUpdate,
     TeacherLessonCreate,
+    TeacherLessonRead,
     TeacherSectionCreate,
+    TeacherSectionRead,
     TeacherStepCreate,
+    TeacherStepRead,
+    TeacherStepUpdate,
     TeacherStudentProgressRead,
 )
 
@@ -113,6 +118,118 @@ async def _delete_steps(session: AsyncSession, step_ids: list[int]) -> None:
     await session.execute(delete(StepORM).where(StepORM.id.in_(step_ids)))
 
 
+def _validate_step_fields(
+    *,
+    step_type: str,
+    body: str,
+    choices: list[TeacherChoiceOptionCreate],
+    is_multiple_choice: bool,
+    correct_answer: str | None,
+    video_url: str | None,
+) -> None:
+    body_text = (body or "").strip()
+    if not body_text and not video_url:
+        raise HTTPException(status_code=422, detail="Укажите материал или ссылку на видео")
+    if step_type == "video" and not video_url:
+        raise HTTPException(status_code=422, detail="Для видео-шага укажите ссылку на видео")
+    if step_type == "choice":
+        if len(choices) < 2:
+            raise HTTPException(status_code=422, detail="Для теста нужно не менее двух вариантов")
+        correct_count = sum(option.is_correct for option in choices)
+        if not correct_count:
+            raise HTTPException(
+                status_code=422, detail="Отметьте хотя бы один правильный вариант"
+            )
+        if not is_multiple_choice and correct_count != 1:
+            raise HTTPException(
+                status_code=422,
+                detail="В тесте с одним выбором должен быть один правильный вариант",
+            )
+    elif step_type in {"string", "number"} and not (correct_answer or "").strip():
+        raise HTTPException(status_code=422, detail="Укажите правильный ответ для автопроверки")
+
+
+async def _replace_step_data(
+    session: AsyncSession,
+    step: StepORM,
+    *,
+    body: str,
+    choices: list[TeacherChoiceOptionCreate],
+    is_multiple_choice: bool,
+    correct_answer: str | None,
+) -> None:
+    """Перезаписывает содержимое шага под его текущий тип."""
+    await session.execute(
+        delete(StepChoiceOptionORM).where(StepChoiceOptionORM.step_id == step.id)
+    )
+    await session.execute(
+        delete(ChoiceQuestionMetadataORM).where(ChoiceQuestionMetadataORM.step_id == step.id)
+    )
+    await session.execute(delete(StepSourceORM).where(StepSourceORM.step_id == step.id))
+    await session.execute(delete(StepContentORM).where(StepContentORM.step_id == step.id))
+    session.add(StepContentORM(step_id=step.id, content_type="html", body=body))
+    if step.step_type == "choice":
+        session.add(
+            ChoiceQuestionMetadataORM(
+                step_id=step.id,
+                source_question_html=body,
+                source_file="teacher-workspace",
+                needs_review=False,
+                is_multiple_choice=is_multiple_choice,
+            )
+        )
+        for position, option in enumerate(choices):
+            session.add(
+                StepChoiceOptionORM(
+                    step_id=step.id,
+                    position=position,
+                    option_html=option.text,
+                    is_suggested_correct=option.is_correct,
+                    is_correct=option.is_correct,
+                )
+            )
+    elif step.step_type in {"string", "number"}:
+        session.add(
+            StepSourceORM(
+                step_id=step.id,
+                source_type="teacher-workspace",
+                payload={"correct": correct_answer},
+            )
+        )
+
+
+async def _renumber_lesson_steps(session: AsyncSession, lesson_id: int) -> None:
+    step_ids = list(
+        (
+            await session.execute(
+                select(StepORM.id)
+                .where(StepORM.lesson_id == lesson_id)
+                .order_by(StepORM.position, StepORM.id)
+            )
+        ).scalars()
+    )
+    for position, step_id in enumerate(step_ids, start=1):
+        await session.execute(
+            update(StepORM).where(StepORM.id == step_id).values(position=position)
+        )
+
+
+async def _owned_step(session: AsyncSession, step_id: int, teacher_id: int) -> StepORM:
+    step = await session.get(StepORM, step_id)
+    if step is None:
+        raise HTTPException(status_code=404, detail="Шаг не найден")
+    lesson = await session.get(LessonORM, step.lesson_id)
+    if lesson is None or lesson.section_id is None:
+        raise HTTPException(status_code=404, detail="Урок не найден")
+    section = await session.get(SectionORM, lesson.section_id)
+    if section is None:
+        raise HTTPException(status_code=404, detail="Модуль не найден")
+    course = await session.get(CourseORM, section.course_id)
+    if course is None or course.owner_id != teacher_id:
+        raise HTTPException(status_code=404, detail="Шаг не найден")
+    return step
+
+
 @router.get("/courses", response_model=TeacherCourseListResponse)
 async def list_my_courses(
     search: str | None = Query(default=None, max_length=200),
@@ -155,12 +272,12 @@ async def create_course(
         return result
 
 
-@router.get("/courses/{course_id}", response_model=CourseDetailRead)
+@router.get("/courses/{course_id}", response_model=TeacherCourseDetailRead)
 async def get_my_course(
     course_id: int,
     teacher: User = Depends(require_teacher),
     container: Container = Depends(get_container),
-) -> CourseDetailRead:
+) -> TeacherCourseDetailRead:
     async with container.session_factory() as session:
         course = await _owned_course(session, course_id, teacher.id)
         sections = (
@@ -202,28 +319,86 @@ async def get_my_course(
             .scalars()
             .all()
         )
-        steps_by_lesson: dict[int, list[StepSummaryRead]] = {}
+        step_ids = [step.id for step in steps]
+        bodies: dict[int, str | None] = {}
+        choices_by_step: dict[int, list[TeacherChoiceOptionCreate]] = {}
+        metadata_by_step: dict[int, bool] = {}
+        correct_by_step: dict[int, str | None] = {}
+        if step_ids:
+            contents = (
+                await session.execute(
+                    select(StepContentORM)
+                    .where(StepContentORM.step_id.in_(step_ids))
+                    .order_by(StepContentORM.id.desc())
+                )
+            ).scalars()
+            for content in contents:
+                bodies.setdefault(content.step_id, content.body)
+            options = (
+                await session.execute(
+                    select(StepChoiceOptionORM)
+                    .where(StepChoiceOptionORM.step_id.in_(step_ids))
+                    .order_by(StepChoiceOptionORM.position)
+                )
+            ).scalars()
+            for option in options:
+                choices_by_step.setdefault(option.step_id, []).append(
+                    TeacherChoiceOptionCreate(
+                        text=option.option_html,
+                        is_correct=bool(option.is_correct),
+                    )
+                )
+            metadatas = (
+                await session.execute(
+                    select(ChoiceQuestionMetadataORM).where(
+                        ChoiceQuestionMetadataORM.step_id.in_(step_ids)
+                    )
+                )
+            ).scalars()
+            for metadata in metadatas:
+                metadata_by_step[metadata.step_id] = metadata.is_multiple_choice
+            sources = (
+                await session.execute(
+                    select(StepSourceORM).where(StepSourceORM.step_id.in_(step_ids))
+                )
+            ).scalars()
+            for source in sources:
+                payload = source.payload or {}
+                value = payload.get("correct")
+                correct_by_step[source.step_id] = None if value is None else str(value)
+        steps_by_lesson: dict[int, list[TeacherStepRead]] = {}
         for step in steps:
             steps_by_lesson.setdefault(step.lesson_id, []).append(
-                StepSummaryRead(id=step.id, position=step.position, step_type=step.step_type)
+                TeacherStepRead(
+                    id=step.id,
+                    position=step.position,
+                    step_type=step.step_type,
+                    body=bodies.get(step.id),
+                    video_url=step.video_url,
+                    choices=choices_by_step.get(step.id, []),
+                    is_multiple_choice=metadata_by_step.get(step.id, False),
+                    correct_answer=correct_by_step.get(step.id),
+                )
             )
-        lessons_by_section: dict[int, list[LessonSummaryRead]] = {}
+        lessons_by_section: dict[int, list[TeacherLessonRead]] = {}
         for lesson in lessons:
             if lesson.section_id is not None:
                 lessons_by_section.setdefault(lesson.section_id, []).append(
-                    LessonSummaryRead(
+                    TeacherLessonRead(
                         id=lesson.id,
                         title=lesson.title,
                         position=lesson.position,
                         steps=steps_by_lesson.get(lesson.id, []),
                     )
                 )
-        return CourseDetailRead(
+        return TeacherCourseDetailRead(
             id=course.id,
             title=course.title,
             description=course.description,
+            level=course.level,
+            is_published=course.is_published,
             sections=[
-                SectionSummaryRead(
+                TeacherSectionRead(
                     id=section.id,
                     title=section.title,
                     position=section.position,
@@ -402,40 +577,144 @@ async def create_step(
             )
             or 1
         )
-        step = StepORM(lesson_id=lesson_id, position=position, step_type=payload.step_type)
+        step = StepORM(
+            lesson_id=lesson_id,
+            position=position,
+            step_type=payload.step_type,
+            video_url=payload.video_url,
+        )
         session.add(step)
         await session.flush()
-        session.add(StepContentORM(step_id=step.id, content_type="html", body=payload.body))
-        if payload.step_type == "choice":
-            session.add(
-                ChoiceQuestionMetadataORM(
-                    step_id=step.id,
-                    source_question_html=payload.body,
-                    source_file="teacher-workspace",
-                    needs_review=False,
-                    is_multiple_choice=payload.is_multiple_choice,
-                )
-            )
-            for position, option in enumerate(payload.choices):
-                session.add(
-                    StepChoiceOptionORM(
-                        step_id=step.id,
-                        position=position,
-                        option_html=option.text,
-                        is_suggested_correct=option.is_correct,
-                        is_correct=option.is_correct,
-                    )
-                )
-        elif payload.step_type in {"string", "number"}:
-            session.add(
-                StepSourceORM(
-                    step_id=step.id,
-                    source_type="teacher-workspace",
-                    payload={"correct": payload.correct_answer},
-                )
-            )
+        _validate_step_fields(
+            step_type=payload.step_type,
+            body=payload.body,
+            choices=payload.choices,
+            is_multiple_choice=payload.is_multiple_choice,
+            correct_answer=payload.correct_answer,
+            video_url=payload.video_url,
+        )
+        await _replace_step_data(
+            session,
+            step,
+            body=payload.body,
+            choices=payload.choices,
+            is_multiple_choice=payload.is_multiple_choice,
+            correct_answer=payload.correct_answer,
+        )
         await session.commit()
         return StepSummaryRead(id=step.id, position=step.position, step_type=step.step_type)
+
+
+async def _step_edit_values(
+    session: AsyncSession, step: StepORM
+) -> tuple[str | None, list[TeacherChoiceOptionCreate], bool, str | None]:
+    content = (
+        await session.execute(
+            select(StepContentORM)
+            .where(StepContentORM.step_id == step.id)
+            .order_by(StepContentORM.id.desc())
+            .limit(1)
+        )
+    ).scalar_one_or_none()
+    options = (
+        (
+            await session.execute(
+                select(StepChoiceOptionORM)
+                .where(StepChoiceOptionORM.step_id == step.id)
+                .order_by(StepChoiceOptionORM.position)
+            )
+        )
+        .scalars()
+        .all()
+    )
+    metadata = await session.get(ChoiceQuestionMetadataORM, step.id)
+    source = (
+        await session.execute(select(StepSourceORM).where(StepSourceORM.step_id == step.id))
+    ).scalar_one_or_none()
+    correct: str | None = None
+    if source is not None and source.payload:
+        value = source.payload.get("correct")
+        correct = None if value is None else str(value)
+    return (
+        content.body if content is not None else None,
+        [
+            TeacherChoiceOptionCreate(text=option.option_html, is_correct=bool(option.is_correct))
+            for option in options
+        ],
+        bool(metadata.is_multiple_choice) if metadata is not None else False,
+        correct,
+    )
+
+
+@router.patch("/steps/{step_id}", response_model=TeacherStepRead)
+async def update_step(
+    step_id: int,
+    payload: TeacherStepUpdate,
+    teacher: User = Depends(require_teacher),
+    container: Container = Depends(get_container),
+) -> TeacherStepRead:
+    async with container.session_factory() as session:
+        step = await _owned_step(session, step_id, teacher.id)
+        old_body, old_choices, old_multiple, old_correct = await _step_edit_values(session, step)
+        step_type = payload.step_type or step.step_type
+        body = payload.body if payload.body is not None else (old_body or "")
+        choices = payload.choices if payload.choices is not None else old_choices
+        is_multiple_choice = (
+            payload.is_multiple_choice
+            if payload.is_multiple_choice is not None
+            else old_multiple
+        )
+        correct_answer = (
+            payload.correct_answer
+            if "correct_answer" in payload.model_fields_set
+            else old_correct
+        )
+        video_url = (
+            payload.video_url if "video_url" in payload.model_fields_set else step.video_url
+        )
+        _validate_step_fields(
+            step_type=step_type,
+            body=body,
+            choices=choices,
+            is_multiple_choice=is_multiple_choice,
+            correct_answer=correct_answer,
+            video_url=video_url,
+        )
+        step.step_type = step_type
+        step.video_url = video_url
+        await _replace_step_data(
+            session,
+            step,
+            body=body,
+            choices=choices,
+            is_multiple_choice=is_multiple_choice,
+            correct_answer=correct_answer,
+        )
+        await session.commit()
+        return TeacherStepRead(
+            id=step.id,
+            position=step.position,
+            step_type=step.step_type,
+            body=body,
+            video_url=step.video_url,
+            choices=choices if step.step_type == "choice" else [],
+            is_multiple_choice=is_multiple_choice,
+            correct_answer=correct_answer if step.step_type in {"string", "number"} else None,
+        )
+
+
+@router.delete("/steps/{step_id}", status_code=204)
+async def delete_step(
+    step_id: int,
+    teacher: User = Depends(require_teacher),
+    container: Container = Depends(get_container),
+) -> None:
+    async with container.session_factory() as session:
+        step = await _owned_step(session, step_id, teacher.id)
+        lesson_id = step.lesson_id
+        await _delete_steps(session, [step.id])
+        await _renumber_lesson_steps(session, lesson_id)
+        await session.commit()
 
 
 @router.delete("/courses/{course_id}", status_code=204)

@@ -130,6 +130,7 @@ class StepORM(Base):
     lesson_id: Mapped[int] = mapped_column(BigInteger, ForeignKey("lessons.id"), nullable=False)
     position: Mapped[int] = mapped_column(Integer, nullable=False, server_default="0")
     step_type: Mapped[str] = mapped_column(Text, nullable=False)
+    video_url: Mapped[str | None] = mapped_column(Text)
     is_enabled: Mapped[bool] = mapped_column(
         Boolean, nullable=False, server_default="true"
     )

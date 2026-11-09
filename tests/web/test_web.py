@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime
+from types import SimpleNamespace
 
 import httpx
 
@@ -17,6 +18,7 @@ from courses_assistant.domain.security import hash_password
 from courses_assistant.entrypoints.api.app import create_app as create_api_app
 from courses_web.app import create_app as create_web_app
 from courses_web.config import Settings as WebSettings
+from courses_web.templating import templates
 from tests.api.test_api import build_test_container
 from tests.fakes import FakeStore
 
@@ -603,3 +605,76 @@ async def test_teacher_page_pagination_and_search() -> None:
         over = await web.get("/teacher?page=99", follow_redirects=False)
         assert over.status_code == 303
         assert over.headers["location"] == "/teacher?page=2"
+
+
+async def test_step_page_renders_video_player() -> None:
+    store = FakeStore()
+    seed_student_and_course(store)
+    store.step_video_urls[101] = "https://youtu.be/abc123"
+    web, api = build_stack(store)
+    async with web, api:
+        await web.post("/login", data={"email": "s@example.com", "password": "pw"})
+        page = await web.get("/courses/10/steps/101")
+        assert page.status_code == 200
+        assert 'class="step-video"' in page.text
+        assert 'src="https://www.youtube.com/embed/abc123"' in page.text
+
+        store.step_video_urls[101] = "https://cdn.example.com/lesson.mp4"
+        page = await web.get("/courses/10/steps/101")
+        assert "<video controls" in page.text
+        assert 'src="https://cdn.example.com/lesson.mp4"' in page.text
+
+
+def test_teacher_course_step_forms_render() -> None:
+    course = {
+        "id": 5,
+        "title": "Курс",
+        "description": None,
+        "level": None,
+        "is_published": False,
+        "sections": [
+            {
+                "id": 1,
+                "title": "Модуль",
+                "position": 1,
+                "lessons": [
+                    {
+                        "id": 2,
+                        "title": "Урок",
+                        "position": 1,
+                        "steps": [
+                            {
+                                "id": 101,
+                                "position": 1,
+                                "step_type": "choice",
+                                "body": "Вопрос",
+                                "video_url": "https://youtu.be/abc123",
+                                "choices": [
+                                    {"text": "A", "is_correct": True},
+                                    {"text": "B", "is_correct": False},
+                                ],
+                                "is_multiple_choice": False,
+                                "correct_answer": None,
+                            }
+                        ],
+                    }
+                ],
+            }
+        ],
+    }
+    html = templates.env.get_template("teacher_course.html").render(
+        request=SimpleNamespace(query_params={}),
+        me={"role": "teacher", "name": "Учитель"},
+        course=course,
+        students=[],
+    )
+    assert "Шаг 1 · Тест" in html
+    assert 'action="/teacher/steps/101"' in html
+    assert 'action="/teacher/steps/101/delete"' in html
+    assert 'action="/teacher/lessons/2/steps"' in html
+    assert 'name="video_url"' in html
+    assert 'value="https://youtu.be/abc123"' in html
+    assert "Подсказка по форматированию" in html
+    assert ">Вопрос</textarea>" in html
+    assert 'value="A"' in html
+    assert "Добавить шаг" in html

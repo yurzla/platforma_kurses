@@ -469,9 +469,7 @@ async def teacher_delete_lesson(request: Request, lesson_id: int) -> Response:
 
 
 @router.post("/teacher/lessons/{lesson_id}/steps")
-async def teacher_create_step(request: Request, lesson_id: int) -> Response:
-    form = await _form(request)
-    course_id = form.get("course_id", "")
+def _step_payload(form: dict[str, str]) -> dict[str, Any]:
     step_type = form.get("step_type", "text")
     choices = [
         {
@@ -481,20 +479,57 @@ async def teacher_create_step(request: Request, lesson_id: int) -> Response:
         for index in range(1, 5)
         if form.get(f"choice_{index}", "").strip()
     ]
+    return {
+        "body": form.get("body", ""),
+        "step_type": step_type,
+        "choices": choices,
+        "is_multiple_choice": form.get("is_multiple_choice") == "on",
+        "correct_answer": form.get("correct_answer") or None,
+        "video_url": form.get("video_url") or None,
+    }
+
+
+@router.post("/teacher/lessons/{lesson_id}/steps")
+async def teacher_create_step(request: Request, lesson_id: int) -> Response:
+    form = await _form(request)
+    course_id = form.get("course_id", "")
     response = await call_api(
         request,
         "POST",
         f"/api/v1/teacher/lessons/{lesson_id}/steps",
-        json={
-            "body": form.get("body", ""),
-            "step_type": step_type,
-            "choices": choices,
-            "is_multiple_choice": form.get("is_multiple_choice") == "on",
-            "correct_answer": form.get("correct_answer") or None,
-        },
+        json=_step_payload(form),
     )
     if response.status_code != 201:
         return RedirectResponse(f"/teacher/courses/{course_id}?error=step", status_code=303)
+    return RedirectResponse(f"/teacher/courses/{course_id}", status_code=303)
+
+
+@router.post("/teacher/steps/{step_id}")
+async def teacher_update_step(request: Request, step_id: int) -> Response:
+    me = await _require_teacher_page(request)
+    if isinstance(me, RedirectResponse):
+        return me
+    form = await _form(request)
+    course_id = form.get("course_id", "")
+    response = await call_api(
+        request,
+        "PATCH",
+        f"/api/v1/teacher/steps/{step_id}",
+        json=_step_payload(form),
+    )
+    if response.status_code != 200:
+        return RedirectResponse(f"/teacher/courses/{course_id}?error=step", status_code=303)
+    return RedirectResponse(f"/teacher/courses/{course_id}", status_code=303)
+
+
+@router.post("/teacher/steps/{step_id}/delete")
+async def teacher_delete_step(request: Request, step_id: int) -> Response:
+    me = await _require_teacher_page(request)
+    if isinstance(me, RedirectResponse):
+        return me
+    form = await _form(request)
+    course_id = form.get("course_id", "")
+    await call_api(request, "DELETE", f"/api/v1/teacher/steps/{step_id}")
     return RedirectResponse(f"/teacher/courses/{course_id}", status_code=303)
 
 

@@ -180,6 +180,9 @@ main { padding: 24px; max-width: 1040px; margin: 0 auto; }
 .step-progress-dot.module-dot.reached { box-shadow: 0 0 0 2px var(--accent); }
 .step-body { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; line-height: 1.6; }
 .step-body img { max-width: 100%; }
+.step-video { margin: 0 0 16px; aspect-ratio: 16 / 9; max-width: 100%; background: #000; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.step-video iframe, .step-video video { width: 100%; height: 100%; display: block; border: 0; }
+.step-video p { margin: 0; padding: 16px; background: var(--panel); }
 
 .answer-panel {
   margin-top: 20px; padding: 16px; background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
@@ -203,8 +206,9 @@ main { padding: 24px; max-width: 1040px; margin: 0 auto; }
 .teacher-panel { margin: 18px 0; padding: 18px; background: var(--panel); border: 1px solid var(--border); border-radius: 14px; }
 .teacher-panel h2 { margin-top: 0; }
 .teacher-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: end; }
-.teacher-form label, .step-form { display: flex; flex-direction: column; gap: 6px; color: var(--muted); font-size: 13px; }
-.teacher-form input, .teacher-form textarea, .inline-form input, .step-form textarea, .step-form select { width: 100%; padding: 9px 10px; color: var(--text); background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; font: inherit; }
+.teacher-form label, .step-form label, .step-form .step-row { display: flex; flex-direction: column; gap: 6px; color: var(--muted); font-size: 13px; }
+.step-form { display: flex; flex-direction: column; gap: 12px; }
+.teacher-form input, .teacher-form textarea, .inline-form input, .step-form input, .step-form textarea, .step-form select { width: 100%; padding: 9px 10px; color: var(--text); background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; font: inherit; }
 .teacher-form textarea, .step-form textarea { resize: vertical; }
 .form-wide { grid-column: 1 / -1; }
 .publish-switch { grid-column: 1 / -1; flex-direction: row !important; align-items: center; color: var(--text) !important; }
@@ -216,11 +220,23 @@ main { padding: 24px; max-width: 1040px; margin: 0 auto; }
 .teacher-course-card h2 { margin: 0 0 6px; font-size: 17px; }.teacher-course-card p { margin: 0; color: var(--muted); }.teacher-card-meta { display: flex; gap: 10px; align-items: center; color: var(--muted); font-size: 12px; flex-wrap: wrap; }
 .course-badge.draft { background: color-mix(in srgb, var(--warn) 15%, transparent); color: var(--warn); }
 .inline-form { display: flex; gap: 8px; align-items: center; margin: 10px 0; }.inline-form input { flex: 1; }
-.teacher-section { margin-top: 14px; padding: 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--panel-2); }.teacher-section h3 { margin: 0; }.teacher-lesson { margin-top: 10px; padding: 12px; border-radius: 8px; background: var(--panel); }.teacher-lesson h4 { margin: 0; }.teacher-lesson ol { margin: 8px 0; color: var(--muted); }.step-form { display: grid; grid-template-columns: 160px 1fr auto; align-items: end; }
+.teacher-section { margin-top: 14px; padding: 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--panel-2); }.teacher-section h3 { margin: 0; }.teacher-lesson { margin-top: 10px; padding: 12px; border-radius: 8px; background: var(--panel); }.teacher-lesson h4 { margin: 0; }.teacher-lesson ol { margin: 8px 0; color: var(--muted); }
+.teacher-steps { display: flex; flex-direction: column; gap: 8px; margin: 10px 0; }
+.teacher-step { padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--panel-2); }
+.teacher-step-title { color: var(--text); font-weight: 600; }
+.step-edit, .step-create { margin-top: 8px; }
+.step-edit summary, .step-create summary { cursor: pointer; color: var(--accent); font-size: 13px; }
+.step-create { padding: 10px 12px; border: 1px dashed var(--border); border-radius: 8px; }
+.step-create .step-form, .step-edit .step-form { margin-top: 10px; }
+.step-form-actions { display: flex; justify-content: flex-start; padding-top: 2px; }
+.format-hint { padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--panel); color: var(--muted); font-size: 13px; }
+.format-hint summary { cursor: pointer; color: var(--accent); }
+.format-hint-body { margin-top: 8px; line-height: 1.6; }
+.format-hint-body code { padding: 1px 4px; background: var(--panel-2); border-radius: 4px; }
 .teacher-item-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; }.btn.danger { background: transparent; border: 1px solid var(--err); color: var(--err); padding: 6px 9px; font-size: 12px; }.btn.danger:hover { background: color-mix(in srgb, var(--err) 14%, transparent); }
-.choice-fields { display: flex; flex-direction: column; gap: 7px; padding: 10px; border: 1px solid var(--border); border-radius: 8px; }.choice-editor { display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: center; }.choice-editor input[type="checkbox"] { width: auto; }.multiple-choice { color: var(--text); }.step-form > label { min-width: 0; }
+.choice-fields { display: flex; flex-direction: column; gap: 7px; padding: 10px; border: 1px solid var(--border); border-radius: 8px; }.choice-editor { display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: center; }.choice-editor input[type="checkbox"] { width: auto; }.multiple-choice { color: var(--text); }
 .form-error { padding: 10px 12px; color: var(--err); background: color-mix(in srgb, var(--err) 12%, transparent); border: 1px solid color-mix(in srgb, var(--err) 40%, transparent); border-radius: 8px; }
-@media (max-width: 700px) { .teacher-form, .teacher-courses, .step-form { grid-template-columns: 1fr; }.inline-form { flex-direction: column; align-items: stretch; } }
+@media (max-width: 700px) { .teacher-form, .teacher-courses { grid-template-columns: 1fr; }.inline-form { flex-direction: column; align-items: stretch; } }
 
 .chat-log {
   min-height: 80px; max-height: 320px; overflow-y: auto; display: flex; flex-direction: column;

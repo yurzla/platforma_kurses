@@ -62,6 +62,7 @@ class FakeStore:
     course_levels: dict[int, str | None] = field(default_factory=dict)
     answer_keys: dict[int, dict] = field(default_factory=dict)
     step_bodies: dict[int, str] = field(default_factory=dict)
+    step_video_urls: dict[int, str] = field(default_factory=dict)
     progress: dict[tuple[int, int], str] = field(default_factory=dict)
     refresh_tokens: dict[str, RefreshToken] = field(default_factory=dict)
     session_seq: int = 0
@@ -472,6 +473,7 @@ class InMemoryCatalogRepository(CatalogRepository):
                 completed=status in ("passed",),
                 saved_answer=None,
                 is_correct=None,
+                video_url=self._store.step_video_urls.get(step_id),
             )
         return None
 

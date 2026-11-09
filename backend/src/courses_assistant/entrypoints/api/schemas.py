@@ -5,7 +5,9 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+
+from courses_assistant.domain.video import parse_video_url
 
 
 class SessionCreate(BaseModel):
@@ -212,14 +214,28 @@ class TeacherChoiceOptionCreate(BaseModel):
 
 
 class TeacherStepCreate(BaseModel):
-    body: str = Field(min_length=1, max_length=100_000)
-    step_type: Literal["text", "free_answer", "choice", "string", "number"] = "text"
+    body: str = Field(default="", max_length=100_000)
+    step_type: Literal["text", "video", "free_answer", "choice", "string", "number"] = "text"
     choices: list[TeacherChoiceOptionCreate] = Field(default_factory=list, max_length=20)
     is_multiple_choice: bool = False
     correct_answer: str | None = Field(default=None, max_length=5_000)
+    video_url: str | None = Field(default=None, max_length=2_000)
+
+    @field_validator("video_url")
+    @classmethod
+    def validate_video_url(cls, value: str | None) -> str | None:
+        if value is None or not value.strip():
+            return None
+        if parse_video_url(value) is None:
+            raise ValueError("Некорректная ссылка на видео")
+        return value.strip()
 
     @model_validator(mode="after")
     def validate_grading_data(self) -> TeacherStepCreate:
+        if not self.body.strip() and not self.video_url:
+            raise ValueError("Укажите материал или ссылку на видео")
+        if self.step_type == "video" and not self.video_url:
+            raise ValueError("Для видео-шага укажите ссылку на видео")
         if self.step_type == "choice":
             if len(self.choices) < 2:
                 raise ValueError("Для теста нужно не менее двух вариантов")
@@ -231,6 +247,58 @@ class TeacherStepCreate(BaseModel):
         elif self.step_type in {"string", "number"} and not (self.correct_answer or "").strip():
             raise ValueError("Укажите правильный ответ для автопроверки")
         return self
+
+
+class TeacherStepUpdate(BaseModel):
+    step_type: Literal["text", "video", "free_answer", "choice", "string", "number"] | None = None
+    body: str | None = Field(default=None, max_length=100_000)
+    choices: list[TeacherChoiceOptionCreate] | None = Field(default=None, max_length=20)
+    is_multiple_choice: bool | None = None
+    correct_answer: str | None = Field(default=None, max_length=5_000)
+    video_url: str | None = Field(default=None, max_length=2_000)
+
+    @field_validator("video_url")
+    @classmethod
+    def validate_video_url(cls, value: str | None) -> str | None:
+        if value is None or not value.strip():
+            return None
+        if parse_video_url(value) is None:
+            raise ValueError("Некорректная ссылка на видео")
+        return value.strip()
+
+
+class TeacherStepRead(BaseModel):
+    id: int
+    position: int
+    step_type: str
+    body: str | None = None
+    video_url: str | None = None
+    choices: list[TeacherChoiceOptionCreate] = Field(default_factory=list)
+    is_multiple_choice: bool = False
+    correct_answer: str | None = None
+
+
+class TeacherLessonRead(BaseModel):
+    id: int
+    title: str
+    position: int
+    steps: list[TeacherStepRead] = Field(default_factory=list)
+
+
+class TeacherSectionRead(BaseModel):
+    id: int
+    title: str
+    position: int
+    lessons: list[TeacherLessonRead] = Field(default_factory=list)
+
+
+class TeacherCourseDetailRead(BaseModel):
+    id: int
+    title: str
+    description: str | None = None
+    level: str | None = None
+    is_published: bool = False
+    sections: list[TeacherSectionRead] = Field(default_factory=list)
 
 
 class TeacherCourseRead(BaseModel):
@@ -259,6 +327,11 @@ class TeacherStudentProgressRead(BaseModel):
     status: str
 
 
+class VideoEmbedRead(BaseModel):
+    kind: Literal["iframe", "file", "link"]
+    src: str
+
+
 class StepRead(BaseModel):
     id: int
     course_id: int
@@ -267,6 +340,8 @@ class StepRead(BaseModel):
     step_type: str
     title: str | None = None
     body: str | None = None
+    video_url: str | None = None
+    video: VideoEmbedRead | None = None
     options: dict[str, Any] | None = None
     grading: str
     completed: bool = False

@@ -262,3 +262,35 @@ async def test_course_search_treats_wildcards_literally() -> None:
 
         underscore = await ac.get("/api/v1/courses", params={"search": "under_"})
         assert [c["id"] for c in underscore.json()["items"]] == [3]
+
+
+async def test_step_video_embed() -> None:
+    store = FakeStore()
+    store.add_user("s@example.com", "Студент", hash_password("pw"), "student")
+    store.add_course(build_course())
+    store.step_video_urls[101] = "https://youtu.be/abc123"
+    ac = make_app(store)
+    async with ac:
+        await _login(ac)
+        response = await ac.get("/api/v1/courses/10/steps/101")
+    assert response.status_code == 200
+    body = response.json()
+    assert body["video_url"] == "https://youtu.be/abc123"
+    assert body["video"] == {
+        "kind": "iframe",
+        "src": "https://www.youtube.com/embed/abc123",
+    }
+
+    store.step_video_urls[101] = "https://example.com/clip.mp4"
+    ac = make_app(store)
+    async with ac:
+        await _login(ac)
+        response = await ac.get("/api/v1/courses/10/steps/101")
+    assert response.json()["video"]["kind"] == "file"
+
+    store.step_video_urls[101] = "https://example.com/watch"
+    ac = make_app(store)
+    async with ac:
+        await _login(ac)
+        response = await ac.get("/api/v1/courses/10/steps/101")
+    assert response.json()["video"]["kind"] == "link"

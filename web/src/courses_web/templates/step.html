@@ -43,6 +43,19 @@
     </div>
   </section>
 
+  {% if step.video %}
+  <div class="step-video">
+    {% if step.video.kind == "iframe" %}
+    <iframe src="{{ step.video.src }}" title="Видео к шагу" loading="lazy" allowfullscreen
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+    {% elif step.video.kind == "file" %}
+    <video controls preload="metadata" src="{{ step.video.src }}"></video>
+    {% else %}
+    <p class="muted"><a href="{{ step.video.src }}" target="_blank" rel="noopener noreferrer">Открыть видео</a></p>
+    {% endif %}
+  </div>
+  {% endif %}
+
   {% if step.body %}
   <div class="step-body">{{ step.body | safe }}</div>
   {% endif %}

@@ -636,6 +636,7 @@ class SqlCatalogRepository(CatalogRepository):
             completed=completed,
             saved_answer=None,
             is_correct=None,
+            video_url=step.video_url,
         )
 
     async def get_answer_key(self, step_id: int) -> dict | None:
