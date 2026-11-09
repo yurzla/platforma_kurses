@@ -42,7 +42,7 @@
     <h2>Jobs</h2>
     <p class="muted">Фоновые задания ассистента: обработка вопроса студента, генерация ответа, число попыток и возможные ошибки. Нажмите на строку, чтобы открыть детали job и источники ответа.</p>
     <form class="filters" id="jobs-filters" onsubmit="return false;">
-      <label>Статус
+      <label class="f-status">Статус
         <select id="f-status">
           <option value="">все</option>
           <option value="queued">queued</option>
@@ -51,10 +51,10 @@
           <option value="failed">failed</option>
         </select>
       </label>
-      <label>Session ID
+      <label class="f-session">Session ID
         <input id="f-session" type="number" min="1" placeholder="например 16">
       </label>
-      <label>Поиск по вопросу
+      <label class="f-search">Поиск по вопросу
         <input id="f-search" type="text" placeholder="текст...">
       </label>
       <button id="f-apply" class="btn">Применить</button>
@@ -143,10 +143,10 @@
     <h2>Чанки</h2>
     <p class="muted">Фрагменты материалов, по которым ищет ассистент. Фильтры помогают найти нужный чанк по курсу, типу источника или тексту.</p>
     <form class="filters" id="chunks-filters" onsubmit="return false;">
-      <label>Курс
+      <label class="f-course">Курс
         <select id="ch-course"><option value="">все</option></select>
       </label>
-      <label>Тип источника
+      <label class="f-source">Тип источника
         <select id="ch-source">
           <option value="">все</option>
           <option value="theory">theory</option>
@@ -154,7 +154,7 @@
           <option value="course_description">course_description</option>
         </select>
       </label>
-      <label>Поиск по тексту
+      <label class="f-search">Поиск по тексту
         <input id="ch-search" type="text" placeholder="текст...">
       </label>
       <button id="ch-apply" class="btn">Применить</button>

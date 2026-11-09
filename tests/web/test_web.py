@@ -478,6 +478,8 @@ async def test_admin_panel_flow() -> None:
             'id="diagnostic-chunks"', 1
         )[0]
         assert 'id="chunks-body"' not in index_panel
+        assert 'class="f-course"' in dashboard.text
+        assert 'class="f-status"' in dashboard.text
         assert "/static/dashboard.js" in dashboard.text
         assert 'id="assistant-toggle"' not in dashboard.text
         lowered = dashboard.text.lower()
@@ -506,6 +508,11 @@ async def test_static_assets_served() -> None:
     assert dashboard.status_code == 200
     assert "text-decoration: none" in dashboard.text
     assert ".modal-backdrop" in dashboard.text
+    assert ".filters input, .filters select, .filters .btn" in dashboard.text
+    assert "height: 38px" in dashboard.text
+    assert "#jobs-filters, #chunks-filters { flex-wrap: nowrap; }" in dashboard.text
+    assert "#f-apply, #ch-apply { margin-left: auto; }" in dashboard.text
+    assert "text-overflow: ellipsis" in dashboard.text
     assert js.status_code == 200
     assert "openJob(" in js.text
     assert "loadIndex(" in js.text

@@ -123,6 +123,46 @@ main { padding: 20px 22px 48px; }
 }
 select option { background: var(--panel-2); color: var(--text); }
 
+.filters input, .filters select, .filters .btn {
+  box-sizing: border-box;
+  height: 38px;
+}
+.filters .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+#jobs-filters, #chunks-filters { flex-wrap: nowrap; }
+#jobs-filters label, #chunks-filters label { min-width: 0; }
+#jobs-filters input, #jobs-filters select,
+#chunks-filters input, #chunks-filters select {
+  width: 100%;
+  min-width: 0;
+}
+#jobs-filters .f-status { flex: 0 1 170px; }
+#jobs-filters .f-session { flex: 0 1 190px; }
+#jobs-filters .f-search { flex: 1 1 240px; }
+#chunks-filters .f-course { flex: 1 1 260px; }
+#chunks-filters .f-source { flex: 0 1 200px; }
+#chunks-filters .f-search { flex: 1 1 220px; }
+#f-apply, #ch-apply { margin-left: auto; }
+#ch-course {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  #jobs-filters, #chunks-filters { flex-wrap: wrap; }
+  #jobs-filters .f-status, #jobs-filters .f-session, #jobs-filters .f-search,
+  #chunks-filters .f-course, #chunks-filters .f-source, #chunks-filters .f-search {
+    flex: 1 1 100%;
+  }
+}
+
 .btn {
   background: var(--accent);
   color: #fff;
