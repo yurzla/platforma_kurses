@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Literal
+
 from fastapi import APIRouter, Depends
 
 from courses_assistant.container import Container
@@ -15,13 +17,23 @@ from courses_assistant.entrypoints.api.schemas import (
 router = APIRouter(prefix="/api/v1/preferences", tags=["preferences"])
 
 
+def _preferred_level(value: str | None) -> Literal["beginner", "intermediate", "advanced"] | None:
+    if value == "beginner":
+        return "beginner"
+    if value == "intermediate":
+        return "intermediate"
+    if value == "advanced":
+        return "advanced"
+    return None
+
+
 def _read(value: LearningPreferences | None) -> LearningPreferencesRead:
     if value is None:
         return LearningPreferencesRead()
     return LearningPreferencesRead(
         interests=value.interests,
         goals=value.goals,
-        preferred_level=value.preferred_level,
+        preferred_level=_preferred_level(value.preferred_level),
     )
 
 

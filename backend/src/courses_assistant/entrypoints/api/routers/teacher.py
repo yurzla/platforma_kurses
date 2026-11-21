@@ -5,7 +5,6 @@ from __future__ import annotations
 from dataclasses import asdict
 
 import structlog
-
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import delete, func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession

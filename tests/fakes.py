@@ -36,12 +36,12 @@ from courses_assistant.domain.models import (
     ChatSession,
     ChatSessionSummary,
     JobStatus,
+    LearningPreferences,
     LLMMessage,
     QuestionJob,
     RefreshToken,
     RetrievedChunk,
     User,
-    LearningPreferences,
 )
 from courses_assistant.domain.quiz import build_answer_key, grading_mode
 from courses_assistant.domain.recommender import CourseMatch

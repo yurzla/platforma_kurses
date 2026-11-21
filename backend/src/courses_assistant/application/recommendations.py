@@ -6,7 +6,7 @@ from collections.abc import Sequence
 
 from courses_assistant.application.ports import LLM, CourseRecommender, Embedder
 from courses_assistant.domain.catalog import CourseSummary
-from courses_assistant.domain.models import LLMMessage, LearningPreferences, Role
+from courses_assistant.domain.models import LearningPreferences, LLMMessage, Role
 from courses_assistant.domain.prompts import build_recommendation_expansion_prompt
 from courses_assistant.domain.recommender import CourseMatch, select_courses
 

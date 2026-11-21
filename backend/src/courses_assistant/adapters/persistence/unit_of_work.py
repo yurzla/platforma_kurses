@@ -22,8 +22,8 @@ from courses_assistant.application.ports import (
     CourseChunkRepository,
     CourseRecommender,
     JobRepository,
-    RefreshTokenRepository,
     LearningPreferencesRepository,
+    RefreshTokenRepository,
     UnitOfWork,
     UserRepository,
 )

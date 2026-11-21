@@ -26,8 +26,8 @@ from courses_assistant.adapters.persistence.orm import (
     StepContentORM,
     StepORM,
     StepSourceORM,
-    UserORM,
     UserLearningPreferencesORM,
+    UserORM,
     UserStepProgressORM,
 )
 from courses_assistant.application.ports import (
@@ -54,12 +54,12 @@ from courses_assistant.domain.models import (
     ChatSession,
     ChatSessionSummary,
     JobStatus,
+    LearningPreferences,
     QuestionJob,
     RefreshToken,
     RetrievedChunk,
     Role,
     User,
-    LearningPreferences,
 )
 from courses_assistant.domain.quiz import build_answer_key, grading_mode
 from courses_assistant.domain.recommender import CourseMatch

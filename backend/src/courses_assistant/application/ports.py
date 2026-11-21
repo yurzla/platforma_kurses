@@ -18,12 +18,12 @@ from courses_assistant.domain.models import (
     ChatSession,
     ChatSessionSummary,
     JobStatus,
+    LearningPreferences,
     LLMMessage,
     QuestionJob,
     RefreshToken,
     RetrievedChunk,
     User,
-    LearningPreferences,
 )
 from courses_assistant.domain.recommender import CourseMatch
 

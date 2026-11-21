@@ -193,6 +193,8 @@ async def test_access_token_via_bearer() -> None:
             "/api/v1/auth/me", headers={"Authorization": f"Bearer {bad_token}"}
         )
         assert bad.status_code == 401
+        anon = await ac.get("/api/v1/auth/me")
+        assert anon.json()["role"] is None
 
 
 async def test_user_learning_preferences_are_saved_for_current_user() -> None:
@@ -217,5 +219,3 @@ async def test_user_learning_preferences_are_saved_for_current_user() -> None:
         assert (
             await ac.patch("/api/v1/preferences/me", json={"preferred_level": "expert"})
         ).status_code == 422
-        anon = await ac.get("/api/v1/auth/me")
-        assert anon.json()["role"] is None
