@@ -342,7 +342,7 @@
       chatInput.value = "";
       showChat();
       append("user", question);
-      var placeholder = append("assistant", "…");
+      var placeholder = append("assistant", "Ассистент отвечает…");
       try {
         var sid = await ensureSession();
         if (!sid) {

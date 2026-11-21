@@ -22,6 +22,7 @@ def test_defaults() -> None:
     settings = Settings()
     assert settings.embedding_dimension == 768
     assert settings.stream_requests == "rag.requests"
+    assert settings.stream_index == "rag.index.requests"
 
 
 def test_resolved_jwt_secret_uses_configured() -> None:

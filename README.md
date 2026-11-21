@@ -10,6 +10,7 @@ worker-ы, HTTP API отдаёт `202` и job-id, клиент опрашива�
 browser ──► web (courses_web, HTML/Jinja2, :8000) ──HTTP──► backend api (JSON, :5000)
                                                                 │
 backend worker ─────────────────────────────────────────────────┤
+backend indexer ────────────────────────────────────────────────┤
 backend cron ───────────────────────────────────────────────────┼── application
 backend scheduler ──────────────────────────────────────────────┘        │
                                                                          ▼
@@ -34,6 +35,9 @@ worker → XREADGROUP → status=running → rewrite → embed → pgvector <=> 
 GET /jobs/{id} → queued | running | done | failed
 scheduler → XADD rag.cron (purge_terminal_jobs) → cron-worker:
        удаляет старые done/failed job-ы → XACK (ошибка → rag.cron.dead)
+teacher creates/updates course or step → XADD rag.index.requests → indexer:
+       обновляет chunks и embeddings названия/описания курса и материалов шагов через Ollama → XACK
+       (ошибка → rag.index.dead)
 ```
 
 Технологии: FastAPI, SQLAlchemy 2.0 async + asyncpg, pgvector, Alembic, Redis Streams,
@@ -49,7 +53,7 @@ backend/                          distribution courses-assistant
     application/    ports, unit_of_work, message_bus, commands, queries, handlers, rag, consumer
     adapters/       persistence (orm, repositories, uow), llm/gigachat, embeddings/ollama,
                     broker/redis_streams
-    entrypoints/    api (JSON), worker, cron, scheduler
+    entrypoints/    api (JSON), worker, indexer, cron, scheduler
     scripts/        db_bootstrap, stepik_dump, load_stepik, embed_chunks,
                     create_user, reset_passwords, import_step_sources,
                     cleanup_empty_steps, renumber_steps
@@ -96,7 +100,8 @@ make down
 Compose поднимает `postgres` (pgvector), `redis`, `ollama` (+ pull модели), `seed`
 (загрузка дампа, если `tmp/edu_platform_kurses.sql` существует), `migrate`
 (Alembic: stamp baseline при наличии дампа + upgrade), `api` (:5000), `web` (:8000),
-`worker`, `scheduler` (периодически ставит cron-задачи) и `cron` (выполняет их).
+`worker`, `indexer` (обновляет embeddings описаний курсов и материалов шагов преподавателей), `scheduler`
+(периодически ставит cron-задачи) и `cron` (выполняет их).
 
 Демо-дамп `tmp/edu_platform_kurses.sql` соответствует `0009_step_video_url`.
 В нём нет данных `refresh_tokens`, а пароли зашифрованы тем `PASSWORD_KEY`,
@@ -113,8 +118,12 @@ Web-сервис: `http://localhost:8000` — обучение, кабинет �
 - **Обучение**: `/courses` → курс → шаг (тесты, автопроверка, прогресс) +
   RAG-панель «Ассистент»; на страницах списков (`/courses`, `/my-courses`) панель
   показывает историю чатов по курсам, а новый вопрос ищет материалы сразу по всем
-  курсам и может порекомендовать курсы из каталога платформы; на странице курса/шага
-  история и ответы ограничены текущим курсом.
+  курсам и может порекомендовать курсы из каталога платформы с учётом интересов,
+  учебных целей и желаемого уровня, сохранённых в блоке «Обо мне» на `/my-courses`;
+  названия и описания завершённых студентом курсов уточняют такой подбор, но сами
+  завершённые курсы повторно не рекомендуются (курсы в процессе остаются кандидатами);
+  на странице курса/шага история и ответы ограничены текущим курсом. Во время
+  генерации ответа панель показывает «Ассистент отвечает…».
 - **Страница шага**: плеер для YouTube, VK Video и прямых mp4/webm/ogg; тело шага
   рендерится как Markdown с сохранением переносов строк, унаследованный HTML из
   импорта отображается без изменений. Поддерживаются шаги «материал», «тест с
@@ -167,6 +176,8 @@ Web-сервис: `http://localhost:8000` — обучение, кабинет �
 | POST | `/api/v1/auth/refresh` | обновить access/refresh по refresh-cookie |
 | POST | `/api/v1/auth/logout` | выход |
 | GET | `/api/v1/auth/me` | текущий пользователь (`role`, `id`, `name`, `email`) |
+| GET | `/api/v1/preferences/me` | интересы, учебные цели и желаемый уровень текущего пользователя |
+| PATCH | `/api/v1/preferences/me` | сохранить интересы, учебные цели и желаемый уровень текущего пользователя |
 | POST | `/api/v1/chat/sessions` | создать сессию (`course_id`, опц.; без него — по всем курсам) → 201 |
 | GET | `/api/v1/chat/sessions` | сессии пользователя: курс, время старта, превью последнего сообщения |
 | GET | `/api/v1/chat/sessions/{id}/messages?limit=` | история сообщений |
@@ -196,7 +207,7 @@ Web-сервис: `http://localhost:8000` — обучение, кабинет �
 | GET | `/api/v1/admin/overview` | счётчики job по статусам + метрики стримов |
 | GET | `/api/v1/admin/jobs` | список job-ов (`status`, `session_id`, `search`, `limit`, `offset`) |
 | GET | `/api/v1/admin/jobs/{id}` | детали job |
-| GET | `/api/v1/admin/dlq` | записи DLQ (`rag.dead`, `rag.cron.dead`) |
+| GET | `/api/v1/admin/dlq` | записи DLQ (`rag.dead`, `rag.index.dead`, `rag.cron.dead`) |
 | GET | `/api/v1/admin/streams` | метрики Redis Streams |
 | GET | `/api/v1/admin/chunks` | чанки индекса: `course_id`, `source_type`, `search`, `limit`, `offset` |
 | GET | `/api/v1/admin/chunks/{id}` | чанк: полный текст и метаданные эмбеддинга |

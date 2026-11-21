@@ -55,6 +55,14 @@ class User:
 
 
 @dataclass(slots=True)
+class LearningPreferences:
+    user_id: int
+    interests: str | None = None
+    goals: str | None = None
+    preferred_level: str | None = None
+
+
+@dataclass(slots=True)
 class RefreshToken:
     id: int
     user_id: int

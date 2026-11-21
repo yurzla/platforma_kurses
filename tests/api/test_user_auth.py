@@ -193,5 +193,29 @@ async def test_access_token_via_bearer() -> None:
             "/api/v1/auth/me", headers={"Authorization": f"Bearer {bad_token}"}
         )
         assert bad.status_code == 401
+
+
+async def test_user_learning_preferences_are_saved_for_current_user() -> None:
+    store = FakeStore()
+    store.add_user("s@example.com", "Студент", encrypt_test_password("pw"), "student")
+    ac = make_app(store)
+    async with ac:
+        assert (await ac.get("/api/v1/preferences/me")).status_code == 401
+        login = await ac.post(
+            "/api/v1/auth/login", json={"email": "s@example.com", "password": "pw"}
+        )
+        assert login.status_code == 200
+        empty = await ac.get("/api/v1/preferences/me")
+        assert empty.json() == {"interests": None, "goals": None, "preferred_level": None}
+        saved = await ac.patch(
+            "/api/v1/preferences/me",
+            json={"interests": "Python", "goals": "Найти работу", "preferred_level": "beginner"},
+        )
+        assert saved.status_code == 200
+        assert saved.json()["interests"] == "Python"
+        assert (await ac.get("/api/v1/preferences/me")).json()["goals"] == "Найти работу"
+        assert (
+            await ac.patch("/api/v1/preferences/me", json={"preferred_level": "expert"})
+        ).status_code == 422
         anon = await ac.get("/api/v1/auth/me")
         assert anon.json()["role"] is None

@@ -23,6 +23,7 @@ from courses_assistant.domain.models import (
     RefreshToken,
     RetrievedChunk,
     User,
+    LearningPreferences,
 )
 from courses_assistant.domain.recommender import CourseMatch
 
@@ -126,6 +127,14 @@ class RefreshTokenRepository(ABC):
     async def revoke_all_for_user(self, user_id: int, revoked_at: datetime) -> None: ...
 
 
+class LearningPreferencesRepository(ABC):
+    @abstractmethod
+    async def get(self, user_id: int) -> LearningPreferences | None: ...
+
+    @abstractmethod
+    async def save(self, preferences: LearningPreferences) -> LearningPreferences: ...
+
+
 class CatalogRepository(ABC):
     @abstractmethod
     async def list_courses(
@@ -146,6 +155,9 @@ class CatalogRepository(ABC):
         enrolled_only: bool = False,
         search: str | None = None,
     ) -> int: ...
+
+    @abstractmethod
+    async def list_completed_courses(self, user_id: int) -> list[CourseSummary]: ...
 
     @abstractmethod
     async def list_authored_courses(
@@ -206,6 +218,7 @@ class CourseRecommender(ABC):
         *,
         model_name: str,
         limit: int,
+        excluded_course_ids: Sequence[int] = (),
     ) -> list[CourseMatch]:
         """Возвращает курсы, ближайшие к вектору запроса (по course_description)."""
 
@@ -284,6 +297,7 @@ class UnitOfWork(ABC):
     users: UserRepository
     catalog: CatalogRepository
     refresh_tokens: RefreshTokenRepository
+    preferences: LearningPreferencesRepository
     recommender: CourseRecommender
 
     @abstractmethod

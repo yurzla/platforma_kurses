@@ -17,6 +17,10 @@ x-app-env: &app-env
   LOG_LEVEL: ${LOG_LEVEL:-INFO}
   JOB_RETENTION_DAYS: ${JOB_RETENTION_DAYS:-7}
   CRON_INTERVAL_SECONDS: ${CRON_INTERVAL_SECONDS:-3600}
+  STREAM_INDEX: ${STREAM_INDEX:-rag.index.requests}
+  INDEX_DLQ: ${INDEX_DLQ:-rag.index.dead}
+  INDEX_GROUP: ${INDEX_GROUP:-rag-indexers}
+  INDEX_CONSUMER_NAME: ${INDEX_CONSUMER_NAME:-indexer-1}
   REDIS_STREAM_MAXLEN: ${REDIS_STREAM_MAXLEN:-10000}
   JWT_SECRET: ${JWT_SECRET:-local-dev-jwt-secret-change-me}
   JWT_ALGORITHM: ${JWT_ALGORITHM:-HS256}
@@ -179,6 +183,16 @@ services:
         condition: service_healthy
     environment: *app-env
     command: ["python", "-m", "courses_assistant.entrypoints.worker"]
+
+  indexer:
+    build: *backend-build
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+    environment: *app-env
+    command: ["python", "-m", "courses_assistant.entrypoints.indexer"]
 
   scheduler:
     build: *backend-build

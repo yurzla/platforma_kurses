@@ -215,6 +215,7 @@ async def _courses_page(
     enrolled: bool,
     page: int,
     search: str = "",
+    extra_context: dict[str, Any] | None = None,
 ) -> Response:
     page = max(page, 1)
     search = _clean_search(search)
@@ -237,7 +238,7 @@ async def _courses_page(
     return _render(
         request,
         template,
-        {"me": me, "assistant_mode": "history", **context, **assistant},
+        {"me": me, "assistant_mode": "history", **context, **assistant, **(extra_context or {})},
     )
 
 
@@ -297,6 +298,8 @@ async def courses(request: Request, page: int = 1, search: str = "") -> Response
 
 @router.get("/my-courses", response_class=HTMLResponse)
 async def my_courses(request: Request, page: int = 1, search: str = "") -> Response:
+    preferences_response = await call_api(request, "GET", "/api/v1/preferences/me")
+    preferences = preferences_response.json() if preferences_response.status_code == 200 else {}
     return await _courses_page(
         request,
         path="/my-courses",
@@ -304,7 +307,26 @@ async def my_courses(request: Request, page: int = 1, search: str = "") -> Respo
         enrolled=True,
         page=page,
         search=search,
+        extra_context={"preferences": preferences},
     )
+
+
+@router.post("/my-courses/preferences")
+async def save_my_preferences(request: Request) -> Response:
+    form = await _form(request)
+    response = await call_api(
+        request,
+        "PATCH",
+        "/api/v1/preferences/me",
+        json={
+            "interests": form.get("interests") or None,
+            "goals": form.get("goals") or None,
+            "preferred_level": form.get("preferred_level") or None,
+        },
+    )
+    if response.status_code == 401:
+        return RedirectResponse("/login?next=/my-courses", status_code=303)
+    return RedirectResponse("/my-courses", status_code=303)
 
 
 def _teacher_list_context(

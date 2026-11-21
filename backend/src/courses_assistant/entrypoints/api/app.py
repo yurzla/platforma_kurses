@@ -24,6 +24,7 @@ from courses_assistant.entrypoints.api.routers import (
     chat,
     health,
     jobs,
+    preferences,
     teacher,
 )
 from courses_assistant.entrypoints.middleware import RequestContextMiddleware
@@ -68,6 +69,7 @@ def create_app(settings: Settings | None = None, container: Container | None = N
     app.include_router(jobs.router)
     app.include_router(catalog.router)
     app.include_router(auth.router)
+    app.include_router(preferences.router)
     app.include_router(admin.router)
     app.include_router(teacher.router)
 

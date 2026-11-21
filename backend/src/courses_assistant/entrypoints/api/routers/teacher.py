@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from dataclasses import asdict
 
+import structlog
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import delete, func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -48,6 +50,30 @@ from courses_assistant.entrypoints.api.schemas import (
 )
 
 router = APIRouter(prefix="/api/v1/teacher", tags=["teacher"])
+logger = structlog.get_logger(__name__)
+
+
+async def _enqueue_course_index(container: Container, course_id: int) -> None:
+    """Запускает eventual-consistency обновление RAG-индекса после коммита."""
+    try:
+        await container.broker.publish(
+            container.settings.stream_index,
+            {"course_id": course_id},
+            maxlen=container.settings.redis_stream_maxlen,
+        )
+    except Exception as exc:  # noqa: BLE001
+        logger.error("course_index_enqueue_failed", course_id=course_id, error=str(exc))
+
+
+async def _enqueue_step_index(container: Container, step_id: int) -> None:
+    try:
+        await container.broker.publish(
+            container.settings.stream_index,
+            {"kind": "step_upsert", "step_id": step_id},
+            maxlen=container.settings.redis_stream_maxlen,
+        )
+    except Exception as exc:  # noqa: BLE001
+        logger.error("step_index_enqueue_failed", step_id=step_id, error=str(exc))
 
 
 async def _owned_course(session: AsyncSession, course_id: int, teacher_id: int) -> CourseORM:
@@ -269,6 +295,7 @@ async def create_course(
         await session.flush()
         result = await _course_read(session, course)
         await session.commit()
+        await _enqueue_course_index(container, course.id)
         return result
 
 
@@ -418,9 +445,13 @@ async def update_course(
 ) -> TeacherCourseRead:
     async with container.session_factory() as session:
         course = await _owned_course(session, course_id, teacher.id)
+        needs_indexing = False
         if "title" in payload.model_fields_set:
-            course.title = payload.title.strip() if payload.title else course.title
+            title = payload.title.strip() if payload.title else course.title
+            needs_indexing = needs_indexing or title != course.title
+            course.title = title
         if "description" in payload.model_fields_set:
+            needs_indexing = needs_indexing or payload.description != course.description
             course.description = payload.description
         if "level" in payload.model_fields_set:
             course.level = payload.level
@@ -440,6 +471,8 @@ async def update_course(
             course.is_published = bool(payload.is_published)
         result = await _course_read(session, course)
         await session.commit()
+        if needs_indexing:
+            await _enqueue_course_index(container, course.id)
         return result
 
 
@@ -602,6 +635,7 @@ async def create_step(
             correct_answer=payload.correct_answer,
         )
         await session.commit()
+        await _enqueue_step_index(container, step.id)
         return StepSummaryRead(id=step.id, position=step.position, step_type=step.step_type)
 
 
@@ -691,6 +725,7 @@ async def update_step(
             correct_answer=correct_answer,
         )
         await session.commit()
+        await _enqueue_step_index(container, step.id)
         return TeacherStepRead(
             id=step.id,
             position=step.position,

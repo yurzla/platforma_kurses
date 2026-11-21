@@ -27,6 +27,7 @@ from courses_assistant.adapters.persistence.orm import (
     StepORM,
     StepSourceORM,
     UserORM,
+    UserLearningPreferencesORM,
     UserStepProgressORM,
 )
 from courses_assistant.application.ports import (
@@ -35,6 +36,7 @@ from courses_assistant.application.ports import (
     CourseChunkRepository,
     CourseRecommender,
     JobRepository,
+    LearningPreferencesRepository,
     RefreshTokenRepository,
     UserRepository,
 )
@@ -57,6 +59,7 @@ from courses_assistant.domain.models import (
     RetrievedChunk,
     Role,
     User,
+    LearningPreferences,
 )
 from courses_assistant.domain.quiz import build_answer_key, grading_mode
 from courses_assistant.domain.recommender import CourseMatch
@@ -279,6 +282,35 @@ class SqlUserRepository(UserRepository):
         return _to_user(orm) if orm else None
 
 
+class SqlLearningPreferencesRepository(LearningPreferencesRepository):
+    def __init__(self, session: AsyncSession) -> None:
+        self._session = session
+
+    async def get(self, user_id: int) -> LearningPreferences | None:
+        orm = await self._session.get(UserLearningPreferencesORM, user_id)
+        return _to_preferences(orm) if orm else None
+
+    async def save(self, preferences: LearningPreferences) -> LearningPreferences:
+        orm = await self._session.get(UserLearningPreferencesORM, preferences.user_id)
+        if orm is None:
+            orm = UserLearningPreferencesORM(user_id=preferences.user_id)
+            self._session.add(orm)
+        orm.interests = preferences.interests
+        orm.goals = preferences.goals
+        orm.preferred_level = preferences.preferred_level
+        await self._session.flush()
+        return _to_preferences(orm)
+
+
+def _to_preferences(orm: UserLearningPreferencesORM) -> LearningPreferences:
+    return LearningPreferences(
+        user_id=orm.user_id,
+        interests=orm.interests,
+        goals=orm.goals,
+        preferred_level=orm.preferred_level,
+    )
+
+
 def _to_refresh_token(orm: RefreshTokenORM) -> RefreshToken:
     return RefreshToken(
         id=orm.id,
@@ -415,6 +447,26 @@ class SqlCatalogRepository(CatalogRepository):
         if search_clause is not None:
             stmt = stmt.where(search_clause)
         return int(await self._session.scalar(stmt) or 0)
+
+    async def list_completed_courses(self, user_id: int) -> list[CourseSummary]:
+        rows = (
+            await self._session.execute(
+                select(CourseORM, EnrollmentORM.progress_percent)
+                .join(EnrollmentORM, EnrollmentORM.course_id == CourseORM.id)
+                .where(EnrollmentORM.user_id == user_id, EnrollmentORM.status == "completed")
+                .order_by(EnrollmentORM.enrolled_at)
+            )
+        ).all()
+        return [
+            CourseSummary(
+                id=course.id,
+                title=course.title,
+                description=course.description,
+                enrolled=True,
+                progress_percent=float(progress),
+            )
+            for course, progress in rows
+        ]
 
     async def list_authored_courses(
         self,
@@ -815,6 +867,7 @@ class SqlCourseRecommender(CourseRecommender):
         *,
         model_name: str,
         limit: int,
+        excluded_course_ids: Sequence[int] = (),
     ) -> list[CourseMatch]:
         distance = ChunkEmbeddingORM.embedding.cosine_distance(list(embedding))
         best_distance = func.min(distance).label("best_distance")
@@ -837,6 +890,8 @@ class SqlCourseRecommender(CourseRecommender):
             .order_by(best_distance)
             .limit(limit)
         )
+        if excluded_course_ids:
+            stmt = stmt.where(ContentChunkORM.course_id.not_in(list(excluded_course_ids)))
         result = await self._session.execute(stmt)
         return [
             CourseMatch(

@@ -192,6 +192,12 @@ main { padding: 24px; max-width: 1040px; margin: 0 auto; }
   margin-top: 20px; padding: 16px; background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
 }
 .quiz-form { display: flex; flex-direction: column; gap: 10px; }
+.preferences-form { display: flex; flex-direction: column; align-items: stretch; gap: 14px; max-width: 720px; }
+.preferences-panel { margin-bottom: 24px; }
+.preferences-form label { display: flex; flex-direction: column; gap: 6px; color: var(--muted); font-size: 13px; }
+.preferences-form textarea, .preferences-form select { width: 100%; box-sizing: border-box; padding: 9px 10px; color: var(--text); background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; font: inherit; }
+.preferences-form textarea { min-height: 42px; resize: none; overflow: hidden; }
+.preferences-form .btn { align-self: flex-start; }
 .choice-option { display: flex; gap: 8px; align-items: flex-start; }
 .quiz-form input[type="text"] {
   padding: 8px 10px; background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; color: var(--text);

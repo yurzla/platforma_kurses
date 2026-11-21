@@ -167,6 +167,8 @@ class Handlers:
             )
 
             if session.course_id is None and looks_like_course_query(command.question):
+                preferences = await uow.preferences.get(session.user_id)
+                completed_courses = await uow.catalog.list_completed_courses(session.user_id)
                 matches = await rank_courses(
                     rewritten,
                     llm=self._llm,
@@ -177,6 +179,8 @@ class Handlers:
                     margin=self._settings.recommendation_margin,
                     min_score=self._settings.recommendation_min_score,
                     candidate_limit=max(self._settings.recommendation_top_k * 4, 20),
+                    preferences=preferences,
+                    completed_courses=completed_courses,
                 )
                 if matches:
                     recommendation_sources = [

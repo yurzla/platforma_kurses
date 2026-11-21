@@ -84,6 +84,17 @@ class MeRead(BaseModel):
     email: str | None = None
 
 
+class LearningPreferencesRead(BaseModel):
+    interests: str | None = None
+    goals: str | None = None
+    preferred_level: Literal["beginner", "intermediate", "advanced"] | None = None
+
+
+class LearningPreferencesUpdate(LearningPreferencesRead):
+    interests: str | None = Field(default=None, max_length=2_000)
+    goals: str | None = Field(default=None, max_length=2_000)
+
+
 class UserListItem(BaseModel):
     id: int
     email: str

@@ -6,6 +6,27 @@
 {% with active = "my-courses" %}{% include "_topbar.html" %}{% endwith %}
 <main>
   <h1 class="page-title">Мое обучение</h1>
+  <section class="card preferences-panel" aria-labelledby="preferences-title">
+    <h2 id="preferences-title">Обо мне</h2>
+    <p class="muted">Расскажите, что вам интересно - это поможет подобрать подходящие курсы.</p>
+    <form class="preferences-form" method="post" action="/my-courses/preferences">
+      <label>Интересы
+        <textarea data-autoresize name="interests" rows="1" maxlength="2000" placeholder="Например: Python, анализ данных, дизайн">{{ preferences.interests or '' }}</textarea>
+      </label>
+      <label>Учебные цели
+        <textarea data-autoresize name="goals" rows="1" maxlength="2000" placeholder="Например: сменить профессию, подготовиться к проекту">{{ preferences.goals or '' }}</textarea>
+      </label>
+      <label>Желаемый уровень
+        <select name="preferred_level">
+          <option value="" {% if not preferences.preferred_level %}selected{% endif %}>Не выбран</option>
+          <option value="beginner" {% if preferences.preferred_level == 'beginner' %}selected{% endif %}>Начинающий</option>
+          <option value="intermediate" {% if preferences.preferred_level == 'intermediate' %}selected{% endif %}>Средний</option>
+          <option value="advanced" {% if preferences.preferred_level == 'advanced' %}selected{% endif %}>Продвинутый</option>
+        </select>
+      </label>
+      <button class="btn" type="submit">Сохранить настройки</button>
+    </form>
+  </section>
   {% include "_list_search.html" %}
   {% if not courses %}
   {% if search %}
@@ -17,4 +38,14 @@
   {% include "_course_cards.html" %}
   {% include "_pagination.html" %}
 </main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.querySelectorAll('textarea[data-autoresize]').forEach((field) => {
+    const resize = () => { field.style.height = 'auto'; field.style.height = `${field.scrollHeight}px`; };
+    field.addEventListener('input', resize);
+    resize();
+  });
+</script>
 {% endblock %}

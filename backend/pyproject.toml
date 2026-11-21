@@ -42,6 +42,7 @@ packages = ["src/courses_assistant"]
 [project.scripts]
 courses-assistant-api = "courses_assistant.entrypoints.api.__main__:main"
 courses-assistant-worker = "courses_assistant.entrypoints.worker.__main__:main"
+courses-assistant-indexer = "courses_assistant.entrypoints.indexer.__main__:main"
 courses-assistant-scheduler = "courses_assistant.entrypoints.scheduler.__main__:main"
 courses-assistant-cron = "courses_assistant.entrypoints.cron.__main__:main"
 courses-assistant-db = "courses_assistant.scripts.db_bootstrap:main"

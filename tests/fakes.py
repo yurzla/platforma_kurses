@@ -16,6 +16,7 @@ from courses_assistant.application.ports import (
     CourseRecommender,
     Embedder,
     JobRepository,
+    LearningPreferencesRepository,
     MessageBroker,
     RefreshTokenRepository,
     UnitOfWork,
@@ -40,6 +41,7 @@ from courses_assistant.domain.models import (
     RefreshToken,
     RetrievedChunk,
     User,
+    LearningPreferences,
 )
 from courses_assistant.domain.quiz import build_answer_key, grading_mode
 from courses_assistant.domain.recommender import CourseMatch
@@ -78,6 +80,7 @@ class FakeStore:
     step_video_urls: dict[int, str] = field(default_factory=dict)
     progress: dict[tuple[int, int], str] = field(default_factory=dict)
     refresh_tokens: dict[str, RefreshToken] = field(default_factory=dict)
+    preferences: dict[int, LearningPreferences] = field(default_factory=dict)
     session_seq: int = 0
     message_seq: int = 0
     user_seq: int = 0
@@ -214,8 +217,13 @@ class InMemoryCourseRecommender(CourseRecommender):
         *,
         model_name: str,
         limit: int,
+        excluded_course_ids: Sequence[int] = (),
     ) -> list[CourseMatch]:
-        return self._store.recommendations[:limit]
+        return [
+            course
+            for course in self._store.recommendations
+            if course.course_id not in excluded_course_ids
+        ][:limit]
 
 
 class InMemoryUserRepository(UserRepository):
@@ -313,6 +321,13 @@ class InMemoryCatalogRepository(CatalogRepository):
             user_id, enrolled_only=enrolled_only, search=search
         )
         return len(summaries)
+
+    async def list_completed_courses(self, user_id: int) -> list[CourseSummary]:
+        return [
+            course
+            for course in await self._course_summaries(user_id, enrolled_only=True, search=None)
+            if course.progress_percent == 100
+        ]
 
     async def list_authored_courses(
         self,
@@ -674,6 +689,18 @@ class InMemoryRefreshTokenRepository(RefreshTokenRepository):
                 token.revoked_at = revoked_at
 
 
+class InMemoryLearningPreferencesRepository(LearningPreferencesRepository):
+    def __init__(self, store: FakeStore) -> None:
+        self._store = store
+
+    async def get(self, user_id: int) -> LearningPreferences | None:
+        return self._store.preferences.get(user_id)
+
+    async def save(self, preferences: LearningPreferences) -> LearningPreferences:
+        self._store.preferences[preferences.user_id] = preferences
+        return preferences
+
+
 class InMemoryUnitOfWork(UnitOfWork):
     def __init__(self, store: FakeStore) -> None:
         self._store = store
@@ -683,6 +710,7 @@ class InMemoryUnitOfWork(UnitOfWork):
         self.users = InMemoryUserRepository(store)
         self.catalog = InMemoryCatalogRepository(store)
         self.refresh_tokens = InMemoryRefreshTokenRepository(store)
+        self.preferences = InMemoryLearningPreferencesRepository(store)
         self.recommender = InMemoryCourseRecommender(store)
 
     async def __aenter__(self) -> InMemoryUnitOfWork:
@@ -719,8 +747,10 @@ class FakeLLM(LLM):
 class FakeEmbedder(Embedder):
     def __init__(self, dimension: int = 768) -> None:
         self._dimension = dimension
+        self.calls: list[str] = []
 
     async def embed(self, text: str) -> list[float]:
+        self.calls.append(text)
         return [0.0] * self._dimension
 
 

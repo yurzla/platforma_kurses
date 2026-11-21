@@ -56,6 +56,12 @@ class Settings(BaseSettings):
     consumer_pending_idle_ms: int = 60_000
     stream_block_ms: int = 5000
 
+    # Индексация описаний курсов преподавателей
+    stream_index: str = "rag.index.requests"
+    index_dlq: str = "rag.index.dead"
+    index_group: str = "rag-indexers"
+    index_consumer_name: str = "indexer-1"
+
     # Cron (отдельная очередь периодических задач)
     stream_cron: str = "rag.cron"
     cron_dlq: str = "rag.cron.dead"

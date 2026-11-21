@@ -184,9 +184,11 @@ def _stream_targets(container: Container) -> list[tuple[str, str]]:
     s = container.settings
     return [
         (s.stream_requests, s.consumer_group),
+        (s.stream_index, s.index_group),
         (s.stream_cron, s.cron_group),
         (s.stream_events, s.consumer_group),
         (s.stream_dead, s.consumer_group),
+        (s.index_dlq, s.index_group),
         (s.cron_dlq, s.cron_group),
     ]
 
