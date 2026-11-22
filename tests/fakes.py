@@ -795,13 +795,23 @@ class FakeBroker(MessageBroker):
         return self.dead_entries.get(stream, [])[:count]
 
     async def stream_stats(self, stream: str, group: str) -> dict:
+        dead_entries = self.dead_entries.get(stream, [])
+        published = [payload for name, payload in self.published if name == stream]
+        length = len(dead_entries) or len(published)
+        exists = bool(dead_entries) or bool(published)
         return {
             "stream": stream,
             "group": group,
-            "length": len(self.dead_entries.get(stream, [])),
+            "exists": exists,
+            "length": length,
             "pending": 0,
             "lag": 0,
             "consumers": 1,
+            "last_generated_id": f"{length}-0" if length else None,
+            "last_delivered_id": f"{length}-0" if length else None,
+            "entries_read": length,
+            "last_message_at": None,
+            "consumer_details": [{"name": "fake-1", "pending": 0, "idle": 0}],
         }
 
     async def ping(self) -> bool:

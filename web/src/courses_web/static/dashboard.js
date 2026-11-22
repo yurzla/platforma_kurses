@@ -4,6 +4,7 @@ const state = {
   tab: "diagnostics",
   diagnostic: "jobs",
   jobs: { status: "", session_id: "", search: "", limit: 25, offset: 0, total: 0 },
+  dlq: { stream: "" },
   chunks: { course_id: "", source_type: "", search: "", limit: 25, offset: 0, total: 0 },
   indexCourses: [],
   users: { search: "", limit: 25, offset: 0, total: 0 },
@@ -76,22 +77,39 @@ function switchDiagnostic(diagnostic) {
 function renderStreams(streams) {
   const body = $("streams-body");
   if (!streams.length) {
-    body.innerHTML = '<tr><td colspan="6" class="muted">нет данных</td></tr>';
+    body.innerHTML = '<tr><td colspan="9" class="muted">нет данных</td></tr>';
     return;
   }
   body.innerHTML = streams
-    .map(
-      (s) => `
-    <tr>
-      <td class="mono">${escapeHtml(s.stream)}</td>
+    .map((s) => {
+      const backlog = (s.pending ?? 0) > 0 || (s.lag ?? 0) > 0;
+      const exists = s.exists === false ? '<span class="badge failed">нет</span>' : "";
+      const details = (s.consumer_details || [])
+        .map((c) => `${escapeHtml(c.name)} (${c.pending}, ${c.idle} мс)`)
+        .join("<br>");
+      return `
+    <tr class="${backlog ? "warn" : ""}">
+      <td class="mono">${escapeHtml(s.stream)} ${exists}</td>
+      <td>${s.kind === "dead" ? '<span class="badge failed">DLQ</span>' : '<span class="badge done">очередь</span>'}</td>
       <td class="mono">${escapeHtml(s.group)}</td>
       <td>${s.length ?? 0}</td>
       <td>${s.pending ?? "—"}</td>
       <td>${s.lag ?? "—"}</td>
       <td>${s.consumers ?? "—"}</td>
-    </tr>`
-    )
+      <td class="muted">${fmt(s.last_message_at)}</td>
+      <td class="muted">${details || "—"}</td>
+    </tr>`;
+    })
     .join("");
+}
+
+async function loadStreams() {
+  try {
+    const data = await getJSON("/api/v1/admin/streams");
+    renderStreams(data);
+  } catch (err) {
+    showError("Не удалось загрузить стримы: " + err.message);
+  }
 }
 
 async function loadOverview() {
@@ -101,7 +119,6 @@ async function loadOverview() {
     ["queued", "running", "done", "failed"].forEach((s) => {
       $("cnt-" + s).textContent = counts[s] || 0;
     });
-    renderStreams(data.streams || []);
     $("updated").textContent = new Date().toLocaleTimeString();
   } catch (err) {
     showError("Не удалось загрузить overview: " + err.message);
@@ -314,6 +331,11 @@ function renderIndex(data) {
   $("index-without-embedding").textContent = data.chunks_without_embedding || 0;
   $("index-courses-without-embeddings").textContent = data.courses_without_embeddings || 0;
   $("index-courses-without-chunks").textContent = data.courses_without_chunks || 0;
+  const queue = data.queue || {};
+  $("index-queue-size").textContent = queue.queue_size || 0;
+  $("index-queue-lag").textContent = queue.lag ?? "—";
+  $("index-stream-length").textContent = queue.length || 0;
+  $("index-dead-letters").textContent = queue.dead_letters || 0;
   $("index-meta").textContent = `Модель: ${data.model_name || "—"} · размерность: ${data.dimension ?? "—"} · последний эмбеддинг: ${fmt(data.last_embedding_at)}`;
 
   const types = Object.entries(data.by_source_type || {});
@@ -444,6 +466,20 @@ function renderHealth(data) {
     .map(([label, value]) => `<tr><td>${label}</td><td class="muted">${fmt(value)}</td></tr>`)
     .join("");
 
+  const workers = data.workers || [];
+  $("health-workers-body").innerHTML = workers.length
+    ? workers
+        .map(
+          (w) => `<tr>
+            <td>${escapeHtml(w.name)}</td>
+            <td class="mono">${escapeHtml(w.group)}</td>
+            <td>${w.consumers ?? "—"}</td>
+            <td>${w.available ? '<span class="badge done">жив</span>' : '<span class="badge failed">нет</span>'}</td>
+          </tr>`
+        )
+        .join("")
+    : '<tr><td colspan="4" class="muted">нет данных</td></tr>';
+
   const settings = data.settings || {};
   $("health-settings").innerHTML = `
     <dt>Модель</dt><dd class="mono">${escapeHtml(settings.embedding_model || "—")}</dd>
@@ -471,6 +507,7 @@ function renderDlq(items) {
       (e) => `
     <tr>
       <td class="mono">${escapeHtml(e.message_id)}</td>
+      <td class="mono">${escapeHtml(e.dead_stream || "—")}</td>
       <td>${escapeHtml(e.task || "—")}</td>
       <td class="mono">${escapeHtml(e.job_id || "—")}</td>
       <td>${e.session_id ?? "—"}</td>
@@ -483,7 +520,10 @@ function renderDlq(items) {
 
 async function loadDlq() {
   try {
-    const items = await getJSON("/api/v1/admin/dlq?limit=100");
+    const p = new URLSearchParams();
+    if (state.dlq.stream) p.set("stream", state.dlq.stream);
+    p.set("limit", "100");
+    const items = await getJSON("/api/v1/admin/dlq?" + p.toString());
     renderDlq(items);
   } catch (err) {
     showError("Не удалось загрузить DLQ: " + err.message);
@@ -689,6 +729,7 @@ async function refresh() {
     await loadOverview();
     if (state.diagnostic === "jobs") await loadJobs();
     else if (state.diagnostic === "dlq") await loadDlq();
+    else if (state.diagnostic === "streams") await loadStreams();
     else if (state.diagnostic === "index") await loadIndex();
     else if (state.diagnostic === "chunks") await loadChunksTab();
     else if (state.diagnostic === "health") await loadHealth();
@@ -728,6 +769,14 @@ function init() {
   $("jobs-next").addEventListener("click", () => {
     state.jobs.offset += state.jobs.limit;
     loadJobs();
+  });
+  $("dlq-apply").addEventListener("click", () => {
+    state.dlq.stream = $("dlq-stream").value;
+    loadDlq();
+  });
+  $("dlq-stream").addEventListener("change", () => {
+    state.dlq.stream = $("dlq-stream").value;
+    loadDlq();
   });
   $("u-apply").addEventListener("click", () => {
     state.users.search = $("u-search").value;

@@ -181,6 +181,11 @@ async def test_admin_debug_insights(monkeypatch) -> None:
         assert empty_summary.status == "empty"
         assert summary.courses_without_embeddings >= 1
         assert summary.courses_without_chunks >= 1
+        assert summary.queue.available is True
+        assert summary.queue.length >= 0
+        assert summary.queue.queue_size == (summary.queue.pending or 0) + (
+            summary.queue.lag or 0
+        )
 
         health = await admin_router.admin_health(container)  # type: ignore[arg-type]
         assert health.dependencies["postgres"] == "ok"
@@ -189,6 +194,7 @@ async def test_admin_debug_insights(monkeypatch) -> None:
         assert health.status == "ok"
         assert health.ollama_model_available is True
         assert health.settings.embedding_dimension == settings.embedding_dimension
+        assert {worker.name for worker in health.workers} == {"chat", "indexer", "cron"}
     finally:
         async with session_factory() as session:
             if chunk_ids:

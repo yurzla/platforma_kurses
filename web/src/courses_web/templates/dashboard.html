@@ -81,26 +81,38 @@
 
   <section class="panel diagnostic-panel hidden" id="diagnostic-dlq">
     <h2>Dead Letter Queue</h2>
-    <p class="muted">«Очередь ошибок»: задания, которые не удалось обработать после попыток. Нужна разработчику, чтобы найти и повторно обработать проблему.</p>
+    <p class="muted">«Очередь ошибок»: задания, которые не удалось обработать. Показывает ошибки чата, индексации материалов и cron-задач. Нужна разработчику, чтобы найти и повторно обработать проблему.</p>
+    <form class="filters" id="dlq-filters" onsubmit="return false;">
+      <label class="f-status">Очередь
+        <select id="dlq-stream">
+          <option value="">все</option>
+          <option value="rag.dead">rag.dead — чат</option>
+          <option value="rag.index.dead">rag.index.dead — индексация</option>
+          <option value="rag.cron.dead">rag.cron.dead — cron</option>
+        </select>
+      </label>
+      <button id="dlq-apply" class="btn">Применить</button>
+    </form>
     <div class="table-wrap">
       <table>
         <thead>
-          <tr><th>Message ID</th><th>Task</th><th>Job ID</th><th>Session</th><th>Error</th><th>Source</th></tr>
+          <tr><th>Message ID</th><th>Очередь</th><th>Task</th><th>Job ID</th><th>Session</th><th>Error</th><th>Source</th></tr>
         </thead>
-        <tbody id="dlq-body"><tr><td colspan="6" class="muted">загрузка…</td></tr></tbody>
+        <tbody id="dlq-body"><tr><td colspan="7" class="muted">загрузка…</td></tr></tbody>
       </table>
     </div>
   </section>
 
   <section class="panel diagnostic-panel hidden" id="diagnostic-streams">
     <h2>Redis Streams</h2>
-    <p class="muted">Технические очереди Redis, по которым сервисы передают задания друг другу. Показывают длину очереди, ожидающие сообщения и отставание обработчиков.</p>
+    <p class="muted">Технические очереди Redis, по которым сервисы передают задания друг другу. Показывают длину очереди, ожидающие сообщения, отставание обработчиков и время последнего сообщения. Строки с pending или lag подсвечиваются.</p>
+    <p class="muted"><strong>Length (всего)</strong> включает уже обработанные и подтверждённые сообщения, которые остаются в стриме до тримминга; реальную работу очереди показывают Pending и Lag.</p>
     <div class="table-wrap">
       <table>
         <thead>
-          <tr><th>Stream</th><th>Группа</th><th>Length</th><th>Pending</th><th>Lag</th><th>Consumers</th></tr>
+          <tr><th>Stream</th><th>Тип</th><th>Группа</th><th>Length (всего)</th><th>Pending</th><th>Lag</th><th>Consumers</th><th>Последнее сообщение</th><th>Детали консьюмеров</th></tr>
         </thead>
-        <tbody id="streams-body"><tr><td colspan="6" class="muted">загрузка…</td></tr></tbody>
+        <tbody id="streams-body"><tr><td colspan="9" class="muted">загрузка…</td></tr></tbody>
       </table>
     </div>
   </section>
@@ -114,7 +126,12 @@
       <div class="card"><span class="card-value" id="index-without-embedding">0</span><span class="card-label">чанков без эмбеддинга</span></div>
       <div class="card"><span class="card-value" id="index-courses-without-embeddings">0</span><span class="card-label">курсов без эмбеддингов</span></div>
       <div class="card"><span class="card-value" id="index-courses-without-chunks">0</span><span class="card-label">курсов без чанков</span></div>
+      <div class="card" title="pending + lag: сообщения, которые ещё не обработаны"><span class="card-value" id="index-queue-size">0</span><span class="card-label">в очереди на индексацию</span></div>
+      <div class="card" title="lag: сколько сообщений группа ещё не доставила обработчику"><span class="card-value" id="index-queue-lag">0</span><span class="card-label">отставание индексатора</span></div>
+      <div class="card" title="length: все сообщения в стриме, включая уже обработанные"><span class="card-value" id="index-stream-length">0</span><span class="card-label">сообщений в стриме</span></div>
+      <div class="card" title="записи в rag.index.dead"><span class="card-value" id="index-dead-letters">0</span><span class="card-label">ошибок индексации</span></div>
     </section>
+    <p class="muted">«В очереди» считает только необработанные сообщения (pending + lag); «сообщений в стриме» включает уже обработанные и подтверждённые, которые остаются в Redis до тримминга.</p>
     <p class="muted" id="index-meta">—</p>
 
     <div class="index-stack">
@@ -192,6 +209,13 @@
           <table>
             <thead><tr><th>Метка</th><th>Время</th></tr></thead>
             <tbody id="health-jobs-body"><tr><td colspan="2" class="muted">загрузка…</td></tr></tbody>
+          </table>
+        </div>
+        <h3>Воркеры</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Воркер</th><th>Группа</th><th>Consumers</th><th>Состояние</th></tr></thead>
+            <tbody id="health-workers-body"><tr><td colspan="4" class="muted">загрузка…</td></tr></tbody>
           </table>
         </div>
       </div>

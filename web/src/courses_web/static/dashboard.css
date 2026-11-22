@@ -187,6 +187,8 @@ table { width: 100%; border-collapse: collapse; }
 th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
 th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .4px; }
 tbody tr:hover { background: var(--panel-2); }
+tbody tr.warn { background: color-mix(in srgb, var(--warn) 10%, transparent); }
+tbody tr.warn:hover { background: color-mix(in srgb, var(--warn) 16%, transparent); }
 
 .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
 .muted { color: var(--muted); }

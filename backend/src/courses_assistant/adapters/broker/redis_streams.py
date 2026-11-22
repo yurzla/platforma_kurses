@@ -3,11 +3,21 @@
 from __future__ import annotations
 
 import json
+from datetime import UTC, datetime
 from typing import Any
 
 import redis.asyncio as redis
 
 from courses_assistant.application.ports import MessageBroker
+
+
+def _stream_id_to_datetime(stream_id: str) -> datetime | None:
+    """Redis Streams id имеет вид ``<milliseconds>-<sequence>``."""
+    milliseconds = stream_id.split("-", 1)[0]
+    try:
+        return datetime.fromtimestamp(int(milliseconds) / 1000, tz=UTC)
+    except (TypeError, ValueError):
+        return None
 
 
 class RedisStreamsBroker(MessageBroker):
@@ -91,21 +101,58 @@ class RedisStreamsBroker(MessageBroker):
         stats: dict = {
             "stream": stream,
             "group": group,
-            "length": await self._client.xlen(stream),
+            "exists": False,
+            "length": 0,
             "pending": None,
             "lag": None,
             "consumers": None,
+            "last_generated_id": None,
+            "last_delivered_id": None,
+            "entries_read": None,
+            "last_message_at": None,
+            "consumer_details": [],
         }
+        try:
+            if not await self._client.exists(stream):
+                return stats
+            stats["exists"] = True
+            info = await self._client.xinfo_stream(stream)
+        except redis.ResponseError:
+            return stats
+
+        stats["length"] = int(info.get("length", 0))
+        last_generated = info.get("last-generated-id")
+        if last_generated:
+            stats["last_generated_id"] = str(last_generated)
+            stats["last_message_at"] = _stream_id_to_datetime(str(last_generated))
+
         try:
             groups = await self._client.xinfo_groups(stream)
         except redis.ResponseError:
             return stats
-        for info in groups:
-            if info.get("name") == group:
-                stats["pending"] = info.get("pending")
-                stats["lag"] = info.get("lag")
-                stats["consumers"] = info.get("consumers")
-                break
+        group_info = next((item for item in groups if item.get("name") == group), None)
+        if group_info is None:
+            return stats
+
+        stats["pending"] = group_info.get("pending")
+        stats["lag"] = group_info.get("lag")
+        stats["consumers"] = group_info.get("consumers")
+        stats["entries_read"] = group_info.get("entries-read")
+        last_delivered = group_info.get("last-delivered-id")
+        stats["last_delivered_id"] = str(last_delivered) if last_delivered else None
+
+        try:
+            consumers = await self._client.xinfo_consumers(stream, group)
+        except redis.ResponseError:
+            return stats
+        stats["consumer_details"] = [
+            {
+                "name": str(consumer.get("name", "")),
+                "pending": int(consumer.get("pending", 0)),
+                "idle": int(consumer.get("idle", 0)),
+            }
+            for consumer in consumers
+        ]
         return stats
 
     async def ping(self) -> bool:

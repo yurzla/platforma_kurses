@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import structlog
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import delete, func, or_, select, text, update
 
@@ -55,6 +56,7 @@ from courses_assistant.entrypoints.api.schemas import (
     ChunkListResponse,
     DlqEntry,
     IndexCourseSummary,
+    IndexQueueState,
     IndexSummary,
     JobListItem,
     JobListResponse,
@@ -65,6 +67,7 @@ from courses_assistant.entrypoints.api.schemas import (
     StreamStat,
     UserListItem,
     UserListResponse,
+    WorkerLiveness,
 )
 
 router = APIRouter(
@@ -72,6 +75,8 @@ router = APIRouter(
     tags=["admin"],
     dependencies=[Depends(require_admin)],
 )
+
+logger = structlog.get_logger(__name__)
 
 
 async def _admin_course_item(session, course: CourseORM) -> AdminCourseListItem:
@@ -180,17 +185,23 @@ async def _delete_course_tree(session, course_id: int) -> None:
     await session.execute(delete(CourseORM).where(CourseORM.id == course_id))
 
 
-def _stream_targets(container: Container) -> list[tuple[str, str]]:
+def _stream_targets(container: Container) -> list[tuple[str, str, str]]:
     s = container.settings
     return [
-        (s.stream_requests, s.consumer_group),
-        (s.stream_index, s.index_group),
-        (s.stream_cron, s.cron_group),
-        (s.stream_events, s.consumer_group),
-        (s.stream_dead, s.consumer_group),
-        (s.index_dlq, s.index_group),
-        (s.cron_dlq, s.cron_group),
+        (s.stream_requests, s.consumer_group, "processing"),
+        (s.stream_index, s.index_group, "processing"),
+        (s.stream_cron, s.cron_group, "processing"),
+        (s.stream_events, s.consumer_group, "processing"),
+        (s.stream_dead, s.consumer_group, "dead"),
+        (s.index_dlq, s.index_group, "dead"),
+        (s.cron_dlq, s.cron_group, "dead"),
     ]
+
+
+def _message_order(message_id: str) -> int:
+    """Порядок по времени сообщения из Redis Streams id (<ms>-<seq>)."""
+    prefix = message_id.split("-", 1)[0]
+    return int(prefix) if prefix.isdigit() else 0
 
 
 def _embedding_model_subquery():
@@ -320,12 +331,19 @@ async def job_detail(
 @router.get("/dlq", response_model=list[DlqEntry])
 async def dlq(
     limit: int = Query(default=50, ge=1, le=200),
+    stream: str | None = Query(default=None, max_length=100),
     container: Container = Depends(get_container),
 ) -> list[DlqEntry]:
     settings = container.settings
-    entries = await dlq_entries(container.broker, settings.stream_dead, limit=limit)
-    entries += await dlq_entries(container.broker, settings.cron_dlq, limit=limit)
-    return [DlqEntry(**entry) for entry in entries]
+    dead_streams = [settings.stream_dead, settings.index_dlq, settings.cron_dlq]
+    if stream:
+        dead_streams = [dead for dead in dead_streams if dead == stream]
+    entries: list[dict] = []
+    for dead_stream in dead_streams:
+        for entry in await dlq_entries(container.broker, dead_stream, limit=limit):
+            entries.append({"dead_stream": dead_stream, **entry})
+    entries.sort(key=lambda entry: _message_order(str(entry.get("message_id", ""))), reverse=True)
+    return [DlqEntry(**entry) for entry in entries[:limit]]
 
 
 @router.get("/streams", response_model=list[StreamStat])
@@ -480,6 +498,32 @@ async def index_summary(container: Container = Depends(get_container)) -> IndexS
             await session.execute(select(CourseORM.id, CourseORM.title).order_by(CourseORM.id))
         ).all()
 
+    queue = IndexQueueState()
+    try:
+        if await container.broker.ping():
+            queue_stats = await container.broker.stream_stats(
+                settings.stream_index, settings.index_group
+            )
+            dead_stats = await container.broker.stream_stats(
+                settings.index_dlq, settings.index_group
+            )
+            queue = IndexQueueState(
+                exists=bool(queue_stats.get("exists")),
+                length=int(queue_stats.get("length") or 0),
+                pending=queue_stats.get("pending"),
+                lag=queue_stats.get("lag"),
+                queue_size=int(queue_stats.get("pending") or 0)
+                + int(queue_stats.get("lag") or 0),
+                consumers=queue_stats.get("consumers"),
+                dead_letters=int(dead_stats.get("length") or 0),
+                available=True,
+            )
+        else:
+            queue = IndexQueueState(available=False)
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("index_queue_stats_failed", error=str(exc))
+        queue = IndexQueueState(available=False)
+
     courses: list[IndexCourseSummary] = []
     for raw_course_id, title in course_rows:
         course_id = int(raw_course_id)
@@ -520,6 +564,7 @@ async def index_summary(container: Container = Depends(get_container)) -> IndexS
         model_name=settings.embedding_model,
         dimension=settings.embedding_dimension,
         last_embedding_at=last_embedding_at,
+        queue=queue,
         courses=courses,
     )
 
@@ -566,12 +611,37 @@ async def admin_health(container: Container = Depends(get_container)) -> AdminHe
                 oldest_queued_at=row[2],
             )
 
+    workers: list[WorkerLiveness] = []
+    redis_available = await container.broker.ping()
+    for name, stream, group in (
+        ("chat", settings.stream_requests, settings.consumer_group),
+        ("indexer", settings.stream_index, settings.index_group),
+        ("cron", settings.stream_cron, settings.cron_group),
+    ):
+        consumers: int | None = None
+        if redis_available:
+            try:
+                stats = await container.broker.stream_stats(stream, group)
+                consumers = stats.get("consumers")
+            except Exception as exc:  # noqa: BLE001
+                logger.warning("worker_liveness_failed", group=group, error=str(exc))
+        workers.append(
+            WorkerLiveness(
+                name=name,
+                stream=stream,
+                group=group,
+                consumers=consumers,
+                available=bool(consumers),
+            )
+        )
+
     return AdminHealth(
         status="ok" if all(value == "ok" for value in dependencies.values()) else "degraded",
         dependencies=dependencies,
         ollama_model=settings.embedding_model,
         ollama_model_available=ollama_available,
         jobs=timeline,
+        workers=workers,
         settings=RetrievalSettings(
             embedding_model=settings.embedding_model,
             embedding_dimension=settings.embedding_dimension,

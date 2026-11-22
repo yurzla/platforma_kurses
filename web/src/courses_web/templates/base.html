@@ -23,6 +23,15 @@
 </head>
 <body>
   {% block body %}{% endblock %}
+  <footer class="site-footer">
+    <div class="site-footer-brand">
+      <span>Courses Assistant</span>
+      <i class="bi bi-robot" aria-hidden="true"></i>
+    </div>
+    <p class="site-footer-text">
+      Учебный проект, созданный в рамках прохождения курса. © {{ current_year() }}
+    </p>
+  </footer>
   {% if me and me.role and assistant_mode %}
   <div class="assistant" data-mode="{{ assistant_mode }}" data-course-id="{{ course_id or '' }}">
     <button type="button" id="assistant-toggle" class="assistant-fab" aria-expanded="false" aria-controls="assistant-drawer" aria-label="Ассистент" title="Ассистент">

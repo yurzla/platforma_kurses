@@ -1,6 +1,25 @@
 .brand-link { color: inherit; text-decoration: none; }
 
-main { padding: 24px; max-width: 1040px; margin: 0 auto; }
+body { min-height: 100vh; display: flex; flex-direction: column; }
+
+main { padding: 24px; max-width: 1040px; margin: 0 auto; flex: 1; width: 100%; }
+
+.login-wrap { flex: 1; min-height: auto; }
+
+.site-footer {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 8px 16px; padding: 26px 22px; margin-top: 24px;
+  background: var(--panel); border-top: 1px solid var(--border);
+  color: var(--muted); font-size: 13px;
+}
+.site-footer-brand {
+  font-weight: 700; letter-spacing: .3px; font-size: 14px; color: var(--text);
+}
+.site-footer-brand .bi { color: var(--accent); font-size: 1.1em; margin-left: 2px; }
+.site-footer-text { margin: 0; }
+@media (max-width: 700px) {
+  .site-footer { flex-direction: column; align-items: flex-start; }
+}
 
 .page-title { margin: 8px 0 16px; font-size: 24px; }
 
@@ -266,6 +285,15 @@ main { padding: 24px; max-width: 1040px; margin: 0 auto; }
 }
 .chat-msg.user { align-self: flex-end; background: var(--accent); color: #fff; }
 .chat-msg.assistant { align-self: flex-start; background: var(--panel-2); }
+.chat-msg.chat-pending { display: inline-flex; align-items: center; gap: 8px; }
+.chat-spinner {
+  flex: 0 0 auto; width: 16px; height: 16px;
+  border: 2px solid color-mix(in srgb, currentColor 25%, transparent);
+  border-top-color: currentColor; border-radius: 50%;
+  animation: chat-spin .8s linear infinite;
+}
+@keyframes chat-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .chat-spinner { animation-duration: 2s; } }
 .chat-msg .chat-code {
   margin: 8px 0; padding: 10px 12px; background: var(--bg);
   border: 1px solid var(--border); border-radius: 8px;

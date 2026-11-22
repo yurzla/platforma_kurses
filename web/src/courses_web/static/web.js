@@ -202,6 +202,24 @@
       return div;
     }
 
+    function appendPending() {
+      var div = document.createElement("div");
+      div.className = "chat-msg assistant chat-pending";
+      var spinner = document.createElement("span");
+      spinner.className = "chat-spinner";
+      spinner.setAttribute("aria-hidden", "true");
+      var label = document.createElement("span");
+      label.className = "chat-pending-text";
+      label.setAttribute("role", "status");
+      label.textContent = "Ассистент отвечает…";
+      div.appendChild(spinner);
+      div.appendChild(label);
+      log.appendChild(div);
+      mountExportLinks();
+      log.scrollTop = log.scrollHeight;
+      return div;
+    }
+
     function clearLog() {
       log.innerHTML = "";
     }
@@ -342,7 +360,7 @@
       chatInput.value = "";
       showChat();
       append("user", question);
-      var placeholder = append("assistant", "Ассистент отвечает…");
+      var placeholder = appendPending();
       try {
         var sid = await ensureSession();
         if (!sid) {

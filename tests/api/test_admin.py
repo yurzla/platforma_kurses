@@ -96,15 +96,74 @@ async def test_dlq_lists_entries() -> None:
     await broker.move_to_dead(
         "rag.requests", "rag.dead", {"job_id": "j1", "session_id": 5}, "boom"
     )
+    await broker.move_to_dead(
+        "rag.index.requests", "rag.index.dead", {"course_id": 7}, "ollama down"
+    )
     async with ac:
         await login(ac, "admin@example.com", "s3cret")
         response = await ac.get("/api/v1/admin/dlq")
     assert response.status_code == 200
     entries = response.json()
+    assert len(entries) == 2
+    by_stream = {entry["dead_stream"]: entry for entry in entries}
+    assert by_stream["rag.dead"]["job_id"] == "j1"
+    assert by_stream["rag.dead"]["error"] == "boom"
+    assert by_stream["rag.dead"]["source_stream"] == "rag.requests"
+    assert by_stream["rag.index.dead"]["course_id"] == 7
+    assert by_stream["rag.index.dead"]["source_stream"] == "rag.index.requests"
+
+
+async def test_dlq_filtered_by_dead_stream() -> None:
+    store = FakeStore()
+    seed_admin(store)
+    ac, broker = make_app(store)
+    await broker.move_to_dead("rag.requests", "rag.dead", {"job_id": "j1"}, "boom")
+    await broker.move_to_dead(
+        "rag.index.requests", "rag.index.dead", {"course_id": 7}, "ollama down"
+    )
+    async with ac:
+        await login(ac, "admin@example.com", "s3cret")
+        response = await ac.get("/api/v1/admin/dlq", params={"stream": "rag.index.dead"})
+    assert response.status_code == 200
+    entries = response.json()
     assert len(entries) == 1
-    assert entries[0]["job_id"] == "j1"
-    assert entries[0]["error"] == "boom"
-    assert entries[0]["source_stream"] == "rag.requests"
+    assert entries[0]["dead_stream"] == "rag.index.dead"
+    assert entries[0]["course_id"] == 7
+
+
+async def test_streams_include_kind_and_detail() -> None:
+    store = FakeStore()
+    seed_admin(store)
+    ac, _ = make_app(store)
+    async with ac:
+        await login(ac, "admin@example.com", "s3cret")
+        response = await ac.get("/api/v1/admin/streams")
+    assert response.status_code == 200
+    streams = response.json()
+    by_stream = {stream["stream"]: stream for stream in streams}
+    assert by_stream["rag.index.requests"]["kind"] == "processing"
+    assert by_stream["rag.index.dead"]["kind"] == "dead"
+    assert by_stream["rag.index.requests"]["consumer_details"] == [
+        {"name": "fake-1", "pending": 0, "idle": 0}
+    ]
+
+
+async def test_health_reports_workers(monkeypatch) -> None:
+    store = FakeStore()
+    seed_admin(store)
+
+    async def fake_check(base_url: str, model: str, timeout: float = 3.0) -> tuple[bool, None]:
+        return True, None
+
+    monkeypatch.setattr(admin_router, "check_ollama_model", fake_check)
+    ac, _ = make_app(store)
+    async with ac:
+        await login(ac, "admin@example.com", "s3cret")
+        response = await ac.get("/api/v1/admin/health")
+    assert response.status_code == 200
+    workers = {worker["name"]: worker for worker in response.json()["workers"]}
+    assert set(workers) == {"chat", "indexer", "cron"}
+    assert all(worker["available"] for worker in workers.values())
 
 
 async def test_anonymous_denied() -> None:

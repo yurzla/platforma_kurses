@@ -70,7 +70,12 @@ async def dlq_entries(
 
 async def stream_overview(
     broker: MessageBroker,
-    targets: list[tuple[str, str]],
+    targets: list[tuple[str, str, str]],
 ) -> list[dict]:
-    """targets — список (stream, group)."""
-    return [await broker.stream_stats(stream, group) for stream, group in targets]
+    """targets — список (stream, group, kind)."""
+    result = []
+    for stream, group, kind in targets:
+        stats = await broker.stream_stats(stream, group)
+        stats["kind"] = kind
+        result.append(stats)
+    return result

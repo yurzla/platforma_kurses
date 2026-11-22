@@ -366,7 +366,12 @@ class MessageBroker(ABC):
 
     @abstractmethod
     async def stream_stats(self, stream: str, group: str) -> dict:
-        """Возвращает метрики стрима: length, pending, lag, consumers."""
+        """Возвращает метрики стрима.
+
+        Ключи: ``exists``, ``length``, ``pending``, ``lag``, ``consumers``,
+        ``last_generated_id``, ``last_delivered_id``, ``entries_read``,
+        ``last_message_at`` и ``consumer_details`` (name/pending/idle).
+        """
 
     @abstractmethod
     async def ping(self) -> bool:

@@ -123,7 +123,7 @@ Web-сервис: `http://localhost:8000` — обучение, кабинет �
   названия и описания завершённых студентом курсов уточняют такой подбор, но сами
   завершённые курсы повторно не рекомендуются (курсы в процессе остаются кандидатами);
   на странице курса/шага история и ответы ограничены текущим курсом. Во время
-  генерации ответа панель показывает «Ассистент отвечает…».
+  генерации ответа панель показывает вращающийся индикатор и надпись «Ассистент отвечает…».
 - **Страница шага**: плеер для YouTube, VK Video и прямых mp4/webm/ogg; тело шага
   рендерится как Markdown с сохранением переносов строк, унаследованный HTML из
   импорта отображается без изменений. Поддерживаются шаги «материал», «тест с
@@ -207,12 +207,12 @@ Web-сервис: `http://localhost:8000` — обучение, кабинет �
 | GET | `/api/v1/admin/overview` | счётчики job по статусам + метрики стримов |
 | GET | `/api/v1/admin/jobs` | список job-ов (`status`, `session_id`, `search`, `limit`, `offset`) |
 | GET | `/api/v1/admin/jobs/{id}` | детали job |
-| GET | `/api/v1/admin/dlq` | записи DLQ (`rag.dead`, `rag.index.dead`, `rag.cron.dead`) |
-| GET | `/api/v1/admin/streams` | метрики Redis Streams |
+| GET | `/api/v1/admin/dlq` | записи DLQ (`rag.dead`, `rag.index.dead`, `rag.cron.dead`); фильтр `stream`, поле `dead_stream` |
+| GET | `/api/v1/admin/streams` | метрики Redis Streams: тип, length, pending, lag, консьюмеры, последнее сообщение |
 | GET | `/api/v1/admin/chunks` | чанки индекса: `course_id`, `source_type`, `search`, `limit`, `offset` |
 | GET | `/api/v1/admin/chunks/{id}` | чанк: полный текст и метаданные эмбеддинга |
-| GET | `/api/v1/admin/index` | сводка RAG-индекса: чанки, эмбеддинги, типы и курсы |
-| GET | `/api/v1/admin/health` | состояние Postgres/Redis/Ollama и последние метки job-ов |
+| GET | `/api/v1/admin/index` | сводка RAG-индекса: чанки, эмбеддинги, типы, курсы и очередь индексации |
+| GET | `/api/v1/admin/health` | состояние Postgres/Redis/Ollama, последние метки job-ов и живость воркеров |
 | GET | `/api/v1/admin/users` | список пользователей (`search`, `limit`, `offset`) |
 | POST | `/api/v1/admin/users` | создать пользователя |
 | PATCH | `/api/v1/admin/users/{id}` | роль, email, имя или пароль пользователя |

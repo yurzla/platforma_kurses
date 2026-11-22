@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from datetime import UTC, datetime
 from types import SimpleNamespace
 
@@ -76,6 +77,29 @@ async def test_login_page_single_form() -> None:
     assert "assistant-toggle" not in response.text
     assert "/static/web.css?v=" in response.text
     assert "/static/web.js?v=" not in response.text
+
+
+async def test_site_footer_on_pages() -> None:
+    store = FakeStore()
+    seed_student_and_course(store)
+    web, api = build_stack(store)
+    current_year = str(datetime.now(UTC).year)
+    async with web, api:
+        login_page = await web.get("/login")
+        assert login_page.status_code == 200
+        assert 'class="site-footer"' in login_page.text
+        assert "Courses Assistant" in login_page.text
+        assert "bi bi-robot" in login_page.text
+        assert "Учебный проект, созданный в рамках прохождения курса" in login_page.text
+        assert current_year in login_page.text
+        footer_html = login_page.text.split('class="site-footer"', 1)[1].split("</footer>", 1)[0]
+        assert footer_html.index("Courses Assistant") < footer_html.index("bi bi-robot")
+
+        await web.post("/login", data={"email": "s@example.com", "password": "pw"})
+        courses = await web.get("/courses")
+    assert courses.status_code == 200
+    assert 'class="site-footer"' in courses.text
+    assert current_year in courses.text
 
 
 async def test_register_page_and_flow() -> None:
@@ -471,6 +495,12 @@ async def test_admin_panel_flow() -> None:
         assert 'class="index-stack"' in dashboard.text
         assert 'id="index-courses-without-embeddings"' in dashboard.text
         assert 'id="index-courses-without-chunks"' in dashboard.text
+        assert 'id="index-queue-size"' in dashboard.text
+        assert 'id="index-stream-length"' in dashboard.text
+        assert 'id="index-dead-letters"' in dashboard.text
+        assert "Length (всего)" in dashboard.text
+        assert 'id="dlq-stream"' in dashboard.text
+        assert 'id="health-workers-body"' in dashboard.text
         assert 'data-diagnostic="chunks"' in dashboard.text
         assert 'id="diagnostic-chunks"' in dashboard.text
         assert 'id="chunks-body"' in dashboard.text
@@ -498,7 +528,8 @@ async def test_static_assets_served() -> None:
     async with web, api:
         assert (await web.get("/static/theme.js")).status_code == 200
         assert (await web.get("/static/dashboard.css")).status_code == 200
-        assert (await web.get("/static/web.js")).status_code == 200
+        webjs = await web.get("/static/web.js")
+        assert webjs.status_code == 200
         css = await web.get("/static/web.css")
         dashboard = await web.get("/static/dashboard.css")
         js = await web.get("/static/dashboard.js")
@@ -510,6 +541,24 @@ async def test_static_assets_served() -> None:
     assert ".pagination" in css.text
     assert ".step-form .choice-editor" in css.text
     assert "grid-template-columns: auto 1fr" in css.text
+    pending_rule = re.search(r"\.chat-msg\.chat-pending \{([^}]*)\}", css.text)
+    assert pending_rule is not None
+    assert "align-items: center" in pending_rule.group(1)
+    assert "animation: chat-spin" in css.text
+    assert "@keyframes chat-spin" in css.text
+    assert ".site-footer-brand" in css.text
+    brand_rule = re.search(r"\.site-footer-brand \{([^}]*)\}", css.text)
+    assert brand_rule is not None
+    assert "font-size: 14px" in brand_rule.group(1)
+    assert "font-weight: 700" in brand_rule.group(1)
+    brand_icon_rule = re.search(r"\.site-footer-brand \.bi \{([^}]*)\}", css.text)
+    assert brand_icon_rule is not None
+    assert "margin-left: 2px" in brand_icon_rule.group(1)
+    footer_rule = re.search(r"\.site-footer \{([^}]*)\}", css.text)
+    assert footer_rule is not None
+    assert "padding: 26px 22px" in footer_rule.group(1)
+    assert "chat-spinner" in webjs.text
+    assert "appendPending" in webjs.text
     assert dashboard.status_code == 200
     assert "text-decoration: none" in dashboard.text
     assert ".modal-backdrop" in dashboard.text

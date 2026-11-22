@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import UTC, datetime
 from pathlib import Path
 
 from fastapi.templating import Jinja2Templates
@@ -23,6 +24,12 @@ def static_url(path: str) -> str:
     return f"/static/{path}?v={version}"
 
 
+def current_year() -> int:
+    """Текущий год для футера (вычисляется при рендере)."""
+    return datetime.now(UTC).year
+
+
 templates.env.globals["static_url"] = static_url
+templates.env.globals["current_year"] = current_year
 templates.env.filters["markdown"] = render_step_body
 

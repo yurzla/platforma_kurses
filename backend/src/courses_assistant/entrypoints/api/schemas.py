@@ -398,15 +398,29 @@ class DlqEntry(BaseModel):
     session_id: int | None = None
     error: str | None = None
     source_stream: str | None = None
+    dead_stream: str | None = None
+
+
+class ConsumerStat(BaseModel):
+    name: str
+    pending: int = 0
+    idle: int = 0
 
 
 class StreamStat(BaseModel):
     stream: str
     group: str
+    kind: str = "processing"
+    exists: bool = True
     length: int
     pending: int | None = None
     lag: int | None = None
     consumers: int | None = None
+    last_generated_id: str | None = None
+    last_delivered_id: str | None = None
+    entries_read: int | None = None
+    last_message_at: datetime | None = None
+    consumer_details: list[ConsumerStat] = Field(default_factory=list)
 
 
 class OverviewResponse(BaseModel):
@@ -453,6 +467,17 @@ class IndexCourseSummary(BaseModel):
     status: str = "ok"
 
 
+class IndexQueueState(BaseModel):
+    exists: bool = False
+    length: int = 0
+    pending: int | None = None
+    lag: int | None = None
+    queue_size: int = 0
+    consumers: int | None = None
+    dead_letters: int = 0
+    available: bool = True
+
+
 class IndexSummary(BaseModel):
     total_chunks: int = 0
     total_embeddings: int = 0
@@ -463,6 +488,7 @@ class IndexSummary(BaseModel):
     model_name: str | None = None
     dimension: int | None = None
     last_embedding_at: datetime | None = None
+    queue: IndexQueueState = Field(default_factory=IndexQueueState)
     courses: list[IndexCourseSummary] = Field(default_factory=list)
 
 
@@ -478,10 +504,19 @@ class RetrievalSettings(BaseModel):
     retrieval_top_k: int
 
 
+class WorkerLiveness(BaseModel):
+    name: str
+    stream: str
+    group: str
+    consumers: int | None = None
+    available: bool = False
+
+
 class AdminHealth(BaseModel):
     status: str
     dependencies: dict[str, str] = Field(default_factory=dict)
     ollama_model: str
     ollama_model_available: bool = False
     jobs: JobTimeline = Field(default_factory=JobTimeline)
+    workers: list[WorkerLiveness] = Field(default_factory=list)
     settings: RetrievalSettings
