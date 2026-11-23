@@ -62,8 +62,10 @@ uv run python -m courses_assistant.scripts.renumber_steps       # позиции
   переключатель Админ/Студент на `/login`. Web имеет свой `courses_web/{config,middleware}.py` и
   НЕ импортирует `courses_assistant`.
 - Web-тесты: `tests/web/test_web.py` (web-стек поверх API через `httpx.ASGITransport`).
-- Аутентификация (API): единый вход по `users` (`domain/security.py`, scrypt); права — по роли
-  (`student`/`teacher`/`admin`), `require_user`/`require_admin` в `api/dependencies.py`. Токены —
+- Аутентификация (API): единый вход по `users` (`domain/security.py`, обратимое шифрование
+  паролей Fernet ключом `PASSWORD_KEY`; пусто — операции с паролями падают с понятной ошибкой);
+  права — по роли (`student`/`teacher`/`admin`), `require_user`/`require_admin` в
+  `api/dependencies.py`. Токены —
   JWT: access (`pyjwt`, HS256) + opaque refresh, оба в httpOnly cookie; refresh хранится в таблице
   `refresh_tokens` и ротируется на `POST /api/v1/auth/refresh`; `get_current_user` принимает access
   из cookie или `Authorization: Bearer`. Регистрация (`/register`) даёт только `student`/`teacher`,
@@ -72,7 +74,8 @@ uv run python -m courses_assistant.scripts.renumber_steps       # позиции
 ## БД и миграции
 
 - Alembic: `backend/alembic/versions/` (baseline 14 таблиц → HNSW → jobs → updated_at index →
-  step_sources → refresh_tokens). Baseline не пересоздавать (в `_LATER_TABLES` исключены `jobs`,
+  step_sources → refresh_tokens → choice options → teacher courses → step video URL, до
+  `0009_step_video_url`). Baseline не пересоздавать (в `_LATER_TABLES` исключены `jobs`,
   `step_sources`, `refresh_tokens`).
 - Идемпотентный bootstrap: `uv run python -m courses_assistant.scripts.db_bootstrap`
   (stamp baseline при наличии дампа + upgrade).
@@ -116,6 +119,10 @@ openspec archive <name> -y                                   # синкает д
   сворачиваемыми группами, клик открывает/продолжает диалог; вопрос создаёт сессию без курса,
   ищет по всем курсам и в глобальном чате подмешивает в промпт каталог курсов (рекомендации
   только из каталога). На курсе/шаге история и ответы ограничены текущим курсом.
+- Рекомендации: `GET/PATCH /api/v1/preferences/me` хранят интересы, учебные цели и желаемый
+  уровень (блок «Обо мне» на `/my-courses`); подбор курсов идёт по эмбеддингам описаний
+  (`RECOMMENDATION_TOP_K`/`MARGIN`/`MIN_SCORE`/`DESCRIPTION_LIMIT`), завершённые курсы повторно
+  не предлагаются.
 - `GET /api/v1/courses` отдаёт конверт `{items,total,limit,offset}` (BREAKING: раньше массив);
   `enrolled`, `limit` (1..200, дефолт 50), `offset`; web-страницы `/courses` и `/my-courses` —
   по 10 на страницу с `?page=N` и клампингом за границы.

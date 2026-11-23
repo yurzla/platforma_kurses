@@ -56,7 +56,7 @@ backend/                          distribution courses-assistant
     entrypoints/    api (JSON), worker, indexer, cron, scheduler
     scripts/        db_bootstrap, stepik_dump, load_stepik, embed_chunks,
                     create_user, reset_passwords, import_step_sources,
-                    cleanup_empty_steps, renumber_steps
+                    cleanup_empty_steps, renumber_steps, fix_course_descriptions
   alembic/          baseline + HNSW + jobs + updated_at + step_sources +
                     refresh_tokens + choice options + teacher courses + video URL
                     (до 0009_step_video_url)
@@ -135,9 +135,11 @@ Web-сервис: `http://localhost:8000` — обучение, кабинет �
   редактирование курса, модулей, уроков и шагов inline-формами, публикация,
   удаление, варианты теста с отметкой правильных, правильный ответ для
   автопроверки, видео-ссылка и подсказка по Markdown.
-- **Администратор**: `/dashboard` («Админ панель») — вкладки Jobs / DLQ / Streams /
-  Индекс / Состояние / Пользователи / Курсы, фильтры, авто-обновление. На вкладке
-  Jobs клик по строке открывает детали задания: вопрос, ответ, ошибку, попытки,
+- **Администратор**: `/dashboard` («Админ панель») — три верхние вкладки
+  «Техническая диагностика», «Пользователи» и «Курсы». Внутри «Технической
+  диагностики» — под-вкладки Jobs, DLQ, Streams, Индекс, Чанки и Состояние с
+  фильтрами и авто-обновлением. На вкладке Jobs клик по строке открывает детали
+  задания: вопрос, ответ, ошибку, попытки,
   время и источники со ссылкой на текст чанка. Для ответов с рекомендациями
   источники показывают предложенные курсы и их score. Вкладка «Индекс» показывает
   количество чанков и эмбеддингов и разбивку по типам и курсам; сводка включает
@@ -221,9 +223,10 @@ Web-сервис: `http://localhost:8000` — обучение, кабинет �
 | PATCH | `/api/v1/admin/courses/{id}` | изменить курс |
 | DELETE | `/api/v1/admin/courses/{id}` | удалить курс |
 
-Web-страницы (порт 8000): `/login`, `/logout`, `/dashboard`, `/courses`,
-`/my-courses`, `/courses/{id}`, `/courses/{id}/steps/{step_id}`, `/teacher`,
-`/teacher/courses/{id}`, `/health`.
+Web-страницы (порт 8000): `/` (редирект на `/courses`), `/login`, `/logout`,
+`/dashboard`, `/courses`, `/my-courses`, `/courses/{id}`,
+`/courses/{id}/steps/{step_id}`, `/teacher`, `/teacher/courses/{id}`,
+`/assistant/history`, `/health`.
 
 ### Формат списка курсов (BREAKING)
 
@@ -265,6 +268,8 @@ uv run python -m courses_assistant.scripts.create_user \
     --email s@example.com --password secret --name "Студент"
 # сброс паролей всех пользователей (новые пароли — в локальный файл вне git):
 uv run python -m courses_assistant.scripts.reset_passwords
+# нормализация описаний курсов (HTML-сущности, пробелы):
+uv run python -m courses_assistant.scripts.fix_course_descriptions
 ```
 
 ## Разработка
@@ -315,3 +320,6 @@ uv run python -m courses_assistant.scripts.reset_passwords
 
 Планировщик/ретенция: `STREAM_CRON`, `CRON_INTERVAL_SECONDS`, `JOB_RETENTION_DAYS`,
 `REDIS_STREAM_MAXLEN`, `REDIS_STREAM_EVENTS_MAXLEN`.
+
+Рекомендации/retrieval: `RETRIEVAL_TOP_K`, `RECOMMENDATION_TOP_K`, `RECOMMENDATION_MARGIN`,
+`RECOMMENDATION_MIN_SCORE`, `RECOMMENDATION_DESCRIPTION_LIMIT`.
