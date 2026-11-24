@@ -1,0 +1,30 @@
+<header class="topbar">
+  <div class="brand"><a href="/courses" class="brand-link">Courses&nbsp;Assistant</a> <i class="bi bi-robot" aria-hidden="true"></i></div>
+  <nav class="tabs">
+    <a class="tab {% if active == 'courses' %}active{% endif %}" href="/courses">Курсы</a>
+    {% if me and me.role %}
+    <a class="tab {% if active == 'my-courses' %}active{% endif %}" href="/my-courses">Мое обучение</a>
+    {% endif %}
+    {% if me and me.role == 'teacher' %}
+    <a class="tab {% if active == 'teacher' %}active{% endif %}" href="/teacher">Преподавание</a>
+    {% endif %}
+    {% if me and me.role == 'admin' %}
+    <a class="tab {% if active == 'dashboard' %}active{% endif %}" href="/dashboard">Админ панель</a>
+    {% endif %}
+  </nav>
+  <div class="meta">
+    {% if me and me.role == 'admin' %}Администратор
+    {% elif me and me.role %}{{ me.name or me.email }}
+    {% endif %}
+  </div>
+  <div class="actions">
+    <button type="button" class="btn ghost" data-theme-toggle aria-pressed="false">Тема</button>
+    {% if me and me.role %}
+    <form method="post" action="/logout">
+      <button type="submit" class="btn ghost">Выйти</button>
+    </form>
+    {% else %}
+    <a class="btn ghost" href="/login">Войти</a>
+    {% endif %}
+  </div>
+</header>

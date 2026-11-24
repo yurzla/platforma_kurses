@@ -1,0 +1,219 @@
+x-app-env: &app-env
+  DATABASE_URL: postgresql+asyncpg://postgres:postgres@postgres:5432/edu_platform_kurses
+  REDIS_URL: redis://redis:6379/0
+  OLLAMA_URL: http://ollama:11434/api/embed
+  GIGACHAT_CREDENTIALS: ${GIGACHAT_CREDENTIALS:-}
+  GIGACHAT_SCOPE: ${GIGACHAT_SCOPE:-GIGACHAT_API_PERS}
+  GIGACHAT_AUTH_URL: ${GIGACHAT_AUTH_URL:-https://ngw.devices.sberbank.ru:9443/api/v2/oauth}
+  GIGACHAT_BASE_URL: ${GIGACHAT_BASE_URL:-https://api.giga.chat/v1}
+  GIGACHAT_MODEL: ${GIGACHAT_MODEL:-GigaChat-2}
+  GIGACHAT_VERIFY_SSL: ${GIGACHAT_VERIFY_SSL:-false}
+  EMBEDDING_MODEL: ${EMBEDDING_MODEL:-nomic-embed-text}
+  EMBEDDING_DIMENSION: ${EMBEDDING_DIMENSION:-768}
+  RECOMMENDATION_TOP_K: ${RECOMMENDATION_TOP_K:-5}
+  RECOMMENDATION_MARGIN: ${RECOMMENDATION_MARGIN:-0.05}
+  RECOMMENDATION_MIN_SCORE: ${RECOMMENDATION_MIN_SCORE:-0.0}
+  RECOMMENDATION_DESCRIPTION_LIMIT: ${RECOMMENDATION_DESCRIPTION_LIMIT:-120}
+  LOG_LEVEL: ${LOG_LEVEL:-INFO}
+  JOB_RETENTION_DAYS: ${JOB_RETENTION_DAYS:-7}
+  CRON_INTERVAL_SECONDS: ${CRON_INTERVAL_SECONDS:-3600}
+  STREAM_INDEX: ${STREAM_INDEX:-rag.index.requests}
+  INDEX_DLQ: ${INDEX_DLQ:-rag.index.dead}
+  INDEX_GROUP: ${INDEX_GROUP:-rag-indexers}
+  INDEX_CONSUMER_NAME: ${INDEX_CONSUMER_NAME:-indexer-1}
+  REDIS_STREAM_MAXLEN: ${REDIS_STREAM_MAXLEN:-10000}
+  JWT_SECRET: ${JWT_SECRET:-local-dev-jwt-secret-change-me}
+  JWT_ALGORITHM: ${JWT_ALGORITHM:-HS256}
+  PASSWORD_KEY: ${PASSWORD_KEY:-}
+  ACCESS_TOKEN_TTL: ${ACCESS_TOKEN_TTL:-900}
+  REFRESH_TOKEN_TTL: ${REFRESH_TOKEN_TTL:-1209600}
+  COOKIE_SECURE: ${COOKIE_SECURE:-false}
+
+x-backend-build: &backend-build
+  context: .
+  dockerfile: backend/Dockerfile
+
+x-web-build: &web-build
+  context: .
+  dockerfile: web/Dockerfile
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: edu_platform_kurses
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d edu_platform_kurses"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    ports:
+      - "6379:6379"
+
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - ollama:/root/.ollama
+    ports:
+      - "11434:11434"
+
+  ollama-pull:
+    image: ollama/ollama:latest
+    depends_on:
+      - ollama
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["sleep 5 && ollama pull ${EMBEDDING_MODEL:-nomic-embed-text}"]
+    restart: "no"
+
+  seed:
+    image: postgres:18-alpine
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./tmp:/seed:ro
+    environment:
+      PGPASSWORD: postgres
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - >-
+        if [ -f /seed/edu_platform_kurses.sql ]; then
+          if [ "$(psql -h postgres -U postgres -d edu_platform_kurses -tAc "SELECT to_regclass('public.users') IS NOT NULL")" = "t" ]; then
+            echo 'Database already seeded, skipping.';
+          else
+            echo 'Seeding demo data...';
+            psql -h postgres -U postgres -d edu_platform_kurses -f /seed/edu_platform_kurses.sql;
+          fi
+        else
+          echo 'No dump found at /seed/edu_platform_kurses.sql, skipping seed.';
+        fi
+    restart: "no"
+
+  migrate:
+    build: *backend-build
+    depends_on:
+      postgres:
+        condition: service_healthy
+      seed:
+        condition: service_completed_successfully
+    environment: *app-env
+    command: ["python", "-m", "courses_assistant.scripts.db_bootstrap"]
+    restart: "no"
+
+  api:
+    build: *backend-build
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+    environment: *app-env
+    command:
+      - uvicorn
+      - courses_assistant.entrypoints.api.app:create_app
+      - --factory
+      - --host
+      - 0.0.0.0
+      - --port
+      - "5000"
+    ports:
+      - "5000:5000"
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:5000/health').status==200 else 1)"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build: *web-build
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      API_BASE_URL: http://api:5000
+      WEB_HOST: 0.0.0.0
+      WEB_PORT: ${WEB_PORT:-8000}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    command:
+      - uvicorn
+      - courses_web.app:create_app
+      - --factory
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health').status==200 else 1)"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  worker:
+    build: *backend-build
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+    environment: *app-env
+    command: ["python", "-m", "courses_assistant.entrypoints.worker"]
+
+  indexer:
+    build: *backend-build
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+    environment: *app-env
+    command: ["python", "-m", "courses_assistant.entrypoints.indexer"]
+
+  scheduler:
+    build: *backend-build
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+    environment: *app-env
+    command: ["python", "-m", "courses_assistant.entrypoints.scheduler"]
+
+  cron:
+    build: *backend-build
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+    environment: *app-env
+    command: ["python", "-m", "courses_assistant.entrypoints.cron"]
+
+volumes:
+  pgdata:
+  ollama:

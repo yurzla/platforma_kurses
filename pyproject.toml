@@ -1,0 +1,39 @@
+[tool.uv.workspace]
+members = ["backend", "web"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["backend/src", "web/src", "tests"]
+exclude = ["app", "tmp", ".venv", "test_chat.py", "test_infrastructure.py", "test_rag.py"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["B008"]
+
+[tool.ruff.lint.per-file-ignores]
+"backend/alembic/versions/*.py" = ["E501"]
+
+[tool.mypy]
+python_version = "3.12"
+mypy_path = "backend/src:web/src"
+packages = ["courses_assistant", "courses_web"]
+ignore_missing_imports = true
+warn_unused_ignores = true
+no_implicit_optional = true
+plugins = []
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+addopts = "-q"
+markers = [
+    "integration: tests that require PostgreSQL/Redis",
+]
+
+[tool.coverage.run]
+source = ["courses_assistant", "courses_web"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = ["pragma: no cover", "if TYPE_CHECKING:"]

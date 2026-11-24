@@ -1,0 +1,148 @@
+"""Роутер каталога обучения: курсы, шаги, ответы, прогресс."""
+
+from __future__ import annotations
+
+from dataclasses import asdict
+
+from fastapi import APIRouter, Depends, HTTPException, Query
+
+from courses_assistant.application.commands import SubmitStepAnswer
+from courses_assistant.container import Container
+from courses_assistant.domain.models import User
+from courses_assistant.domain.video import parse_video_url
+from courses_assistant.entrypoints.api.dependencies import get_container, require_user
+from courses_assistant.entrypoints.api.schemas import (
+    AnswerRequest,
+    AnswerResult,
+    CourseDetailRead,
+    CourseListResponse,
+    CourseSummaryRead,
+    LessonSummaryRead,
+    SectionSummaryRead,
+    StepRead,
+    StepSummaryRead,
+    VideoEmbedRead,
+)
+
+router = APIRouter(prefix="/api/v1/courses", tags=["catalog"])
+
+
+@router.get("", response_model=CourseListResponse)
+async def list_courses(
+    enrolled: bool = False,
+    search: str | None = Query(default=None, max_length=200),
+    limit: int = Query(default=50, ge=1, le=200),
+    offset: int = Query(default=0, ge=0),
+    user: User = Depends(require_user),
+    container: Container = Depends(get_container),
+) -> CourseListResponse:
+    async with container.uow_factory() as uow:
+        courses = await uow.catalog.list_courses(
+            user.id,
+            enrolled_only=enrolled,
+            search=search,
+            limit=limit,
+            offset=offset,
+        )
+        total = await uow.catalog.count_courses(
+            user.id, enrolled_only=enrolled, search=search
+        )
+    return CourseListResponse(
+        items=[CourseSummaryRead(**asdict(course)) for course in courses],
+        total=total,
+        limit=limit,
+        offset=offset,
+    )
+
+
+@router.get("/{course_id}", response_model=CourseDetailRead)
+async def get_course(
+    course_id: int,
+    user: User = Depends(require_user),
+    container: Container = Depends(get_container),
+) -> CourseDetailRead:
+    async with container.uow_factory() as uow:
+        course = await uow.catalog.get_course(course_id, user.id)
+    if course is None:
+        raise HTTPException(status_code=404, detail="Курс не найден")
+    return CourseDetailRead(
+        id=course.id,
+        title=course.title,
+        description=course.description,
+        sections=[
+            SectionSummaryRead(
+                id=section.id,
+                title=section.title,
+                position=section.position,
+                lessons=[
+                    LessonSummaryRead(
+                        id=lesson.id,
+                        title=lesson.title,
+                        position=lesson.position,
+                        steps=[
+                            StepSummaryRead(
+                                id=step.id,
+                                position=step.position,
+                                step_type=step.step_type,
+                                completed=step.completed,
+                            )
+                            for step in lesson.steps
+                        ],
+                    )
+                    for lesson in section.lessons
+                ],
+            )
+            for section in course.sections
+        ],
+    )
+
+
+@router.get("/{course_id}/steps/{step_id}", response_model=StepRead)
+async def get_step(
+    course_id: int,
+    step_id: int,
+    user: User = Depends(require_user),
+    container: Container = Depends(get_container),
+) -> StepRead:
+    async with container.uow_factory() as uow:
+        step = await uow.catalog.get_step(course_id, step_id, user.id)
+    if step is None:
+        raise HTTPException(status_code=404, detail="Шаг не найден")
+    embed = parse_video_url(step.video_url)
+    return StepRead(
+        id=step.id,
+        course_id=step.course_id,
+        lesson_id=step.lesson_id,
+        position=step.position,
+        step_type=step.step_type,
+        title=step.title,
+        body=step.body,
+        video_url=step.video_url,
+        video=VideoEmbedRead(kind=embed.kind, src=embed.src) if embed else None,
+        options=step.options,
+        grading=step.grading,
+        completed=step.completed,
+        saved_answer=step.saved_answer,
+        is_correct=step.is_correct,
+    )
+
+
+@router.post("/{course_id}/steps/{step_id}/answer", response_model=AnswerResult)
+async def submit_answer(
+    course_id: int,
+    step_id: int,
+    payload: AnswerRequest,
+    user: User = Depends(require_user),
+    container: Container = Depends(get_container),
+) -> AnswerResult:
+    result = await container.handlers.submit_step_answer(
+        SubmitStepAnswer(
+            user_id=user.id, course_id=course_id, step_id=step_id, answer=payload.answer
+        )
+    )
+    return AnswerResult(
+        is_correct=result.is_correct,
+        correct_answer=result.correct_answer,
+        completed=result.completed,
+        progress_percent=result.progress_percent,
+    )

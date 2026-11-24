@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Курсы · Courses Assistant{% endblock %}
+
+{% block body %}
+{% with active = "courses" %}{% include "_topbar.html" %}{% endwith %}
+<main>
+  <h1 class="page-title">Курсы</h1>
+  {% include "_list_search.html" %}
+  {% if not courses %}
+  {% if search %}
+  <p class="muted">По запросу «{{ search }}» ничего не найдено. <a href="/courses">Сбросить поиск</a>.</p>
+  {% else %}
+  <p class="muted">Доступных курсов нет.</p>
+  {% endif %}
+  {% endif %}
+  {% include "_course_cards.html" %}
+  {% include "_pagination.html" %}
+</main>
+{% endblock %}

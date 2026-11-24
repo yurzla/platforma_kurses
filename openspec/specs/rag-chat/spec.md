@@ -1,0 +1,334 @@
+# rag-chat
+
+## Purpose
+
+Provides course-scoped conversational Q&A: students create chat sessions, submit questions, and receive answers grounded in the current course materials, with conversation history and cited sources.
+
+## Requirements
+
+### Requirement: Create chat session
+The system SHALL allow an authenticated user to create a chat session bound to that user and, optionally, a course, and SHALL return a unique session identifier. The session SHALL always be bound to the authenticated user.
+
+#### Scenario: Session created
+- **WHEN** an authenticated user requests a new chat session for an existing course
+- **THEN** the system responds with HTTP 201 and a session identifier
+- **AND** the session is persisted with the authenticated user and the course
+
+#### Scenario: Session created without a course
+- **WHEN** an authenticated user requests a new chat session without specifying a course
+- **THEN** the system responds with HTTP 201 and a session identifier not bound to any single course
+
+#### Scenario: Unknown user or course
+- **WHEN** an authenticated user requests a session for a non-existent course
+- **THEN** the system responds with HTTP 404 and does not create a session
+
+#### Scenario: Authenticated student
+- **WHEN** an authenticated student requests a new chat session and supplies no user identifier
+- **THEN** the system binds the session to the authenticated student
+
+#### Scenario: No user and no session
+- **WHEN** a client requests a new chat session without an authenticated user
+- **THEN** the system responds with HTTP 401
+
+### Requirement: Retrieve message history
+The system SHALL return the messages of a chat session in chronological order, limited to the most recent N messages when a limit is provided, and SHALL only return history to the session's owner or an administrator.
+
+#### Scenario: History returned in order
+- **WHEN** the session's owner requests the history of an existing session with a limit
+- **THEN** the system returns at most `limit` messages ordered from oldest to newest
+
+#### Scenario: Unknown session
+- **WHEN** a client requests history for a non-existent session
+- **THEN** the system responds with HTTP 404
+
+#### Scenario: Foreign session forbidden
+- **WHEN** an authenticated user requests history for a session owned by another user
+- **THEN** the system responds with HTTP 403
+
+#### Scenario: Anonymous rejected
+- **WHEN** an unauthenticated client requests message history
+- **THEN** the system responds with HTTP 401
+
+### Requirement: List chat sessions
+
+The system SHALL return the authenticated user's chat sessions, most recent first, each with its course reference, course title, start time and a preview of the last message, and SHALL return only the sessions owned by that user.
+
+#### Scenario: Own sessions listed
+
+- **WHEN** an authenticated user requests their chat sessions
+- **THEN** the system returns the user's sessions ordered from most recent to oldest, each with the course title and last-message preview
+
+#### Scenario: Only own sessions
+
+- **WHEN** an authenticated user requests their chat sessions
+- **THEN** sessions owned by other users are not returned
+
+#### Scenario: Anonymous rejected
+
+- **WHEN** an unauthenticated client requests the chat session list
+- **THEN** the system responds with HTTP 401
+
+### Requirement: Markdown-formatted answers
+
+The system SHALL instruct the language model to format assistant answers in Markdown, using bold
+for emphasis, fenced code blocks for multi-line code (inline code for short fragments), and
+Markdown links to platform courses in the form `[text](/courses/ID)`, so that the web panel can
+render the formatting. The system SHALL also instruct the model to separate the answer's blocks
+from each other with exactly one blank line, to separate list items from each other with exactly one
+blank line, and to always place a blank line before the «Источники:» block. The system SHALL
+additionally normalize the generated answer deterministically before persisting it, so that the
+answer's blocks and adjacent list items are separated by exactly one blank line and a blank line
+always precedes the «Источники:» block, without modifying fenced code blocks. The system SHALL also
+ensure the «Источники:» block starts on its own line, splitting the label out when the model emits
+it after other text on the same line, and placing a blank line before it. The system SHALL instruct
+the model to present recommended courses only as a Markdown bullet list, one course per line as
+`- [«Название»](/courses/ID) — краткое описание`, and never as a comma-separated enumeration of
+course links. The system SHALL further instruct the model that every mention of a course — in the
+answer text, in a list, or in the «Источники:» block — MUST be a Markdown link `[«Название»](/courses/ID)`
+whose title is taken verbatim from the provided data, and that a course MUST NOT be mentioned without
+such a link.
+
+#### Scenario: Answer formatted in Markdown
+- **WHEN** the assistant generates an answer
+- **THEN** the prompt instructs the model to use Markdown bold and fenced code blocks
+
+#### Scenario: Course reference uses a Markdown link
+- **WHEN** the assistant refers to a platform course in its answer
+- **THEN** the prompt instructs the model to use a Markdown link to that course page
+
+#### Scenario: Every course mention is a Markdown link
+- **WHEN** the assistant mentions a course in the answer text, in a list, or in the «Источники:» block
+- **THEN** the prompt instructs the model to format that mention as a Markdown link `[«Название»](/courses/ID)`
+- **AND** the prompt instructs the model to take the link title verbatim from the provided data
+- **AND** the prompt forbids mentioning a course without a Markdown link
+
+#### Scenario: Blocks and list items separated by blank lines
+- **WHEN** the assistant generates an answer with several blocks or list items
+- **THEN** the prompt instructs the model to separate the blocks with exactly one blank line
+- **AND** the prompt instructs the model to separate list items from each other with exactly one blank line
+- **AND** the prompt instructs the model to place a blank line before the «Источники:» block
+
+#### Scenario: Blank lines are normalized deterministically
+- **WHEN** the assistant persists an answer in which list items or blocks are not separated by a blank line
+- **THEN** the system inserts exactly one blank line between adjacent list items and between blocks
+- **AND** the system places a blank line before the «Источники:» block
+- **AND** the system leaves fenced code blocks unchanged
+
+#### Scenario: Sources block placed on its own line
+- **WHEN** the assistant persists an answer in which the «Источники:» label follows other text on the same line
+- **THEN** the system splits the label onto its own line
+- **AND** the system places a blank line before the «Источники:» block
+
+#### Scenario: Recommended courses listed as bullets
+- **WHEN** the assistant recommends courses in a global session
+- **THEN** the prompt instructs the model to list each course as a separate Markdown bullet item
+- **AND** the prompt forbids enumerating courses as a comma-separated list of links
+
+### Requirement: Grounded model-authored answer
+
+When processing a question, the system SHALL rewrite the question using recent history when needed, embed it, retrieve the top matching chunks restricted to the session's course when the session is bound to a course (and across all courses when it is not), and generate an answer with the configured LLM. The answer SHALL be grounded only in the provided course materials and, for a global recommendation question, in the provided recommended-courses section; the system SHALL instruct the model not to use knowledge outside those materials and not to invent facts, courses, links, or sources. The system SHALL present each retrieved material fragment labelled `[Источник i]` together with the lesson title, the source type, and a Markdown link to its course page in the form `[«Title»](/courses/ID)`. The system SHALL NOT include the platform course catalog in the answer prompt. For a session bound to a course the system SHALL tell the model that the student is already inside that course and MUST NOT offer to take, enroll in, study, start, or choose it, while still answering from the course materials. The system SHALL instruct the model that every answer MUST end with a single-line sources list introduced by the exact label `Источники:`, listing comma-separated entries in the form `[«Title»](/courses/ID)`, where the link text is the real course title and MUST NOT be a fragment label such as «Источник 1», and both title and URL are taken only from the provided data; the system SHALL require this block in every answer and SHALL list in it only courses present in the provided data, discarding any course or title not present in the provided data; the system SHALL omit the block only when the provided data contains no source course; the system SHALL NOT append a sources section itself and SHALL NOT guarantee that the model lists every source. For a session not bound to a course, when the question asks to find, list, or choose courses, the system SHALL delegate matching to the embedding-based course recommender (capability `course-recommendations`) and pass the matched courses to the model as a `РЕКОМЕНДУЕМЫЕ КУРСЫ` section; the model SHALL compose the answer, and it MUST NOT recommend or link courses absent from that section. When the student asks for additional or other courses, the system SHALL instruct the model to state that no other suitable courses are available rather than inventing, adding, or linking any courses beyond the section. Before persisting, the system SHALL convert any course link whose identifier is not a published platform course to plain text. When no course chunks are retrieved and no recommended courses are matched, the system SHALL return a clear "no material found" answer without calling the LLM.
+
+#### Scenario: Answer generated from chunks with source metadata
+- **WHEN** a question is processed for a session whose course has matching material
+- **THEN** an assistant answer is generated from the retrieved course chunks
+- **AND** the answer is persisted together with the chunk identifiers used as sources
+
+#### Scenario: Answer without a course
+- **WHEN** a question is processed for a session not bound to a course and matching material exists in any course
+- **THEN** an assistant answer is generated from the retrieved chunks across all courses
+
+#### Scenario: Course recommendation in a global session
+- **WHEN** a question asks which course to take and the session is not bound to a course and matching courses are found
+- **THEN** the matched courses are passed to the model as a «РЕКОМЕНДУЕМЫЕ КУРСЫ» section and the model composes the answer
+- **AND** every course the answer recommends is one of the published platform courses from that section
+
+#### Scenario: No matching material
+- **WHEN** a question is processed, no course chunks are retrieved, and the session is bound to a course
+- **THEN** the system returns a clear "no material found" answer without calling the LLM
+- **AND** the exchange is still persisted
+
+#### Scenario: No matching material in a global session
+- **WHEN** a question is processed for a session not bound to a course, no course chunks are retrieved, and no recommended courses are matched
+- **THEN** the system returns a clear "no material found" answer without calling the LLM
+
+#### Scenario: Retrieval restricted to course
+- **WHEN** the same question is asked in sessions of two different courses
+- **THEN** each answer is generated only from chunks belonging to its own course
+
+#### Scenario: Current course is not offered in a course-scoped answer
+- **WHEN** a question is processed in a session bound to a course
+- **THEN** the prompt tells the model that the student is already inside that course and MUST NOT offer to take, enroll in, or choose it
+- **AND** the answer is still generated from the course materials
+
+#### Scenario: Prompt requests a model-authored sources block
+- **WHEN** the system builds the prompt for an answer
+- **THEN** the prompt instructs the model to always end the answer with a single line introduced by the label `Источники:` followed by comma-separated entries `[«Title»](/courses/ID)`
+- **AND** the prompt forbids using a fragment label such as «Источник 1» as the link text
+- **AND** the system does not append a sources section to the answer itself
+
+#### Scenario: Fragments are labelled as sources
+- **WHEN** retrieved material fragments are presented to the model
+- **THEN** each fragment is introduced by the label `[Источник i]`
+
+#### Scenario: Prompt omits the platform catalog
+- **WHEN** the system builds the prompt for a global answer
+- **THEN** the prompt does not include a platform course catalog section
+
+#### Scenario: Source courses passed to the model in a global answer
+- **WHEN** an answer is generated for a session not bound to a course from materials of several courses
+- **THEN** each retrieved source course is passed to the model as a Markdown link to its course page
+
+#### Scenario: Recommendation answer is composed by the model
+- **WHEN** a question asks which course to take and matching courses are recommended
+- **THEN** the persisted answer is the model's own answer grounded in the recommended-courses section
+- **AND** courses recommended by the model that are not published platform courses are removed before persisting
+
+#### Scenario: Exhausted recommendation list is not invented
+- **WHEN** the student asks for more or other courses and the recommended-courses section contains no further courses
+- **THEN** the prompt instructs the model to state that no other suitable courses are available
+- **AND** the model does not add or link any course outside the provided section
+
+#### Scenario: Sources block omitted only when no more courses
+- **WHEN** the system builds the prompt for an answer
+- **THEN** the prompt requires the «Источники:» block in every answer and permits its omission only when there are genuinely no sources to list
+- **AND** no other exception is allowed to omit the block
+
+#### Scenario: Courses absent from the provided data are discarded from sources
+- **WHEN** the model's «Источники:» block names a course or title that is not present in the provided materials or recommended courses
+- **THEN** the prompt instructs the model to discard that course or title from the block
+- **AND** only courses present in the provided data remain in the block
+
+#### Scenario: Recommendations link the portal catalog
+- **WHEN** the assistant recommends a course in a session not bound to a course
+- **THEN** the recommended course is one of the published platform courses
+- **AND** the answer refers to it with a Markdown link to its course page
+
+#### Scenario: Answers grounded in provided data
+- **WHEN** the assistant generates an answer
+- **THEN** the prompt instructs the model to use only the provided course materials and recommended courses and not to use outside knowledge
+
+#### Scenario: Course mentioned in a lesson material is not recommended
+- **WHEN** the model includes a list-item recommendation naming a course that is not one of the platform courses (for example a course mentioned inside a lesson material)
+- **THEN** the system removes that recommendation item before persisting the answer
+- **AND** recommendations of platform courses are kept
+
+#### Scenario: Recommendation kept when its description quotes an unrelated phrase
+- **WHEN** a list-item recommendation names a published platform course but its description contains a quoted phrase with a space that is not a course
+- **THEN** the system keeps that recommendation item
+
+#### Scenario: Numbered lists rendered as bullets
+- **WHEN** the persisted answer contains numbered list items (`1.` or `1)`)
+- **THEN** the system renders them as Markdown `-` bullets without renumbering
+- **AND** numbers inside code blocks and prose are left unchanged
+
+#### Scenario: Link to an unknown course rendered as text
+- **WHEN** the generated answer contains a Markdown link to a course identifier that is not a published platform course
+- **THEN** the system renders the link as plain text without creating a link
+
+#### Scenario: Course link with inner whitespace is normalized
+- **WHEN** the generated answer contains a Markdown course link with whitespace around the URL inside the parentheses
+- **THEN** the persisted answer contains the link in the form `[text](/courses/ID)` without the inner whitespace
+
+### Requirement: Delete chat session
+
+The system SHALL allow the session's owner or an administrator to permanently delete a chat
+session together with all its messages and question jobs, and SHALL respond with HTTP 204 on
+success. Deleting a session SHALL NOT affect other sessions, other jobs, or course materials.
+
+#### Scenario: Owner deletes a session
+- **WHEN** the session's owner requests deletion of an existing session
+- **THEN** the system responds with HTTP 204
+- **AND** the session and its messages are no longer returned by the chat endpoints
+
+#### Scenario: Administrator deletes a foreign session
+- **WHEN** an authenticated administrator requests deletion of a session owned by another user
+- **THEN** the system responds with HTTP 204 and the session is deleted
+
+#### Scenario: Foreign session forbidden
+- **WHEN** an authenticated user requests deletion of a session owned by another user and is not an administrator
+- **THEN** the system responds with HTTP 403 and the session remains
+
+#### Scenario: Unknown session
+- **WHEN** a client requests deletion of a non-existent session
+- **THEN** the system responds with HTTP 404
+
+#### Scenario: Anonymous rejected
+- **WHEN** an unauthenticated client requests deletion of a session
+- **THEN** the system responds with HTTP 401 and nothing is deleted
+
+#### Scenario: Session jobs removed with the session
+- **WHEN** a session that has question jobs is deleted
+- **THEN** the jobs belonging to that session are deleted as well
+- **AND** jobs of other sessions are kept
+
+### Requirement: Export chat session
+The system SHALL let the session's owner or an administrator download the dialogue of a chat
+session as an attached Markdown (`format=md`) or PDF (`format=pdf`) file, and SHALL reject any other
+format with HTTP 400. The exported document SHALL contain the session start date, the dialogue
+messages in chronological order with their roles, and the sources of assistant answers when present.
+
+#### Scenario: Markdown export
+- **WHEN** the session's owner requests the dialogue export with `format=md`
+- **THEN** the system responds with HTTP 200, a Markdown content type and a `Content-Disposition` attachment header
+- **AND** the file name has the form `dialog-<session_id>-<YYYY-MM-DD>.md`
+- **AND** the body contains the course title when the session is bound to a course and every message in chronological order with its role
+
+#### Scenario: PDF export
+- **WHEN** the session's owner requests the dialogue export with `format=pdf`
+- **THEN** the system responds with HTTP 200, a PDF content type and a `Content-Disposition` attachment header
+- **AND** the file name has the form `dialog-<session_id>-<YYYY-MM-DD>.pdf`
+- **AND** the body is a PDF document containing the dialogue text, including Cyrillic characters
+
+#### Scenario: Assistant sources included
+- **WHEN** an assistant message of the exported session references sources
+- **THEN** the exported document lists those sources for that answer
+
+#### Scenario: Unsupported format
+- **WHEN** a client requests the export with a format other than `md` or `pdf`
+- **THEN** the system responds with HTTP 400 and does not produce a file
+
+#### Scenario: Foreign session forbidden
+- **WHEN** an authenticated user requests the export of a session owned by another user and is not an administrator
+- **THEN** the system responds with HTTP 403
+
+#### Scenario: Anonymous rejected
+- **WHEN** an unauthenticated client requests the export of a session
+- **THEN** the system responds with HTTP 401
+
+### Requirement: Clear chat history
+
+The API SHALL let an authenticated user delete all of their chat sessions with a single
+`DELETE /api/v1/chat/sessions` request, and SHALL accept an optional `course_id` query parameter
+that limits the deletion to the sessions of that course. Question jobs of the deleted sessions
+SHALL be removed in the same operation, the response SHALL be HTTP 204 without a body, and
+sessions of other users SHALL never be deleted.
+
+#### Scenario: Delete all sessions of the user
+- **WHEN** an authenticated user calls `DELETE /api/v1/chat/sessions`
+- **THEN** the system responds with HTTP 204
+- **AND** every chat session of that user, its messages and its question jobs are deleted
+- **AND** sessions of other users remain unchanged
+
+#### Scenario: Delete sessions of one course
+- **WHEN** an authenticated user calls `DELETE /api/v1/chat/sessions?course_id=10`
+- **THEN** only the user's sessions bound to course 10 are deleted
+- **AND** the user's sessions of other courses remain
+
+#### Scenario: Clearing history requires authentication
+- **WHEN** an unauthenticated request calls `DELETE /api/v1/chat/sessions`
+- **THEN** the system responds with HTTP 401
+
+### Requirement: Recommendation job sources
+The system SHALL persist the courses selected for a global recommendation answer as sources on both the job and the assistant message.
+
+#### Scenario: Recommendation sources persisted
+- **WHEN** a global session question is answered with recommended courses
+- **THEN** the job and the assistant message store one source per recommended course
+
+#### Scenario: Recommendation source metadata
+- **WHEN** a recommendation source is stored
+- **THEN** it contains the source type, course id, course title, course URL, and relevance score
+
+#### Scenario: No recommendation matches
+- **WHEN** no recommended courses are matched
+- **THEN** the job stores no recommendation sources

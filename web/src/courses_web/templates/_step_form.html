@@ -1,0 +1,71 @@
+{% set is_edit = step is defined and step %}
+{% set current_type = step.step_type if is_edit else 'text' %}
+{% set current_choices = step.choices if is_edit else [] %}
+<form class="step-form" method="post" action="{{ action }}" data-step-form>
+  <input type="hidden" name="course_id" value="{{ course.id }}">
+
+  <label class="step-row">Тип шага
+    <select name="step_type" data-step-type>
+      <option value="text" {% if current_type == 'text' %}selected{% endif %}>Материал</option>
+      <option value="choice" {% if current_type == 'choice' %}selected{% endif %}>Тест с вариантами</option>
+      <option value="string" {% if current_type == 'string' %}selected{% endif %}>Короткий ответ с автопроверкой</option>
+      <option value="number" {% if current_type == 'number' %}selected{% endif %}>Числовой ответ с автопроверкой</option>
+      <option value="free_answer" {% if current_type == 'free_answer' %}selected{% endif %}>Задание без автопроверки</option>
+      <option value="video" {% if current_type == 'video' %}selected{% endif %}>Видео</option>
+    </select>
+  </label>
+
+  <label class="step-row">Материал или условие
+    <textarea name="body" rows="4" placeholder="Текст материала или условие задания">{{ step.body or '' if is_edit else '' }}</textarea>
+  </label>
+
+  <label class="step-row">Видео-ссылка
+    <input name="video_url" value="{{ step.video_url or '' if is_edit else '' }}"
+           placeholder="https://www.youtube.com/watch?v=... или https://vk.com/video-...">
+  </label>
+
+  <details class="format-hint step-row">
+    <summary>Подсказка по форматированию</summary>
+    <div class="format-hint-body">
+      <p>Содержимое шага — <strong>Markdown</strong>. Переносы строк сохраняются.</p>
+      <p><code>**жирный**</code>, <code>*курсив*</code>, <code>`код`</code>,
+        <code>[ссылка](https://example.com)</code>,
+        <code>![alt](https://example.com/image.png)</code>.</p>
+      <p>Заголовок: <code># Заголовок</code>.
+        Списки: <code>- пункт</code> или <code>1. пункт</code>.
+        Цитата: <code>&gt; текст</code>.</p>
+      <p>Блок кода — три обратных апострофа до и после:
+        <code>```python ... ```</code>.</p>
+      <p>Старые шаги с HTML продолжают отображаться как раньше.</p>
+      <p>Видео вставляйте ссылкой в поле «Видео-ссылка»: YouTube, VK Video
+        или прямая ссылка на mp4/webm/ogg.</p>
+    </div>
+  </details>
+
+  <div class="choice-fields hidden step-row" data-choice-fields>
+    <label class="multiple-choice">
+      <input type="checkbox" name="is_multiple_choice"
+             {% if is_edit and step.is_multiple_choice %}checked{% endif %}>
+      Несколько правильных вариантов
+    </label>
+    {% for index in range(1, 5) %}
+    {% set choice = current_choices[index - 1] if current_choices|length >= index else none %}
+    <label class="choice-editor">
+      <input type="checkbox" name="correct_{{ index }}" aria-label="Правильный вариант"
+             {% if choice and choice.is_correct %}checked{% endif %}>
+      <input name="choice_{{ index }}" placeholder="Вариант {{ index }}"
+             value="{{ choice.text if choice else '' }}">
+    </label>
+    {% endfor %}
+    <p class="muted">Отметьте галочкой правильные варианты. Минимум два варианта.</p>
+  </div>
+
+  <label class="answer-key-field hidden step-row" data-answer-field>Правильный ответ
+    <input name="correct_answer" placeholder="Точное значение для проверки"
+           value="{{ step.correct_answer or '' if is_edit else '' }}">
+  </label>
+
+  <div class="step-form-actions">
+    <button class="btn" type="submit">{{ submit_label }}</button>
+  </div>
+</form>

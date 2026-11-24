@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Регистрация · Courses Assistant{% endblock %}
+
+{% block body %}
+<div class="login-wrap">
+  <form class="login-card" method="post" action="/register" id="register-form">
+    <h1>Регистрация</h1>
+
+    {% if error %}<div class="login-error">{{ error }}</div>{% endif %}
+
+    <label>Email
+      <input name="email" type="email" autocomplete="username" required
+             value="{{ email|default('') }}">
+    </label>
+    <label>Имя
+      <input name="name" autocomplete="name" required value="{{ name|default('') }}">
+    </label>
+    <label>Роль
+      <select name="role">
+        {% for item in roles %}
+        <option value="{{ item }}" {% if item == role|default('student') %}selected{% endif %}>
+          {% if item == 'teacher' %}Преподаватель{% else %}Студент{% endif %}
+        </option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Пароль
+      <input type="password" name="password" autocomplete="new-password" minlength="6" required>
+    </label>
+    <label>Пароль ещё раз
+      <input type="password" name="password_confirm" autocomplete="new-password" minlength="6" required>
+    </label>
+
+    <div class="login-actions auth-actions">
+      <button class="btn" type="submit">Зарегистрироваться</button>
+      <a class="btn ghost" href="/login">У меня есть аккаунт</a>
+      <button type="button" class="btn ghost" data-theme-toggle aria-pressed="false">Тема</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  (function () {
+    var form = document.getElementById("register-form");
+    if (!form) return;
+    form.addEventListener("submit", function (event) {
+      var password = form.password.value;
+      var confirm = form.password_confirm.value;
+      if (password !== confirm) {
+        event.preventDefault();
+        var err = form.querySelector(".login-error");
+        if (!err) {
+          err = document.createElement("div");
+          err.className = "login-error";
+          form.insertBefore(err, form.querySelector("label"));
+        }
+        err.textContent = "Пароли не совпадают";
+      }
+    });
+  })();
+</script>
+{% endblock %}
