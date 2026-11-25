@@ -6,6 +6,10 @@ worker-ы, HTTP API отдаёт `202` и job-id, клиент опрашива�
 
 ## Архитектура
 
+Подробное описание компонентов, слоёв, очередей и сценариев RAG/рекомендаций:
+[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md). Схема БД —
+[`docs/DB_SCHEMA.md`](docs/DB_SCHEMA.md).
+
 ```
 browser ──► web (courses_web, HTML/Jinja2, :8000) ──HTTP──► backend api (JSON, :5000)
                                                                 │
