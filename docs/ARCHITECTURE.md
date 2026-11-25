@@ -18,14 +18,13 @@ RAG-ответ ассистента и подбор курсов. Схема Б�
 10. [Флоу рекомендаций курсов](#10-флоу-рекомендаций-курсов)
 11. [Индексация контента](#11-индексация-контента)
 12. [Конфигурация](#12-конфигурация)
-13. [Известные ограничения и расхождения](#13-известные-ограничения-и-расхождения)
 
 ---
 
 ## 1. Назначение и стек
 
 RAG-ассистент образовательной платформы: отвечает студенту по материалам курса,
-подбирает курсы по семантике запроса, ведёт обучение (каталог, шаги, автопроверка,
+подбирает курсы по семантике запроса, ведет обучение (каталог, шаги, автопроверка,
 прогресс), кабинет преподавателя и админку.
 
 Медленная генерация вынесена из HTTP: API ставит задачу в очередь и возвращает
@@ -108,7 +107,7 @@ Web-образ не тянет БД/Redis/LLM-зависимости. Общие
 
 Замечания:
 
-- `seed` использует клиент `postgres:18-alpine` (не сервер), чтобы не плодить ещё один серверный образ.
+- `seed` использует клиент `postgres:18-alpine` (не сервер), чтобы не плодить еще один серверный образ.
 - `migrate` зависит от успешного `seed`; `api`/воркеры — от успешного `migrate`.
 
 ## 4. Слои и зависимости
@@ -180,7 +179,7 @@ domain        models, catalog, quiz, prompts, context, formatting,
 3. иначе → `XACK` + повторный `XADD` в ту же очередь (ретрай).
 
 Админка (`entrypoints/api/routers/admin.py`) показывает `stream_stats`
-(length/pending/lag/consumers) и содержимое DLQ для всех трёх очередей,
+(length/pending/lag/consumers) и содержимое DLQ для всех трех очередей,
 а также liveness воркеров (наличие консьюмеров в группе).
 
 ## 6. Асинхронные задачи
@@ -205,22 +204,22 @@ GET /api/v1/jobs/{job_id} → queued | running | done | failed
 ```
 
 Внутри процессов — обычный `asyncio`; graceful shutdown по `SIGINT`/`SIGTERM`
-через `asyncio.Event`. Долгих CPU-bound задач нет, всё I/O-bound.
+через `asyncio.Event`. Долгих CPU-bound задач нет, все I/O-bound.
 
 ## 7. Флоу ассистента (RAG-ответ)
 
 Роутер: `entrypoints/api/routers/jobs.py`; обработчик:
 `application/handlers.py::Handlers.send_question` / `process_question`.
 
-1. **Постановка.** Проверяется доступ к сессии (владелец или `admin`), создаётся
+1. **Постановка.** Проверяется доступ к сессии (владелец или `admin`), создается
    `jobs(queued)`, публикуется `{job_id, session_id, question}` в `rag.requests`,
    в job пишется `message_id` = id записи в Streams. Ответ — `202 {job_id}`.
 2. **Захват задачи.** Воркер вызывает `ProcessQuestion`. `jobs.mark_running()`
    атомарно переводит `queued → running`; если не удалось (уже забрал другой
-   воркер) — возвращается пустой ответ, сообщение всё равно `XACK`-ается.
+   воркер) — возвращается пустой ответ, сообщение все равно `XACK`-ается.
 3. **Подготовка.**
    - история: `uow.chat.get_history(session_id, limit=10)`;
-   - `rewrite_question` — LLM (temperature 0) переформулирует вопрос с учётом
+   - `rewrite_question` — LLM (temperature 0) переформулирует вопрос с учетом
      истории; при пустой истории вопрос возвращается как есть;
    - вопрос пользователя сохраняется в `chat_messages` (role=`user`).
 4. **Развилка.** Если сессия **не** привязана к курсу и вопрос похож на просьбу
@@ -244,7 +243,7 @@ GET /api/v1/jobs/{job_id} → queued | running | done | failed
 
 ## 8. Как источники подаются в модель
 
-Отдельного retrieval-сообщения нет: всё складывается в **system-промпт**
+Отдельного retrieval-сообщения нет: все складывается в **system-промпт**
 (`domain/prompts.py`).
 
 ```
@@ -292,7 +291,7 @@ SYSTEM_PROMPT
   опционально `course_id = <курс сессии>`;
 - отбор — просто `LIMIT RETRIEVAL_TOP_K` (по умолчанию 5);
 - индекс `idx_embeddings_hnsw` (HNSW, `vector_cosine_ops`);
-- `course_description` в RAG намеренно исключён.
+- `course_description` в RAG намеренно исключен.
 
 Порога по score, реранкера, MMR и дедупликации по урокам нет.
 
@@ -303,7 +302,7 @@ SYSTEM_PROMPT
 - по `chunk_embeddings` c `source_type = 'course_description'`;
 - `MIN(distance)` по каждому курсу, `score = 1 - distance`;
 - только `courses.is_published = true`;
-- исключаются завершённые пользователем курсы;
+- исключаются завершенные пользователем курсы;
 - `ORDER BY best_distance LIMIT candidate_limit`, где
   `candidate_limit = max(RECOMMENDATION_TOP_K * 4, 20)`.
 
@@ -391,7 +390,7 @@ threshold = max(RECOMMENDATION_MIN_SCORE, best_score - RECOMMENDATION_MARGIN)
 | `CONSUMER_PENDING_IDLE_MS` | `60000` | порог `XAUTOCLAIM` |
 | `STREAM_BLOCK_MS` | `5000` | блокирующее чтение (не задавать socket_timeout!) |
 | `CRON_INTERVAL_SECONDS` | `3600` | период scheduler |
-| `JOB_RETENTION_DAYS` | `7` | ретенция завершённых job-ов |
+| `JOB_RETENTION_DAYS` | `7` | ретенция завершенных job-ов |
 | `REDIS_STREAM_MAXLEN` / `_EVENTS_MAXLEN` | `10000` / `1000` | approximate-trim |
 | `JWT_SECRET` / `JWT_ALGORITHM` | — (эфемерный) / `HS256` | подпись access |
 | `ACCESS_TOKEN_TTL` / `REFRESH_TOKEN_TTL` | `900` / `1209600` | TTL токенов |
@@ -400,28 +399,3 @@ threshold = max(RECOMMENDATION_MIN_SCORE, best_score - RECOMMENDATION_MARGIN)
 
 Веб-сервис имеет свой набор (`web/src/courses_web/config.py`): `API_BASE_URL`,
 `WEB_HOST`, `WEB_PORT`, `LOG_LEVEL` и имена cookie для авто-refresh.
-
-## 13. Известные ограничения и расхождения
-
-1. **Нет UI персональных рекомендаций.** `AGENTS.md` упоминает подбор курсов по
-   предпочтениям на `/my-courses`; фактически предпочтения влияют только на
-   рекомендации в чате.
-2. **Нет полного каталога в промпте.** В глобальном чате в промпт попадает только
-   секция `РЕКОМЕНДУЕМЫЕ КУРСЫ` (после эмбеддинг-отбора), а не весь каталог.
-3. **`rag.events` не потребляется** — это audit-стрим для админки, без консьюмера.
-4. **Нет порога для чанков и реранкера.** RAG-отбор — чистый top-k по cosine
-   distance; качество зависит от `RETRIEVAL_TOP_K` и эмбеддингов.
-5. **Профиль не хранится как вектор** — пересчитывается при каждом запросе
-   (лишние токены и латентность на LLM-расширение и эмбеддинг).
-6. **Рекомендации не фильтруются по `preferred_level`** — уровень лишь
-   добавляется в поисковый текст; жёсткой фильтрации по `courses.level` нет.
-7. **Индексация — eventual consistency.** Правка курса/шага не сразу видна в RAG.
-8. **Индексация шагов и описаний в разных форматах.** `source_type` шага
-   (`theory`/`task`) определяется по типу шага, описание курса — отдельный тип
-   `course_description`.
-
-## См. также
-
-- [`DB_SCHEMA.md`](DB_SCHEMA.md) — схема БД, таблицы, индексы, RAG-потоки.
-- `README.md` — быстрый старт и команды.
-- `AGENTS.md` — соглашения по разработке (OpenSpec, тулчейн, грабли).
